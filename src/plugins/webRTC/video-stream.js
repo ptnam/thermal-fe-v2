@@ -1,0 +1,133 @@
+import { VideoRTC } from './video-rtc.js'
+
+class VideoStream extends VideoRTC {
+  set divMode(value) {
+    this.querySelector('.mode').innerText = value
+    this.querySelector('.status').innerText = ''
+  }
+
+  set divError(value) {
+    const state = this.querySelector('.mode').innerText
+    if (state !== 'loading') return
+    this.querySelector('.mode').innerText = 'error'
+    this.querySelector('.status').innerText = value
+  }
+
+  /**
+   * Custom GUI
+   */
+  oninit() {
+    super.oninit()
+
+    this.innerHTML = `
+        <style>
+         video-stream {
+            position: relative;
+        }
+        .info {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 12px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+        }
+        </style>
+        <div class="info">
+            <div class="status"></div>
+            <div class="mode"></div>
+        </div>
+        `
+
+    const info = this.querySelector('.info')
+    this.insertBefore(this.video, info)
+  }
+
+  onconnect() {
+    console.debug('stream.onconnect')
+    const result = super.onconnect()
+    if (result) this.divMode = 'loading'
+    return result
+  }
+
+  ondisconnect() {
+    console.debug('stream.ondisconnect')
+    super.ondisconnect()
+  }
+
+  onopen() {
+    const result = super.onopen()
+
+    this.onmessage['stream'] = (msg) => {
+      console.debug('stream.onmessge', msg)
+      switch (msg.type) {
+        case 'error':
+          this.divError = msg.value
+          this.dispatchEvent(new CustomEvent('stream-error', {
+            detail:msg.type
+          }))
+          break
+        case 'mse':
+        case 'hls':
+        case 'mp4':
+        case 'mjpeg':
+          // this.divMode = msg.type.toUpperCase()
+          this.dispatchEvent(new CustomEvent('stream-onopen', {
+            detail:msg.type
+          }))
+          this.divMode = ''
+          break
+      }
+    }
+
+    return result
+  }
+
+  onclose() {
+    console.debug('stream.onclose')
+    this.dispatchEvent(new CustomEvent('stream-onclose'))
+    return super.onclose()
+  }
+
+  onpcvideo(ev) {
+    console.debug('stream.onpcvideo')
+    super.onpcvideo(ev)
+
+    if (this.pcState !== WebSocket.CLOSED) {
+      this.divMode = 'RTC'
+    }
+  }
+
+  saveScreenshot() {
+    const a = document.createElement('a')
+
+    if (this.video.videoWidth && this.video.videoHeight) {
+      const canvas = document.createElement('canvas')
+      canvas.width = this.video.videoWidth
+      canvas.height = this.video.videoHeight
+      canvas.getContext('2d').drawImage(this.video, 0, 0, canvas.width, canvas.height)
+      a.href = canvas.toDataURL('image/jpeg')
+    } else if (this.video.poster && this.video.poster.startsWith('data:image/jpeg')) {
+      a.href = this.video.poster
+    } else {
+      return
+    }
+
+    const ts = new Date().toISOString().substring(0, 19).replaceAll('-', '').replaceAll(':', '')
+    a.download = `snapshot_${ts}.jpeg`
+    a.click()
+  }
+
+  pause() {
+    if (this.video && !this.video.paused) {
+      this.video.pause()
+    }
+  }
+
+  /** Stop the video stream and cleanup */
+}
+
+customElements.define('video-stream', VideoStream)

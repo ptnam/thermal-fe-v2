@@ -1,0 +1,292 @@
+<template>
+  <FormWrapper
+      :form-model="formModel"
+      :form-props="{ labelWidth: 'auto', rules: formRules }"
+      :request-fn="isEditing ? editMachineApi : addMachineApi"
+      :isEditing="isEditing"
+      @success="handleSuccess"
+  >
+    <template v-slot="{ formErrors }">
+      <el-card>
+        <template #header>
+          <div class="card-header">
+            <span class="font-bold">Thông tin thiết bị</span>
+          </div>
+        </template>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="Khu vực" prop="areaId" :error="formErrors.AreaId">
+              <tree-select-remote
+                  v-model="formModel.areaId"
+                  :request-fn="getAllTreeAreaApi"
+                  filterable
+                  clearable
+                  @node-click="handleAreaIdClick"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item
+                v-if="formModel?.area && formModel.areaId"
+                label="Tọa độ"
+                :error="formErrors.Latitude ?? formErrors.Longitude"
+                label-width="100px"
+            >
+              <LatLngPicker
+                  v-if="formModel?.area?.mapType === MAP_TYPE_MAP"
+                  :map-config="formModel"
+                  @input="setCoordinate"
+              />
+              <lat-lng-image-picker
+                  v-if="formModel?.area?.mapType === MAP_TYPE_PICTURE"
+                  :image-path="formModel?.area?.photoPath"
+                  :map-config="formModel"
+                  @input="setCoordinate"
+              />
+              <p v-if="formModel.longitude && formModel.latitude" class="m-0 whitespace-nowrap">
+                <span class="font-bold">Kinh độ:</span> {{ formModel.longitude }},
+                <span class="font-bold">Vĩ độ:</span> {{ formModel.latitude }}
+              </p>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item label="Mã thiết bị" prop="code" :error="formErrors.Code">
+              <el-input v-model="formModel.code"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item
+                label="Tên thiết bị"
+                prop="code"
+                :error="formErrors.Name"
+                label-width="100px"
+            >
+              <el-input v-model="formModel.name"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form-item
+                label="Chu kỳ lấy data (phút)"
+                prop="frequency"
+                :error="formErrors.Frequency"
+            >
+              <InputNumber v-model="formModel.frequency"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item
+                label="Loại thiết bị"
+                prop="machineTypeId"
+                :error="formErrors.MachineTypeId"
+                label-width="100px"
+            >
+              <virtualized-select-from-url
+                  v-model="formModel.machineTypeId"
+                  :request-fn="getAllMachineTypeApi"
+                  filterable
+                  value-key="id"
+                  @change="changeMachineTypeId"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="12"></el-col>
+          <el-col :span="12">
+
+            <el-form-item
+                label="Trạng thái"
+                prop="status"
+                :error="formErrors.Status"
+                label-width="100px"
+            >
+              <select-from-config
+                  key-config="commonStatusList"
+                  v-model="formModel.status"
+                  col-value="code"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-card>
+      <el-card v-if="formModel.machineTypeId && formModel.areaId" class="mt-4">
+        <remote-table
+            ref="machinePartTableRef"
+            :row-key="(row: any) => row.id"
+            :default-expand-all="true"
+            :tree-props="{ children: 'children', checkStrictly: true }"
+            :request-fn="() =>getMachinePartAllTreeApi({ machineTypeId: formModel.machineTypeId })"
+            :columns="machinePartCols"
+        />
+      </el-card>
+      <MachineSettingDialog
+          :destroy-on-close="true"
+          v-model="visibleSetting"
+          :form-model="formModel"
+          :machine-part="machinePartRow ?? {}"
+          :machine-part-id="machinePartId"
+          @cancel="()=> visibleSetting = false"
+          @save="saveMachinePart"
+      />
+    </template>
+  </FormWrapper>
+</template>
+
+<script setup lang="tsx">
+import FormWrapper from '@/components/Form/FormWrapper.vue'
+import {computed, ref} from 'vue'
+import {rule} from '@/utils/validate'
+import {isFormEditing} from '@/utils/is'
+import {FormRules, ElButton, ElTag, ElCard} from 'element-plus'
+import {addMachineApi, editMachineApi} from '@/api/machine'
+import {getAllTreeAreaApi} from '@/api/area'
+import VirtualizedSelectFromUrl from '@/components/Selection/VirtualizedSelectFromUrl.vue'
+import {getAllMachineTypeApi} from '@/api/machine-type'
+import InputNumber from '@/components/Input/InputNumber.vue'
+import {getMachinePartAllTreeApi} from '@/api/machine-part'
+import TreeSelectRemote from '@/components/Tree/TreeSelectRemote.vue'
+import LatLngPicker from '@/components/Map/LatLngPicker.vue'
+import LatLngImagePicker from '@/components/Map/LatLngImagePicker.vue'
+import {MAP_TYPE_MAP, MAP_TYPE_PICTURE} from '@/constants'
+import {Tools} from "@element-plus/icons-vue";
+import 'element-tree-line/dist/style.css'
+import MachineSettingDialog from "@/views/category/machine/components/MachineSettingDialog.vue";
+import RemoteTable from "@/components/Table/RemoteTable.vue";
+import SelectFromConfig from "@/components/Selection/SelectFromConfig.vue";
+
+const machinePartTableRef = ref<InstanceType<typeof RemoteTable>>()
+
+const visibleSetting = ref(false)
+
+const props = defineProps({
+  formModel: {
+    type: Object,
+    required: true,
+  },
+})
+const renderCameraPointTags = (cameraPoints: any) => {
+  return (
+      <>
+        {cameraPoints.map((item, index) => (
+            <ElTag
+                key={index}
+                effect={item.comparationModeObjectList ? 'dark' : 'plain'}
+                type={item.comparationModeObjectList ? 'success' : 'danger'}
+            >
+              {item?.name}
+            </ElTag>
+        ))}
+      </>
+  );
+};
+
+const machinePartCols = [
+  {prop: 'name', label: 'Tên bộ phận'},
+  {
+    prop: 'machineType.name',
+    label: 'Điểm giám sát',
+    slots: {
+      default: (scope: any) => (
+          <div class="flex flex-wrap gap-2">
+            {
+              props.formModel?.dictMachineParts?.[scope.row.id]?.machineComponents?.map((machineComponent: any) => (
+                  <ElCard
+                      key={machineComponent.id}
+                      class="w-fit"
+                      shadow="hover"
+                      headerClass="!p-1 text-center font-medium"
+                      bodyClass="!p-2"
+                  >
+                    {{
+                      header: () => <>{machineComponent.name}</>,
+                      default: () => (
+                          <div class="flex flex-wrap gap-2">
+                            {renderCameraPointTags(machineComponent?.machineMonitorCameraPoints ?? [])}
+                            {renderCameraPointTags(machineComponent?.machineMonitorSensorPoints ?? [])}
+                          </div>
+                      )
+                    }}
+                  </ElCard>
+              ))
+            }
+          </div>
+      ),
+    },
+  },
+  {
+    width: '80px',
+    slots: {
+      default: (scope: any) => (
+          <div>
+            <ElButton
+                onClick={() => openMachineSetting(scope.row)}
+                icon={Tools}
+            ></ElButton>
+          </div>
+      ),
+    },
+  },
+]
+
+const machinePartId = ref(0)
+let machinePartRow = null
+const openMachineSetting = (row: any) => {
+  machinePartId.value = row.id ?? 0
+  machinePartRow = row
+  visibleSetting.value = true
+}
+
+const saveMachinePart = (machineComponents: any, closeSetting = false) => {
+  const form = props.formModel
+  form.dictMachineParts[machinePartId.value] = {
+    ...machinePartRow ?? {},
+    machineTypeId: props.formModel.machineTypeId,
+    machineComponents: machineComponents
+  }
+  emits('update:formModel', form)
+  if (closeSetting) {
+    visibleSetting.value = false
+  }
+}
+
+const isEditing = computed(() => {
+  return isFormEditing(props.formModel)
+})
+
+const formRules = computed<FormRules>(() => {
+  const rules: FormRules = {
+    areaId: [rule('required', true)],
+    machineTypeId: [rule('required', true)],
+    name: [rule('required', true)],
+    code: [rule('required', true)],
+    frequency: [rule('required', true)],
+  }
+
+  return rules
+})
+
+const emits = defineEmits(['update:formModel', 'success'])
+const handleSuccess = (data: any) => {
+  emits('success', data)
+}
+
+const changeMachineTypeId = () => {
+  machinePartTableRef?.value?.fetch()
+}
+const handleAreaIdClick = (area: any) => {
+  const form = {...props.formModel, ...{area: area, areaId: area.id}}
+  emits('update:formModel', form)
+}
+
+const updateFormModel = (node: any) => {
+  emits('update:formModel', {...props.formModel, ...node})
+}
+const setCoordinate = (coordinate: any) => {
+  updateFormModel(coordinate)
+}
+</script>

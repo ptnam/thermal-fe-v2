@@ -1,0 +1,77 @@
+<template>
+  <el-form
+    ref="refForm"
+    label-position="left"
+    :model="props.formModel"
+    :validate-on-rule-change="false"
+    require-asterisk-position="right"
+    v-bind="props.formProps"
+  >
+    <div class="mt-2">
+      <slot :formErrors="formErrors" />
+    </div>
+    <slot name="button">
+      <div class="mt-4 w-full text-center">
+        <cancel-button @click="triggerCancel"></cancel-button>
+        <save-button :loading="loading" @click="submitForm"></save-button>
+      </div>
+    </slot>
+  </el-form>
+</template>
+
+<script lang="ts" setup>
+import { useFormRequest } from '@/hooks/web/useFormRequest'
+import { ElMessage, FormInstance } from 'element-plus'
+import { ref } from 'vue'
+import SaveButton from '@/components/Button/SaveButton.vue'
+import { inject } from 'vue'
+import CancelButton from '@/components/Button/CancelButton.vue'
+
+const injectedCancelDialog = inject<() => void>('cancelDialog')
+
+function triggerCancel() {
+  if (injectedCancelDialog) {
+    injectedCancelDialog()
+  }
+}
+
+const props = defineProps<{
+  formModel: Record<string, any>
+  formProps?: Partial<FormInstance>
+  requestFn: (...args: any[]) => Promise<any>
+  transformFormData?: Function
+  isEditing?: boolean
+}>()
+
+const emits = defineEmits(['success'])
+const refForm = ref<FormInstance>()
+const { formErrors, submit, loading, clearErrors, setErrors } = useFormRequest()
+
+const submitForm = async () => {
+  const valid = await refForm?.value?.validate()
+  if (valid) {
+    const formData = props.transformFormData
+      ? props.transformFormData(JSON.parse(JSON.stringify(props.formModel)))
+      : props.formModel
+    const args = props.isEditing ? [props.formModel.id, formData] : [formData]
+    const { success, data } = await submit(props.requestFn, ...args)
+    if (success) {
+      ElMessage({
+        message: 'Lưu thành công!',
+        type: 'success',
+      })
+      emits('success', data)
+    }
+  }
+}
+
+defineExpose({
+  loading,
+  formErrors,
+  submit,
+  clearErrors,
+  setErrors,
+  submitForm,
+  triggerCancel
+})
+</script>

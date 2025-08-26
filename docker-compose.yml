@@ -1,0 +1,10 @@
+services:
+  node-sever:
+    image: node:22.14.0-alpine
+    working_dir: /app
+    container_name: ${CONTAINER_NAME}
+    restart: "no"
+    tty: true
+    volumes:
+      - .:/app
+    network_mode: "host"
