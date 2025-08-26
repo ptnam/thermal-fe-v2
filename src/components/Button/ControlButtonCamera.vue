@@ -79,7 +79,7 @@ const props = defineProps({
 
 const speed = ref(3);
 
-const {onRequest, isLoading} = useRequest();
+const {onRequest} = useRequest();
 const requestCommand = (command: number) => {
   onRequest(sendCommandCameraApi, {
     cameraId: props.formModel.id,
