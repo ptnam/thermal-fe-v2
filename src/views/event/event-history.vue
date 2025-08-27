@@ -154,8 +154,7 @@ onMounted(() => {
   createSignalRConnection()
   startSignalR()
   onSignalREvent('exportCompleted', function (jobId: any) {
-    debugger
-    downloadByPathApi(`/api/download/${jobId}`).then((res) => {
+    downloadByPathApi(`/api/Export/download/${jobId}`).then((res) => {
       downloadFile(res)
     })
   })
