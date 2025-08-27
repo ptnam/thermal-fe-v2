@@ -122,8 +122,6 @@ onUnmounted(() => {
 const { onRequest: requestExport, isLoading: isLoadingExport } = useRequest()
 const exportFile = (searchParams: any) => {
   requestExport(notificationExportApi, searchParams).then((res) => {
-    debugger
-    console.log(res.jobId)
     invokeSignalR('RegisterJob', res.jobId)
     ElMessage.success('File sẽ tự động download sau khi đã xuất xong')
   })
