@@ -1,7 +1,7 @@
 <script setup lang="tsx">
 import ListTemplate from '@/components/PageTemplate/List/ListTemplate.vue'
 import PageContainer from '@/components/PageContainer.vue'
-import { nextTick, onMounted, ref } from 'vue'
+import { nextTick, onMounted, onUnmounted, ref } from 'vue'
 import { getAllTreeAreaApi } from '@/api/area'
 import VirtualizedSelectFromUrl from '@/components/Selection/VirtualizedSelectFromUrl.vue'
 import SearchButton from '@/components/Button/SearchButton.vue'
@@ -21,6 +21,7 @@ import {
   invokeSignalR,
   onSignalREvent,
   startSignalR,
+  stopSignalR,
 } from '@/plugins/signalr'
 import { downloadByPathApi } from '@/api/common'
 import { downloadFile } from '@/utils/response'
@@ -160,11 +161,15 @@ onMounted(() => {
   })
 })
 
+onUnmounted(() => {
+  stopSignalR()
+})
+
 const { onRequest, isLoading } = useRequest()
 const exportFile = (searchParams: any) => {
   onRequest(thermalExportApi, searchParams).then((res) => {
     debugger
-    console.log( res.jobId)
+    console.log(res.jobId)
     invokeSignalR('RegisterJob', res.jobId)
     ElMessage.success('File sẽ tự động download sau khi đã xuất xong')
   })

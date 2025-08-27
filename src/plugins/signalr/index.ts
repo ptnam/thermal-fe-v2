@@ -27,6 +27,18 @@ export const startSignalR = async () => {
     }
 }
 
+export const stopSignalR = async () => {
+  if (!connection) return
+  try {
+    if (connection.state !== signalR.HubConnectionState.Disconnected) {
+      await connection.stop()
+      console.log('SignalR Disconnected.')
+    }
+  } catch (err) {
+    console.error('SignalR Disconnection Error:', err)
+  }
+}
+
 export async function invokeSignalR(methodName: string, ...args: any[]): Promise<any> {
     if (!connection) throw new Error('SignalR connection not initialized.')
     try {

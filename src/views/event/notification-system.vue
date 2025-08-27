@@ -2,7 +2,7 @@
 import ListTemplate from '@/components/PageTemplate/List/ListTemplate.vue'
 import { TableColumn } from '@/components/Table'
 import PageContainer from '@/components/PageContainer.vue'
-import { computed, nextTick, onMounted, ref } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue'
 import { getAllTreeAreaApi } from '@/api/area'
 import TreeSelectRemote from '@/components/Tree/TreeSelectRemote.vue'
 import SelectFromConfig from '@/components/Selection/SelectFromConfig.vue'
@@ -28,6 +28,7 @@ import {
   invokeSignalR,
   onSignalREvent,
   startSignalR,
+  stopSignalR,
 } from '@/plugins/signalr'
 import { downloadByPathApi } from '@/api/common'
 import { downloadFile } from '@/utils/response'
@@ -114,11 +115,15 @@ onMounted(() => {
     })
   })
 })
+
+onUnmounted(() => {
+  stopSignalR()
+})
 const { onRequest: requestExport, isLoading: isLoadingExport } = useRequest()
 const exportFile = (searchParams: any) => {
   requestExport(notificationExportApi, searchParams).then((res) => {
     debugger
-    console.log( res.jobId)
+    console.log(res.jobId)
     invokeSignalR('RegisterJob', res.jobId)
     ElMessage.success('File sẽ tự động download sau khi đã xuất xong')
   })
