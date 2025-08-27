@@ -1,37 +1,44 @@
 <script setup lang="tsx">
 import ListTemplate from '@/components/PageTemplate/List/ListTemplate.vue'
-import {TableColumn} from '@/components/Table'
+import { TableColumn } from '@/components/Table'
 import PageContainer from '@/components/PageContainer.vue'
-import {computed, nextTick, ref} from 'vue'
-import {getAllTreeAreaApi} from '@/api/area'
+import { computed, nextTick, onMounted, ref } from 'vue'
+import { getAllTreeAreaApi } from '@/api/area'
 import TreeSelectRemote from '@/components/Tree/TreeSelectRemote.vue'
 import SelectFromConfig from '@/components/Selection/SelectFromConfig.vue'
-import {ElButton, ElMessage} from 'element-plus'
-import {Select, View} from '@element-plus/icons-vue'
-import {useConfirmModal} from '@/hooks/web/useModal'
+import { ElButton, ElMessage } from 'element-plus'
+import { Select, View } from '@element-plus/icons-vue'
+import { useConfirmModal } from '@/hooks/web/useModal'
 import {
   listNotificationApi,
   notificationDetailApi,
   notificationExportApi,
-  updateNotificationStatusApi
-} from "@/api/notification";
-import {getAllMachineApi} from "@/api/machine";
-import VirtualizedSelectFromUrl from "@/components/Selection/VirtualizedSelectFromUrl.vue";
+  updateNotificationStatusApi,
+} from '@/api/notification'
+import { getAllMachineApi } from '@/api/machine'
+import VirtualizedSelectFromUrl from '@/components/Selection/VirtualizedSelectFromUrl.vue'
 import dayjs from 'dayjs'
-import BaseDialog from "@/components/Dialog/BaseDialog.vue";
-import NotificationFormDetail from "@/views/event/components/NotificationFormDetail.vue";
-import useRequest from "@/hooks/web/useRequest";
-import SearchButton from "@/components/Button/SearchButton.vue";
-import ExportButton from "@/components/Button/ExportButton.vue";
+import BaseDialog from '@/components/Dialog/BaseDialog.vue'
+import NotificationFormDetail from '@/views/event/components/NotificationFormDetail.vue'
+import useRequest from '@/hooks/web/useRequest'
+import SearchButton from '@/components/Button/SearchButton.vue'
+import ExportButton from '@/components/Button/ExportButton.vue'
+import {
+  createSignalRConnection,
+  invokeSignalR,
+  onSignalREvent,
+  startSignalR,
+} from '@/plugins/signalr'
+import { downloadByPathApi } from '@/api/common'
+import { downloadFile } from '@/utils/response'
 
-
-const {confirmModal} = useConfirmModal()
+const { confirmModal } = useConfirmModal()
 
 const changeStatus = (row: any) => {
   confirmModal('Cập nhật trạng thái', 'Bạn có chắc muốn cập nhật trạng thái đã xử lý?', () => {
     updateNotificationStatusApi(row.id, {
       status: row.statusObject.code === 'Pending' ? 2 : 1,
-      dataTime: row.dataTime
+      dataTime: row.dataTime,
     }).then(() => {
       elTableRef?.value?.refresh()
     })
@@ -45,37 +52,33 @@ const columns = computed<TableColumn[]>(() => [
   {
     width: '120px',
     slots: {
-      default: ({row}) => (
-          <div>
-            <ElButton
-                type={typeStatus[row?.statusObject?.code]}
-                circle
-                onClick={() => changeStatus(row)}
-                icon={Select}
-            ></ElButton>
-            <ElButton
-                circle
-                onClick={() => openDetail(row)}
-                icon={View}
-            ></ElButton>
-          </div>
+      default: ({ row }) => (
+        <div>
+          <ElButton
+            type={typeStatus[row?.statusObject?.code]}
+            circle
+            onClick={() => changeStatus(row)}
+            icon={Select}
+          ></ElButton>
+          <ElButton circle onClick={() => openDetail(row)} icon={View}></ElButton>
+        </div>
       ),
     },
   },
-  {prop: 'dateData', label: 'Ngày', width: 120},
-  {prop: 'timeData', label: 'Giờ'},
-  {prop: 'areaName', label: 'Khu vực'},
-  {prop: 'machineName', label: 'Thiết bị'},
-  {prop: 'machineComponentName', label: 'Bộ phận'},
-  {prop: 'monitorPointCode', label: 'Điểm nhiệt'},
-  {prop: 'componentValue', label: 'Nhiệt độ'},
-  {prop: 'compareTypeObject.name', label: 'Kiểu cảnh báo'},
-  {prop: 'warningEventName', label: 'Loại cảnh báo'},
-  {prop: 'compareValue', label: 'Nhiệt độ so sánh'},
-  {prop: 'deltaValue', label: 'Chênh lệch'},
-  {prop: 'compareResultObject.name', label: 'Đánh giá'},
-  {prop: 'statusObject.name', label: 'Trạng thái'},
-  {prop: 'resolveTime', label: 'Thời gian xử lý'},
+  { prop: 'dateData', label: 'Ngày', width: 120 },
+  { prop: 'timeData', label: 'Giờ' },
+  { prop: 'areaName', label: 'Khu vực' },
+  { prop: 'machineName', label: 'Thiết bị' },
+  { prop: 'machineComponentName', label: 'Bộ phận' },
+  { prop: 'monitorPointCode', label: 'Điểm nhiệt' },
+  { prop: 'componentValue', label: 'Nhiệt độ' },
+  { prop: 'compareTypeObject.name', label: 'Kiểu cảnh báo' },
+  { prop: 'warningEventName', label: 'Loại cảnh báo' },
+  { prop: 'compareValue', label: 'Nhiệt độ so sánh' },
+  { prop: 'deltaValue', label: 'Chênh lệch' },
+  { prop: 'compareResultObject.name', label: 'Đánh giá' },
+  { prop: 'statusObject.name', label: 'Trạng thái' },
+  { prop: 'resolveTime', label: 'Thời gian xử lý' },
 ])
 
 const machineRef = ref<InstanceType<typeof VirtualizedSelectFromUrl>>()
@@ -91,20 +94,31 @@ const formModel = ref<any>({
   id: null,
   compareResultObject: {},
   compareTypeObject: {},
-  statusObject: {}
+  statusObject: {},
 })
-const {onRequest, isLoading} = useRequest();
+const { onRequest, isLoading } = useRequest()
 
 const detailVisible = ref(false)
 const openDetail = (row: any) => {
   detailVisible.value = true
-  onRequest(notificationDetailApi, {id: row.id, dataTime: row.dataTime}).then(res => {
+  onRequest(notificationDetailApi, { id: row.id, dataTime: row.dataTime }).then((res) => {
     formModel.value = res.data
   })
 }
-const {onRequest: requestExport, isLoading: isLoadingExport} = useRequest()
+onMounted(() => {
+  createSignalRConnection()
+  startSignalR()
+  onSignalREvent('exportCompleted', function (jobId: any) {
+    debugger
+    downloadByPathApi(`/api/download/${jobId}`).then((res) => {
+      downloadFile(res)
+    })
+  })
+})
+const { onRequest: requestExport, isLoading: isLoadingExport } = useRequest()
 const exportFile = (searchParams: any) => {
-  requestExport(notificationExportApi, searchParams).then(_res => {
+  requestExport(notificationExportApi, searchParams).then((res) => {
+    invokeSignalR('RegisterJob', res.jobId)
     ElMessage.success('File sẽ tự động download sau khi đã xuất xong')
   })
 }
@@ -113,14 +127,14 @@ const exportFile = (searchParams: any) => {
 <template>
   <page-container title="Cảnh báo nhiệt độ vượt ngưỡng">
     <list-template
-        ref="elTableRef"
-        :columns="columns"
-        :search-props="{ visibleSearchButton: false, inline: false }"
-        :use-table-config="{
+      ref="elTableRef"
+      :columns="columns"
+      :search-props="{ visibleSearchButton: false, inline: false }"
+      :use-table-config="{
         fetchDataApi: listNotificationApi,
         searchDefaults: {
-          fromTime:  dayjs().subtract(7, 'day').format('YYYY-MM-DD 00:00:00'),
-        }
+          fromTime: dayjs().subtract(7, 'day').format('YYYY-MM-DD 00:00:00'),
+        },
       }"
     >
       <template v-slot:top><span></span></template>
@@ -129,68 +143,68 @@ const exportFile = (searchParams: any) => {
           <el-col :span="8">
             <el-form-item label="Thời gian từ">
               <el-date-picker
-                  v-model="searchParams.fromTime"
-                  type="datetime"
-                  placeholder="Thời gian bắt đầu"
-                  value-format="YYYY-MM-DD HH:mm:ss"
-                  class="!w-[-webkit-fill-available]"
+                v-model="searchParams.fromTime"
+                type="datetime"
+                placeholder="Thời gian bắt đầu"
+                value-format="YYYY-MM-DD HH:mm:ss"
+                class="!w-[-webkit-fill-available]"
               />
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="Thời gian đến">
               <el-date-picker
-                  v-model="searchParams.toTime"
-                  type="datetime"
-                  placeholder="Thời gian kết thúc"
-                  value-format="YYYY-MM-DD HH:mm:ss"
-                  class="!w-[-webkit-fill-available]"
+                v-model="searchParams.toTime"
+                type="datetime"
+                placeholder="Thời gian kết thúc"
+                value-format="YYYY-MM-DD HH:mm:ss"
+                class="!w-[-webkit-fill-available]"
               />
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="Khu vực">
               <tree-select-remote
-                  v-model="searchParams.areaId"
-                  :request-fn="getAllTreeAreaApi"
-                  filterable
-                  clearable
-                  @change="() => changeAreaId(searchParams)"
+                v-model="searchParams.areaId"
+                :request-fn="getAllTreeAreaApi"
+                filterable
+                clearable
+                @change="() => changeAreaId(searchParams)"
               />
             </el-form-item>
           </el-col>
           <el-col :span="8" v-if="searchParams.areaId">
             <el-form-item label="Thiết bị">
               <virtualized-select-from-url
-                  ref="machineRef"
-                  v-model="searchParams.machineId"
-                  :request-fn="() => getAllMachineApi({areaId:searchParams.areaId})"
-                  filterable
-                  value-key="id"
-                  clearable
+                ref="machineRef"
+                v-model="searchParams.machineId"
+                :request-fn="() => getAllMachineApi({ areaId: searchParams.areaId })"
+                filterable
+                value-key="id"
+                clearable
               />
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="Trạng thái xử lý">
               <select-from-config
-                  key-config="notificationStatusList"
-                  v-model="searchParams.notificationStatus"
-                  clearable
+                key-config="notificationStatusList"
+                v-model="searchParams.notificationStatus"
+                clearable
               />
             </el-form-item>
           </el-col>
         </el-row>
         <div class="flex justify-center">
-          <search-button @click="elTableRef?.refresh()"/>
-          <export-button @click="() => exportFile(searchParams)" :loading="isLoading"/>
+          <search-button @click="elTableRef?.refresh()" />
+          <export-button @click="() => exportFile(searchParams)" :loading="isLoading" />
         </div>
       </template>
     </list-template>
     <base-dialog class="!w-auto" v-model="detailVisible" v-loading="isLoadingExport">
       <notification-form-detail
-          :form-model="formModel"
-          @update-status="() =>   elTableRef?.refresh()"
+        :form-model="formModel"
+        @update-status="() => elTableRef?.refresh()"
       />
     </base-dialog>
   </page-container>

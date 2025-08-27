@@ -14,9 +14,6 @@ const messaging = firebase.messaging()
 
 messaging.onBackgroundMessage((payload) => {
     const notificationTitle = payload.notification?.title ?? 'New message'
-    if( payload.data?.type === "export_data") {
-        return;
-    }
     const notificationOptions = {
         body: payload.notification?.body,
         icon: '/favicon.ico',

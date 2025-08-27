@@ -1,7 +1,7 @@
 <script setup lang="tsx">
 import ListTemplate from '@/components/PageTemplate/List/ListTemplate.vue'
 import PageContainer from '@/components/PageContainer.vue'
-import { nextTick, ref } from 'vue'
+import { nextTick, onMounted, ref } from 'vue'
 import { getAllTreeAreaApi } from '@/api/area'
 import VirtualizedSelectFromUrl from '@/components/Selection/VirtualizedSelectFromUrl.vue'
 import SearchButton from '@/components/Button/SearchButton.vue'
@@ -15,7 +15,15 @@ import InputNumber from '@/components/Input/InputNumber.vue'
 import useRequest from '@/hooks/web/useRequest'
 import { STATUS_COLOR_MAP } from '@/constants'
 import _ from 'lodash'
-import {ElMessage} from "element-plus";
+import { ElMessage } from 'element-plus'
+import {
+  createSignalRConnection,
+  invokeSignalR,
+  onSignalREvent,
+  startSignalR,
+} from '@/plugins/signalr'
+import { downloadByPathApi } from '@/api/common'
+import { downloadFile } from '@/utils/response'
 
 const defaultCols = [
   { prop: 'dateData', label: 'Ngày', width: 160, align: 'center' },
@@ -142,9 +150,21 @@ const machineChange = (searchParams: any) => {
   machineComponentRef?.value?.fetch()
 }
 
+onMounted(() => {
+  createSignalRConnection()
+  startSignalR()
+  onSignalREvent('exportCompleted', function (jobId: any) {
+    debugger
+    downloadByPathApi(`/api/download/${jobId}`).then((res) => {
+      downloadFile(res)
+    })
+  })
+})
+
 const { onRequest, isLoading } = useRequest()
 const exportFile = (searchParams: any) => {
-  onRequest(thermalExportApi, searchParams).then(_res => {
+  onRequest(thermalExportApi, searchParams).then((res) => {
+    invokeSignalR('RegisterJob', res.jobId)
     ElMessage.success('File sẽ tự động download sau khi đã xuất xong')
   })
 }

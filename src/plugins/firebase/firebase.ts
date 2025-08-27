@@ -6,9 +6,6 @@ import {
     Messaging,
 } from 'firebase/messaging'
 import {saveFirebaseTokenApi} from '@/api/user'
-import {downloadByPathApi} from "@/api/common";
-import {downloadFile} from "@/utils/response";
-import {ElMessage} from "element-plus";
 
 // Firebase config
 const firebaseConfig = {
@@ -87,13 +84,6 @@ export function setupFcmListener(): void {
           console.warn('📭 Notification permission denied.')
           return
         }
-      }
-      if( payload.data?.type === "export_data" && payload.data.url) {
-          ElMessage.success(title)
-          downloadByPathApi(payload.data.url).then(res => {
-              downloadFile(res)
-          })
-          return;
       }
       const notification = new Notification(title, {
         body,
