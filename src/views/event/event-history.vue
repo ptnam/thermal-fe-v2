@@ -163,6 +163,8 @@ onMounted(() => {
 const { onRequest, isLoading } = useRequest()
 const exportFile = (searchParams: any) => {
   onRequest(thermalExportApi, searchParams).then((res) => {
+    debugger
+    console.log( res.jobId)
     invokeSignalR('RegisterJob', res.jobId)
     ElMessage.success('File sẽ tự động download sau khi đã xuất xong')
   })
