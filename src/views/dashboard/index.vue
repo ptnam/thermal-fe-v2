@@ -5,29 +5,29 @@
       <div class="md:col-span-8 col-span-12">
         <div style="height: 80vh">
           <LeafletMap
-              ref="leafletMapRef"
-              :key="itemKey"
-              :photo-path="areaItem.photoPath"
-              :map-type="areaItem.mapType"
-              :zoom="areaItem.zoom"
-              :latitude="areaItem.latitude"
-              :longitude="areaItem.longitude"
+            ref="leafletMapRef"
+            :key="itemKey"
+            :photo-path="areaItem.photoPath"
+            :map-type="areaItem.mapType"
+            :zoom="areaItem.zoom"
+            :latitude="areaItem.latitude"
+            :longitude="areaItem.longitude"
           >
             <live-marker
-                v-for="marker in liveMarkers"
-                :key="marker.updateAt"
-                :lat-lng="[marker.latitude, marker.longitude]"
-                @click="() => showMarkerInfo(marker)"
-                v-bind="getIconPaths(marker)"
-                @mouseover="() => markerHover(marker)"
+              v-for="marker in liveMarkers"
+              :key="marker.updateAt"
+              :lat-lng="[marker.latitude, marker.longitude]"
+              @click="() => showMarkerInfo(marker)"
+              v-bind="getIconPaths(marker)"
+              @mouseover="() => markerHover(marker)"
             >
               <l-tooltip permanent :key="marker.updateAt">
                 <div class="card">
                   <TooltipInfo
-                      :key="marker.updateAt"
-                      :marker="marker"
-                      :liveTemperature="liveTemperatureMap[marker.key]"
-                      :thermalInfo="thermalInfoMap[marker.id]"
+                    :key="marker.updateAt"
+                    :marker="marker"
+                    :liveTemperature="liveTemperatureMap[marker.key]"
+                    :thermalInfo="thermalInfoMap[marker.id]"
                   />
                 </div>
               </l-tooltip>
@@ -38,21 +38,18 @@
       <div class="md:col-span-2 col-span-12 px-0.5">
         <el-scrollbar>
           <area-tree
-              :request-fn="getAllTreeAreaApi"
-              @node-click="handleNodeClick"
-              :default-expand-all="true"
-              :check-strictly="true"
-              :highlight-current="false"
-              show-line
+            :request-fn="getAllTreeAreaApi"
+            @node-click="handleNodeClick"
+            :default-expand-all="true"
+            :check-strictly="true"
+            :highlight-current="false"
+            show-line
           />
         </el-scrollbar>
       </div>
       <base-dialog v-model="visibleThermalDetail" :close-on-click-modal="true">
         <div class="mt-4" v-loading="loadingThermalData">
-          <thermal-data
-              :marker="selectedComponent"
-              :thermalInfo="selectedThermalData"
-          >
+          <thermal-data :marker="selectedComponent" :thermalInfo="selectedThermalData">
           </thermal-data>
         </div>
       </base-dialog>
@@ -62,32 +59,37 @@
 
 <script setup lang="ts">
 import 'leaflet/dist/leaflet.css'
-import {nextTick, onMounted, ref} from 'vue'
+import { nextTick, onMounted, onUnmounted, ref } from 'vue'
 import PageContainer from '@/components/PageContainer.vue'
-import {useLang} from '@/hooks/web/useI18n.js'
-import {getAllTreeAreaApi} from '@/api/area'
-import {MAP_TYPE_MAP, MAP_TYPE_PICTURE} from '@/constants'
+import { useLang } from '@/hooks/web/useI18n.js'
+import { getAllTreeAreaApi } from '@/api/area'
+import { MAP_TYPE_MAP, MAP_TYPE_PICTURE } from '@/constants'
 import LeafletMap from '@/views/dashboard/components/LeafletMap.vue'
 import AreaTree from '@/components/Tree/AreaTree.vue'
 import LiveMarker from '@/components/Map/LiveMarker.vue'
-import {LTooltip} from '@vue-leaflet/vue-leaflet'
+import { LTooltip } from '@vue-leaflet/vue-leaflet'
 import {
   createSignalRConnection,
   startSignalR,
   invokeSignalR,
   onSignalREvent,
+  stopSignalR,
 } from '@/plugins/signalr'
 import ThermalData from '@/views/dashboard/components/ThermalData.vue'
 import TooltipInfo from '@/views/dashboard/components/TooltipInfo.vue'
-import { machinesAndResultByAreaApi, realTimeThermalDataApi, thermalByComponentApi } from '@/api/thermal-data'
-import BaseDialog from "@/components/Dialog/BaseDialog.vue";
-import _ from 'lodash';
+import {
+  machinesAndResultByAreaApi,
+  realTimeThermalDataApi,
+  thermalByComponentApi,
+} from '@/api/thermal-data'
+import BaseDialog from '@/components/Dialog/BaseDialog.vue'
+import _ from 'lodash'
 
 onMounted(() => {
   createSignalRConnection()
   startSignalR()
   onSignalREvent('newThermalData', function (thermalData: any) {
-    liveTemperatureMap.value = {...liveTemperatureMap.value, ...thermalData}
+    liveTemperatureMap.value = { ...liveTemperatureMap.value, ...thermalData }
     liveMarkers.value = liveMarkers.value.map(function (item, index) {
       return {
         ...item,
@@ -96,7 +98,12 @@ onMounted(() => {
     })
   })
 })
-const {t} = useLang()
+
+onUnmounted(() => {
+  stopSignalR()
+})
+
+const { t } = useLang()
 const areaItem = ref({
   mapType: MAP_TYPE_MAP,
   zoom: 8,
@@ -112,19 +119,19 @@ const goodSensorUrl = new URL('@/assets/map/good-sensor.svg', import.meta.url).h
 const badSensorUrl = new URL('@/assets/map/bad-sensor.svg', import.meta.url).href
 
 const mapIcon = {
-  'Sensor': {
-    good: {iconPath: goodSensorUrl, isBlink: false,},
-    bad: {iconPath: badSensorUrl, isBlink: true,}
+  Sensor: {
+    good: { iconPath: goodSensorUrl, isBlink: false },
+    bad: { iconPath: badSensorUrl, isBlink: true },
   },
-  'Machine': {
-    good: {iconPath: goodCamUrl, isBlink: false,},
-    bad: {iconPath: badCamUrl, isBlink: true,}
+  Machine: {
+    good: { iconPath: goodCamUrl, isBlink: false },
+    bad: { iconPath: badCamUrl, isBlink: true },
   },
-  'Component': {
-    good: {iconPath: goodCamUrl, isBlink: false,},
-    bad: {iconPath: badCamUrl, isBlink: true,}
-  }
-};
+  Component: {
+    good: { iconPath: goodCamUrl, isBlink: false },
+    bad: { iconPath: badCamUrl, isBlink: true },
+  },
+}
 const getIconPaths = (mark: any) => {
   const level = liveTemperatureMap.value[mark.key]?.level
   const icon = mapIcon[mark.deviceType]
@@ -155,18 +162,18 @@ const handleNodeClick = (item: any) => {
 }
 
 const loadThermalData = (areaId: number, invokeSignal = true) => {
-  machinesAndResultByAreaApi({areaId: areaId}).then((res) => {
+  machinesAndResultByAreaApi({ areaId: areaId }).then((res) => {
     const components: any[] = res.data
     nextTick(() => {
       if (invokeSignal) {
         const machineIds: string[] = [
           ...new Set(
-              components.map((item) => item.machineId).filter((val): val is string => !!val),
+            components.map((item) => item.machineId).filter((val): val is string => !!val),
           ),
         ]
         invokeSignalR('RegisterMachines', machineIds)
       }
-      liveTemperatureMap.value = _.keyBy(components, 'key');
+      liveTemperatureMap.value = _.keyBy(components, 'key')
       liveMarkers.value = components.map(function (item, index) {
         return {
           ...item,
@@ -183,8 +190,8 @@ const selectedThermalData = ref<any[]>([])
 const loadingThermalData = ref(false)
 const visibleThermalDetail = ref(false)
 const showMarkerInfo = (marker: any) => {
-  if (marker.deviceType ==='Sensor') {
-    return;
+  if (marker.deviceType === 'Sensor') {
+    return
   }
   visibleThermalDetail.value = true
   selectedComponentId.value = marker.id
@@ -193,20 +200,22 @@ const showMarkerInfo = (marker: any) => {
   thermalByComponentApi({
     machineId: marker.machineId,
     id: marker.id,
-    deviceType: marker.deviceType
-  }).then(res => {
-    selectedThermalData.value = res.data
-  }).finally(() => {
-    loadingThermalData.value = false
+    deviceType: marker.deviceType,
   })
+    .then((res) => {
+      selectedThermalData.value = res.data
+    })
+    .finally(() => {
+      loadingThermalData.value = false
+    })
 }
 
 const markerHover = (marker: any) => {
   realTimeThermalDataApi({
     machineId: marker.machineId,
     id: marker.id,
-    deviceType: marker.deviceType
-  }).then(res => {
+    deviceType: marker.deviceType,
+  }).then((res) => {
     thermalInfoMap.value[marker.id] = res.data
   })
 }
