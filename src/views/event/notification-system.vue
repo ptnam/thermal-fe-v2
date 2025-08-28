@@ -112,6 +112,8 @@ onMounted(() => {
   onSignalREvent('exportCompleted', function (jobId: any) {
     downloadByPathApi(`/api/Export/download/${jobId}`).then((res) => {
       downloadFile(res)
+    }).finally(() => {
+      isExportLoading.value = false
     })
   })
 })
@@ -119,8 +121,10 @@ onMounted(() => {
 onUnmounted(() => {
   stopSignalR()
 })
-const { onRequest: requestExport, isLoading: isLoadingExport } = useRequest()
+const isExportLoading = ref(false)
+const { onRequest: requestExport } = useRequest()
 const exportFile = (searchParams: any) => {
+  isExportLoading.value = true
   requestExport(notificationExportApi, searchParams).then((res) => {
     invokeSignalR('RegisterJob', res.jobId)
     ElMessage.success('File sẽ tự động download sau khi đã xuất xong')
@@ -201,11 +205,11 @@ const exportFile = (searchParams: any) => {
         </el-row>
         <div class="flex justify-center">
           <search-button @click="elTableRef?.refresh()" />
-          <export-button @click="() => exportFile(searchParams)" :loading="isLoading" />
+          <export-button @click="() => exportFile(searchParams)" :loading="isExportLoading" />
         </div>
       </template>
     </list-template>
-    <base-dialog class="!w-auto" v-model="detailVisible" v-loading="isLoadingExport">
+    <base-dialog class="!w-auto" v-model="detailVisible">
       <notification-form-detail
         :form-model="formModel"
         @update-status="() => elTableRef?.refresh()"

@@ -157,6 +157,8 @@ onMounted(() => {
   onSignalREvent('exportCompleted', function (jobId: any) {
     downloadByPathApi(`/api/Export/download/${jobId}`).then((res) => {
       downloadFile(res)
+    }).finally(() => {
+      isExportLoading.value = false
     })
   })
 })
@@ -165,8 +167,10 @@ onUnmounted(() => {
   stopSignalR()
 })
 
-const { onRequest, isLoading } = useRequest()
+const isExportLoading = ref(false)
+const { onRequest } = useRequest()
 const exportFile = (searchParams: any) => {
+  isExportLoading.value = true
   onRequest(thermalExportApi, searchParams).then((res) => {
     invokeSignalR('RegisterJob', res.jobId)
     ElMessage.success('File sẽ tự động download sau khi đã xuất xong')
@@ -294,7 +298,7 @@ const exportFile = (searchParams: any) => {
         </el-row>
         <div class="flex justify-center">
           <search-button @click="elTableRef?.refresh()" />
-          <export-button @click="() => exportFile(searchParams)" :loading="isLoading" />
+          <export-button @click="() => exportFile(searchParams)" :loading="isExportLoading" />
         </div>
       </template>
     </list-template>
