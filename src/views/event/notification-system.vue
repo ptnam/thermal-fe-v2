@@ -209,7 +209,7 @@ const exportFile = (searchParams: any) => {
         </div>
       </template>
     </list-template>
-    <base-dialog class="!w-auto" v-model="detailVisible">
+    <base-dialog class="!w-auto" v-model="detailVisible" v-loading="isLoading">
       <notification-form-detail
         :form-model="formModel"
         @update-status="() => elTableRef?.refresh()"
