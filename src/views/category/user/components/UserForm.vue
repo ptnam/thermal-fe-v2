@@ -25,6 +25,9 @@
       <el-form-item label="Số điện thoại" prop="phone" :error="formErrors.Phone">
         <el-input v-model="formModel.phone"/>
       </el-form-item>
+      <el-form-item label="Telegram User" prop="telegramUsername" :error="formErrors.TelegramUsername">
+        <el-input v-model="formModel.telegramUsername"/>
+      </el-form-item>
       <el-form-item label="Quyền" prop="roles" :error="formErrors.Roles">
         <ObjectSelectFromUrl
             v-model="formModel.roles"

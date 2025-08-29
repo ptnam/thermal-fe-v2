@@ -5,6 +5,7 @@
       :icon="icon"
       :color="color"
       :round="round"
+      :circle="circle"
       v-bind="$attrs"
   >
   </el-button>
@@ -23,6 +24,7 @@ interface Props<T = any> {
   icon?: any
   color?: any
   round?: any
+  circle?: any
 }
 
 const props = defineProps<Props>();
