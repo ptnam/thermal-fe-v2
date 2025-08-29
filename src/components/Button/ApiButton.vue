@@ -8,6 +8,7 @@
       :circle="circle"
       v-bind="$attrs"
   >
+    <slot></slot>
   </el-button>
 </template>
 

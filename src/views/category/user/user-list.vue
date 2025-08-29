@@ -115,9 +115,9 @@ const saveSuccess = () => {
           <api-button
             :api="syncTelegramChatIdApi"
             :icon="Refresh"
-            :round="true"
-            :circle="true"
-          />
+          >
+            Đồng bộ telegram
+          </api-button>
         </el-form-item>
       </template>
 
