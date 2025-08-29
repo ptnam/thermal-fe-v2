@@ -14,6 +14,8 @@ import EditCircleButton from '@/components/Button/EditCircleButton.vue'
 import {joinFieldValues} from "@/utils/stringUtils";
 import ApiButton from '@/components/Button/ApiButton.vue'
 import { Refresh } from '@element-plus/icons-vue'
+import ExportButton from '@/components/Button/ExportButton.vue'
+import SearchButton from '@/components/Button/SearchButton.vue'
 
 const { t } = useLang()
 const renderActionColumn = (scope: any) => {
@@ -21,12 +23,6 @@ const renderActionColumn = (scope: any) => {
     <div>
       <EditCircleButton onClick={() => openDialogEdit(scope)} />
       <DeleteCircleButton onClick={() => openDelete(scope)} />
-      <ApiButton 
-        api={() => syncTelegramChatIdApi({id: scope.row.id})}
-        icon={Refresh} 
-        round={true}
-        circle
-      />
     </div>
   )
 }
@@ -46,7 +42,7 @@ const columns = computed<TableColumn[]>(() => [
   { prop: 'createdAt', width: 160, label: t('fields.created_at') },
   {
     label: t('fields.action'),
-    width: '180px',
+    width: '110px',
     slots: {
       default: renderActionColumn,
     },
@@ -94,7 +90,9 @@ const saveSuccess = () => {
         fetchDataApi: getUserListApi,
       }"
       @addHandler="openDialogAdd"
+      :search-props="{ visibleSearchButton: false }"
     >
+      <template v-slot:top><span></span></template>
       <template slot="search" v-slot="{ searchParams }">
         <el-form-item :label="t('fields.status')">
           <select-from-config
@@ -113,7 +111,17 @@ const saveSuccess = () => {
         <el-form-item label="Telegram">
           <el-input v-model="searchParams.telegramUsername" clearable style="width: 160px" />
         </el-form-item>
+        <el-form-item>
+          <search-button @click="elTableRef?.refresh()" />
+          <api-button
+            :api="syncTelegramChatIdApi"
+            :icon="Refresh"
+            :round="true"
+            :circle="true"
+          />
+        </el-form-item>
       </template>
+
     </list-template>
     <base-dialog v-model="dialogVisible" :destroy-on-close="true">
       <user-form v-model:formModel="formModel" @success="saveSuccess"></user-form>

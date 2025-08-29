@@ -20,6 +20,6 @@ export const deleteUserApi = (id: number): Promise<IResponse> => {
 export const saveFirebaseTokenApi = (data: any): Promise<IResponse> => {
   return request.post({ url: '/api/Users/userToken', data })
 }
-export const syncTelegramChatIdApi = (searchParams: object): Promise<IResponse<[]>> => {
-  return request.get({ url: '/api/Users/syncTelegramChatId', params: searchParams })
+export const syncTelegramChatIdApi = (): Promise<IResponse<[]>> => {
+  return request.post({ url: '/api/Users/syncTelegramChatId' })
 }
