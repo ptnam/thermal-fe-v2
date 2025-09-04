@@ -109,6 +109,12 @@
                 <span class="font-bold">Vĩ độ:</span> {{ formModel.latitude }}
               </p>
             </el-form-item>
+            <el-form-item label="Frequency" prop="frequency" :error="formErrors.Frequency">
+              <InputNumber v-model="formModel.frequency"/>
+            </el-form-item>
+            <el-form-item label="Slot" prop="slot" :error="formErrors.Slot">
+              <InputNumber v-model="formModel.slot"/>
+            </el-form-item>
           </el-col>
         </el-row>
       </el-card>
@@ -125,6 +131,7 @@
             <th class="px-2 py-1 text-left w-[200px]">Mã</th>
             <th class="px-2 py-1 text-left w-[200px]">Tên</th>
             <th class="px-2 py-1 text-left">Ghi chú</th>
+            <th class="px-2 py-1 text-left">Trạng thái</th>
             <th class="px-2 py-1 text-left w-[90x]"></th>
           </tr>
           </thead>
@@ -157,6 +164,19 @@
                   label-position="top"
               >
                 <el-input v-model="item.note"/>
+              </el-form-item>
+            </td>
+            <td class="px-2 py-1">
+              <el-form-item
+                  :prop="`sensorMonitorPoints.${index}.status`"
+                  :error="formErrors?.[`SensorMonitorPoints[${index}].Status`]"
+                  label-position="top"
+              >
+                <select-from-config
+                    key-config="commonStatusList"
+                    v-model="formModel.status"
+                    col-value="code"
+                />
               </el-form-item>
             </td>
             <td class="px-2 py-1">
