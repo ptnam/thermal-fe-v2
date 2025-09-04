@@ -109,10 +109,10 @@
                 <span class="font-bold">Vĩ độ:</span> {{ formModel.latitude }}
               </p>
             </el-form-item>
-            <el-form-item label="Frequency" prop="frequency" :error="formErrors.Frequency">
+            <el-form-item label="Chu kỳ lấy dữ liệu" prop="frequency" :error="formErrors.Frequency">
               <InputNumber v-model="formModel.frequency"/>
             </el-form-item>
-            <el-form-item label="Slot" prop="slot" :error="formErrors.Slot">
+            <el-form-item label="Vị trí dữ liệu" prop="slot" :error="formErrors.Slot">
               <InputNumber v-model="formModel.slot"/>
             </el-form-item>
           </el-col>
@@ -174,7 +174,7 @@
               >
                 <select-from-config
                     key-config="commonStatusList"
-                    v-model="formModel.status"
+                    v-model="item.status"
                     col-value="code"
                 />
               </el-form-item>
@@ -211,7 +211,7 @@ import AddButton from '@/components/Button/AddButton.vue'
 import {Remove} from '@element-plus/icons-vue'
 import {getAllSensorTypeApi} from '@/api/sensor-type'
 import TreeSelectRemote from '@/components/Tree/TreeSelectRemote.vue'
-import {MAP_TYPE_MAP, MAP_TYPE_PICTURE} from "@/constants";
+import {MAP_TYPE_MAP, MAP_TYPE_PICTURE, STATUS_ACTIVE} from "@/constants";
 import LatLngPicker from "@/components/Map/LatLngPicker.vue";
 import LatLngImagePicker from "@/components/Map/LatLngImagePicker.vue";
 
@@ -243,7 +243,7 @@ const handleSuccess = (data: any) => {
 
 const addSensorMonitorPoint = () => {
   const form = props.formModel
-  form.sensorMonitorPoints.push({})
+  form.sensorMonitorPoints.push({status: STATUS_ACTIVE})
   emits('update:formModel', form)
 }
 const removeSensorMonitorPoint = (index: number) => {
