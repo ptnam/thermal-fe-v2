@@ -91,6 +91,9 @@
             <el-form-item label="Port" prop="port" :error="formErrors.Port">
               <InputNumber v-model="formModel.port"/>
             </el-form-item>
+            <el-form-item label="Vị trí dữ liệu" prop="slot" :error="formErrors.Slot">
+              <InputNumber v-model="formModel.slot"/>
+            </el-form-item>
             <el-form-item
                 v-if="formModel?.area && formModel.areaId"
                 label="Tọa độ"
@@ -111,9 +114,6 @@
                 <span class="font-bold">Kinh độ:</span> {{ formModel.longitude }},
                 <span class="font-bold">Vĩ độ:</span> {{ formModel.latitude }}
               </p>
-            </el-form-item>
-            <el-form-item label="Vị trí dữ liệu" prop="slot" :error="formErrors.Slot">
-              <InputNumber v-model="formModel.slot"/>
             </el-form-item>
           </el-col>
         </el-row>
