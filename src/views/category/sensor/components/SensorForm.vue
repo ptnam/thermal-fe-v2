@@ -59,6 +59,9 @@
             >
               <el-input v-model="formModel.wanIpAddress"/>
             </el-form-item>
+            <el-form-item label="Chu kỳ lấy dữ liệu" prop="frequency" :error="formErrors.Frequency">
+              <InputNumber v-model="formModel.frequency"/>
+            </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="Tên cảm biến" prop="name" :error="formErrors.Name">
@@ -108,9 +111,6 @@
                 <span class="font-bold">Kinh độ:</span> {{ formModel.longitude }},
                 <span class="font-bold">Vĩ độ:</span> {{ formModel.latitude }}
               </p>
-            </el-form-item>
-            <el-form-item label="Chu kỳ lấy dữ liệu" prop="frequency" :error="formErrors.Frequency">
-              <InputNumber v-model="formModel.frequency"/>
             </el-form-item>
             <el-form-item label="Vị trí dữ liệu" prop="slot" :error="formErrors.Slot">
               <InputNumber v-model="formModel.slot"/>
