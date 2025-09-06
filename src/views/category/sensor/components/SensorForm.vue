@@ -62,6 +62,9 @@
             <el-form-item label="Chu kỳ lấy dữ liệu" prop="frequency" :error="formErrors.Frequency">
               <InputNumber v-model="formModel.frequency"/>
             </el-form-item>
+            <el-form-item label="Độ dài dữ liệu" prop="numberOfPoints" :error="formErrors.NumberOfPoints">
+              <InputNumber v-model="formModel.numberOfPoints"/>
+            </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="Tên cảm biến" prop="name" :error="formErrors.Name">
@@ -93,6 +96,19 @@
             </el-form-item>
             <el-form-item label="Vị trí dữ liệu" prop="slot" :error="formErrors.Slot">
               <InputNumber v-model="formModel.slot"/>
+            </el-form-item>
+            <el-form-item label="Slave ID" prop="slaveId" :error="formErrors.SlaveId">
+              <InputNumber v-model="formModel.slaveId"/>
+            </el-form-item>
+            <el-form-item
+                label="Protocol"
+                prop="protocol"
+                :error="formErrors.Protocol"
+            >
+              <select-from-config
+                  key-config="modbusProtocolList"
+                  v-model="formModel.protocol"
+              />
             </el-form-item>
             <el-form-item
                 v-if="formModel?.area && formModel.areaId"
@@ -230,6 +246,7 @@ const formRules = computed<FormRules>(() => {
   const rules: FormRules = {
     name: [rule('required', true)],
     code: [rule('required', true)],
+    wanIpAddress: [rule('required', true)],
     areaId: [rule('required', true)],
     sensorTypeId: [rule('required', true)],
     monitorType: [rule('required', true)],
