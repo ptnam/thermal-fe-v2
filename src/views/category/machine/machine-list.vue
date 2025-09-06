@@ -96,7 +96,6 @@ const exportFile = (searchParams: any) => {
         @addHandler="openDialogAdd"
         v-loading="detailLoading"
     >
-      <template v-slot:top><span></span></template>
       <template slot="search" v-slot="{ searchParams }">
         <el-form-item label="Thiết bị" label-width="90px">
           <el-input v-model="searchParams.name" clearable style="width: 200px"/>
