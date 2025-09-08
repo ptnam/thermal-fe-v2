@@ -3,6 +3,9 @@ import request from '@/plugins/axios'
 export const getAllWarningEventApi = (searchParams: object): Promise<IResponse<[]>> => {
   return request.get({ url: '/api/WarningEvents/All', params: searchParams })
 }
+export const getAllTypeWarningEventApi = (warningType: number): Promise<IResponse<[]>> => {
+  return request.get({ url: `/api/WarningEvents/All/${warningType}` })
+}
 
 export const getWarningEventListApi = (searchParams: object): Promise<IResponse<[]>> => {
   return request.get({ url: '/api/WarningEvents/list', params: searchParams })

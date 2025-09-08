@@ -1,0 +1,1 @@
+export const WARNING_TYPE_AI = 2
