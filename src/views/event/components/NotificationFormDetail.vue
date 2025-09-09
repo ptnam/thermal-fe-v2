@@ -43,7 +43,6 @@
     <el-form-item label="Cảnh báo">
       <view-input :contain="formModelValue?.warningEventName" :disabled="true" />
     </el-form-item>
-    {{formModelValue}}
     <el-form-item label="Hình ảnh">
       <el-image
         :src="formModelValue.imagePath"
