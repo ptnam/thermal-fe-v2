@@ -10,7 +10,7 @@ import dayjs from 'dayjs'
 import SearchButton from '@/components/Button/SearchButton.vue'
 import { getVisionNotificationApi } from '@/api/notification/visionNotification'
 import { getAllCamerasApi } from '@/api/camera'
-import {getAllTypeWarningEventApi, getAllWarningEventApi} from '@/api/warning-event'
+import {getAllWarningEventApi} from '@/api/warning-event'
 import { WARNING_TYPE_AI } from '@/constants/warningType'
 import { ElImage } from 'element-plus'
 
