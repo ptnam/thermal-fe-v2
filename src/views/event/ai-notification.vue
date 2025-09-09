@@ -10,7 +10,7 @@ import dayjs from 'dayjs'
 import SearchButton from '@/components/Button/SearchButton.vue'
 import { getVisionNotificationApi } from '@/api/notification/visionNotification'
 import { getAllCamerasApi } from '@/api/camera'
-import { getAllTypeWarningEventApi } from '@/api/warning-event'
+import {getAllTypeWarningEventApi, getAllWarningEventApi} from '@/api/warning-event'
 import { WARNING_TYPE_AI } from '@/constants/warningType'
 import { ElImage } from 'element-plus'
 
@@ -119,7 +119,7 @@ const elTableRef = ref<InstanceType<typeof ListTemplate>>()
               <virtualized-select-from-url
                 ref="warningEventId"
                 v-model="searchParams.warningEventId"
-                :request-fn="() => getAllTypeWarningEventApi(WARNING_TYPE_AI)"
+                :request-fn="() => getAllWarningEventApi({warningType: WARNING_TYPE_AI})"
                 filterable
                 value-key="id"
                 clearable
