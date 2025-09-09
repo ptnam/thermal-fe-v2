@@ -32,6 +32,7 @@ import {
 } from '@/plugins/signalr'
 import { downloadByPathApi } from '@/api/common'
 import { downloadFile } from '@/utils/response'
+import { ElImage } from 'element-plus'
 
 const { confirmModal } = useConfirmModal()
 
@@ -62,6 +63,26 @@ const columns = computed<TableColumn[]>(() => [
             icon={Select}
           ></ElButton>
           <ElButton circle onClick={() => openDetail(row)} icon={View}></ElButton>
+        </div>
+      ),
+    },
+  },
+  {
+    width: '120px',
+    label: 'Hình ảnh',
+    slots: {
+      default: ({ row }) => (
+        <div>
+          {row.imagePath && (
+            <ElImage
+              src={row.imagePath}
+              lazy={true}
+              fit="cover"
+              preview-src-list={[row.imagePath]}
+              show-progress={true}
+              preview-teleported={true}
+            />
+          )}
         </div>
       ),
     },

@@ -18,10 +18,20 @@ import { ElImage } from 'element-plus'
 const columns = computed<TableColumn[]>(() => [
   {
     width: '120px',
+    label: 'Hình ảnh',
     slots: {
       default: ({ row }) => (
         <div>
-          { row.imagePath && <ElImage src={row.imagePath} lazy={true} fit='cover' /> }
+          {row.imagePath && (
+            <ElImage
+              src={row.imagePath}
+              lazy={true}
+              fit="cover"
+              preview-src-list={[row.imagePath]}
+              show-progress={true}
+              preview-teleported={true}
+            />
+          )}
         </div>
       ),
     },
