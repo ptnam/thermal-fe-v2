@@ -35,7 +35,7 @@ const constantRoutes: AppRouteRecordRaw[] = [
   {
     path: '/event',
     component: Layout,
-    redirect: '/event/table',
+    redirect: '/event/ai-notification',
     name: 'event',
     meta: { icon: 'map_pointer', permission: ['monitoring'] },
     children: [
@@ -44,6 +44,13 @@ const constantRoutes: AppRouteRecordRaw[] = [
         name: 'ai_system',
         component: () => import('@/views/event/ai-notification.vue'),
         meta: { icon: 'setting-bell', permission: ['monitoring'] },
+      },
+      {
+        path: 'vision-event-history/detail',
+        name: 'vision_event_history_detail',
+        component: () => import('@/views/event/vision-event-history/detail.vue'),
+        hidden:true,
+        meta: { icon: 'history', permission: ['monitoring'], hidden: true },
       },
       {
         path: 'notification-system',

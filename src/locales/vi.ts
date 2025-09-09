@@ -33,6 +33,7 @@ export default {
         live: 'Giám sát trực tiếp',
         event: 'Theo dõi điểm đo',
         ai_system: 'Cảnh báo AI',
+        vision_event_history_detail: 'Cảnh báo AI',
         notification_system: 'Nhiệt độ vượt ngưỡng',
         event_history: 'Nhật ký nhiệt độ',
         home: 'Tổng hợp dữ liệu',
