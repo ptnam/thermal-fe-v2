@@ -127,15 +127,6 @@ const elTableRef = ref<InstanceType<typeof ListTemplate>>()
               />
             </el-form-item>
           </el-col>
-          <el-col :span="8">
-            <el-form-item label="Trạng thái xử lý">
-              <select-from-config
-                key-config="notificationStatusList"
-                v-model="searchParams.notificationStatus"
-                clearable
-              />
-            </el-form-item>
-          </el-col>
         </el-row>
         <div class="flex justify-center">
           <search-button @click="elTableRef?.refresh()" />
