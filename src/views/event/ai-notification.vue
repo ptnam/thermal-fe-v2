@@ -47,6 +47,7 @@ const elTableRef = ref<InstanceType<typeof ListTemplate>>()
   <page-container title="Cảnh báo AI">
     <list-template
       ref="elTableRef"
+      key-list="ai-notification"
       :columns="columns"
       :search-props="{ visibleSearchButton: false, inline: false }"
       :use-table-config="{

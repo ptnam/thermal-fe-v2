@@ -136,6 +136,7 @@ const exportFile = (searchParams: any) => {
   <page-container title="Cảnh báo nhiệt độ vượt ngưỡng">
     <list-template
       ref="elTableRef"
+      key-list="notification-system"
       :columns="columns"
       :search-props="{ visibleSearchButton: false, inline: false }"
       :use-table-config="{

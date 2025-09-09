@@ -182,6 +182,7 @@ const exportFile = (searchParams: any) => {
   <page-container title="Nhật ký nhiệt độ">
     <list-template
       ref="elTableRef"
+      key-list="event-history"
       :columns="columns"
       :use-table-config="{
         fetchDataApi: listThermalsApi,
