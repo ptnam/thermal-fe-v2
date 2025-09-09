@@ -6,51 +6,22 @@ import { computed, nextTick, ref } from 'vue'
 import { getAllTreeAreaApi } from '@/api/area'
 import TreeSelectRemote from '@/components/Tree/TreeSelectRemote.vue'
 import SelectFromConfig from '@/components/Selection/SelectFromConfig.vue'
-import { ElButton } from 'element-plus'
-import { Select, View } from '@element-plus/icons-vue'
-import { useConfirmModal } from '@/hooks/web/useModal'
-import {
-  notificationDetailApi,
-  updateNotificationStatusApi,
-} from '@/api/notification'
 import VirtualizedSelectFromUrl from '@/components/Selection/VirtualizedSelectFromUrl.vue'
 import dayjs from 'dayjs'
-import useRequest from '@/hooks/web/useRequest'
 import SearchButton from '@/components/Button/SearchButton.vue'
 import { getVisionNotificationApi } from '@/api/notification/visionNotification'
 import { getAllCamerasApi } from '@/api/camera'
 import { getAllTypeWarningEventApi } from '@/api/warning-event'
 import { WARNING_TYPE_AI } from '@/constants/warningType'
+import { ElImage } from 'element-plus'
 
-const { confirmModal } = useConfirmModal()
-
-const changeStatus = (row: any) => {
-  confirmModal('Cập nhật trạng thái', 'Bạn có chắc muốn cập nhật trạng thái đã xử lý?', () => {
-    updateNotificationStatusApi(row.id, {
-      status: row.statusObject.code === 'Pending' ? 2 : 1,
-      dataTime: row.dataTime,
-    }).then(() => {
-      elTableRef?.value?.refresh()
-    })
-  })
-}
-const typeStatus = {
-  Resolved: 'success',
-  Pending: 'danger',
-}
 const columns = computed<TableColumn[]>(() => [
   {
     width: '120px',
     slots: {
       default: ({ row }) => (
         <div>
-          <ElButton
-            type={typeStatus[row?.statusObject?.code]}
-            circle
-            onClick={() => changeStatus(row)}
-            icon={Select}
-          ></ElButton>
-          <ElButton circle onClick={() => openDetail(row)} icon={View}></ElButton>
+          { row.imagePath && <ElImage src={row.imagePath} lazy={true} fit='cover' /> }
         </div>
       ),
     },
@@ -58,17 +29,8 @@ const columns = computed<TableColumn[]>(() => [
   { prop: 'dateData', label: 'Ngày', width: 120 },
   { prop: 'timeData', label: 'Giờ' },
   { prop: 'areaName', label: 'Khu vực' },
-  { prop: 'machineName', label: 'Thiết bị' },
-  { prop: 'machineComponentName', label: 'Bộ phận' },
-  { prop: 'monitorPointCode', label: 'Điểm nhiệt' },
-  { prop: 'componentValue', label: 'Nhiệt độ' },
-  { prop: 'compareTypeObject.name', label: 'Kiểu cảnh báo' },
+  { prop: 'cameraName', label: 'Tên camera' },
   { prop: 'warningEventName', label: 'Loại cảnh báo' },
-  { prop: 'compareValue', label: 'Nhiệt độ so sánh' },
-  { prop: 'deltaValue', label: 'Chênh lệch' },
-  { prop: 'compareResultObject.name', label: 'Đánh giá' },
-  { prop: 'statusObject.name', label: 'Trạng thái' },
-  { prop: 'resolveTime', label: 'Thời gian xử lý' },
 ])
 
 const cameraRef = ref<InstanceType<typeof VirtualizedSelectFromUrl>>()
@@ -79,22 +41,6 @@ const changeAreaId = (searchParams: GenericObject) => {
   })
 }
 const elTableRef = ref<InstanceType<typeof ListTemplate>>()
-
-const formModel = ref<any>({
-  id: null,
-  compareResultObject: {},
-  compareTypeObject: {},
-  statusObject: {},
-})
-const { onRequest } = useRequest()
-
-const detailVisible = ref(false)
-const openDetail = (row: any) => {
-  detailVisible.value = true
-  onRequest(notificationDetailApi, { id: row.id, dataTime: row.dataTime }).then((res) => {
-    formModel.value = res.data
-  })
-}
 </script>
 
 <template>
