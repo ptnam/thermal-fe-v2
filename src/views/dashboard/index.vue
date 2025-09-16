@@ -118,8 +118,8 @@ const badCamUrl = new URL('@/assets/map/camera-off.png', import.meta.url).href
 const goodSensorUrl = new URL('@/assets/map/good-sensor.svg', import.meta.url).href
 const badSensorUrl = new URL('@/assets/map/bad-sensor.svg', import.meta.url).href
 
-const goodCamSensorUrl = new URL('@/assets/map/camera-sensor-good.png', import.meta.url).href
-const badCamSensorUrl = new URL('@/assets/map/camera-sensor-bad.png', import.meta.url).href
+const goodCamSensorUrl = new URL('@/assets/map/camera-sensor-good.jpg', import.meta.url).href
+const badCamSensorUrl = new URL('@/assets/map/camera-sensor-good.jpg', import.meta.url).href
 
 const mapIcon = {
   Sensor: {
