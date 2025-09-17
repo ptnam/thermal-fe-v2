@@ -43,7 +43,7 @@ const constantRoutes: AppRouteRecordRaw[] = [
         path: 'ai-notification',
         name: 'ai_system',
         component: () => import('@/views/event/ai-notification.vue'),
-        meta: { icon: 'setting-bell', permission: ['monitoring'] },
+        meta: { icon: 'setting-bell', permission: ['ai-monitoring'] },
       },
       {
         path: 'vision-event-history/detail',
