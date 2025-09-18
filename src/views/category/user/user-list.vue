@@ -91,7 +91,6 @@ const saveSuccess = () => {
       @addHandler="openDialogAdd"
       :search-props="{ visibleSearchButton: false }"
     >
-      <template v-slot:top><span></span></template>
       <template slot="search" v-slot="{ searchParams }">
         <el-form-item :label="t('fields.status')">
           <select-from-config
