@@ -11,19 +11,25 @@
           @change="refreshTable"
       />
     </el-form-item>
-    <base-table
-        :columns="columns"
-        :data="tableData"
-        :loading="isLoading"
-    ></base-table>
+    <div>
+      <base-table
+          :columns="columns"
+          :data="tableData"
+          :loading="isLoading"
+      ></base-table>
+      <SimpleDrawRTCPlayer v-if="presetCameraId" stream-key="presetCameraId" />
+    </div>
+
   </div>
 </template>
-<script setup lang="ts">
+<script setup lang="tsx">
 import {getAllCamerasApi, getVisionPresetsApi} from "@/api/camera";
 import VirtualizedSelectFromUrl from "@/components/Selection/VirtualizedSelectFromUrl.vue";
 import {computed, ref} from "vue";
 import {TableColumn} from "@/components/Table";
 import BaseTable from "../../../../components/Table/BaseTable.vue";
+import {View, EditPen} from "@element-plus/icons-vue";
+import SimpleDrawRTCPlayer from "@/components/Video/SimpleDrawRTCPlayer.vue";
 
 const props = defineProps({
   visionCamera: {
@@ -34,9 +40,37 @@ const props = defineProps({
 const presetCameraId = ref(null)
 
 const columns = computed<TableColumn[]>(() => [
-  {type: 'index', label: 'STT', width: 60, headerAlign: 'center'},
-  {prop: 'code', label: 'Mã camera'},
-  {prop: 'name', label: 'Tên camera'},
+  {prop: 'presetName', label: 'Presets'},
+  {
+    label: 'Vẽ vùng',
+    align: 'center',
+    slots: {
+      default: (scope: any) => (
+          <ElTooltip content='Vẽ vùng'>
+            <ElButton
+                circle={true}
+                icon={EditPen}
+                onClick={() => drawArea(scope.row)}
+            />
+          </ElTooltip>
+      ),
+    },
+  },
+  {
+    label: 'Xem ảnh',
+    align: 'center',
+    slots: {
+      default: (scope: any) => (
+          <ElTooltip content='Xem ảnh'>
+            <ElButton
+                circle={true}
+                icon={View}
+                onClick={() => viewImage(scope.row)}
+            />
+          </ElTooltip>
+      ),
+    },
+  }
 ]);
 
 const tableData = ref([])
