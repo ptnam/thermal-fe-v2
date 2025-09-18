@@ -5,7 +5,7 @@ import PageContainer from '@/components/PageContainer.vue'
 import {computed, ref} from 'vue'
 import BaseDialog from '@/components/Dialog/BaseDialog.vue'
 import {ElButton, ElTooltip} from 'element-plus'
-import {Refresh, Rank} from '@element-plus/icons-vue'
+import {Refresh, Rank, Aim} from '@element-plus/icons-vue'
 import SelectFromConfig from '@/components/Selection/SelectFromConfig.vue'
 import {CAMERA_NORMAL_TYPE, STATUS_ACTIVE} from '@/constants'
 import {getCameraListApi, deleteCameraApi, syncPresetsApi, listPresetsApi} from '@/api/camera'
@@ -16,6 +16,7 @@ import DeleteCircleButton from '@/components/Button/DeleteCircleButton.vue'
 import TreeSelectRemote from "@/components/Tree/TreeSelectRemote.vue";
 import useRequest from "@/hooks/web/useRequest";
 import PresetTourTab from '@/views/category/camera/components/PresetTourTab.vue'
+import CameraVisionPreset from "@/views/category/camera/components/CameraVisionPreset.vue";
 
 const columns = computed<TableColumn[]>(() => [
   {type: 'index', label: 'STT', width: 60, headerAlign: 'center'},
@@ -25,7 +26,7 @@ const columns = computed<TableColumn[]>(() => [
   {prop: 'cameraTypeObject.name', label: 'Chức năng camera'},
   {prop: 'deviceStatusObject.name', label: 'Trạng thái', width: '150px'},
   {
-    width: '190px',
+    width: '240px',
     slots: {
       default: (scope: any) => (
           <div>
@@ -43,6 +44,15 @@ const columns = computed<TableColumn[]>(() => [
                   onClick={() => showPresets(scope.row)}
               />
             </ElTooltip>
+            {scope.row.cameraType === CAMERA_NORMAL_TYPE &&
+              <ElTooltip content='Chỉnh góc quay'>
+                <ElButton
+                    circle={true}
+                    icon={Aim}
+                    onClick={() => showVisionPresets(scope.row)}
+                />
+              </ElTooltip>
+            }
             <EditCircleButton onClick={() => openDialogEdit(scope)}></EditCircleButton>
             <DeleteCircleButton onClick={() => openDelete(scope)}></DeleteCircleButton>
           </div>
@@ -57,6 +67,7 @@ const formModel = ref({})
 const presets = ref([])
 const cameraTours = ref([])
 const presetDialogVisible = ref(false)
+const presetVisionVisible = ref(false)
 
 const {onRequest: presetRequest, isLoading: syncPresetLoading} = useRequest();
 const syncPresets = (item: any) => {
@@ -71,6 +82,12 @@ const showPresets = (item: any) => {
     cameraTours.value = res.data.cameraTours
     presetDialogVisible.value = true
   })
+}
+
+const visionCamera = ref(null);
+const showVisionPresets = (item: any) => {
+  presetVisionVisible.value = true
+  visionCamera.value = item
 }
 const openDialogAdd = () => {
   formModel.value = {
@@ -141,8 +158,17 @@ const saveSuccess = () => {
         title="Thông số góc quay"
     >
       <PresetTourTab
-        :presets="presets"
-        :tours="cameraTours"
+          :presets="presets"
+          :tours="cameraTours"
+      />
+    </base-dialog>
+    <base-dialog
+        v-model="presetVisionVisible"
+        :destroy-on-close="true"
+        title="Thông số góc quay"
+    >
+      <CameraVisionPreset
+          :visionCamera="visionCamera"
       />
     </base-dialog>
   </page-container>

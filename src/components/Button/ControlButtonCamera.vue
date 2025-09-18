@@ -47,6 +47,12 @@
                     :icon="SwitchButton"
                     @click="() => requestCommand(CAMERA_COMMANDS.Restart)"
                 ></el-button>
+                <el-button
+                    color="#1D5DA8"
+                    circle
+                    :icon="Setting"
+                    @click="() => requestCommand(CAMERA_COMMANDS.Calibration)"
+                ></el-button>
               </div>
             </div>
           </div>
@@ -61,7 +67,7 @@
 import FormWrapper from '@/components/Form/FormWrapper.vue'
 import {sendCommandCameraApi, setViewingAngleApi} from '@/api/camera'
 import GameControllerPad from '@/components/Button/GameControllerPad.vue'
-import {SwitchButton, ZoomIn, ZoomOut} from '@element-plus/icons-vue'
+import {SwitchButton, ZoomIn, ZoomOut, Setting} from '@element-plus/icons-vue'
 import useRequest from "@/hooks/web/useRequest";
 import {ref} from "vue";
 import {CAMERA_COMMANDS} from "@/constants/camera";
