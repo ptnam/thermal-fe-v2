@@ -157,12 +157,12 @@ const constantRoutes: AppRouteRecordRaw[] = [
         path: '/report',
         component: Layout,
         name: 'report',
-        meta: { icon: 'chart', permission: ['reporting'] },
+        meta: { icon: 'chart', permission: ['manual'] },
         children: [
             {
                 path: 'download/CGI Manual.pdf',
                 name: 'user_manual',
-                meta: { icon: 'chart', permission: ['reporting'] },
+                meta: { icon: 'chart', permission: ['manual'] },
                 beforeEnter: (_to, _from, next) => {
                     const fileUrl = '/download/huong-dan.pdf'
                     downloadFileFromUrl(fileUrl, 'Hướng dẫn sử dụng.pdf')
