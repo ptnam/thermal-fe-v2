@@ -9,6 +9,7 @@ import SelectFromConfig from '@/components/Selection/SelectFromConfig.vue'
 import { ElButton, ElMessage } from 'element-plus'
 import { Select, View } from '@element-plus/icons-vue'
 import { useConfirmModal } from '@/hooks/web/useModal'
+import cameraImg from '@/assets/map/camera-sensor-good.jpg'
 import {
   listNotificationApi,
   notificationDetailApi,
@@ -70,19 +71,26 @@ const columns = computed<TableColumn[]>(() => [
   {
     width: '120px',
     label: 'Hình ảnh',
+    align: 'center',
     slots: {
       default: ({ row }) => (
         <div>
-          {row.imagePath && (
-            <ElImage
-              src={row.imagePath}
-              lazy={true}
-              fit="cover"
-              preview-src-list={[row.imagePath]}
-              show-progress={true}
-              preview-teleported={true}
-            />
-          )}
+          {
+            row.dataSourceType === 1 ? (
+              <img src={cameraImg}  alt="sensor"/>
+            ) : (
+              row.imagePath && (
+                <ElImage
+                  src={row.imagePath}
+                  lazy
+                  fit="cover"
+                  preview-src-list={[row.imagePath]}
+                  show-progress
+                  preview-teleported
+                />
+              )
+            )
+          }
         </div>
       ),
     },

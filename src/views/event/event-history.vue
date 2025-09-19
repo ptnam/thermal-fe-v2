@@ -255,12 +255,13 @@ const exportFile = (searchParams: any) => {
             <el-form-item label="Bộ phận">
               <virtualized-select-from-url
                 ref="machineComponentRef"
-                v-model="searchParams.machineComponentId"
+                v-model="searchParams.machineComponentIds"
                 :request-fn="() => getComponentMachineApi({ machineId: searchParams.machineId })"
                 filterable
                 value-key="id"
                 :default-first-option="true"
                 clearable
+                :multiple="true"
               />
             </el-form-item>
           </el-col>

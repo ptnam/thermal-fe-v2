@@ -34,7 +34,8 @@ import {ElButton, ElTooltip} from 'element-plus'
 
 const props = defineProps({
   visionCamera: {
-    type: Object,
+    type: [Object, null],
+    required: false
   },
 })
 
@@ -88,12 +89,12 @@ const refreshTable = () => {
   })
 }
 
-const drawArea = (row) => {
+const drawArea = (_row) => {
 
 }
 
 const rtcPlayerRef = ref()
-const viewImage = (row) => {
+const viewImage = (_row) => {
   rtcPlayerRef.value?.()
 }
 </script>
