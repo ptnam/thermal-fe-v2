@@ -1,51 +1,68 @@
 <template>
   <div class="rounded overflow-hidden shadow-lg bg-white p-2">
     <div
-        v-loading="loading"
-        class="relative aspect-video border rounded bg-black overflow-hidden group"
+      v-loading="loading"
+      class="relative aspect-video border rounded bg-black overflow-hidden group"
     >
       <div
-          ref="videoRef"
-          :class="['h-[-webkit-fill-available] relative', isFullscreen? 'flex justify-center items-center': '']"
+        ref="videoRef"
+        :class="[
+          'h-[-webkit-fill-available] relative',
+          isFullscreen ? 'flex justify-center items-center' : '',
+        ]"
       >
+        <!-- Controls -->
         <div
-            v-if="isFullscreen"
-            class="flex gap-2 absolute bottom-2 left-2 z-20 px-3 py-2 shadow-lg backdrop-blur-sm"
+          class="absolute bottom-2 right-2 z-20 px-3 py-2 rounded-lg flex gap-2 shadow-lg backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200"
         >
           <el-button
-              v-if="isDrawing === false"
-              size="small"
-              circle
-              type="warning"
-              :icon="Aim"
-              @click="startDrawing"
+            size="small"
+            circle
+            type="primary"
+            @click="togglePlayback"
+            :icon="isPlaying ? VideoPause : VideoPlay"
+          />
+          <el-button size="small" circle type="success" @click="screenshot" :icon="Camera" />
+          <el-button size="small" circle type="info" @click="toggleFullScreen" :icon="FullScreen" />
+        </div>
+        <div
+          v-if="isFullscreen"
+          class="flex gap-2 absolute bottom-2 left-2 z-20 px-3 py-2 shadow-lg backdrop-blur-sm"
+        >
+          <el-button
+            v-if="isDrawing === false"
+            size="small"
+            circle
+            type="warning"
+            :icon="Aim"
+            @click="startDrawing"
           >
           </el-button>
           <el-button
-              v-if="isDrawing && (pointCount === 1 || pointCount >= 3)"
-              size="small"
-              type="danger"
-              circle
-              :icon="Odometer"
-              :loading="measureTempLoading"
-              @click="measureTemp"
+            v-if="isDrawing && (pointCount === 1 || pointCount >= 3)"
+            size="small"
+            type="danger"
+            circle
+            :icon="Odometer"
+            :loading="measureTempLoading"
+            @click="measureTemp"
           >
           </el-button>
           <el-button
-              v-if="isDrawing && pointCount"
-              color="#495480"
-              size="small"
-              circle
-              :icon="CloseBold"
-              @click="drawer?.removeAllPoint()"
+            v-if="isDrawing && pointCount"
+            color="#495480"
+            size="small"
+            circle
+            :icon="CloseBold"
+            @click="drawer?.removeAllPoint()"
           >
           </el-button>
         </div>
         <!-- Canvas overlay -->
         <canvas
-            ref="canvasRef"
-            class="absolute z-1 pointer-events-auto"
-            v-show="isDrawing"
+          ref="canvasRef"
+          class="absolute z-1 pointer-events-auto"
+          v-show="isDrawing"
         ></canvas>
       </div>
     </div>
@@ -53,20 +70,24 @@
 </template>
 
 <script setup lang="ts">
-import {ref, onMounted, nextTick} from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import {
   Aim,
   Odometer,
   CloseBold,
+  VideoPause,
+  VideoPlay,
+  Camera,
+  FullScreen,
 } from '@element-plus/icons-vue'
-import {getStreamApi} from '@/api/camera'
-import {PolygonDrawer} from '@/utils/PolygonDrawer'
+import { getStreamApi } from '@/api/camera'
+import { PolygonDrawer } from '@/utils/PolygonDrawer'
 import useRequest from '@/hooks/web/useRequest'
-import {thermalDataByAreaApi} from '@/api/thermal-data'
+import { thermalDataByAreaApi } from '@/api/thermal-data'
 
 const props = defineProps({
-  streamKey: {type: [String, Number], required: true},
-  cam: {type: [Object], required: false},
+  streamKey: { type: [String, Number], required: true },
+  cam: { type: [Object], required: false },
 })
 
 const videoRef = ref<HTMLElement | null>(null)
@@ -94,41 +115,41 @@ let drawer: PolygonDrawer | null = null
 onMounted(() => {
   loading.value = true
   getStreamApi(props.streamKey)
-      .then((res) => {
-        const key = res.data
-        const path = import.meta.env.VITE_LIVE_PATH
-        videoStream.src = new URL(`${path}?src=${key}`)
-        videoRef?.value?.appendChild(videoStream)
+    .then((res) => {
+      const key = res.data
+      const path = import.meta.env.VITE_LIVE_PATH
+      videoStream.src = new URL(`${path}?src=${key}`)
+      videoRef?.value?.appendChild(videoStream)
 
-        const video = videoStream.video
-        video.addEventListener('waiting', () => {
-          isPlaying.value = false
-        })
-        video.addEventListener('playing', () => {
-          isPlaying.value = true
-        })
-        video.addEventListener('pause', () => {
-          isPlaying.value = false
-        })
+      const video = videoStream.video
+      video.addEventListener('waiting', () => {
+        isPlaying.value = false
+      })
+      video.addEventListener('playing', () => {
+        isPlaying.value = true
+      })
+      video.addEventListener('pause', () => {
+        isPlaying.value = false
+      })
 
-        document.addEventListener('fullscreenchange', () => {
-          isFullscreen.value = !!document.fullscreenElement
-          const videoEl = videoRef.value?.querySelector('video')
-          if (videoEl) {
-            if (isFullscreen.value) {
-              fullScreenMode()
-            } else {
-              pictureScreenMode()
-              isDrawing.value = false
-              drawer?.stop()
-            }
-            drawer?.removeAllPoint()
+      document.addEventListener('fullscreenchange', () => {
+        isFullscreen.value = !!document.fullscreenElement
+        const videoEl = videoRef.value?.querySelector('video')
+        if (videoEl) {
+          if (isFullscreen.value) {
+            fullScreenMode()
+          } else {
+            pictureScreenMode()
+            isDrawing.value = false
+            drawer?.stop()
           }
-        })
+          drawer?.removeAllPoint()
+        }
       })
-      .finally(() => {
-        loading.value = false
-      })
+    })
+    .finally(() => {
+      loading.value = false
+    })
   pictureScreenMode()
 })
 
@@ -195,19 +216,22 @@ function startDrawing() {
 
       if (!drawer) {
         drawer = new PolygonDrawer(
-            c,
-            (_points) => {
-              isDrawing.value = false
-            },
-            (points) => {
-              pointCount.value = points.length
-              pointValues.value = points
-              nextTick(() => {
-                if (pointCount.value >= 3 && !drawer?.isConvex()) {
-                  drawer?.showFullScreenAlert(videoRef, 'không phải hình đa giác lồi, vui lòng vẽ lại!')
-                }
-              })
-            },
+          c,
+          (_points) => {
+            isDrawing.value = false
+          },
+          (points) => {
+            pointCount.value = points.length
+            pointValues.value = points
+            nextTick(() => {
+              if (pointCount.value >= 3 && !drawer?.isConvex()) {
+                drawer?.showFullScreenAlert(
+                  videoRef,
+                  'không phải hình đa giác lồi, vui lòng vẽ lại!',
+                )
+              }
+            })
+          },
         )
       }
 
@@ -217,7 +241,7 @@ function startDrawing() {
   })
 }
 
-const {onRequest: measureTempRequest, isLoading: measureTempLoading} = useRequest()
+const { onRequest: measureTempRequest, isLoading: measureTempLoading } = useRequest()
 
 function measureTemp() {
   const video = videoRef.value?.querySelector('video') as HTMLVideoElement
@@ -233,7 +257,7 @@ function measureTemp() {
   for (const item of pointValues.value as Point[]) {
     const x = (item.x / rect.width) * 100
     const y = (item.y / rect.height) * 100
-    tmpPoints.push({x, y})
+    tmpPoints.push({ x, y })
   }
   measureTempRequest(thermalDataByAreaApi, {
     videoWidth: videoWidth.value,
@@ -241,21 +265,24 @@ function measureTemp() {
     cameraId: props.streamKey,
     points: tmpPoints,
   })
-      .then((res) => {
-        if (res.data) {
-          drawer?.showFullScreenAlert(
-              videoRef,
-              `
+    .then((res) => {
+      if (res.data) {
+        drawer?.showFullScreenAlert(
+          videoRef,
+          `
             Min: ${res.data.minTemperature},
             Max: ${res.data.maxTemperature},
             Trung bình: ${res.data.aveTemperature}
           `,
-          )
-        }
-      })
-      .catch((e) => {
-        drawer?.showFullScreenAlert(videoRef, e.toString())
-      })
+        )
+      }
+    })
+    .catch((e) => {
+      drawer?.showFullScreenAlert(videoRef, e.toString())
+    })
 }
-</script>
 
+defineExpose({
+  toggleFullScreen
+})
+</script>

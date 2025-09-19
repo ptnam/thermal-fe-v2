@@ -17,7 +17,7 @@
           :data="tableData"
           :loading="isLoading"
       ></base-table>
-      <SimpleDrawRTCPlayer v-if="presetCameraId" stream-key="presetCameraId" />
+      <SimpleDrawRTCPlayer ref="rtcPlayerRef"  v-if="presetCameraId" :stream-key="presetCameraId" />
     </div>
 
   </div>
@@ -30,6 +30,7 @@ import {TableColumn} from "@/components/Table";
 import BaseTable from "../../../../components/Table/BaseTable.vue";
 import {View, EditPen} from "@element-plus/icons-vue";
 import SimpleDrawRTCPlayer from "@/components/Video/SimpleDrawRTCPlayer.vue";
+import {ElButton, ElTooltip} from 'element-plus'
 
 const props = defineProps({
   visionCamera: {
@@ -85,5 +86,14 @@ const refreshTable = () => {
   }).finally(() => {
     isLoading.value = false
   })
+}
+
+const drawArea = (row) => {
+
+}
+
+const rtcPlayerRef = ref()
+const viewImage = (row) => {
+  rtcPlayerRef.value?.()
 }
 </script>

@@ -106,7 +106,6 @@ const exportFile = (searchParams: any) => {
               :request-fn="getAllTreeAreaApi"
               filterable
               clearable
-              style="width: 160px"
           />
         </el-form-item>
         <el-form-item label="Loại thiết bị" label-width="120px">
@@ -116,7 +115,6 @@ const exportFile = (searchParams: any) => {
               filterable
               clearable
               value-key="id"
-              style="width: 160px"
           />
         </el-form-item>
         <div class="flex justify-center">
