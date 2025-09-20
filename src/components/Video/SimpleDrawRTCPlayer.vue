@@ -30,6 +30,15 @@
             class="flex gap-2 absolute bottom-2 left-2 z-20 px-3 py-2 shadow-lg backdrop-blur-sm"
         >
           <el-button
+              v-if="isDrawing === false"
+              size="small"
+              circle
+              type="warning"
+              :icon="Aim"
+              @click="startDrawing"
+          >
+          </el-button>
+          <el-button
               v-if="isDrawing && pointCount"
               color="#495480"
               size="small"
@@ -45,6 +54,7 @@
                 size="small"
                 circle
                 :icon="SetUp"
+                :loading="savePresetLoading"
                 @click="saveVisionPresets"
             >
             </el-button>
@@ -69,7 +79,7 @@ import {
   SetUp,
   VideoPlay,
   Camera,
-  FullScreen,
+  FullScreen, Aim,
 } from '@element-plus/icons-vue'
 import {getStreamApi, visionPresetApi} from '@/api/camera'
 import {PolygonDrawer} from '@/utils/PolygonDrawer'
@@ -267,13 +277,17 @@ const getImageData = (): string | null => {
   return tempCanvas.toDataURL("image/png");
 };
 
+const savePresetLoading = ref(false)
 const saveVisionPresets = () => {
+  savePresetLoading.value = true
   visionPresetApi({
     ...presetData.value,
     ...{
-      points: pointValues.value,
+      areaPoints: pointValues.value,
       imageData: getImageData()
     }
+  }).finally(() => {
+    savePresetLoading.value = false
   })
 }
 
