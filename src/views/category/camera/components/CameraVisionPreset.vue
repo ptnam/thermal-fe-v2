@@ -17,7 +17,12 @@
           :data="tableData"
           :loading="isLoading"
       ></base-table>
-      <SimpleDrawRTCPlayer ref="rtcPlayerRef"  v-if="presetCameraId" :stream-key="presetCameraId" />
+      <SimpleDrawRTCPlayer
+          ref="rtcPlayerRef"
+          :key="presetCameraId"
+          v-if="presetCameraId"
+          :stream-key="presetCameraId"
+      />
     </div>
 
   </div>
@@ -46,6 +51,7 @@ const columns = computed<TableColumn[]>(() => [
   {
     label: 'Vẽ vùng',
     align: 'center',
+    width: '120px',
     slots: {
       default: (scope: any) => (
           <ElTooltip content='Vẽ vùng'>
@@ -61,6 +67,7 @@ const columns = computed<TableColumn[]>(() => [
   {
     label: 'Xem ảnh',
     align: 'center',
+    width: '120px',
     slots: {
       default: (scope: any) => (
           <ElTooltip content='Xem ảnh'>
@@ -89,8 +96,14 @@ const refreshTable = () => {
   })
 }
 
-const drawArea = (_row) => {
-
+const drawArea = (row: any) => {
+  rtcPlayerRef.value?.toggleFullScreen();
+  rtcPlayerRef.value?.startDrawing();
+  rtcPlayerRef.value?.setPresetData({
+    cameraId: props.visionCamera?.id,
+    presetCameraId: presetCameraId.value,
+    presetId: row.presetId
+  });
 }
 
 const rtcPlayerRef = ref()

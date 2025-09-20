@@ -29,7 +29,7 @@
             />
           </el-form-item>
           <el-form-item
-              label="Tần suất kiểm tra (phút)"
+              label="Tần suất kiểm tra (giây)"
               prop="frequency"
               :error="formErrors.Frequency"
           >

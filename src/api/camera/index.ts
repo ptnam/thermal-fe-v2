@@ -49,3 +49,7 @@ export const sendCommandCameraApi = (params: object): Promise<IResponse> => {
 export const playTourApi = ( data: object): Promise<IResponse> => {
     return request.post({url: '/api/cameras/tourCommand', data: data})
 }
+
+export const visionPresetApi = ( data: any): Promise<IResponse> => {
+    return request.post({url: '/api/cameras/visionPresets', data: data})
+}
