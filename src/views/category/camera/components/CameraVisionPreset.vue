@@ -1,17 +1,19 @@
 <template>
   <div>
     <el-form-item label="Camera tích hợp">
-      <virtualized-select-from-url
+      <select-options
           ref="cameraRef"
-          v-model="presetCameraId"
-          :request-fn="() => getAllCamerasApi({ areaId: visionCamera?.areaId })"
+          v-model="cameraTmp"
           filterable
           value-key="id"
           clearable
           @change="refreshTable"
-      />
+          :options="[visionCamera, visionCamera?.integratedCam]"
+      >
+
+      </select-options>
     </el-form-item>
-    <div class="flex">
+    <div>
       <base-table
           v-show="tableVisible"
           :columns="columns"
@@ -35,14 +37,14 @@
   </div>
 </template>
 <script setup lang="tsx">
-import {getAllCamerasApi, getVisionPresetsApi} from "@/api/camera";
-import VirtualizedSelectFromUrl from "@/components/Selection/VirtualizedSelectFromUrl.vue";
+import {getVisionPresetsApi} from "@/api/camera";
 import {computed, nextTick, onMounted, ref} from "vue";
 import {TableColumn} from "@/components/Table";
 import BaseTable from "../../../../components/Table/BaseTable.vue";
 import {View, EditPen} from "@element-plus/icons-vue";
 import SimpleDrawRTCPlayer from "@/components/Video/SimpleDrawRTCPlayer.vue";
 import {ElButton, ElTooltip} from 'element-plus'
+import SelectOptions from "@/components/Selection/SelectOptions.vue";
 
 const props = defineProps({
   visionCamera: {
@@ -51,6 +53,7 @@ const props = defineProps({
   },
 })
 
+const cameraTmp = ref(null)
 const presetCameraId = ref(null)
 const tableVisible = ref(true)
 
@@ -137,7 +140,7 @@ const viewerImages = ref<string[]>([]);
 const startIndex = ref(0);
 
 const viewImage = (row: any) => {
-  viewerImages.value = [row.imagePath]; // if multiple images per row, map them into an array
+  viewerImages.value = [row.imagePath];
   startIndex.value = 0;
   viewerVisible.value = true;
 }

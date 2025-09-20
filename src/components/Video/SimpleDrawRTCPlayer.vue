@@ -83,6 +83,7 @@ import {
 } from '@element-plus/icons-vue'
 import {getStreamApi, visionPresetApi} from '@/api/camera'
 import {PolygonDrawer} from '@/utils/PolygonDrawer'
+import {ElMessage} from "element-plus";
 
 const props = defineProps({
   streamKey: {type: [String, Number], required: true},
@@ -286,6 +287,14 @@ const saveVisionPresets = () => {
       areaPoints: pointValues.value,
       imageData: getImageData()
     }
+  }).then(_ => {
+    toggleFullScreen()
+    nextTick(() => {
+      ElMessage({
+        message: 'Lưu thành công!',
+        type: 'success',
+      })
+    })
   }).finally(() => {
     savePresetLoading.value = false
   })
