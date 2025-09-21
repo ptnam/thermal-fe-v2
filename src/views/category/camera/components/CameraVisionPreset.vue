@@ -12,32 +12,36 @@
       >
       </select-options>
     </el-form-item>
-    <div>
-      <base-table
-          :columns="columns"
-          :data="tableData"
-          :loading="isLoading"
-      ></base-table>
-      <el-image-viewer
-          v-if="viewerVisible"
-          :url-list="viewerImages"
-          :initial-index="startIndex"
-          @close="viewerVisible = false"
-      />
+    <div class="flex">
+      <div class="w-[320px]">
+
+        <base-table
+            :columns="columns"
+            :data="tableData"
+            :loading="isLoading"
+        ></base-table>
+      </div>
       <SimpleDrawRTCPlayer
           ref="rtcPlayerRef"
-          :key="presetCameraId"
           v-if="presetCameraId"
+          :key="presetCameraId"
           :stream-key="presetCameraId"
           @saved="() => refreshTable()"
       />
     </div>
 
+    <el-image-viewer
+        v-if="viewerVisible"
+        :url-list="viewerImages"
+        :initial-index="startIndex"
+        @close="viewerVisible = false"
+    />
+
   </div>
 </template>
 <script setup lang="tsx">
 import {getVisionPresetsApi, invokePresetApi} from "@/api/camera";
-import {computed, nextTick, onMounted, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import {TableColumn} from "@/components/Table";
 import BaseTable from "../../../../components/Table/BaseTable.vue";
 import {View, EditPen} from "@element-plus/icons-vue";
@@ -59,18 +63,11 @@ const presetCameraId = ref(null)
 onMounted(() => {
   presetCameraId.value = props.visionCamera?.id
   cameraTmp.value = props.visionCamera?.id
-  if (props.visionCamera?.ptzType === 'Fix') {
-    nextTick(() => {
-      setTimeout(function () {
-        drawArea({presetId: 0})
-      }, 1000)
-    })
-  }
   refreshTable()
 })
 
 const columns = computed<TableColumn[]>(() => [
-  {prop: 'presetName', label: 'Presets'},
+  {prop: 'presetName', label: 'Presets', width: '80px',},
   {
     label: 'Vẽ vùng',
     align: 'center',
@@ -81,7 +78,10 @@ const columns = computed<TableColumn[]>(() => [
             <ApiButton
                 circle={true}
                 icon={EditPen}
-                api={() => Promise.resolve(drawArea(scope.row))}
+                api={async () => {
+                  await drawArea(scope.row);
+                  return Promise.resolve();
+                }}
             />
           </ElTooltip>
       ),
@@ -113,7 +113,7 @@ const refreshTable = () => {
   isLoading.value = true
   getVisionPresetsApi({
     cameraId: props.visionCamera?.id,
-    presetCameraId: presetCameraId.value
+    presetCameraId: cameraTmp.value
   }).then(res => {
     tableData.value = res.data
   }).finally(() => {
@@ -123,21 +123,28 @@ const refreshTable = () => {
 
 
 const rtcPlayerRef = ref()
-const drawArea = (row: any) => {
-  return invokePresetApi({
-    cameraId: props.visionCamera?.id,
-    presetId: row.presetId
-  }).then(() => {
-    rtcPlayerRef.value?.toggleFullScreen();
-    rtcPlayerRef.value?.startDrawing();
-    rtcPlayerRef.value?.setPresetData({
-      cameraId: props.visionCamera?.id,
-      presetCameraId: presetCameraId.value,
+const drawArea = async (row: any) => {
+  if (row.presetId) {
+    await invokePresetApi({
+      cameraId: row.presetCameraId,
       presetId: row.presetId
-    });
-  })
+    }).then(() => {
+      fullScreenVideo(row)
+    })
+  } else {
+    fullScreenVideo(row)
+  }
 }
 
+const fullScreenVideo = (row: any) => {
+  rtcPlayerRef.value?.toggleFullScreen();
+  rtcPlayerRef.value?.startDrawing();
+  rtcPlayerRef.value?.setPresetData({
+    cameraId: props.visionCamera?.id,
+    presetCameraId: presetCameraId.value,
+    presetId: row.presetId
+  });
+}
 const viewerVisible = ref(false);
 const viewerImages = ref<string[]>([]);
 const startIndex = ref(0);

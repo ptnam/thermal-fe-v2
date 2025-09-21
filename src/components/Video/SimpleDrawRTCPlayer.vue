@@ -1,5 +1,5 @@
 <template>
-  <div class="rounded overflow-hidden shadow-lg bg-white p-2">
+  <div class="rounded overflow-hidden shadow-lg bg-white px-2">
     <div
         v-loading="loading"
         class="relative aspect-video border rounded bg-black overflow-hidden group"
@@ -206,7 +206,7 @@ function startDrawing() {
         )
       }
 
-      drawer.removeAllPoint() // always start fresh
+      drawer.removeAllPoint()
       drawer.start()
     }
   })

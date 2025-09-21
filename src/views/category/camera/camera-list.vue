@@ -166,6 +166,7 @@ const saveSuccess = () => {
         v-model="presetVisionVisible"
         :destroy-on-close="true"
         title="Thông số góc quay"
+        style="min-width: 850px"
     >
       <CameraVisionPreset
           :visionCamera="visionCamera"
