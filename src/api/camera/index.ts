@@ -53,3 +53,7 @@ export const playTourApi = ( data: object): Promise<IResponse> => {
 export const visionPresetApi = ( data: any): Promise<IResponse> => {
     return request.post({url: '/api/cameras/visionPresets', data: data})
 }
+
+export const invokePresetApi = (searchParams: object): Promise<IResponse<[]>> => {
+    return request.get({url: '/api/cameras/invokePreset', params: searchParams})
+}

@@ -15,15 +15,7 @@
         <div
             class="absolute bottom-2 right-2 z-20 px-3 py-2 rounded-lg flex gap-2 shadow-lg backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200"
         >
-          <el-button
-              size="small"
-              circle
-              type="primary"
-              @click="togglePlayback"
-              :icon="isPlaying ? VideoPause : VideoPlay"
-          />
-          <el-button size="small" circle type="success" @click="screenshot" :icon="Camera"/>
-          <el-button size="small" circle type="info" @click="toggleFullScreen" :icon="FullScreen"/>
+          <el-button size="default" circle type="info" @click="toggleFullScreen" :icon="FullScreen"/>
         </div>
         <div
             v-if="isFullscreen"
@@ -31,7 +23,7 @@
         >
           <el-button
               v-if="isDrawing === false"
-              size="small"
+              size="default"
               circle
               type="warning"
               :icon="Aim"
@@ -41,17 +33,17 @@
           <el-button
               v-if="isDrawing && pointCount"
               color="#495480"
-              size="small"
+              size="default"
               circle
               :icon="CloseBold"
               @click="drawer?.removeAllPoint()"
           >
           </el-button>
-          <el-tooltip content="Lưu tọa độ vùng ">
+          <el-tooltip content="Lưu tọa độ vùng">
             <el-button
                 v-if="isDrawing && pointCount"
-                color="#495480"
-                size="small"
+                color="#16457F"
+                size="default"
                 circle
                 :icon="SetUp"
                 :loading="savePresetLoading"
@@ -75,10 +67,7 @@
 import {ref, onMounted, nextTick} from 'vue'
 import {
   CloseBold,
-  VideoPause,
   SetUp,
-  VideoPlay,
-  Camera,
   FullScreen, Aim,
 } from '@element-plus/icons-vue'
 import {getStreamApi, visionPresetApi} from '@/api/camera'
@@ -171,26 +160,6 @@ const fullScreenMode = () => {
   }
 }
 
-function togglePlayback() {
-  if (isPlaying.value) {
-    pause()
-  } else {
-    play()
-  }
-}
-
-function play() {
-  videoStream.play()
-}
-
-function pause() {
-  videoStream.pause()
-}
-
-function screenshot() {
-  videoStream.saveScreenshot()
-}
-
 function toggleFullScreen() {
   const video = videoRef.value
   const doc = document as any
@@ -266,19 +235,21 @@ const getImageData = (): string | null => {
   }
 
   const tempCanvas = document.createElement("canvas");
-  tempCanvas.width = width * 2; // side by side
+  tempCanvas.width = width
   tempCanvas.height = height;
 
   const ctx = tempCanvas.getContext("2d");
   if (!ctx) return null;
 
   ctx.drawImage(v as HTMLVideoElement, 0, 0, width, height);
-  ctx.drawImage(c as HTMLCanvasElement, width, 0, width, height);
+  ctx.drawImage(c as HTMLCanvasElement, 0, 0, width, height);
 
   return tempCanvas.toDataURL("image/png");
 };
 
 const savePresetLoading = ref(false)
+
+const emits = defineEmits(['saved'])
 const saveVisionPresets = () => {
   savePresetLoading.value = true
   visionPresetApi({
@@ -288,6 +259,7 @@ const saveVisionPresets = () => {
       imageData: getImageData()
     }
   }).then(_ => {
+    emits('saved')
     toggleFullScreen()
     nextTick(() => {
       ElMessage({
