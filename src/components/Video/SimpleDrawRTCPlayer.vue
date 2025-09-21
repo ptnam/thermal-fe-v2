@@ -27,6 +27,7 @@
               circle
               type="warning"
               :icon="Aim"
+              :loading="savePresetLoading"
               @click="startDrawing"
           >
           </el-button>
@@ -36,6 +37,7 @@
               size="default"
               circle
               :icon="CloseBold"
+              :loading="savePresetLoading"
               @click="drawer?.removeAllPoint()"
           >
           </el-button>

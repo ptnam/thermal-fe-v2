@@ -8,7 +8,7 @@
           value-key="id"
           clearable
           @change="refreshTable"
-          :options="[visionCamera, visionCamera?.integratedCam]"
+          :options="visionCamera?.ptzType === 'Fix' ? [visionCamera] : [visionCamera, visionCamera?.integratedCam]"
       >
       </select-options>
     </el-form-item>
@@ -141,7 +141,7 @@ const fullScreenVideo = (row: any) => {
   rtcPlayerRef.value?.startDrawing();
   rtcPlayerRef.value?.setPresetData({
     cameraId: props.visionCamera?.id,
-    presetCameraId: presetCameraId.value,
+    presetCameraId: row.presetCameraId,
     presetId: row.presetId
   });
 }
