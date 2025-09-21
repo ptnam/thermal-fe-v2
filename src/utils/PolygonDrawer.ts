@@ -5,16 +5,22 @@ export class PolygonDrawer {
     private isDrawing = false
     private readonly onComplete?: (points: { x: number; y: number }[]) => void
     private readonly onCountPoint?: (points: { x: number; y: number }[]) => void
+    private readonly strokeStyle: string
+    private readonly fillStyle: string
 
     constructor(
         canvas: HTMLCanvasElement,
         onComplete?: (points: { x: number; y: number }[]) => void,
-        onCountPoint?: (points: { x: number; y: number }[]) => void
+        onCountPoint?: (points: { x: number; y: number }[]) => void,
+        strokeStyle: string = 'white',
+        fillStyle: string = 'green',
     ) {
         this.canvas = canvas
         const ctx = this.canvas.getContext('2d')
         if (!ctx) throw new Error('Canvas context not found')
         this.ctx = ctx
+        this.strokeStyle = strokeStyle
+        this.fillStyle = fillStyle
         this.onComplete = onComplete
         this.onCountPoint = onCountPoint
 
@@ -65,7 +71,7 @@ export class PolygonDrawer {
         if (this.points.length > 2) {
             this.ctx.lineTo(this.points[0].x, this.points[0].y)
         }
-        this.ctx.strokeStyle = 'white'
+        this.ctx.strokeStyle = this.strokeStyle
         this.ctx.lineWidth = 2
         this.ctx.stroke()
 
@@ -73,7 +79,7 @@ export class PolygonDrawer {
         for (const p of this.points) {
             this.ctx.beginPath()
             this.ctx.arc(p.x, p.y, 4, 0, Math.PI * 2)
-            this.ctx.fillStyle = 'green'
+            this.ctx.fillStyle = this.fillStyle
             this.ctx.fill()
         }
     }

@@ -201,6 +201,8 @@ function startDrawing() {
                 }
               })
             },
+            'red',
+            'blue'
         )
       }
 
