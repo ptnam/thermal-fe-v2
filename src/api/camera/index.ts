@@ -57,3 +57,11 @@ export const visionPresetApi = ( data: any): Promise<IResponse> => {
 export const invokePresetApi = (searchParams: object): Promise<IResponse<[]>> => {
     return request.get({url: '/api/cameras/invokePreset', params: searchParams})
 }
+
+export const getAiServicesApi = (params: object): Promise<IResponse> => {
+  return request.get({url: '/api/Cameras/aiservices', params: params})
+}
+
+export const saveAiServicesApi = (data: any): Promise<IResponse> => {
+  return request.post({url: `/api/cameras/aiservices`, data: data})
+}
