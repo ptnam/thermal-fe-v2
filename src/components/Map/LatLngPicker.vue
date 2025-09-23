@@ -68,6 +68,7 @@
               v-if="marker.latitude && marker.longitude"
               :lat-lng="[marker.latitude, marker.longitude]"
           />
+          <islands />
         </l-map>
       </template>
     </el-dialog>
@@ -78,6 +79,7 @@ import {onMounted, ref} from 'vue'
 import {LMap, LTileLayer, LMarker} from '@vue-leaflet/vue-leaflet'
 import 'leaflet/dist/leaflet.css'
 import {LocationInformation} from '@element-plus/icons-vue'
+import Islands from '@/components/Map/islands.vue'
 
 const props = defineProps({
   buttonText: {

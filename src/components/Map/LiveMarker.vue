@@ -1,6 +1,7 @@
 <template>
   <l-marker :lat-lng="latLng" :icon="currentIcon">
     <slot></slot>
+    <islands />
   </l-marker>
 </template>
 
@@ -8,6 +9,7 @@
 import {ref, onMounted} from 'vue'
 import {LMarker} from '@vue-leaflet/vue-leaflet'
 import L from 'leaflet'
+import Islands from '@/components/Map/islands.vue'
 
 // Props
 const props = defineProps({

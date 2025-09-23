@@ -29,6 +29,7 @@
           :bounds="bounds"
       />
       <slot></slot>
+      <islands />
     </l-map>
   </div>
 </template>
@@ -40,6 +41,7 @@ import {MAP_TYPE_MAP, MAP_TYPE_PICTURE} from '@/constants'
 
 import {CRS} from 'leaflet'
 import {useImageBounds} from "@/hooks/web/useImageBounds";
+import Islands from '@/components/Map/islands.vue'
 
 const crs = CRS.Simple
 
