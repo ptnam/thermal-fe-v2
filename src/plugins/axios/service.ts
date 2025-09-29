@@ -35,6 +35,7 @@ axiosInstance.interceptors.response.use(
         if (error.status === 401) {
             const userStore = useUserStoreWithOut()
             userStore.resetAndRedirectToLogin()
+            service.cancelAllRequest()
         }
         return Promise.reject(error)
     }
