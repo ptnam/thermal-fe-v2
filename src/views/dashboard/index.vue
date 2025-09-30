@@ -176,7 +176,7 @@ const loadThermalData = (area: any, invokeSignal = true) => {
     if(area.mapType == MAP_TYPE_PICTURE) {
       areaRangePointList.value = []
     } else {
-      areaRangePointList.value = (res.data.item2 ?? []).filter((point: any) => point.latitude && point.longitude && point.mapType !== MAP_TYPE_PICTURE);
+      areaRangePointList.value = (res.data.item2 ?? []).filter((point: any) => point.latitude && point.longitude);
     }
   })
 }
