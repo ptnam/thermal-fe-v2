@@ -32,7 +32,7 @@
                 </div>
               </l-tooltip>
             </live-marker>
-            <area-range :point-list="areaRangePointList"/>
+            <area-range :point-list="areaRangePointList" @clickMaker="(marker) => handleNodeClick(marker)"/>
           </LeafletMap>
         </div>
       </div>
@@ -88,6 +88,7 @@ import _ from 'lodash'
 import AreaRange from '@/views/dashboard/components/AreaRange.vue'
 
 onMounted(() => {
+  loadThermalData({}, false)
   createSignalRConnection()
   startSignalR()
   onSignalREvent('newThermalData', function (thermalData: any) {
@@ -166,13 +167,17 @@ const handleNodeClick = (item: any) => {
       leafletMapRef.value.flyToPoint()
     }
   })
-  loadThermalData(item.id)
+  loadThermalData(item)
 }
 
-const loadThermalData = (areaId: number, invokeSignal = true) => {
-  machinesAndResultByAreaApi({ areaId: areaId }).then((res) => {
+const loadThermalData = (area: any, invokeSignal = true) => {
+  machinesAndResultByAreaApi({ areaId: area?.id }).then((res) => {
     loadMachineComponents(res.data.item1 ?? [], invokeSignal)
-    areaRangePointList.value = (res.data.item2 ?? []).filter((point: any) => point.latitude && point.longitude);
+    if(area.mapType == MAP_TYPE_PICTURE) {
+      areaRangePointList.value = []
+    } else {
+      areaRangePointList.value = (res.data.item2 ?? []).filter((point: any) => point.latitude && point.longitude && point.mapType !== MAP_TYPE_PICTURE);
+    }
   })
 }
 const loadMachineComponents = (components: any[], invokeSignal = true) => {
