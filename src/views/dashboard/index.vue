@@ -172,7 +172,7 @@ const handleNodeClick = (item: any) => {
 const loadThermalData = (areaId: number, invokeSignal = true) => {
   machinesAndResultByAreaApi({ areaId: areaId }).then((res) => {
     loadMachineComponents(res.data.item1 ?? [], invokeSignal)
-    areaRangePointList.value = res.data.item2
+    areaRangePointList.value = (res.data.item2 ?? []).filter((point: any) => point.latitude && point.longitude);
   })
 }
 const loadMachineComponents = (components: any[], invokeSignal = true) => {

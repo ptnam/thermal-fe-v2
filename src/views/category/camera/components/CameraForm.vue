@@ -84,18 +84,6 @@
             <el-input v-model="formModel.wanIpAddress"/>
           </el-form-item>
           <el-form-item
-              v-show="formModel.cameraType === CAMERA_NORMAL_TYPE"
-              label="Vùng giám sát"
-              prop="cameraType"
-              :error="formErrors.CameraType"
-          >
-            <select-from-config
-                key-config="cameraTypeList"
-                v-model="formModel.cameraType"
-                col-value="code"
-            />
-          </el-form-item>
-          <el-form-item
               label="Hãng camera"
               prop="brand"
               :error="formErrors.Brand"
