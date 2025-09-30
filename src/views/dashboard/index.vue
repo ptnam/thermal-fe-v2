@@ -32,6 +32,7 @@
                 </div>
               </l-tooltip>
             </live-marker>
+            <area-range :point-list="areaRangePointList"/>
           </LeafletMap>
         </div>
       </div>
@@ -84,6 +85,7 @@ import {
 } from '@/api/thermal-data'
 import BaseDialog from '@/components/Dialog/BaseDialog.vue'
 import _ from 'lodash'
+import AreaRange from '@/views/dashboard/components/AreaRange.vue'
 
 onMounted(() => {
   createSignalRConnection()
@@ -147,6 +149,7 @@ const getIconPaths = (mark: any) => {
 }
 const leafletMapRef = ref()
 const liveMarkers = ref<any[]>([])
+const areaRangePointList = ref<any[]>([])
 const liveTemperatureMap = ref({})
 const thermalInfoMap = ref({})
 const itemKey = ref(0)
@@ -168,23 +171,26 @@ const handleNodeClick = (item: any) => {
 
 const loadThermalData = (areaId: number, invokeSignal = true) => {
   machinesAndResultByAreaApi({ areaId: areaId }).then((res) => {
-    const components: any[] = res.data
-    nextTick(() => {
-      if (invokeSignal) {
-        const machineIds: string[] = [
-          ...new Set(
-            components.map((item) => item.machineId).filter((val): val is string => !!val),
-          ),
-        ]
-        invokeSignalR('RegisterMachines', machineIds)
+    loadMachineComponents(res.data.item1 ?? [], invokeSignal)
+    areaRangePointList.value = res.data.item2
+  })
+}
+const loadMachineComponents = (components: any[], invokeSignal = true) => {
+  nextTick(() => {
+    if (invokeSignal) {
+      const machineIds: string[] = [
+        ...new Set(
+          components.map((item) => item.machineId).filter((val): val is string => !!val),
+        ),
+      ]
+      invokeSignalR('RegisterMachines', machineIds)
+    }
+    liveTemperatureMap.value = _.keyBy(components, 'key')
+    liveMarkers.value = components.map(function (item, index) {
+      return {
+        ...item,
+        updateAt: `${Date.now()}_${index}_${Math.floor(1000 + Math.random() * 9000)}`,
       }
-      liveTemperatureMap.value = _.keyBy(components, 'key')
-      liveMarkers.value = components.map(function (item, index) {
-        return {
-          ...item,
-          updateAt: `${Date.now()}_${index}_${Math.floor(1000 + Math.random() * 9000)}`,
-        }
-      })
     })
   })
 }

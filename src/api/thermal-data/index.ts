@@ -36,7 +36,7 @@ export const realTimeThermalDataApi = (searchParams: object): Promise<IResponse<
     return request.get({url: '/api/ThermalDatas/realTimeThermalData', params: searchParams})
 }
 
-export const machinesAndResultByAreaApi = (searchParams: object): Promise<IResponse<[]>> => {
+export const machinesAndResultByAreaApi = (searchParams: object): Promise<any> => {
     return request.get({url: '/api/ThermalDatas/machinesAndResultByArea', params: searchParams})
 }
 export const environmentThermalApi = (searchParams: object): Promise<IResponse<[]>> => {
