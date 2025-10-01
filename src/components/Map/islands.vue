@@ -22,8 +22,33 @@
     fillColor="#aad3df"
   >
   </l-polygon>
+  <l-marker :lat-lng="[16.5, 113]">
+    <l-icon
+      :icon-size="[150, 30]"
+      :icon-anchor="[75, 15]"
+      className="bg-transparent"
+    >
+      <div class="text-[#777877]">
+        Quần đảo <br>
+        Hoàng Sa
+      </div>
+    </l-icon>
+  </l-marker>
+
+  <l-marker :lat-lng="[9.5, 115.5]">
+    <l-icon
+      :icon-size="[180, 30]"
+      :icon-anchor="[90, 15]"
+      className="bg-transparent"
+    >
+      <div class="text-[#777877]">
+        Quần đảo<br>
+        Trường Sa
+      </div>
+    </l-icon>
+  </l-marker>
 </template>
 <script setup lang="ts">
 import openstreetmap from '@/assets/map/openstreetmap.json'
-import { LPolygon } from '@vue-leaflet/vue-leaflet'
+import { LPolygon, LMarker, LIcon } from '@vue-leaflet/vue-leaflet'
 </script>
