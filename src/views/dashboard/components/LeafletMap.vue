@@ -10,6 +10,7 @@
         @ready="onMapLoad"
         style="height: 80vh"
         :crs="mapType === MAP_TYPE_PICTURE ? crs : null"
+        @update:zoom="onZoomChange"
         v-bind="$attrs"
     >
       <!-- Base map -->
@@ -29,7 +30,7 @@
           :bounds="bounds"
       />
       <slot></slot>
-      <islands />
+      <islands v-if="mapType === MAP_TYPE_MAP" :zoom="zoomValue" />
     </l-map>
   </div>
 </template>
@@ -59,6 +60,11 @@ const loadingMap = ref(true)
 
 const onMapLoad = () => {
   loadingMap.value = false
+}
+
+const zoomValue = ref(props.zoom)
+function onZoomChange(newZoom: number) {
+  zoomValue.value = newZoom
 }
 
 const flyToPoint = () => {
