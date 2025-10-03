@@ -2,12 +2,12 @@ importScripts('https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js
 importScripts('https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js')
 
 firebase.initializeApp({
-    apiKey: "AIzaSyCpSKtb_-oJMhcF0z1M2AnSrRVnXGV5_1k",
-    authDomain: "therma-92d11.firebaseapp.com",
-    projectId: "therma-92d11",
-    storageBucket: "therma-92d11.firebasestorage.app",
-    messagingSenderId: "842499541723",
-    appId: "1:842499541723:web:4be1fa87321676eb179afe"
+    apiKey: "AIzaSyDQ468DVxk3199-gAbdxQUCJtisJoFuoCs",
+    authDomain: "thermal-b13b9.firebaseapp.com",
+    projectId: "thermal-b13b9",
+    storageBucket: "thermal-b13b9.firebasestorage.app",
+    messagingSenderId: "524070383945",
+    appId: "1:524070383945:web:ea9e08fefdc1c1228eea98",
 })
 
 const messaging = firebase.messaging()
