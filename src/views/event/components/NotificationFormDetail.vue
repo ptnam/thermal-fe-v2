@@ -28,6 +28,9 @@
     <el-form-item label="Loại">
       <view-input :contain="formModelValue?.compareTypeObject?.name" :disabled="true" />
     </el-form-item>
+    <el-form-item label="Đối tượng so sánh">
+      <view-input :contain="formModelValue?.compareComponent" :disabled="true" />
+    </el-form-item>
     <el-form-item label="Giá trị so sánh">
       <view-input :contain="formModelValue?.compareValue" :disabled="true" />
     </el-form-item>
