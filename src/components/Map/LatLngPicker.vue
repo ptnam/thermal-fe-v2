@@ -68,7 +68,7 @@
               v-if="marker.latitude && marker.longitude"
               :lat-lng="[marker.latitude, marker.longitude]"
           />
-          <islands />
+          <islands v-if="mapType === MAP_TYPE_MAP" :zoom="zoomValue" />
         </l-map>
       </template>
     </el-dialog>
@@ -80,6 +80,7 @@ import {LMap, LTileLayer, LMarker} from '@vue-leaflet/vue-leaflet'
 import 'leaflet/dist/leaflet.css'
 import {LocationInformation} from '@element-plus/icons-vue'
 import Islands from '@/components/Map/islands.vue'
+import { MAP_TYPE_MAP } from '@/constants/index.js'
 
 const props = defineProps({
   buttonText: {
@@ -93,6 +94,10 @@ const props = defineProps({
   latitudeLabel: {
     type: String,
     default: 'Vĩ độ',
+  },
+  mapType: {
+    type: String,
+    default: MAP_TYPE_MAP,
   },
   mapConfig: {
     type: Object,

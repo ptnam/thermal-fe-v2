@@ -6,6 +6,7 @@
       buttonText="Chọn tọa độ trên ảnh"
       :map-config="mapConfig"
       :crs="crs"
+      :mapType="MAP_TYPE_PICTURE"
       :update-center="false"
   >
     <l-image-overlay class="" :url="imagePath" :crossOrigin="false" :bounds="bounds"></l-image-overlay>
@@ -19,6 +20,7 @@ import {LImageOverlay} from '@vue-leaflet/vue-leaflet'
 
 import {CRS} from 'leaflet'
 import {useImageBounds} from "@/hooks/web/useImageBounds.js";
+import { MAP_TYPE_PICTURE } from '@/constants/index.js'
 
 const crs = CRS.Simple
 const props = defineProps({
