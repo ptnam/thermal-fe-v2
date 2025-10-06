@@ -30,9 +30,8 @@ axiosInstance.interceptors.response.use(
         return res
     },
     (error: AxiosError) => {
-        console.log(error) // for debug
         ElMessage.error((error.response?.data as { message: string })?.message ?? error.message)
-        if (error.status === 401) {
+        if (error.status === 401 || error.message === 'Network Error') {
             const userStore = useUserStoreWithOut()
             userStore.resetAndRedirectToLogin()
             service.cancelAllRequest()
