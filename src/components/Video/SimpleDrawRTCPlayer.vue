@@ -233,6 +233,9 @@ const getImageData = (): string | null => {
   const width = v.videoWidth || c.width || c.offsetWidth;
   const height = v.videoHeight || c.height || c.offsetHeight;
 
+  videoWidth.value = v.videoWidth
+  videoHeight.value = v.videoHeight
+
   if (width === 0 || height === 0) {
     console.warn("Video not ready or canvas has no size yet");
     return null;
@@ -259,6 +262,7 @@ const saveVisionPresets = () => {
   visionPresetApi({
     ...presetData.value,
     ...{
+      resolution: `${videoWidth.value}x${videoHeight.value}`,
       areaPoints: pointValues.value,
       imageData: getImageData()
     }

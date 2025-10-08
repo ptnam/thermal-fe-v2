@@ -1,6 +1,9 @@
 import request from '@/plugins/axios'
 import { UserLoginType } from '@/api/login/types'
 
+export const getAllUserListApi = (searchParams: object): Promise<IResponse<[]>> => {
+  return request.get({ url: '/api/Users/all', params: searchParams })
+}
 export const getUserListApi = (searchParams: object): Promise<IResponse<[]>> => {
   return request.get({ url: '/api/Users/list', params: searchParams })
 }

@@ -23,19 +23,15 @@
           multiple
         ></select-from-config>
       </el-form-item>
-      <el-form-item
-        label="Người dùng"
-        prop="users"
-        :error="formErrors?.Users"
-      >
-        <object-infinite-select
+      <el-form-item label="Người dùng" prop="users" :error="formErrors?.Users">
+        <object-select-from-url
           v-model="formModel.users"
-          :request-fn="getUserListApi"
+          :request-fn="getAllUserListApi"
           :append-query="{ status: STATUS_ACTIVE }"
           col-value="id"
           col-label="fullName"
           multiple
-        />
+        ></object-select-from-url>
       </el-form-item>
       <el-form-item
         v-show="isEditing"
@@ -64,11 +60,9 @@ import { rule } from '@/utils/validate'
 import { isFormEditing } from '@/utils/is'
 import { FormRules } from 'element-plus'
 import { addNotificationChannelApi, editNotificationChannelApi } from '@/api/notification-channel'
-import {
-  STATUS_ACTIVE,
-} from '@/constants'
-import { getUserListApi } from '@/api/user'
-import ObjectInfiniteSelect from "@/components/Selection/ObjectInfiniteSelect.vue";
+import { STATUS_ACTIVE } from '@/constants'
+import { getAllUserListApi } from '@/api/user'
+import ObjectSelectFromUrl from '@/components/Selection/ObjectSelectFromUrl.vue'
 
 const props = defineProps({
   formModel: {
