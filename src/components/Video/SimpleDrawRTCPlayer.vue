@@ -259,12 +259,13 @@ const savePresetLoading = ref(false)
 const emits = defineEmits(['saved'])
 const saveVisionPresets = () => {
   savePresetLoading.value = true
+  const image = getImageData()
   visionPresetApi({
     ...presetData.value,
     ...{
       resolution: `${videoWidth.value}x${videoHeight.value}`,
       areaPoints: pointValues.value,
-      imageData: getImageData()
+      imageData: image
     }
   }).then(_ => {
     emits('saved')
