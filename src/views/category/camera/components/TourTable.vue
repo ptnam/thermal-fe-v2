@@ -10,6 +10,7 @@ import {useLang} from "@/hooks/web/useI18n";
 import ApiButton from "@/components/Button/ApiButton.vue";
 import {ArrowRight, SwitchButton} from "@element-plus/icons-vue";
 import {playTourApi} from "@/api/camera";
+import {ElMessage} from "element-plus";
 
 const {t} = useLang()
 const renderExpand = (scope: any) => {
@@ -22,6 +23,13 @@ const renderExpand = (scope: any) => {
         ))}
       </div>
   )
+}
+
+const showMessage = (res: any) => {
+  ElMessage({
+    message: res.message,
+    type: 'success',
+  })
 }
 
 const columns = [
@@ -39,14 +47,14 @@ const columns = [
       default: ({row}) => (
           <div>
             <ApiButton
-                api={() => playTourApi({tourId: row.tourId, cameraId: row.cameraId, command: 'run'})}
+                api={() => playTourApi({tourId: row.tourId, cameraId: row.cameraId, command: 'run'}).then(res => showMessage(res))}
                 icon={ArrowRight}
                 color="#4F6B99"
                 round={true}
             >
             </ApiButton>
             <ApiButton
-                api={() => playTourApi({tourId: row.tourId, cameraId: row.cameraId, command: 'stop'})}
+                api={() => playTourApi({tourId: row.tourId, cameraId: row.cameraId, command: 'stop'}).then(res => showMessage(res))}
                 icon={SwitchButton}
                 color="#FACE38"
                 round={true}
