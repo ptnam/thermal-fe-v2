@@ -18,6 +18,6 @@ export const myProfileApi = (): Promise<object> => {
   })
 }
 
-export const logoutApi = (): Promise<IResponse> => {
-  return request.post({ url: 'api/auth/logout' })
+export const logoutApi = (data: object): Promise<IResponse> => {
+  return request.post({ url: 'api/auth/logout', data: data })
 }

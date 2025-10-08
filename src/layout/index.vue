@@ -1,18 +1,16 @@
 <script lang="ts" setup>
-import {computed, onBeforeMount, ref} from 'vue'
-import {Navbar, Sidebar, AppMain} from './components'
-import {useResizeHandler} from './mixin/ResizeHandler'
-import {useAppStore} from '@/store/modules/app'
-import {useConfigStore} from '@/store/modules/configStore'
-import {usePaginationStore} from '@/store/modules/paginationStore'
-import {setupFcmListener} from "@/plugins/firebase/firebase";
-
+import { computed, onBeforeMount, ref } from 'vue'
+import { Navbar, Sidebar, AppMain } from './components'
+import { useResizeHandler } from './mixin/ResizeHandler'
+import { useAppStore } from '@/store/modules/app'
+import { useConfigStore } from '@/store/modules/configStore'
+import { usePaginationStore } from '@/store/modules/paginationStore'
+import { requestAndSendFcmToken, setupFcmListener } from '@/plugins/firebase/firebase'
 
 try {
   setupFcmListener()
-} catch (e) {
-
-}
+  requestAndSendFcmToken()
+} catch (e) {}
 useResizeHandler()
 const appStore = useAppStore()
 const configStore = useConfigStore()
@@ -47,16 +45,13 @@ const handleClickOutside = () => {
 </script>
 <template>
   <div :class="classObj" class="app-wrapper">
-    <div
-      v-if="device === 'mobile' && sidebar.opened"
-      @click="handleClickOutside"
-    />
-    <Sidebar class="sidebar-container"/>
+    <div v-if="device === 'mobile' && sidebar.opened" @click="handleClickOutside" />
+    <Sidebar class="sidebar-container" />
     <div class="main-container" v-loading="loadConfigLoading">
       <div :class="{ 'fixed-header': fixedHeader }">
-        <Navbar/>
+        <Navbar />
       </div>
-      <AppMain v-if="!loadConfigLoading"/>
+      <AppMain v-if="!loadConfigLoading" />
     </div>
   </div>
 </template>

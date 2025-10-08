@@ -61,6 +61,16 @@ export async function requestAndSendFcmToken(): Promise<void> {
     }
 }
 
+
+export async function getFirebaseToken() {
+  const permission = await Notification.requestPermission()
+  if (permission !== 'granted') {
+    console.log('Notification permission denied.')
+    return
+  }
+  return  await getToken(<Messaging>messaging, {vapidKey: VAPID_KEY})
+}
+
 /**
  * Set up foreground FCM message listener
  */

@@ -4,6 +4,7 @@ import { UserType } from '@/api/login/types'
 import { ElMessageBox } from 'element-plus'
 import router from '@/router'
 import { logoutApi, myProfileApi, refreshTokenApi } from '@/api/login'
+import { getFirebaseToken } from '@/plugins/firebase/firebase'
 
 let refreshTimer: number | null = null
 
@@ -75,7 +76,11 @@ export const useUserStore = defineStore('user', {
         cancelButtonText: 'Hủy',
         type: 'warning',
       }).then(async () => {
-        await logoutApi().finally(() => {
+        const token = await getFirebaseToken();
+        await logoutApi({
+          firebaseToken: token,
+          deviceType: 'web'
+        }).finally(() => {
           this.resetAndRedirectToLogin()
         })
       })
