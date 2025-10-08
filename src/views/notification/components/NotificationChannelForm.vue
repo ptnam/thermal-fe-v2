@@ -31,6 +31,7 @@
           col-value="id"
           col-label="fullName"
           multiple
+          filterable
         ></object-select-from-url>
       </el-form-item>
       <el-form-item
