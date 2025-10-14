@@ -29,8 +29,8 @@ export function useConfirmModal() {
 export function useNoticeModal() {
   const noticeModal = async (
     content: string,
+    onOk?: () => void | Promise<any>,
     title = 'Thông báo',
-    onOk?: () => void | Promise<void>,
     extraOptions?: Partial<Parameters<typeof ElMessageBox.alert>[2]>,
   ) => {
     await ElMessageBox.alert(content, title, {

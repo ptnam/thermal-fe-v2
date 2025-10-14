@@ -5,7 +5,13 @@ import { useResizeHandler } from './mixin/ResizeHandler'
 import { useAppStore } from '@/store/modules/app'
 import { useConfigStore } from '@/store/modules/configStore'
 import { usePaginationStore } from '@/store/modules/paginationStore'
-import { requestAndSendFcmToken, setupFcmListener } from '@/plugins/firebase/firebase'
+import {
+  enableNotificationSound,
+  isNotificationGranted,
+  requestAndSendFcmToken,
+  setupFcmListener,
+} from '@/plugins/firebase/firebase'
+import { useNoticeModal } from '@/hooks/web/useModal'
 
 try {
   setupFcmListener()
@@ -29,16 +35,24 @@ const classObj = computed(() => {
     // mobile: device.value === 'mobile',
   }
 })
+const { noticeModal } = useNoticeModal()
 const loadConfigLoading = ref(true)
 onBeforeMount(async () => {
   try {
     await configStore.loadConfig()
     await paginationStore.loadConfig()
+    checkSound()
   } catch (e) {
   } finally {
     loadConfigLoading.value = false
   }
 })
+
+const checkSound = () => {
+  if (!isNotificationGranted()) {
+    noticeModal('Hãy cho phép thiết bị bật âm thanh', enableNotificationSound)
+  }
+}
 const handleClickOutside = () => {
   appStore.closeSideBar(false)
 }

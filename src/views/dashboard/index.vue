@@ -115,39 +115,21 @@ const areaItem = ref({
   photoPath: '',
 })
 
-const goodCamUrl = new URL('@/assets/map/camera-on.png', import.meta.url).href
-const badCamUrl = new URL('@/assets/map/camera-off.png', import.meta.url).href
+const goodSensorUrl = new URL('@/assets/map/good-sensor.png', import.meta.url).href
+const badSensorUrl = new URL('@/assets/map/bad-sensor.png', import.meta.url).href
 
-const goodSensorUrl = new URL('@/assets/map/good-sensor.svg', import.meta.url).href
-const badSensorUrl = new URL('@/assets/map/bad-sensor.svg', import.meta.url).href
-
-const goodCamSensorUrl = new URL('@/assets/map/camera-sensor-good.jpg', import.meta.url).href
-const badCamSensorUrl = new URL('@/assets/map/camera-with-bad-sensor.png', import.meta.url).href
-
-const mapIcon = {
-  Sensor: {
-    good: { iconPath: goodSensorUrl, isBlink: false },
-    bad: { iconPath: badSensorUrl, isBlink: true },
-  },
-  Camera: {
-    good: { iconPath: goodCamUrl, isBlink: false },
-    bad: { iconPath: badCamUrl, isBlink: true },
-  },
-  CameraSensor: {
-    good: { iconPath: goodCamSensorUrl, isBlink: false },
-    bad: { iconPath: badCamSensorUrl, isBlink: true },
-  },
-}
 const getIconPaths = (mark: any) => {
   const level = liveTemperatureMap.value[mark.key]?.level
-  const icon = mapIcon[mark.monitorPointIcon]
-  if(icon) {
-    if (level === 'Bad') {
-      return icon.bad
-    }
-    return icon.good
+  const icon = {
+    good: { iconPath: goodSensorUrl, isBlink: false },
+    bad: { iconPath: badSensorUrl, isBlink: true },
   }
+  if (level === 'Bad') {
+    return icon.bad
+  }
+  return icon.good
 }
+
 const leafletMapRef = ref()
 const liveMarkers = ref<any[]>([])
 const areaRangePointList = ref<any[]>([])
