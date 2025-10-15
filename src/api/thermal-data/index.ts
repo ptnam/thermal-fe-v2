@@ -15,15 +15,15 @@ export const listThermalGroupApi = (searchParams: object): Promise<IResponse<[]>
 }
 
 export const hourlyThermalDataApi = (searchParams: object): Promise<IResponse<[]>> => {
-    return request.get({url: '/api/ThermalDatas/hourlyThermalData', params: searchParams})
+    return request.get({url: '/api/ThermalDatas/hourlyThermalDataMulti', params: searchParams})
 }
 
 export const dailyThermalDataApi = (searchParams: object): Promise<IResponse<[]>> => {
-    return request.get({url: '/api/ThermalDatas/dailyThermalData', params: searchParams})
+    return request.get({url: '/api/ThermalDatas/dailyThermalDataMulti', params: searchParams})
 }
 
 export const timeThermalDataApi = (searchParams: object): Promise<IResponse<[]>> => {
-    return request.get({url: '/api/ThermalDatas/detailThermalData', params: searchParams})
+    return request.get({url: '/api/ThermalDatas/detailThermalDataMulti', params: searchParams})
 }
 export const componentThermalDataApi = (searchParams: object): Promise<IResponse<[]>> => {
     return request.get({url: '/api/ThermalDatas/componentThermalData', params: searchParams})

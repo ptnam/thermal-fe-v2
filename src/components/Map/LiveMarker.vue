@@ -30,7 +30,7 @@ const currentIcon = ref(null)
 function createIcon(path, isBlink = false) {
   return L.icon({
     iconUrl: path,
-    iconSize: [20, 20],
+    iconSize: [30, 30],
     iconAnchor: [10, 10],
     tooltipAnchor: [0, -10],
     className: isBlink ? 'blink' : ''

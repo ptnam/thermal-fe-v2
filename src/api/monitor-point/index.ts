@@ -27,6 +27,6 @@ export const deleteMonitorPointApi = (id: number): Promise<IResponse> => {
     return request.delete({url: `api/MonitorPoints/${id}`})
 }
 
-export const allMonitorPointsByMachineComponentApi = (machineComponentId: number | null): Promise<IResponse> => {
-    return request.get({url: `api/MonitorPoints/allByMachineComponent?machineComponentId=${machineComponentId}`})
+export const allMonitorPointsByMachineComponentApi = (searchParams: object | null): Promise<IResponse> => {
+    return request.get({url: 'api/MonitorPoints/allByMachineComponent', params: searchParams})
 }

@@ -16,46 +16,51 @@
         <el-form-item v-if="searchParams.areaId" label="Thiết bị">
           <virtualized-select-from-url
               ref="machineRef"
-              v-model="searchParams.machineId"
+              v-model="searchParams.machineIds"
               :request-fn="() => getAllMachineApi({areaId:searchParams.areaId})"
               filterable
               value-key="id"
               col-label="name"
               :default-first-option="true"
               clearable
+              multiple
               @change="changeMachine"
-              style="width: 180px"
           />
         </el-form-item>
-        <el-form-item v-if="searchParams.machineId" label="Bộ phận">
+        <el-form-item v-if="searchParams.machineIds" label="Bộ phận">
           <virtualized-select-from-url
               ref="machineComponentRef"
-              v-model="searchParams.machineComponentId"
-              :request-fn="() => getComponentMachineApi({machineId:searchParams.machineId})"
+              v-model="searchParams.machineComponentIds"
+              :request-fn="() => getMultiComponentsMachineApi({machineIds:searchParams.machineIds})"
               filterable
               value-key="id"
               :default-first-option="true"
               clearable
-              style="width: 150px"
+              multiple
               @change="changeMachineComponent"
           />
         </el-form-item>
-        <el-form-item v-show="searchParams.machineComponentId">
+        <el-form-item v-show="searchParams.machineComponentIds">
           <el-tooltip
-            content="Thiết lập thiết bị mặc định"
+              content="Thiết lập thiết bị mặc định"
           >
-          <el-button :loading="saveSettingLoading" :icon="Setting" @click="()=> saveSetting(searchParams)"></el-button>
+            <el-button
+                :loading="saveSettingLoading"
+                :icon="Setting"
+                @click="()=> saveSetting(searchParams)"
+            ></el-button>
           </el-tooltip>
         </el-form-item>
-        <el-form-item v-if="searchParams.machineComponentId" label="Điểm giám sát">
+        <el-form-item v-if="searchParams.machineComponentIds && searchParams.machineComponentIds.length === 1"
+                      label="Điểm giám sát">
           <ObjectSelectFromUrl
               ref="monitorPointIdRef"
               v-model="monitorPoint"
-              :request-fn="() => allMonitorPointsByMachineComponentApi(searchParams.machineComponentId)"
+              :request-fn="() => allMonitorPointsByMachineComponentApi({machineComponentId: searchParams.machineComponentIds[0]})"
               filterable
               value-key="id"
               clearable
-              style="width: 150px"
+              multiple
               @change="changeMonitorPoint"
           />
         </el-form-item>
@@ -63,7 +68,6 @@
       <el-row>
         <el-form-item>
           <el-select
-              style="width: 160px"
               v-model="searchType"
               filterable
               value-key="id"
@@ -122,10 +126,12 @@
 </template>
 <script setup lang="ts">
 import VirtualizedSelectFromUrl from "@/components/Selection/VirtualizedSelectFromUrl.vue";
-import { getAllMachineApi, getComponentMachineApi, getMachineSettingApi, saveMachineSettingApi } from '@/api/machine'
+import {
+  getAllMachineApi, getMachineSettingApi,
+  getMultiComponentsMachineApi, saveMachineSettingApi
+} from '@/api/machine'
 import useRequest from "@/hooks/web/useRequest";
-import { computed, nextTick, onMounted, ref } from 'vue'
-import {allMonitorPointsByMachineComponentApi} from "@/api/monitor-point";
+import {computed, nextTick, onMounted, ref} from 'vue'
 import VueApexChart from "vue3-apexcharts";
 import {getAllTreeAreaApi} from "@/api/area";
 import SearchButton from "@/components/Button/SearchButton.vue";
@@ -136,9 +142,10 @@ import {
 } from "@/api/thermal-data";
 import TreeSelectRemote from "@/components/Tree/TreeSelectRemote.vue";
 import ObjectSelectFromUrl from "@/components/Selection/ObjectSelectFromUrl.vue";
-import { Setting } from '@element-plus/icons-vue'
-import { ElMessage } from 'element-plus'
+import {Setting} from '@element-plus/icons-vue'
+import {ElMessage} from 'element-plus'
 import dayjs from 'dayjs'
+import {allMonitorPointsByMachineComponentApi} from "@/api/monitor-point";
 
 const HOUR = 1
 const DAY = 2
@@ -232,8 +239,8 @@ const monitorPoint = ref();
 
 const searchParams = ref({
   areaId: null,
-  machineId: null,
-  machineComponentId: null,
+  machineIds: null,
+  machineComponentIds: [],
   monitorPointId: null,
   monitorPointType: null,
   reportDate: new Date().toISOString().split('T')[0],
@@ -290,20 +297,20 @@ const changeAreaId = () => {
   })
 }
 const changeMachine = () => {
-  searchParams.value['machineComponentId'] = null
-  searchParams.value['monitorPointId'] = null
+  searchParams.value['machineComponentIds'] = []
+  searchParams.value['monitorPointIds'] = null
   searchParams.value['monitorPointType'] = null
   machineComponentRef?.value?.fetch()
 }
 
 const changeMachineComponent = () => {
-  searchParams.value['monitorPointId'] = null
+  searchParams.value['monitorPointIds'] = null
   searchParams.value['monitorPointType'] = null
   monitorPointIdRef?.value?.fetch()
 }
 
 const changeMonitorPoint = (pointItem: any) => {
-  searchParams.value['monitorPointId'] = pointItem.id
+  // searchParams.value['monitorPointId'] = pointItem.id
   searchParams.value['monitorPointType'] = pointItem.monitorPointType
 }
 

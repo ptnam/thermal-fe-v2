@@ -35,6 +35,10 @@ export const getComponentMachineApi = (searchParams: object): Promise<IResponse>
     return request.get({url: '/api/Machines/components', params: searchParams})
 }
 
+export const getMultiComponentsMachineApi = (searchParams: object): Promise<IResponse> => {
+    return request.get({url: 'api/Machines/multiComponents', params: searchParams})
+}
+
 export const machinesAndComponentByAreaApi = (searchParams: object): Promise<IResponse> => {
     return request.get({url: '/api/Machines/machinesByArea', params: searchParams})
 }
