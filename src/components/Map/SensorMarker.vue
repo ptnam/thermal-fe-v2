@@ -1,0 +1,110 @@
+<template>
+  <l-marker :lat-lng="latLng" :icon="currentIcon">
+    <slot></slot>
+  </l-marker>
+</template>
+
+<script setup>
+import {watch, computed, ref, onMounted} from 'vue'
+import {LMarker} from '@vue-leaflet/vue-leaflet'
+import L from 'leaflet'
+// Props
+const props = defineProps({
+  latLng: {
+    type: Array,
+    required: true,
+  },
+  iconColor: {
+    type: String,
+    default: '#dd0c44', // default red
+  },
+  isBlink: {
+    type: Boolean,
+    default: false,
+  },
+})
+
+// Reactive state
+const currentIcon = ref(null)
+
+const svgHtml = computed(() => `<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+ "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+ width="30pt" height="40pt" viewBox="0 0 452.000000 552.000000"
+ preserveAspectRatio="xMidYMid meet">
+
+<g transform="translate(0.000000,552.000000) scale(0.100000,-0.100000)"  fill="#333333" stroke="none">
+<path d="M2019 5336 c-75 -21 -147 -66 -204 -128 -62 -66 -99 -138 -114 -222
+-8 -42 -11 -565 -11 -1733 0 -954 -4 -1673 -9 -1673 -18 0 -153 -135 -197
+-195 -100 -141 -149 -295 -147 -470 3 -423 319 -761 748 -800 210 -20 455 70
+611 224 165 163 244 350 245 578 0 250 -106 471 -298 625 l-63 50 0 1678 c0
+1191 -3 1694 -11 1732 -23 109 -103 222 -200 284 -95 60 -239 80 -350 50z
+m235 -176 c77 -36 133 -104 152 -188 11 -47 14 -367 14 -1759 0 -1631 1 -1704
+18 -1720 10 -10 48 -39 85 -65 168 -120 267 -330 254 -544 -13 -216 -127 -406
+-309 -517 -91 -55 -175 -79 -298 -84 -198 -9 -340 46 -480 187 -131 131 -190
+269 -190 450 0 214 96 396 280 530 39 27 71 51 72 53 2 1 5 787 8 1747 5 1644
+6 1747 23 1777 41 77 112 133 192 154 44 12 132 1 179 -21z"/>
+<path fill="${props.iconColor}" d="M2104 3938 c-12 -5 -27 -21 -33 -35 -8 -17 -11 -370 -11 -1269 0
+-685 -2 -1249 -5 -1253 -2 -5 -25 -14 -51 -21 -59 -17 -149 -75 -198 -130 -84
+-93 -129 -247 -108 -363 27 -146 122 -271 257 -338 51 -25 80 -32 149 -36 141
+-9 251 31 349 129 169 167 174 437 13 616 -52 57 -149 117 -208 127 l-38 7 0
+1260 0 1260 -29 29 c-31 30 -52 35 -87 17z"/>
+<path d="M2934 4846 c-48 -21 -60 -84 -25 -127 l19 -24 459 -3 c492 -2 496 -2
+520 49 19 39 3 81 -38 101 -31 16 -74 18 -469 18 -342 -1 -442 -4 -466 -14z"/>
+<path d="M2915 4255 c-33 -32 -34 -83 -2 -113 22 -21 32 -22 228 -22 202 0
+206 0 227 23 32 34 30 89 -4 116 -25 20 -40 21 -226 21 -198 0 -199 0 -223
+-25z"/>
+<path d="M2935 3698 c-48 -26 -60 -87 -26 -129 l19 -24 464 -3 c452 -2 465 -2
+490 17 48 38 39 114 -17 139 -35 16 -901 17 -930 0z"/>
+<path d="M2916 3109 c-35 -27 -36 -86 -3 -117 22 -21 32 -22 228 -22 202 0
+206 0 227 23 32 34 30 89 -4 116 -25 20 -40 21 -224 21 -184 0 -199 -1 -224
+-21z"/>
+<path d="M2941 2549 c-52 -21 -68 -86 -32 -130 l19 -24 462 -3 c408 -2 465 -1
+487 13 33 22 45 57 31 96 -20 58 -30 59 -510 58 -253 0 -443 -4 -457 -10z"/>
+<path d="M2915 1955 c-33 -32 -34 -83 -2 -113 22 -21 32 -22 228 -22 202 0
+206 0 227 23 32 34 30 89 -4 116 -25 20 -40 21 -226 21 -198 0 -199 0 -223
+-25z"/>
+</g>
+</svg>
+`)
+
+// Create Leaflet icon from either SVG or PNG
+function createIcon() {
+  return L.divIcon({
+    html: svgHtml.value,
+    className: props.isBlink ? 'blink' : '',
+    iconSize: [10, 10],
+    iconAnchor: [10, 10],
+  })
+}
+
+watch(
+    () => props.iconColor,
+    () => {
+      currentIcon.value = createIcon()
+    },
+    {immediate: true}
+)
+
+onMounted(() => {
+  currentIcon.value = createIcon()
+})
+</script>
+
+<style lang="scss">
+.blink {
+  animation: blink 0.6s infinite;
+}
+
+:global {
+  @keyframes blink {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.3;
+    }
+  }
+}
+</style>

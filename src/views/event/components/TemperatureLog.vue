@@ -214,7 +214,7 @@ const chartOptions = {
 const series = ref(
     []
 )
-const searchType = ref(PHASE)
+const searchType = ref(TIME)
 const searchTypeOptions = [
   {
     value: HOUR,
@@ -228,10 +228,10 @@ const searchTypeOptions = [
     value: TIME,
     label: "Khoảng thời gian"
   },
-  {
-    value: PHASE,
-    label: "So sách các pha"
-  }
+  // {
+  //   value: PHASE,
+  //   label: "So sách các pha"
+  // }
 ];
 
 const monitorPoint = ref();
@@ -287,8 +287,8 @@ const search = () => {
 
 
 const changeAreaId = () => {
-  searchParams.value['machineId'] = null
-  searchParams.value['machineComponentId'] = null
+  searchParams.value['machineIds'] = null
+  searchParams.value['machineComponentIds'] = []
   searchParams.value['monitorPointId'] = null
   searchParams.value['monitorPointType'] = null
   nextTick(() => {
