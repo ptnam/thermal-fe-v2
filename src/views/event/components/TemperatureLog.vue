@@ -60,7 +60,6 @@
               filterable
               value-key="id"
               clearable
-              multiple
               @change="changeMonitorPoint"
           />
         </el-form-item>
