@@ -29,6 +29,10 @@ export const componentThermalDataApi = (searchParams: object): Promise<IResponse
     return request.get({url: '/api/ThermalDatas/componentThermalData', params: searchParams})
 }
 
+export const predictThermalDataApi = (searchParams: object): Promise<IResponse<[]>> => {
+    return request.get({url: 'api/ThermalDatas/predictThermalData', params: searchParams})
+}
+
 export const thermalByComponentApi = (searchParams: object): Promise<IResponse<[]>> => {
     return request.get({url: '/api/ThermalDatas/thermalByComponent', params: searchParams})
 }

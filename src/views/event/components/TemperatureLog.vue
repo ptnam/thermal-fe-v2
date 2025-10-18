@@ -137,7 +137,7 @@ import SearchButton from "@/components/Button/SearchButton.vue";
 import {
   componentThermalDataApi,
   dailyThermalDataApi,
-  hourlyThermalDataApi, timeThermalDataApi,
+  hourlyThermalDataApi, predictThermalDataApi, timeThermalDataApi,
 } from "@/api/thermal-data";
 import TreeSelectRemote from "@/components/Tree/TreeSelectRemote.vue";
 import ObjectSelectFromUrl from "@/components/Selection/ObjectSelectFromUrl.vue";
@@ -150,6 +150,7 @@ const HOUR = 1
 const DAY = 2
 const TIME = 3
 const PHASE = 4
+const PREDICT = 5
 
 const chartOptions = {
   chart: {
@@ -228,6 +229,10 @@ const searchTypeOptions = [
     value: TIME,
     label: "Khoảng thời gian"
   },
+  {
+    value: PREDICT,
+    label: "Dự đoán xu hướng nhiệt"
+  },
   // {
   //   value: PHASE,
   //   label: "So sách các pha"
@@ -273,7 +278,8 @@ const search = () => {
     1: hourlyThermalDataApi,
     2: dailyThermalDataApi,
     3: timeThermalDataApi,
-    4: componentThermalDataApi
+    4: componentThermalDataApi,
+    5: predictThermalDataApi
   }
   onRequest(mapApi[searchType.value], searchParams.value).then(res => {
     chartRef.value?.updateOptions({
