@@ -84,6 +84,7 @@ const props = defineProps({
 })
 
 const speed = ref(3);
+const preCommand = ref();
 
 const {onRequest} = useRequest();
 const requestCommand = (command: number) => {
@@ -91,6 +92,8 @@ const requestCommand = (command: number) => {
     cameraId: props.formModel.id,
     speed: speed.value,
     command: command,
+    preCommand: preCommand.value
   })
+  preCommand.value = command
 }
 </script>
