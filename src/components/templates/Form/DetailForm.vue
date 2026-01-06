@@ -28,7 +28,7 @@ const loading = ref(false);
 
 interface FormComponentProps {
   title?: string;
-  formModel?: UnknownRecord;
+  formModel?: any;
   component: Component;
   transformDetailData?: (data: unknown) => unknown;
   detailRequest: (id: string) => Promise<IResponse<unknown>>;

@@ -14,8 +14,8 @@
   </el-form>
 </template>
 <script setup lang="ts">
+import SearchButton from "@/components/Button/SearchButton.vue";
 import { ElForm } from "element-plus";
-import SearchButton from "@/components/ui/Button/SearchButton.vue";
 
 defineProps({
   model: {

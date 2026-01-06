@@ -1,8 +1,8 @@
 type TransformSaveData = (data: unknown) => unknown;
 
 export interface ActionFormProps<TReq = never, TRes = unknown> {
-  formModel?: UnknownRecord;
-  formProps?: FormElProps;
+  formModel?: any;
+  formProps?: any;
   requestFn?: (data: TReq) => Promise<IResponse<TRes>>;
   transformSaveData?: TransformSaveData;
 }
