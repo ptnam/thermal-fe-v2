@@ -10,6 +10,7 @@ export default {
     search: 'Search',
   },
   buttons: {
+    forgetPassword: 'Forget password',
     add_new: 'Add new',
   },
   fields: {
@@ -61,6 +62,14 @@ export default {
     message: 'Backstage management system',
     username: 'Username',
     password: 'Password',
+  },
+  user: {
+    changePassword: 'Change Password',
+    fields: {
+      currentPassword: 'Current Password',
+      newPassword: 'New Password',
+      password: 'Password',
+    },
   },
   validation: {
     required: 'The {field} field is required.',

@@ -26,3 +26,7 @@ export const saveFirebaseTokenApi = (data: any): Promise<IResponse> => {
 export const syncTelegramChatIdApi = (): Promise<IResponse<[]>> => {
   return request.post({ url: '/api/Users/syncTelegramChatId' })
 }
+
+export const changePasswordApi = (data: any): Promise<IResponse<[]>> => {
+  return request.post({ url: '/api/Users/changepassword', data })
+}

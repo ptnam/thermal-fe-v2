@@ -14,6 +14,7 @@ export default {
         delOk: 'Xóa',
     },
     buttons: {
+        forgetPassword: 'Quên mật khẩu',
         add_new: 'Thêm',
     },
     fields: {
@@ -68,6 +69,14 @@ export default {
         message: 'Backstage management system',
         username: 'Username',
         password: 'Password',
+    },
+    user: {
+        changePassword: 'Thay đổi mật khẩu',
+        fields: {
+        currentPassword: 'Mật khẩu hiện tại',
+        newPassword: 'Mật khẩu mới',
+        password: 'Password',
+        },
     },
     validation: {
         required: 'Trường này bắt buộc nhập.',

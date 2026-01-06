@@ -7,7 +7,13 @@ import {computed} from 'vue'
 // import { useRouter } from 'vue-router'
 import NarBarNotification from '@/components/DropDown/NarBarNotification.vue'
 import {UserFilled} from '@element-plus/icons-vue'
+import { useLang } from '@/hooks/web/useI18n'
+import { useDialogForm } from '@/hooks/web/useDialogForm'
+import ChangePasswordForm from './ChangePasswordForm.vue'
+import { changePasswordApi } from '@/api/user'
 // import LocaleDropdown from '@/components/LocaleDropdown/LocaleDropdown.vue'
+
+const { t } = useLang()
 
 const store = useAppStore()
 const userStore = useUserStore()
@@ -23,6 +29,24 @@ const toggleSideBar = () => {
 }
 const logout = async () => {
   userStore.logoutConfirm()
+}
+const { showDialog, closeDialog } = useDialogForm();
+
+const forgetPassword = () => {
+   showDialog(
+    {
+      component: ChangePasswordForm,
+      formModel: {
+        currentPassword: '',
+        newPassword: '',
+      },
+      requestFn: changePasswordApi,
+      onSuccess: () => {
+        closeDialog();
+      },
+    },
+    { title: t("user.changePassword") },
+  );
 }
 </script>
 <template>
@@ -49,8 +73,9 @@ const logout = async () => {
         <template #dropdown>
           <el-dropdown-menu class="user-dropdown">
             <router-link to="/dashboard">
-              <el-dropdown-item> Home</el-dropdown-item>
+              <el-dropdown-item>Home</el-dropdown-item>
             </router-link>
+            <el-dropdown-item @click="forgetPassword">{{ t("buttons.forgetPassword") }}</el-dropdown-item>
             <el-dropdown-item divided @click="logout">
               <span style="display: block">Log Out</span>
             </el-dropdown-item>
