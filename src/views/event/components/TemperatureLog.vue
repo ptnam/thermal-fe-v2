@@ -145,6 +145,7 @@ import {Setting} from '@element-plus/icons-vue'
 import {ElMessage} from 'element-plus'
 import dayjs from 'dayjs'
 import {allMonitorPointsByMachineComponentApi} from "@/api/monitor-point";
+import { ApexOptions } from "apexcharts";
 
 const HOUR = 1
 const DAY = 2
@@ -152,7 +153,7 @@ const TIME = 3
 const PHASE = 4
 const PREDICT = 5
 
-const chartOptions = {
+const chartOptions: ApexOptions = {
   chart: {
     height: 350,
     type: 'line',
@@ -204,7 +205,6 @@ const chartOptions = {
     },
     labels: {
       show: true,
-      hideOverlappingLabels: true,
       formatter: function (val) {
         return val + "°C";
       }

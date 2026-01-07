@@ -25,11 +25,10 @@
                     <el-option v-for="item in [1, 2, 4, 9]" :key="item" :label="item" :value="item"/>
                   </el-select>
                   <el-tooltip
-                      v-if="visibleOrderSetting"
                       effect="dark"
                       content="Sửa vị trí hiển thị của camera"
                   >
-                    <el-button @click="visibleSortSetting = true" :icon="Setting"></el-button>
+                    <el-button @click="showOrderDialog" :icon="Setting"></el-button>
                   </el-tooltip>
                   <el-button
                       v-if="!visibleOrderSetting"
@@ -106,6 +105,7 @@ const loadingSetting = ref(false)
 const visibleOrderSetting = ref(true)
 const visibleSortSetting = ref(false)
 const environmentTemperature = ref<any>(null)
+const selectedAreaId =  ref(null)
 
 const totalItems = computed(() => fullList.value.length)
 
@@ -150,6 +150,7 @@ const handleNodeClick = (originItem: any) => {
     fullList.value = [originItem]
     loadEnvironmentThermal(originItem.areaId)
   } else {
+    selectedAreaId.value = originItem.id
     fullList.value = collectCams(originItem)
     loadEnvironmentThermal(originItem.id)
   }
@@ -178,6 +179,11 @@ const collectCams = (node: any): any[] => {
 
   return result;
 };
+
+const showOrderDialog = () => {
+  visibleSortSetting.value = true
+}
+
 onMounted(() => {
   loadCamSetting()
 })
