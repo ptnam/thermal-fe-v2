@@ -64,7 +64,8 @@ const presetVisionVisible = ref(false)
 const { onRequest: presetRequest, isLoading: syncPresetLoading } = useRequest()
 const syncPresets = (item: any) => {
   presetRequest(syncPresetsApi, item.id).then((res) => {
-    presets.value = res.data
+    presets.value = res.data.presets
+    cameraTours.value = res.data.cameraTours
     presetDialogVisible.value = true
   })
 }
