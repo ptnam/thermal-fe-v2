@@ -23,8 +23,9 @@
 import {computed, nextTick, onMounted, ref} from "vue";
 import {notificationsCountApi} from "@/api/notification";
 import VueApexChart from "vue3-apexcharts";
+import { ApexOptions } from "apexcharts";
 
-const chartOptions = ref({
+const chartOptions = ref<ApexOptions>({
   chart: {
     height: 350,
     type: 'bar',
@@ -73,7 +74,7 @@ const chartOptions = ref({
     labels: {
       show: true,
       formatter: function (val) {
-        return val;
+        return String(val);
       }
     },
     title: {
