@@ -53,7 +53,7 @@
           >
           </el-button>
           <el-button
-              v-if="isDrawing && (pointCount === 1 || pointCount >= 3)"
+              v-if="isDrawing && pointCount >= 1"
               size="small"
               type="danger"
               circle
@@ -68,9 +68,10 @@
               size="small"
               circle
               :icon="CloseBold"
-              @click="drawer?.removeAllPoint()"
+              @click="stopDrawing"
           >
           </el-button>
+          <span class="text-red-800">{{drawResultText}}</span>
         </div>
         <!-- Canvas overlay -->
         <canvas
@@ -84,7 +85,7 @@
 </template>
 
 <script setup lang="ts">
-import {ref, onMounted, nextTick} from 'vue'
+import {ref, onMounted, nextTick, onUnmounted} from 'vue'
 import {
   VideoPlay,
   VideoPause,
@@ -211,7 +212,10 @@ function toggleFullScreen() {
   const video = videoRef.value
   const doc = document as any
   if (!document.fullscreenElement) video?.requestFullscreen?.()
-  else doc.exitFullscreen?.()
+  else {
+    doc.exitFullscreen?.();
+    stopDrawing()
+  }
 }
 
 const pointValues = ref<any>([])
@@ -256,7 +260,33 @@ function startDrawing() {
 
 const {onRequest: measureTempRequest, isLoading: measureTempLoading} = useRequest()
 
+const timerId = ref(0);
+const drawResultText = ref("");
+
+const stopDrawing = () => {
+  drawer?.removeAllPoint();
+  drawResultText.value = "";
+  if(timerId.value) {
+    clearInterval(timerId.value);
+  }
+}
+
+onUnmounted(() => {
+  if (timerId.value) {
+    clearInterval(timerId.value);
+  }
+});
 function measureTemp() {
+  if(timerId.value) {
+    clearInterval(timerId.value);
+  }
+  measureTempAction();
+  timerId.value = setInterval(() => {
+    measureTempAction();
+  }, 10000);
+}
+
+function measureTempAction() {
   const video = videoRef.value?.querySelector('video') as HTMLVideoElement
   const rect = video.getBoundingClientRect()
 
@@ -280,14 +310,7 @@ function measureTemp() {
   })
       .then((res) => {
         if (res.data) {
-          drawer?.showFullScreenAlert(
-              videoRef,
-              `
-            Min: ${res.data.minTemperature},
-            Max: ${res.data.maxTemperature},
-            Trung bình: ${res.data.aveTemperature}
-          `,
-          )
+          drawResultText.value = `  Min: ${res.data.minTemperature}, Max: ${res.data.maxTemperature},Trung bình: ${res.data.aveTemperature}`;
         }
       })
       .catch((e) => {
