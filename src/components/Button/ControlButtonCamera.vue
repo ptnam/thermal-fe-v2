@@ -55,7 +55,7 @@
                     circle
                     :icon="Setting"
                     @click="() => requestCommand(CAMERA_COMMANDS.Calibration)"
-                    title="Điều chỉnh AI"
+                    title="Điều chỉnh (calibration) tự động"
                 ></el-button>
               </div>
             </div>
