@@ -35,7 +35,13 @@
         <div v-if="isFullscreen">
           <div
               class="absolute bottom-2 left-1/2 transform -translate-x-1/2 z-20 px-3 py-2 rounded-lg flex gap-2 shadow-lg backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-            <el-button size="small" circle type="success" @click="visibleControl = !visibleControl" :icon="Coordinate"/>
+            <el-button
+                size="small"
+                circle type="success"
+                @click="visibleControl = !visibleControl"
+                :icon="Coordinate"
+                title="Điều chỉnh camera"
+            />
             <ControlButtonCamera v-show="visibleControl" v-if="cam" :form-model="cam"/>
           </div>
         </div>
@@ -50,6 +56,7 @@
               type="warning"
               :icon="Aim"
               @click="startDrawing"
+              title="Bắt đầu đo nhiệt độ"
           >
           </el-button>
           <el-button
@@ -60,6 +67,7 @@
               :icon="Odometer"
               :loading="measureTempLoading"
               @click="measureTemp"
+              title="Đo nhiệt độ"
           >
           </el-button>
           <el-button
@@ -69,6 +77,7 @@
               circle
               :icon="CloseBold"
               @click="stopDrawing"
+              title="Dừng đo"
           >
           </el-button>
           <span class="text-red-800">{{drawResultText}}</span>

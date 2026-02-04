@@ -32,26 +32,30 @@
                     :icon="ZoomIn"
                     color="#64B35A"
                     @click="() => requestCommand(CAMERA_COMMANDS.ZoomIn)"
+                    title="Phóng to"
                 ></el-button>
                 <el-button
                     circle
                     :icon="ZoomOut"
                     color="#E6513B"
                     @click="() => requestCommand(CAMERA_COMMANDS.ZoomOut)"
+                    title="Thu nhỏ"
                 ></el-button>
               </div>
-              <div>
+              <div class="flex">
                 <el-button
                     color="#FACE38"
                     circle
                     :icon="SwitchButton"
                     @click="() => requestCommand(CAMERA_COMMANDS.Restart)"
+                    title="Khởi động lại"
                 ></el-button>
                 <el-button
                     color="#1D5DA8"
                     circle
                     :icon="Setting"
                     @click="() => requestCommand(CAMERA_COMMANDS.Calibration)"
+                    title="Điều chỉnh AI"
                 ></el-button>
               </div>
             </div>
