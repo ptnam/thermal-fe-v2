@@ -47,7 +47,7 @@
         </div>
         <div
             v-if="isFullscreen"
-            class="flex gap-2 absolute bottom-2 left-2 z-20 px-3 py-2 shadow-lg backdrop-blur-sm"
+            class="flex items-center gap-2 absolute bottom-2 left-2 z-20 px-3 py-2 shadow-lg backdrop-blur-sm"
         >
           <el-button
               v-if="isDrawing === false"
@@ -80,7 +80,7 @@
               title="Dừng đo"
           >
           </el-button>
-          <span class="text-red-800">{{drawResultText}}</span>
+          <span class="text-white text-2xl">{{drawResultText}}</span>
         </div>
         <!-- Canvas overlay -->
         <canvas
@@ -169,7 +169,8 @@ onMounted(() => {
               isDrawing.value = false
               drawer?.stop()
             }
-            drawer?.removeAllPoint()
+            drawer?.removeAllPoint();
+            stopDrawing();
           }
         })
       })
