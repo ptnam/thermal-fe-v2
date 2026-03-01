@@ -1,7 +1,7 @@
 <template>
-  <div class="flex justify-between">
+  <div class="page-info-bar ">
     <p class="mt-2">Hiển thị từ {{rowIndex}} đến {{lastRowIndex}} trong tổng số {{total}}</p>
-    <div class="flex gap-2">
+    <div class="pagination-group flex gap-2">
       <el-pagination
           v-model:current-page="currentPage"
           v-model:page-size="pageSize"
@@ -11,6 +11,7 @@
           :total="total"
       />
       <el-button
+          class="btn-page"
           v-show="paginationSetting"
           :icon="Setting"
           color="#F0F2F5"
@@ -23,9 +24,9 @@
             <template v-for="(col, index) in columns" :key="index">
               <div
                   v-if="col && col.prop && col.label"
-                  class="flex items-center justify-between p-4 bg-white border rounded"
+                  class="flex items-center justify-between p-4 border rounded"
               >
-                <span class="text-sm font-medium text-gray-700">{{ col.label }}</span>
+                <span class="text-sm font-medium">{{ col.label }}</span>
                 <el-switch v-model="props.paginationSetting[col.prop]" />
               </div>
             </template>

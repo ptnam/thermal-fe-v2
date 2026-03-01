@@ -5,7 +5,6 @@
       :key="item[colValue]"
       :label="item[colLabel]"
       :value="item[colValue]"
-      v-bind="$attrs"
     />
   </el-select>
 </template>

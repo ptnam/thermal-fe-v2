@@ -1,5 +1,5 @@
 <template>
-  <el-button type="primary" :icon="Search" v-bind="$attrs">
+  <el-button type="primary" class="btn-search" :icon="Search" v-bind="$attrs">
     {{ t('common.search') }}
   </el-button>
 </template>

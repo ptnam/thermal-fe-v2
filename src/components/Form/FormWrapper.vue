@@ -22,9 +22,8 @@
 <script lang="ts" setup>
 import { useFormRequest } from '@/hooks/web/useFormRequest'
 import { ElMessage, FormInstance } from 'element-plus'
-import { ref } from 'vue'
+import { ref, inject } from 'vue'
 import SaveButton from '@/components/Button/SaveButton.vue'
-import { inject } from 'vue'
 import CancelButton from '@/components/Button/CancelButton.vue'
 
 const injectedCancelDialog = inject<() => void>('cancelDialog')

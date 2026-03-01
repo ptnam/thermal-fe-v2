@@ -8,10 +8,10 @@
         :useGlobalLeaflet="true"
         :zoom-snap="0.01"
         @ready="onMapLoad"
-        style="height: 80vh"
         :crs="mapType === MAP_TYPE_PICTURE ? crs : null"
         @update:zoom="onZoomChange"
         v-bind="$attrs"
+
     >
       <!-- Base map -->
       <l-tile-layer

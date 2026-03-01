@@ -22,7 +22,7 @@ export default {
         email: 'Email',
         phone: 'Điện thoại',
         status: 'Trạng thái',
-        action: '',
+        action: 'Hành động',
     },
     user_list: {
         title: 'Danh sách người dùng',

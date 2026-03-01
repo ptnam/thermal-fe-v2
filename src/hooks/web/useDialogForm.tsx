@@ -1,7 +1,7 @@
 import GenericForm, {
   type FormComponentProps,
 } from "@/components/templates/Form/GenericForm.vue";
-import { ElDialog } from "element-plus";
+import {ElDrawer} from "element-plus";
 import { createVNode, render, ref, h, type VNode } from "vue";
 
 interface DialogProps {
@@ -30,9 +30,11 @@ export function useDialogForm() {
     visible.value = true;
 
     dialogVNode = createVNode(
-      ElDialog,
+      ElDrawer,
       {
         modelValue: visible.value,
+        withHeader: false,
+        resizable: true,
         center: true,
         alignCenter: true,
         "onUpdate:modelValue": (val: boolean) => {

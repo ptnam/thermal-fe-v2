@@ -1,8 +1,10 @@
 <template>
-  <el-button circle type="primary" v-bind="$attrs" @click="$emit('click')" :icon="EditPen" />
+  <el-button
+      class="action-btn-circle btn-edit-round"
+      type="primary"
+      v-bind="$attrs"
+      @click="$emit('click')">✎</el-button>
 </template>
 <script lang="ts" setup>
-import { EditPen } from '@element-plus/icons-vue'
-
 defineEmits(['click'])
 </script>

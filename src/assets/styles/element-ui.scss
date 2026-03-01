@@ -1,10 +1,16 @@
 // cover some element-ui styles
 @import 'element-plus/dist/index.css';
+@import "element-plus/theme-chalk/dark/css-vars.css";
 
-.el-table th.el-table__cell {
-  background-color: #F0F8FF;
+
+.dart {
+  --el-bg-color: ;
 }
-
+html.dark {
+  --el-menu-bg-color: #0F172A;
+  --el-table-tr-bg-color: #0F172A;
+  --el-drawer-bg-color: #0F172A;
+}
 .el-breadcrumb__inner,
 .el-breadcrumb__inner a {
   font-weight: 400 !important;

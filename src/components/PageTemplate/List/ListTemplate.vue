@@ -1,38 +1,80 @@
 <template>
-  <div>
-    <search-form
-        v-show="showSearchForm"
-        :model="searchParams"
-        :loading="loading"
-        @search="() => tableMethods.getList()"
-        v-bind="searchProps"
-    >
-      <slot :searchParams="searchParams"></slot>
-    </search-form>
-    <slot name="top">
-      <add-button @click="$emit('addHandler')"></add-button>
-    </slot>
-    <BaseTable
-        :data="dataList"
-        :loading="loading"
-        @register="tableRegister"
-        :columns="columnValue"
-        v-bind="$attrs"
-    >
-    </BaseTable>
-    <BasePagination
-        v-if="showPagination"
-        class="mt-4"
-        :total="tableState.total.value"
-        v-model:page-size="tableState.pageSize.value"
-        v-model:current-page="tableState.currentPage.value"
-        v-model:rowIndex="tableState.rowIndex.value"
-        v-model:lastRowIndex="tableState.lastRowIndex.value"
-        :keyList="keyList"
-        :pagination-setting="paginationSetting"
-        :columns="columns"
-        @saveSuccess="updatePaginationSetting"
-    />
+  <div class="container">
+    <div class="grid">
+      <!-- Filter Section -->
+      <div class="card filter-card">
+          <search-form
+              v-show="showSearchForm"
+              class="filter-row"
+              :model="searchParams"
+              :loading="loading"
+              @search="() => tableMethods.getList()"
+              v-bind="searchProps"
+          >
+            <slot :searchParams="searchParams" :tableMethods="tableMethods"></slot>
+          </search-form>
+      </div>
+
+      <!-- Table/Card Section -->
+      <div class="card table-container-full">
+        <div
+            style="padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border)">
+          <div style="font-size: 15px; font-weight: 700; color: var(--primary); text-transform: uppercase;">
+            {{ title }}
+          </div>
+          <div style="display: flex; align-items: center; gap: 15px;">
+            <div class="view-switcher">
+              <button class="view-btn active" onclick="switchView('table')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="8" y1="6" x2="21" y2="6"></line>
+                  <line x1="8" y1="12" x2="21" y2="12"></line>
+                  <line x1="8" y1="18" x2="21" y2="18"></line>
+                  <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                  <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                  <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                </svg>
+              </button>
+              <button class="view-btn" onclick="switchView('card')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+              </button>
+            </div>
+            <button class="btn-add" @click="$emit('addHandler')">+ Thêm</button>
+          </div>
+        </div>
+
+        <!-- TABLE VIEW -->
+        <div>
+          <BaseTable
+              :data="dataList"
+              :loading="loading"
+              @register="tableRegister"
+              :columns="columnValue"
+              v-bind="$attrs"
+          >
+          </BaseTable>
+        </div>
+        <BasePagination
+            v-if="showPagination"
+            class="mt-4"
+            :total="tableState.total.value"
+            v-model:page-size="tableState.pageSize.value"
+            v-model:current-page="tableState.currentPage.value"
+            v-model:rowIndex="tableState.rowIndex.value"
+            v-model:lastRowIndex="tableState.lastRowIndex.value"
+            :keyList="keyList"
+            :pagination-setting="paginationSetting"
+            :columns="columns"
+            @saveSuccess="updatePaginationSetting"
+        />
+      </div>
+    </div>
   </div>
 </template>
 <script setup lang="ts">
@@ -42,7 +84,6 @@ import type {UseTableConfig} from '@/hooks/web/useTable'
 import SearchForm from '@/components/PageTemplate/List/SearchForm.vue'
 import {onMounted, PropType, ref, watch} from 'vue'
 import BasePagination from '@/components/Pagination/BasePagination.vue'
-import AddButton from '@/components/Button/AddButton.vue'
 import {TableColumn} from '@/components/Table'
 import {usePaginationStore} from '@/store/modules/paginationStore'
 
@@ -59,6 +100,10 @@ const props = defineProps({
   useTableConfig: {
     type: Object as PropType<UseTableConfig>,
     required: true,
+  },
+  title: {
+    type: String,
+    required: false,
   },
   searchProps: {
     type: Object,

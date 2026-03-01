@@ -1,8 +1,13 @@
 <template>
-  <el-button circle type="danger" v-bind="$attrs" @click="$emit('click')" :icon="DeleteFilled" />
+  <el-button
+      class="action-btn-circle btn-delete-round"
+      type="danger"
+      v-bind="$attrs"
+      @click="$emit('click')" >
+    🗑
+  </el-button>
 </template>
 <script lang="ts" setup>
-import { DeleteFilled } from '@element-plus/icons-vue'
 
 defineEmits(['click'])
 </script>

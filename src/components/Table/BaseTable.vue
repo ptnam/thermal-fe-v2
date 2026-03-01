@@ -85,8 +85,8 @@ export default defineComponent({
             data={props.data}
             v-loading={props.loading}
             {...attrs}
-            border
-            stripe
+            rowClassName="bg-(--bg-body)"
+            cellClassName="py-3 px-[15px]"
         >
           {renderColumns()}
         </ElTable>

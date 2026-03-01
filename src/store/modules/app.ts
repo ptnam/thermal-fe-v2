@@ -1,13 +1,14 @@
-import { defineStore } from 'pinia'
-import { store } from '@/store'
+import {defineStore} from 'pinia'
+import {store} from '@/store'
 
 interface AppState {
-  title: string
+  title: string,
+  theme: string,
   sidebar: {
     opened: boolean
     withoutAnimation: boolean
   }
-  device: 'desktop' | 'mobile' | string
+  device: string
   fixedHeader?: boolean
   pageLoading?: boolean
 }
@@ -16,6 +17,7 @@ export const useAppStore = defineStore('app', {
   state: (): AppState => {
     return {
       title: import.meta.env.VITE_APP_TITLE,
+      theme: "dark",
       sidebar: {
         opened: true,
         withoutAnimation: false,
@@ -26,6 +28,7 @@ export const useAppStore = defineStore('app', {
     }
   },
   getters: {
+    isDark: (s) => s.theme === "dark",
     getPageLoading(): boolean {
       return <boolean>this.pageLoading
     },
@@ -34,6 +37,22 @@ export const useAppStore = defineStore('app', {
     },
   },
   actions: {
+    initApp() {
+      this.initTheme();
+    },
+    applyThemeToDOM(isDark: boolean) {
+      const html = document.documentElement;
+      const theme = isDark ? 'dark': 'light'
+      html.dataset.theme =theme;
+      html.className = theme
+    },
+    setDark(v: boolean) {
+      this.theme = v ? "dark" : "light";
+      this.applyThemeToDOM(v);
+    },
+    initTheme() {
+      this.applyThemeToDOM(this.theme === "dark");
+    },
     toggleSideBar() {
       this.sidebar.opened = !this.sidebar.opened
       this.sidebar.withoutAnimation = false
