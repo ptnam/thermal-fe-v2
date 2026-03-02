@@ -95,6 +95,7 @@ const exportFile = (searchParams: any) => {
         }"
         @addHandler="openDialogAdd"
         v-loading="detailLoading"
+        title="Danh sách thiết bị"
     >
       <template slot="search" v-slot="{ searchParams }">
         <el-form-item label="Thiết bị" label-width="90px">

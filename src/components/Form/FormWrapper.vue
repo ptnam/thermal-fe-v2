@@ -7,15 +7,19 @@
     require-asterisk-position="right"
     v-bind="props.formProps"
   >
-    <div class="mt-2">
-      <slot :formErrors="formErrors" />
-    </div>
-    <slot name="button">
-      <div class="mt-4 w-full text-center">
-        <cancel-button @click="triggerCancel"></cancel-button>
-        <save-button :loading="loading" @click="submitForm"></save-button>
+    <div class="flex flex-col">
+      <div class="drawer-body mt-2">
+        <slot :formErrors="formErrors" />
       </div>
-    </slot>
+      <div class="drawer-footer">
+        <slot name="button">
+          <div class="mt-4 w-full text-center">
+            <cancel-button @click="triggerCancel"></cancel-button>
+            <save-button :loading="loading" @click="submitForm"></save-button>
+          </div>
+        </slot>
+      </div>
+    </div>
   </el-form>
 </template>
 

@@ -90,7 +90,7 @@ onMounted(() => {
           <path d="M4 6h16M4 12h16M4 18h16"/>
         </svg>
       </button>
-      <a href="dashboard.html" class="brand" style="text-decoration:none">
+      <router-link to="/dashboard" class="brand" style="text-decoration:none">
         <div class="logo-box">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
                stroke-linejoin="round">
@@ -98,12 +98,16 @@ onMounted(() => {
           </svg>
         </div>
         IFS - AI
-      </a>
+      </router-link>
     </div>
 
     <div class="nav-menu" id="mainMenu">
-      <div class="nav-wrapper"><a href="dashboard.html" class="nav-link active-link">TRANG CHỦ</a></div>
-      <div class="nav-wrapper"><a href="giamsattructiep.html" class="nav-link">GIÁM SÁT TRỰC TIẾP</a></div>
+      <div class="nav-wrapper">
+        <router-link class="nav-link active-link" to="/dashboard">TRANG CHỦ</router-link>
+      </div>
+      <div class="nav-wrapper">
+        <router-link class="nav-link" to="/live">GIÁM SÁT TRỰC TIẾP</router-link>
+      </div>
       <div class="nav-wrapper">
         <div class="nav-link">THEO DÕI ĐIỂM ĐO
           <svg class="nav-arrow" width="10" viewBox="0 0 24 24">
@@ -111,10 +115,10 @@ onMounted(() => {
           </svg>
         </div>
         <div class="dropdown-menu">
-          <a href="theodoidiemdo_canhbaoai.html" class="menu-link">Cảnh báo AI</a>
-          <a href="theodoidiemdo_canhbao.html" class="menu-link">Nhiệt độ vượt ngưỡng</a>
-          <a href="theodoidiemdo_nhatkynhietdo.html" class="menu-link">Nhật ký nhiệt độ</a>
-          <a href="theodoidiemdo_tonghopphantich.html" class="menu-link">Tổng hợp phân tích</a>
+          <router-link class="menu-link" to="/event/ai-notification">Cảnh báo AI</router-link>
+          <router-link class="menu-link" to="/event/notification-system">Nhiệt độ vượt ngưỡng</router-link>
+          <router-link class="menu-link" to="/event/event-history">Nhật ký nhiệt độ</router-link>
+          <router-link class="menu-link" to="/event/home">Tổng hợp phân tích</router-link>
         </div>
       </div>
 
@@ -128,20 +132,21 @@ onMounted(() => {
           <div class="mega-col">
             <div class="col-header">HẠ TẦNG & THIẾT BỊ</div>
             <router-link class="menu-link" to="/category/area">Khu vực</router-link>
-            <a href="quantrihethong_camera.html" class="menu-link">Camera</a>
-            <a href="quantrihethong_cambien.html" class="menu-link">Cảm biến</a>
-            <a href="quantrihethong_loaithietbi.html" class="menu-link">Loại Thiết bị</a>
-            <a href="quantrihethong_thietbi.html" class="menu-link">Thiết bị</a>
+            <router-link class="menu-link" to="/category/camera-list">Camera</router-link>
+            <router-link class="menu-link" to="/category/camera-sensor">Cảm biến</router-link>
+            <router-link class="menu-link" to="/category/machine-type">Loại Thiết bị</router-link>
+            <router-link class="menu-link" to="/category/machine-list">Thiết bị</router-link>
           </div>
           <div class="mega-col">
             <div class="col-header">THIẾT LẬP CẢNH BÁO</div>
-            <a href="thietlapcanhbao_kenhcanhbao.html" class="menu-link menu-item-with-bg">
+            <router-link class="menu-link menu-item-with-bg" to="/setting/notification-channel">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
               </svg>
               Kênh Cảnh báo
-            </a>
-            <a href="theodoidiemdo_bocanhbao.html" class="menu-link menu-item-with-bg">
+            </router-link>
+
+            <router-link class="menu-link menu-item-with-bg" to="/setting/notification-group">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
                 <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
@@ -149,18 +154,19 @@ onMounted(() => {
                 <line x1="12" y1="20" x2="12.01" y2="20"></line>
               </svg>
               Bộ cảnh báo
-            </a>
+            </router-link>
           </div>
           <div class="mega-col">
             <div class="col-header">QUẢN LÝ NGƯỜI DÙNG</div>
-            <a href="quantrihethong_nguoidung.html" class="menu-link menu-item-with-bg">
+            <router-link class="menu-link menu-item-with-bg" to="/category/user">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                 <circle cx="12" cy="7" r="4"></circle>
               </svg>
               Người dùng
-            </a>
-            <a href="#" class="menu-link menu-item-with-bg">
+            </router-link>
+
+            <a href="/report/download/CGI Manual.pdf" class="menu-link menu-item-with-bg">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
                 <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>

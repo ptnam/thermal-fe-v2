@@ -48,6 +48,6 @@ const checkSound = () => {
 </template>
 
 <style lang="scss">
-@import "@/assets/styles/style.scss";
-@import "@/assets/styles/responsive-fixes.scss";
+@use "@/assets/styles/style.scss";
+@use "@/assets/styles/responsive-fixes.scss";
 </style>

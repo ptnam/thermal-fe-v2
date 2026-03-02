@@ -327,6 +327,7 @@ const markerHover = (marker: any) => {
   overflow: hidden;
   gap: 20px;
   display: grid;
+  height: calc(100vh - 100px);
 }
 
 @media (max-width: 1200px) {

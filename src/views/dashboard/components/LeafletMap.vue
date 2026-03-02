@@ -11,13 +11,16 @@
         :crs="mapType === MAP_TYPE_PICTURE ? crs : null"
         @update:zoom="onZoomChange"
         v-bind="$attrs"
+        data-theme=""
 
     >
       <!-- Base map -->
       <l-tile-layer
+         :key="tileKey"
           v-if="mapType === MAP_TYPE_MAP"
           :opacity="mapType === MAP_TYPE_MAP ? 1 : 0"
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+         :url="tile.url"
+         :attribution="tile.attribution"
           layer-type="base"
       />
 
@@ -36,13 +39,14 @@
 </template>
 
 <script setup lang="ts">
-import {nextTick, ref, watch} from 'vue'
+import { computed, nextTick, ref, watch} from 'vue'
 import {LMap, LTileLayer, LImageOverlay} from '@vue-leaflet/vue-leaflet'
 import {MAP_TYPE_MAP, MAP_TYPE_PICTURE} from '@/constants'
 
 import {CRS} from 'leaflet'
 import {useImageBounds} from "@/hooks/web/useImageBounds";
 import Islands from '@/components/Map/islands.vue'
+import { useAppStore } from '@/store/modules/app'
 
 const crs = CRS.Simple
 
@@ -53,8 +57,25 @@ const props = defineProps({
   photoPath: {type: [String, null], required: true},
   mapType: {type: String, required: true},
 })
-
+const appStore = useAppStore()
+const isDark = computed(() => appStore.theme === 'dark')
 const mapRef = ref<InstanceType<typeof LMap> | null>(null)
+
+
+const tile = computed(() => {
+  if (isDark.value) {
+    return {
+      url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+      attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+    }
+  }
+  return {
+    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    attribution: '&copy; OpenStreetMap contributors',
+  }
+})
+
+const tileKey = computed(() => (isDark.value ? 'base_dark' : 'base_light'))
 
 const loadingMap = ref(true)
 

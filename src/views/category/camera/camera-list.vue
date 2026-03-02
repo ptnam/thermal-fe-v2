@@ -112,7 +112,7 @@ const saveSuccess = () => {
 </script>
 
 <template>
-  <page-container title="Danh sách camera" v-loading="syncPresetLoading">
+  <div v-loading="syncPresetLoading">
     <list-template
       ref="elTableRef"
       key-list="camera-list"
@@ -121,6 +121,7 @@ const saveSuccess = () => {
         fetchDataApi: getCameraListApi,
       }"
       @addHandler="openDialogAdd"
+      title="Danh sách camera"
     >
       <template slot="search" v-slot="{ searchParams }">
         <el-form-item label="Mã/tên camera">
@@ -167,5 +168,5 @@ const saveSuccess = () => {
     <base-dialog v-model="aiSettingDialogVisible" :destroy-on-close="true" title="Cài đặt AI">
       <ai-setting :camera="selectedCamera" @saved="aiSettingDialogVisible = false" />
     </base-dialog>
-  </page-container>
+  </div>
 </template>
