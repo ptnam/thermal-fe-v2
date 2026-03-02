@@ -101,6 +101,9 @@
                     v-bind="getIconPaths(marker)"
                     @mouseover="() => markerHover(marker)"
                 >
+                  <l-tooltip permanent :key="marker.updateAt">
+                    {{marker.name}}
+                  </l-tooltip>
                 </sensor-marker>
                 <area-range
                     :point-list="areaRangePointList"
@@ -120,6 +123,12 @@
           show-line
       ></AreaTreeDashBoard>
     </div>
+    <base-dialog v-model="visibleThermalDetail" :close-on-click-modal="true">
+      <div class="mt-4" v-loading="loadingThermalData">
+        <thermal-data :marker="selectedComponent" :thermalInfo="selectedThermalData">
+        </thermal-data>
+      </div>
+    </base-dialog>
   </div>
 </template>
 
@@ -129,6 +138,7 @@ import {nextTick, onMounted, onUnmounted, ref} from 'vue'
 import {getAllTreeAreaApi} from '@/api/area'
 import {MAP_TYPE_MAP, MAP_TYPE_PICTURE} from '@/constants'
 import LeafletMap from '@/views/dashboard/components/LeafletMap.vue'
+import {LTooltip} from '@vue-leaflet/vue-leaflet'
 import {
   createSignalRConnection,
   startSignalR,
@@ -145,6 +155,8 @@ import _ from 'lodash'
 import AreaRange from '@/views/dashboard/components/AreaRange.vue'
 import SensorMarker from "@/components/Map/SensorMarker.vue";
 import AreaTreeDashBoard from "@/views/dashboard/components/AreaTreeDashBoard.vue";
+import BaseDialog from "@/components/Dialog/BaseDialog.vue";
+import ThermalData from "@/views/dashboard/components/ThermalData.vue";
 
 onMounted(() => {
   loadThermalData({}, false)
@@ -744,126 +756,6 @@ const markerHover = (marker: any) => {
   gap: 10px;
 }
 
-/* Interactive Node Popup - Premium Style */
-.node-popup {
-  position: absolute;
-  background: var(--bg-card);
-  border-radius: 12px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-  width: 800px;
-  max-width: 95vw;
-  z-index: 10000;
-  padding: 0;
-  overflow: hidden;
-  color: var(--text-main);
-  display: none;
-  font-family: 'Inter', sans-serif;
-  pointer-events: auto;
-  border: 1px solid var(--border);
-  animation: popupFadeIn 0.2s ease-out;
-  backdrop-filter: blur(10px);
-}
-
-@keyframes popupFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px) scale(0.95);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.node-popup-header {
-  background: var(--bg-body);
-  /* Theme-aware subtle header */
-  padding: 16px 20px;
-  font-weight: 700;
-  text-align: center;
-  border-bottom: 1px solid var(--border);
-  font-size: 15px;
-  color: var(--primary);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.node-popup-close {
-  cursor: pointer;
-  color: var(--text-sub);
-  font-size: 20px;
-  transition: 0.2s;
-  line-height: 1;
-}
-
-.node-popup-close:hover {
-  color: var(--danger);
-  transform: scale(1.1);
-}
-
-.node-popup-body {
-  padding: 20px;
-  max-height: 70vh;
-  overflow-y: auto;
-  background: var(--bg-card);
-}
-
-/* Analysis Card Style - Premium Unified */
-.analysis-card {
-  background: var(--bg-body);
-  /* Use body bg for inner cards for contrast */
-  border-radius: 10px;
-  padding: 14px;
-  border: 1px solid var(--border);
-  transition: 0.2s;
-}
-
-.analysis-card:hover {
-  border-color: var(--primary);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.analysis-title {
-  font-weight: 700;
-  color: var(--text-main);
-  font-size: 14px;
-  margin-bottom: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.analysis-row {
-  display: flex;
-  justify-content: space-between;
-  font-size: 12px;
-  margin-bottom: 8px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  color: var(--text-sub);
-}
-
-.analysis-row:last-child {
-  margin-bottom: 0;
-  padding-bottom: 0;
-  border-bottom: none;
-}
-
-.analysis-label {
-  font-weight: 500;
-}
-
-.analysis-val {
-  color: var(--text-main);
-  font-weight: 700;
-  font-family: 'JetBrains Mono', monospace;
-}
-
 .status-pill {
   padding: 2px 8px;
   border-radius: 4px;
@@ -882,9 +774,6 @@ const markerHover = (marker: any) => {
   .node-popup::after {
     content: '';
     position: absolute;
-    left: -10px;
-    top: 50%;
-    transform: translateY(-50%);
     border-width: 10px 10px 10px 0;
     border-style: solid;
     border-color: transparent var(--border) transparent transparent;
@@ -896,10 +785,6 @@ const markerHover = (marker: any) => {
 @media (max-width: 768px) {
   .node-popup {
     position: fixed !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    width: 90% !important;
     max-width: 400px !important;
     max-height: 80vh !important;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 0 1000px rgba(0, 0, 0, 0.6) !important;

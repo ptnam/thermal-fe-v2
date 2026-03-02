@@ -6,10 +6,8 @@
           :showLabelLine="true"
       >
         <template #node-label>
-            <span>
-              <el-icon v-if="isCam(node.data)" :color="CAMERA_TYPE_COLOR[node.data.cameraType]"
-              ><VideoCamera/></el-icon>
-              <el-icon v-else color="green"><MapLocation/></el-icon>
+            <span :style="{color: CAMERA_TYPE_COLOR[node.data.cameraType]}">
+              <el-icon v-if="!isCam(node.data)" color="green"><MapLocation/></el-icon>
               {{ node.data.name }}
             </span>
         </template>
@@ -31,7 +29,7 @@
 import {getElementLabelLine} from 'element-tree-line'
 import 'element-tree-line/dist/style.css'
 import {h} from 'vue'
-import {CollectionTag, MapLocation, VideoCamera} from '@element-plus/icons-vue'
+import {CollectionTag, MapLocation} from '@element-plus/icons-vue'
 import {updateCameraSettingApi} from "@/api/camera-setting";
 import {CAMERA_COMMANDS, CAMERA_TYPE_COLOR} from "@/constants";
 import {isCam} from "@/utils/cameraUtils";
