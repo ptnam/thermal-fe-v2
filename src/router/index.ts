@@ -30,6 +30,12 @@ const constantRoutes: AppRouteRecordRaw[] = [
         component: () => import('@/views/live/StreamPage.vue'),
         meta: { icon: 'camera', permission: ['live'] },
       },
+      {
+        path: 'detail',
+        name: 'live_detail',
+        component: () => import('@/views/live/StreamDetail.vue'),
+        meta: { icon: 'camera', permission: ['live'] },
+      },
     ],
   },
   {

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {ref, onMounted} from 'vue'
 import {getStreamApi} from '@/api/camera'
+import router from '@/router'
 
 const props = defineProps({
   streamKey: {type: [String, Number], required: true},
@@ -44,6 +45,10 @@ onMounted(() => {
         loading.value = false
       })
 })
+
+const redirectFullScreen = () => {
+  router.push({name: 'live_detail', query: {key, streamKey}})
+}
 </script>
 <template>
   <div class="cam-cell">
@@ -51,7 +56,7 @@ onMounted(() => {
       <div class="dot-live"></div>
       <span class="cam-name-tag">cam.name</span>
     </div>
-      <span class="cam-time-tag">28.Jan 2026 09:55:08</span>
+      <span class="cam-time-tag"></span>
     </div>
     <div ref="videoRef" class="cam-img"></div>
     <div class="cam-footer">
@@ -92,7 +97,7 @@ onMounted(() => {
           <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
         </svg>
       </button>
-      <button class="cam-action-btn" title="Toàn màn hình" onclick="window.location.href='camera.html'">
+      <button class="cam-action-btn" title="Toàn màn hình" @click="redirectFullScreen">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <polyline points="15 3 21 3 21 9"></polyline>
           <polyline points="9 21 3 21 3 15"></polyline>

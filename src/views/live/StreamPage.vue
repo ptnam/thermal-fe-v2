@@ -23,8 +23,7 @@
             </svg>
           </button>
           <div class="ctrl-group">
-
-            <button class="btn-settings" onclick="openDrawer()">
+            <button class="btn-settings" @click="openDrawer">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <circle cx="12" cy="12" r="3"></circle>
                 <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
@@ -33,16 +32,18 @@
               Thiết lập
             </button>
           </div>
-          <div class="env-temp">Nhiệt độ môi trường: 32.5</div>
+          <div v-show="environmentTemperature !== null" class="env-temp">Nhiệt độ môi trường: {{ environmentTemperature?.temperature ?? "" }}</div>
         </div>
 
         <div class="cam-grid" id="mainCamGrid">
           <div v-for="cam in paginatedData" :key="cam.id" class="cam-cell">
-            <web-player  :cam="cam" :streamKey="cam.id"></web-player>
+            <web-player :cam="cam" :streamKey="cam.id"></web-player>
           </div>
         </div>
       </div>
-
+      <el-drawer v-model="drawerVisible" style="min-width: 650px" :destroy-on-close="true" resizable :with-header="false">
+        <drawer-setting></drawer-setting>
+      </el-drawer>
     </div>
   </div>
 </template>
@@ -56,6 +57,9 @@ import {environmentThermalApi} from "@/api/thermal-data";
 import WebPlayer from "@/components/Video/WebPlayer.vue";
 import {getAllTreeAreaApi} from "@/api/area";
 import LiveTreeArea from "@/components/Tree/LiveTreeArea.vue";
+import DrawerForm from '@/components/Form/DrawerForm.vue'
+import DrawerSetting from '@/views/live/components/DrawerSetting.vue'
+import { ElDrawer } from 'element-plus'
 
 const fullList = ref<any[]>([])
 
@@ -65,6 +69,7 @@ const currentPage = ref(1)
 const loadingSetting = ref(false)
 const visibleOrderSetting = ref(true)
 const visibleSortSetting = ref(false)
+const drawerVisible = ref(false)
 const environmentTemperature = ref<any>(null)
 const selectedAreaId =  ref(null)
 
@@ -141,6 +146,11 @@ const collectCams = (node: any): any[] => {
 
 const showOrderDialog = () => {
   visibleSortSetting.value = true
+}
+
+const openDrawer = () => {
+  debugger
+  drawerVisible.value = true
 }
 
 onMounted(() => {
