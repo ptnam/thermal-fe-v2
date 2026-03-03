@@ -57,7 +57,6 @@ import {environmentThermalApi} from "@/api/thermal-data";
 import WebPlayer from "@/components/Video/WebPlayer.vue";
 import {getAllTreeAreaApi} from "@/api/area";
 import LiveTreeArea from "@/components/Tree/LiveTreeArea.vue";
-import DrawerForm from '@/components/Form/DrawerForm.vue'
 import DrawerSetting from '@/views/live/components/DrawerSetting.vue'
 import { ElDrawer } from 'element-plus'
 
@@ -149,7 +148,6 @@ const showOrderDialog = () => {
 }
 
 const openDrawer = () => {
-  debugger
   drawerVisible.value = true
 }
 

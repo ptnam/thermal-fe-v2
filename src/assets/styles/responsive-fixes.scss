@@ -591,7 +591,6 @@
     .drawer-lg,
     .drawer-xl {
       width: 100% !important;
-      right: -100%;
       /* Remove !important here */
     }
 
@@ -2014,7 +2013,6 @@
   @media (max-width: 768px) {
     .drawer {
       width: 100% !important;
-      right: -100% !important;
     }
 
     .drawer-header {
