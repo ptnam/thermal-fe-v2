@@ -20,7 +20,7 @@ const columns = computed<TableColumn[]>(() => [
     label: 'Hình ảnh',
     slots: {
       default: ({ row }) => (
-        <div>
+        <div class="ai-thumb">
           {row.imagePath && (
             <ElImage
               src={row.imagePath}
@@ -39,7 +39,13 @@ const columns = computed<TableColumn[]>(() => [
   { prop: 'timeData', label: 'Giờ' },
   { prop: 'areaName', label: 'Khu vực' },
   { prop: 'cameraName', label: 'Tên camera' },
-  { prop: 'warningEventName', label: 'Loại cảnh báo' },
+  {
+    prop: 'warningEventName',
+    label: 'Loại cảnh báo',
+    slots: {
+      default: ({row}) => (<span   style={{color: 'var(--danger)'}}>{row.warningEventName}</span>)
+    },
+  },
 ])
 
 const cameraRef = ref<InstanceType<typeof VirtualizedSelectFromUrl>>()
@@ -56,9 +62,11 @@ const elTableRef = ref<InstanceType<typeof ListTemplate>>()
   <page-container title="Cảnh báo AI">
     <list-template
       ref="elTableRef"
+      title="Danh sách Cảnh báo AI"
       key-list="ai-notification"
       :columns="columns"
       :search-props="{ visibleSearchButton: false, inline: false }"
+      :show-btn-add="false"
       :use-table-config="{
         fetchDataApi: getVisionNotificationApi,
         searchDefaults: {
@@ -68,9 +76,11 @@ const elTableRef = ref<InstanceType<typeof ListTemplate>>()
     >
       <template v-slot:top><span></span></template>
       <template slot="search" v-slot="{ searchParams }">
-        <el-row :gutter="20">
-          <el-col :span="8">
-            <el-form-item label="Thời gian từ">
+        <div class="filter-grid-ai">
+          <!-- Row 1 -->
+          <div class="filter-group-ai">
+            <label>Thời gian từ</label>
+            <div class="input-icon-wrapper">
               <el-date-picker
                 v-model="searchParams.fromTime"
                 type="datetime"
@@ -78,10 +88,11 @@ const elTableRef = ref<InstanceType<typeof ListTemplate>>()
                 value-format="YYYY-MM-DD HH:mm:ss"
                 class="!w-[-webkit-fill-available]"
               />
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="Thời gian đến">
+            </div>
+          </div>
+          <div class="filter-group-ai">
+            <label>Thời gian đến</label>
+            <div class="input-icon-wrapper">
               <el-date-picker
                 v-model="searchParams.toTime"
                 type="datetime"
@@ -89,48 +100,131 @@ const elTableRef = ref<InstanceType<typeof ListTemplate>>()
                 value-format="YYYY-MM-DD HH:mm:ss"
                 class="!w-[-webkit-fill-available]"
               />
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="Khu vực">
-              <tree-select-remote
-                v-model="searchParams.areaId"
-                :request-fn="getAllTreeAreaApi"
-                filterable
-                clearable
-                @change="() => changeAreaId(searchParams)"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="8" v-if="searchParams.areaId">
-            <el-form-item label="Camera">
-              <virtualized-select-from-url
-                ref="cameraRef"
-                v-model="searchParams.cameraId"
-                :request-fn="() => getAllCamerasApi({ areaId: searchParams.areaId })"
-                filterable
-                value-key="id"
-                clearable
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="Loại cảnh báo">
-              <virtualized-select-from-url
-                ref="warningEventId"
-                v-model="searchParams.warningEventId"
-                :request-fn="() => getAllWarningEventApi({warningType: WARNING_TYPE_AI})"
-                filterable
-                value-key="id"
-                clearable
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <div class="flex justify-center">
-          <search-button @click="elTableRef?.refresh()" />
+            </div>
+          </div>
+          <div class="filter-group-ai">
+            <label>Khu vực</label>
+            <tree-select-remote
+              v-model="searchParams.areaId"
+              :request-fn="getAllTreeAreaApi"
+              filterable
+              clearable
+              @change="() => changeAreaId(searchParams)"
+            />
+          </div>
+
+          <!-- Row 2 -->
+          <div class="filter-group-ai">
+            <label>Camera</label>
+            <virtualized-select-from-url
+              ref="cameraRef"
+              v-model="searchParams.cameraId"
+              :request-fn="() => getAllCamerasApi({ areaId: searchParams.areaId })"
+              filterable
+              value-key="id"
+              clearable
+            />
+          </div>
+          <div class="filter-group-ai">
+            <label>Loại cảnh báo</label>
+            <virtualized-select-from-url
+              ref="warningEventId"
+              v-model="searchParams.warningEventId"
+              :request-fn="() => getAllWarningEventApi({warningType: WARNING_TYPE_AI})"
+              filterable
+              value-key="id"
+              clearable
+            />
+          </div>
+          <div class="filter-group-ai" style="justify-content: flex-end;">
+            <search-button @click="elTableRef?.refresh()" />
+          </div>
         </div>
       </template>
     </list-template>
   </page-container>
 </template>
+<style scoped>
+.ai-thumb {
+  width: 80px;
+  height: 45px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.ai-thumb:hover {
+  transform: scale(1.2);
+  z-index: 10;
+}
+
+/* Filter Refinement */
+.filter-grid-ai {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: nowrap;
+}
+
+.filter-group-ai {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+.filter-group-ai label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-main);
+  white-space: nowrap;
+  /* Removed min-width to save space in single row layout */
+}
+
+.input-icon-wrapper {
+  position: relative;
+  flex: 1;
+}
+
+.input-icon-wrapper .filter-input {
+  padding-left: 35px !important;
+  height: 38px;
+}
+
+.input-icon-wrapper .input-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-sub);
+  opacity: 0.7;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+}
+
+.btn-search-ai {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 0 24px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 38px;
+  transition: 0.2s;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-search-ai:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+</style>

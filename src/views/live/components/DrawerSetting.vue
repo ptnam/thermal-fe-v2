@@ -1,29 +1,29 @@
 <script setup>
-import BaseTree from "@/components/Tree/BaseTree.vue";
 import {getAllTreeAreaApi} from "@/api/area/index.ts";
-import AreaTreeDashBoard from "@/views/dashboard/components/AreaTreeDashBoard.vue";
 import SimpleAreaTree from "@/components/Tree/SimpleAreaTree.vue";
-import {CAMERA_TYPE_COLOR} from "@/constants/index.ts";
-import {isCam} from "@/utils/cameraUtils.ts";
-import {MapLocation} from "@element-plus/icons-vue";
+import { computed, ref } from 'vue'
+import { number } from 'vue-types'
 
-const emit = defineEmits(['close'])
-const changeGrid = (cells, btn) => {
-  // Update active state in toolbar
-  document.querySelectorAll('.grid-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.grid-btn').forEach(b => {
-    if (b.textContent == cells) b.classList.add('active');
-  });
+const emit = defineEmits(['close', 'updatePage'])
 
-  // Update active state in drawer
-  document.querySelectorAll('.layout-option').forEach(opt => opt.classList.remove('active'));
-  if (btn && btn.classList.contains('layout-option')) btn.classList.add('active');
+const props = defineProps({
+  listMarked: {
+    type: Array,
+    required: true
+  },
+  screenNumber: {
+    type: number,
+    required: false
+  }
+})
 
-  // Apply grid
+const selectedIds = computed(() => props.listMarked.map(u => u.id))
+const changeGrid = (cells) => {
   const grid = document.getElementById('mainCamGrid');
   const cols = Math.sqrt(cells);
   grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
   grid.style.alignContent = 'start';
+  emit("updatePage", cells)
 }
 </script>
 <template>
@@ -40,6 +40,7 @@ const changeGrid = (cells, btn) => {
               show-checkbox
               :request-fn="() => getAllTreeAreaApi({ cameras: true })"
               :check-strictly="true"
+              :default-checked-keys="selectedIds"
           >
             <template #default="{ node }">
               <div class="st-item">
@@ -63,12 +64,12 @@ const changeGrid = (cells, btn) => {
       <div class="settings-section">
         <div class="settings-title">KIỂU BỐ CỤC</div>
         <div class="layout-picker">
-          <div class="layout-option" @click="()=>changeGrid(1, this)">
+          <div :class="['layout-option', screenNumber === 1 ? 'active': '']" @click="()=>changeGrid(1)">
             <div class="grid-icon"
                  style="width:24px; height:18px; border:1.5px solid currentColor; border-radius:3px; opacity:0.6;">
             </div>
           </div>
-          <div class="layout-option" @click="()=>changeGrid(2, this)">
+          <div :class="['layout-option', screenNumber === 2 ? 'active': '']" @click="()=>changeGrid(2)">
             <div class="grid-icon" style="display:flex; gap:3px;">
               <div style="width:11px; height:18px; border:1.5px solid currentColor; border-radius:2px; opacity:0.6;">
               </div>
@@ -76,7 +77,7 @@ const changeGrid = (cells, btn) => {
               </div>
             </div>
           </div>
-          <div class="layout-option" @click="()=>changeGrid(4, this)">
+          <div :class="['layout-option', screenNumber === 4 ? 'active': '']" @click="()=>changeGrid(4)">
             <div class="grid-icon" style="display:grid; grid-template-columns:1fr 1fr; gap:3px;">
               <div style="width:11px; height:8px; border:1.5px solid currentColor; border-radius:2px;">
               </div>
@@ -88,7 +89,7 @@ const changeGrid = (cells, btn) => {
               </div>
             </div>
           </div>
-          <div class="layout-option active" @click="()=>changeGrid(9, this)">
+          <div :class="['layout-option', screenNumber === 9 ? 'active': '']" @click="()=>changeGrid(9)">
             <div class="grid-icon" style="display:grid; grid-template-columns:repeat(3, 1fr); gap:2px;">
               <div style="width:7px; height:5px; border:1px solid currentColor; border-radius:1px; opacity:0.6;">
               </div>
@@ -158,8 +159,7 @@ const changeGrid = (cells, btn) => {
       <button class="btn-save"
               onclick="applySettings()"
               style="padding: 10px 24px; border-radius: 8px; border: none; background: var(--primary); color: white; cursor: pointer; font-weight: 700;">
-        Lưu
-        thiết lập
+        Lưu thiết lập
       </button>
     </div>
   </div>

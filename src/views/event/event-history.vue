@@ -179,9 +179,9 @@ const exportFile = (searchParams: any) => {
 </script>
 
 <template>
-  <page-container title="Nhật ký nhiệt độ">
     <list-template
       ref="elTableRef"
+      title="Nhật ký nhiệt độ"
       key-list="event-history"
       :columns="columns"
       :use-table-config="{
@@ -198,111 +198,67 @@ const exportFile = (searchParams: any) => {
     >
       <template v-slot:top><span></span></template>
       <template slot="search" v-slot="{ searchParams }">
-        <el-row :gutter="20">
-          <el-col :span="8">
-            <el-form-item label="Thời gian từ">
-              <el-date-picker
-                v-model="searchParams.fromTime"
-                type="datetime"
-                placeholder="Thời gian bắt đầu"
-                value-format="YYYY-MM-DD HH:mm:ss"
-                class="!w-[-webkit-fill-available]"
-              />
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="8">
-            <el-form-item label="Thời gian đến">
-              <el-date-picker
-                v-model="searchParams.toTime"
-                type="datetime"
-                placeholder="Thời gian kết thúc"
-                value-format="YYYY-MM-DD HH:mm:ss"
-                class="!w-[-webkit-fill-available]"
-              />
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="8">
-            <el-form-item label="Khu vực">
-              <tree-select-remote
-                v-model="searchParams.areaId"
-                :requestFn="getAllTreeAreaApi"
-                filterable
-                clearable
-                @node-click="() => handleAreaChange(searchParams)"
-              />
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="8" v-show="searchParams.areaId">
-            <el-form-item label="Thiết bị">
-              <virtualized-select-from-url
-                ref="machineRef"
-                v-model="searchParams.machineId"
-                :request-fn="() => getAllMachineApi({ areaId: searchParams.areaId })"
-                filterable
-                value-key="id"
-                col-label="name"
-                :default-first-option="true"
-                clearable
-                @change="() => machineChange(searchParams)"
-              />
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="8" v-show="searchParams.machineId">
-            <el-form-item label="Bộ phận">
-              <virtualized-select-from-url
-                ref="machineComponentRef"
-                v-model="searchParams.machineComponentIds"
-                :request-fn="() => getComponentMachineApi({ machineId: searchParams.machineId })"
-                filterable
-                value-key="id"
-                :default-first-option="true"
-                clearable
-                :multiple="true"
-              />
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="8">
-            <el-form-item label="Kiểu so sánh">
-              <select-from-config
-                v-model="searchParams.thresholdType"
-                key-config="thresholdTypeList"
-                clearable
-              />
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="8">
-            <el-form-item label="Từ">
-              <input-number v-model="searchParams.deltaMin" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="8">
-            <el-form-item label="Đến">
-              <input-number v-model="searchParams.deltaMax" />
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="8">
-            <el-form-item label="Đánh giá">
-              <select-from-config
-                v-model="searchParams.temperatureLevel"
-                key-config="temperatureLevelList"
-                clearable
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <div class="flex justify-center">
+        <div class="filter-row">
+          <div class="filter-item">
+            <div class="filter-label">Thời gian từ</div>
+            <el-date-picker
+              v-model="searchParams.fromTime"
+              type="datetime"
+              placeholder="Thời gian bắt đầu"
+              value-format="YYYY-MM-DD HH:mm:ss"
+              class="!w-[-webkit-fill-available] filter-input"
+            />
+          </div>
+          <div class="filter-item">
+            <div class="filter-label">Thời gian đến</div>
+            <el-date-picker
+              v-model="searchParams.toTime"
+              type="datetime"
+              placeholder="Thời gian kết thúc"
+              value-format="YYYY-MM-DD HH:mm:ss"
+              class="!w-[-webkit-fill-available] filter-input"
+            />
+          </div>
+          <div class="filter-item">
+            <div class="filter-label">Khu vực</div>
+            <tree-select-remote
+              v-model="searchParams.areaId"
+              :requestFn="getAllTreeAreaApi"
+              filterable
+              clearable
+              @node-click="() => handleAreaChange(searchParams)"
+              class="filter-input"
+            />
+          </div>
+          <div class="filter-item">
+            <div class="filter-label">Kiểu so sánh</div>
+            <select-from-config
+              v-model="searchParams.thresholdType"
+              key-config="thresholdTypeList"
+              clearable
+              class="filter-input"
+            />
+          </div>
+          <div class="filter-item">
+            <div class="filter-label">Từ</div>
+            <input-number v-model="searchParams.deltaMin" class="filter-input" />
+          </div>
+          <div class="filter-item">
+            <div class="filter-label">Đến</div>
+            <input-number v-model="searchParams.deltaMax" class="filter-input" />
+          </div>
+          <div class="filter-item">
+            <div class="filter-label">Đánh giá</div>
+            <select-from-config
+              v-model="searchParams.temperatureLevel"
+              key-config="temperatureLevelList"
+              clearable
+              class="filter-input"
+            />
+          </div>
           <search-button @click="elTableRef?.refresh()" />
-          <export-button @click="() => exportFile(searchParams)" :loading="isExportLoading" />
+          <export-button @click="() => exportFile(searchParams)" :loading="isExportLoading"></export-button>
         </div>
       </template>
     </list-template>
-  </page-container>
 </template>

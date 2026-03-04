@@ -1,11 +1,9 @@
 <script setup lang="tsx">
 import ListTemplate from '@/components/PageTemplate/List/ListTemplate.vue'
 import {TableColumn} from '@/components/Table'
-import PageContainer from '@/components/PageContainer.vue'
 import {computed, nextTick, onMounted, onUnmounted, ref} from 'vue'
 import {getAllTreeAreaApi} from '@/api/area'
 import TreeSelectRemote from '@/components/Tree/TreeSelectRemote.vue'
-import SelectFromConfig from '@/components/Selection/SelectFromConfig.vue'
 import {ElButton, ElMessage} from 'element-plus'
 import {Select, View} from '@element-plus/icons-vue'
 import {useConfirmModal} from '@/hooks/web/useModal'
@@ -101,7 +99,13 @@ const columns = computed<TableColumn[]>(() => [
   {prop: 'machineName', label: 'Thiết bị', width: 120},
   {prop: 'machineComponentName', label: 'Bộ phận', width: 120},
   {prop: 'monitorPointCode', label: 'Điểm nhiệt'},
-  {prop: 'componentValue', label: 'Nhiệt độ'},
+  {
+    prop: 'componentValue',
+    label: 'Nhiệt độ',
+    slots: {
+      default: ({row}) => (<span style={{color: 'var(--danger)'}}>{row.componentValue}</span>)
+    },
+  },
   {prop: 'compareTypeObject.name', label: 'Kiểu cảnh báo', width: 160},
   {prop: 'warningEventName', label: 'Loại cảnh báo', width: 120},
   {prop: 'compareComponent', label: 'Đối tượng so sánh', width: 120},
@@ -163,88 +167,76 @@ const exportFile = (searchParams: any) => {
 </script>
 
 <template>
-  <page-container title="Cảnh báo nhiệt độ vượt ngưỡng">
-    <list-template
-        ref="elTableRef"
-        key-list="notification-system"
-        :columns="columns"
-        :search-props="{ visibleSearchButton: false, inline: false }"
-        :use-table-config="{
+  <list-template
+    ref="elTableRef"
+    title="Danh sách Nhiệt độ vượt ngưỡng"
+    key-list="notification-system"
+    :columns="columns"
+    :search-props="{ visibleSearchButton: false, inline: false }"
+    :use-table-config="{
         fetchDataApi: listNotificationApi,
         searchDefaults: {
           fromTime: dayjs().subtract(7, 'day').format('YYYY-MM-DD 00:00:00'),
         },
       }"
-    >
-      <template v-slot:top><span></span></template>
-      <template slot="search" v-slot="{ searchParams }">
-        <el-row :gutter="20">
-          <el-col :span="8">
-            <el-form-item label="Thời gian từ">
-              <el-date-picker
-                  v-model="searchParams.fromTime"
-                  type="datetime"
-                  placeholder="Thời gian bắt đầu"
-                  value-format="YYYY-MM-DD HH:mm:ss"
-                  class="!w-[-webkit-fill-available]"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="Thời gian đến">
-              <el-date-picker
-                  v-model="searchParams.toTime"
-                  type="datetime"
-                  placeholder="Thời gian kết thúc"
-                  value-format="YYYY-MM-DD HH:mm:ss"
-                  class="!w-[-webkit-fill-available]"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="Khu vực">
-              <tree-select-remote
-                  v-model="searchParams.areaId"
-                  :request-fn="getAllTreeAreaApi"
-                  filterable
-                  clearable
-                  @change="() => changeAreaId(searchParams)"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="8" v-if="searchParams.areaId">
-            <el-form-item label="Thiết bị">
-              <virtualized-select-from-url
-                  ref="machineRef"
-                  v-model="searchParams.machineId"
-                  :request-fn="() => getAllMachineApi({ areaId: searchParams.areaId })"
-                  filterable
-                  value-key="id"
-                  clearable
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="Trạng thái xử lý">
-              <select-from-config
-                  key-config="notificationStatusList"
-                  v-model="searchParams.notificationStatus"
-                  clearable
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <div class="flex justify-center">
-          <search-button @click="elTableRef?.refresh()"/>
-          <export-button @click="() => exportFile(searchParams)" :loading="isExportLoading"/>
+    :show-btn-add="false"
+  >
+    <template v-slot:top><span></span></template>
+    <template slot="search" v-slot="{ searchParams }">
+      <div class="filter-row">
+        <div class="filter-item">
+          <div class="filter-label">Thời gian từ</div>
+          <el-date-picker
+            v-model="searchParams.fromTime"
+            type="datetime"
+            placeholder="Thời gian bắt đầu"
+            value-format="YYYY-MM-DD HH:mm:ss"
+            class="!w-[-webkit-fill-available] filter-input"
+          />
         </div>
-      </template>
-    </list-template>
-    <base-dialog class="!w-auto" v-model="detailVisible" v-loading="isLoading">
-      <notification-form-detail
-          :form-model="formModel"
-          @update-status="() => elTableRef?.refresh()"
-      />
-    </base-dialog>
-  </page-container>
+        <div class="filter-item">
+          <div class="filter-label">Thời gian đến</div>
+          <el-date-picker
+            v-model="searchParams.toTime"
+            type="datetime"
+            placeholder="Thời gian kết thúc"
+            value-format="YYYY-MM-DD HH:mm:ss"
+            class="!w-[-webkit-fill-available] filter-input"
+          />
+        </div>
+        <div class="filter-item">
+          <div class="filter-label">Khu vực</div>
+          <tree-select-remote
+            class="filter-input"
+            v-model="searchParams.areaId"
+            :request-fn="getAllTreeAreaApi"
+            filterable
+            clearable
+            @change="() => changeAreaId(searchParams)"
+          />
+        </div>
+        <div class="filter-item">
+          <div class="filter-label">Thiết bị</div>
+          <virtualized-select-from-url
+            ref="machineRef"
+            v-model="searchParams.machineId"
+            :request-fn="() => getAllMachineApi({ areaId: searchParams.areaId })"
+            filterable
+            value-key="id"
+            clearable
+            class="filter-input"
+          />
+        </div>
+        <search-button @click="elTableRef?.refresh()"/>
+        <export-button  @click="() => exportFile(searchParams)" :loading="isExportLoading"></export-button>
+      </div>
+
+    </template>
+  </list-template>
+  <base-dialog class="!w-auto" v-model="detailVisible" v-loading="isLoading">
+    <notification-form-detail
+      :form-model="formModel"
+      @update-status="() => elTableRef?.refresh()"
+    />
+  </base-dialog>
 </template>

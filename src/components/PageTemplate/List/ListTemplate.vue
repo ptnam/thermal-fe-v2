@@ -45,7 +45,7 @@
                 </svg>
               </button>
             </div>
-            <button class="btn-add" @click="$emit('addHandler')">+ Thêm</button>
+            <button v-show="showBtnAdd" class="btn-add" @click="$emit('addHandler')">+ Thêm</button>
           </div>
         </div>
 
@@ -110,6 +110,10 @@ const props = defineProps({
     required: false,
   },
   showSearchForm: {
+    type: Boolean,
+    default: true,
+  },
+  showBtnAdd: {
     type: Boolean,
     default: true,
   },

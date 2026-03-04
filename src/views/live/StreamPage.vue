@@ -42,7 +42,13 @@
         </div>
       </div>
       <el-drawer v-model="drawerVisible" style="min-width: 650px" :destroy-on-close="true" resizable :with-header="false">
-        <drawer-setting></drawer-setting>
+        <drawer-setting
+          :list-marked="fullList"
+          :screenNumber="pageSize"
+          @close="()=>drawerVisible = false"
+          @updatePage="(value)=>pageSize.value = value"
+        >
+        </drawer-setting>
       </el-drawer>
     </div>
   </div>
@@ -74,6 +80,7 @@ const selectedAreaId =  ref(null)
 
 const paginatedData = computed(() => {
   const start = (currentPage.value - 1) * pageSize.value
+  debugger
   return fullList.value.slice(start, start + pageSize.value)
 })
 
