@@ -27,7 +27,15 @@ const columns = computed<TableColumn[]>(() => [
   {prop: 'machineType.name', label: 'Loại thiết bị'},
   {prop: 'name', label: 'Tên thiết bị'},
   {prop: 'code', label: 'Mã thiết bị'},
-  {prop: 'displayStatus', label: 'Trạng thái'},
+  {
+    prop: 'displayStatus',
+    label: 'Trạng thái',
+    slots: {
+      default: ({row}) => (<span   style={{
+        color:  row.status === 'Active' ? 'var(--success)' : 'var(--danger)'
+      }}>{row?.displayStatus}</span>)
+    },
+  },
   {
     label: t('fields.action'),
     width: '110px',
@@ -98,18 +106,30 @@ const exportFile = (searchParams: any) => {
         title="Danh sách thiết bị"
     >
       <template slot="search" v-slot="{ searchParams }">
-        <el-form-item label="Thiết bị" label-width="90px">
-          <el-input v-model="searchParams.name" clearable style="width: 200px"/>
-        </el-form-item>
-        <el-form-item label="Khu vực" label-width="90px">
+        <div class="filter-item">
+          <div class="filter-label">Thiết bị</div>
+          <el-input class="filter-input" v-model="searchParams.name" clearable placeholder="Nhập tên thiết bị..."/>
+        </div>
+        <div class="filter-item">
+          <div class="filter-label">Khu vực</div>
           <tree-select-remote
               v-model="searchParams.areaId"
               :request-fn="getAllTreeAreaApi"
               filterable
               clearable
           />
-        </el-form-item>
-        <el-form-item label="Loại thiết bị" label-width="120px">
+        </div>
+        <div class="filter-item">
+          <div class="filter-label">Khu vực</div>
+          <tree-select-remote
+              v-model="searchParams.areaId"
+              :request-fn="getAllTreeAreaApi"
+              filterable
+              clearable
+          />
+        </div>
+        <div class="filter-item">
+          <div class="filter-label">Loại thiết bị</div>
           <virtualized-select-from-url
               v-model="searchParams.machineTypeId"
               :request-fn="getAllMachineTypeApi"
@@ -117,7 +137,7 @@ const exportFile = (searchParams: any) => {
               clearable
               value-key="id"
           />
-        </el-form-item>
+        </div>
         <div class="flex justify-center">
           <search-button @click="elTableRef?.refresh()"/>
           <export-button @click="() => exportFile(searchParams)" :loading="isLoadingExport"/>

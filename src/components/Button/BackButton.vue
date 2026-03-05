@@ -12,7 +12,6 @@
 <script lang="ts" setup>
 import { Back } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
-import { defineProps } from 'vue'
 
 // Props
 const props = defineProps<{

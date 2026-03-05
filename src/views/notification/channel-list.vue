@@ -14,6 +14,7 @@ import NotificationChannelForm from '@/views/notification/components/Notificatio
 import {getUserListApi} from '@/api/user'
 import InfiniteSelect from '@/components/Selection/InfiniteSelect.vue'
 import {joinFieldValues} from '@/utils/stringUtils'
+import SearchButton from "@/components/Button/SearchButton.vue";
 
 const {t} = useLang()
 
@@ -70,41 +71,40 @@ const saveSuccess = () => {
 </script>
 
 <template>
-  <page-container title="Danh sách cảnh báo">
-    <list-template
-        ref="elTableRef"
-        key-list="channel-list"
-        :columns="columns"
-        :use-table-config="{
+  <list-template
+      ref="elTableRef"
+      title="Danh sách cảnh báo"
+      key-list="channel-list"
+      :columns="columns"
+      :use-table-config="{
         fetchDataApi: getNotificationChannelListApi,
       }"
-        @addHandler="openDialogAdd"
-    >
-      <template slot="search" v-slot="{ searchParams }">
-        <el-form-item label="Tên kênh" label-width="80px">
-          <el-input v-model="searchParams.name" clearable style="width: 160px"/>
-        </el-form-item>
-        <el-form-item label="Nơi nhận cảnh báo" prop="channelType">
+      @addHandler="openDialogAdd"
+      :search-props="{className:''}"
+  >
+    <template slot="search" v-slot="{ searchParams, tableMethods }">
+      <div class="filter-row">
+        <div class="filter-item">
+          <div class="filter-label">Tên kênh</div>
+          <el-input v-model="searchParams.name" clearable placeholder="Nhập tên kênh..."/>
+        </div>
+        <div class="filter-item">
+          <div class="filter-label">Nơi nhận cảnh báo</div>
           <select-from-config
-              style="width: 160px"
+              class="filter-input"
               key-config="notificationChannelTypeList"
               v-model="searchParams.channelType"
               col-value="code"
               col-label="name"
               clearable
           ></select-from-config>
-        </el-form-item>
-        <el-form-item
-            label="Email"
-            label-width="50px"
-        >
-          <el-input v-model="searchParams.email" clearable style="width: 160px"/>
-        </el-form-item>
-        <el-form-item
-            label="Người dùng"
-            prop="formModel.users"
-            label-width="95px"
-        >
+        </div>
+        <div class="filter-item">
+          <div class="filter-label">Email</div>
+          <el-input v-model="searchParams.email" clearable class="filter-input" placeholder="Nhập email..."/>
+        </div>
+        <div class="filter-item">
+          <div class="filter-label">Người dùng</div>
           <InfiniteSelect
               v-model="searchParams.userId"
               :request-fn="getUserListApi"
@@ -112,16 +112,17 @@ const saveSuccess = () => {
               col-value="id"
               col-label="fullName"
               clearable
-              style="min-width: 240px"
+              class="filter-input"
           />
-        </el-form-item>
-      </template>
-    </list-template>
-    <base-dialog v-model="dialogVisible" :destroy-on-close="true" style="min-width: 500px">
-      <NotificationChannelForm
-          :formModel="formModel"
-          @success="saveSuccess"
-      ></NotificationChannelForm>
-    </base-dialog>
-  </page-container>
+        </div>
+        <search-button @click="tableMethods?.refresh()"/>
+      </div>
+    </template>
+  </list-template>
+  <base-dialog v-model="dialogVisible" :destroy-on-close="true" style="min-width: 500px">
+    <NotificationChannelForm
+        :formModel="formModel"
+        @success="saveSuccess"
+    ></NotificationChannelForm>
+  </base-dialog>
 </template>
