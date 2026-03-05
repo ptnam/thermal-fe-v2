@@ -2,9 +2,8 @@
   <div class="container">
     <div class="grid">
       <!-- Filter Section -->
-      <div class="card filter-card">
+      <div  v-show="showSearchForm" class="card filter-card">
           <search-form
-              v-show="showSearchForm"
               class="filter-row"
               :model="searchParams"
               :loading="loading"
@@ -17,37 +16,40 @@
 
       <!-- Table/Card Section -->
       <div class="card table-container-full">
-        <div
+
+        <slot name="top">
+          <div
             style="padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border)">
-          <div style="font-size: 15px; font-weight: 700; color: var(--primary); text-transform: uppercase;">
-            {{ title }}
-          </div>
-          <div style="display: flex; align-items: center; gap: 15px;">
-            <div class="view-switcher">
-              <button class="view-btn active" onclick="switchView('table')">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="8" y1="6" x2="21" y2="6"></line>
-                  <line x1="8" y1="12" x2="21" y2="12"></line>
-                  <line x1="8" y1="18" x2="21" y2="18"></line>
-                  <line x1="3" y1="6" x2="3.01" y2="6"></line>
-                  <line x1="3" y1="12" x2="3.01" y2="12"></line>
-                  <line x1="3" y1="18" x2="3.01" y2="18"></line>
-                </svg>
-              </button>
-              <button class="view-btn" onclick="switchView('card')">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="3" y="3" width="7" height="7"></rect>
-                  <rect x="14" y="3" width="7" height="7"></rect>
-                  <rect x="14" y="14" width="7" height="7"></rect>
-                  <rect x="3" y="14" width="7" height="7"></rect>
-                </svg>
-              </button>
+            <div style="font-size: 15px; font-weight: 700; color: var(--primary); text-transform: uppercase;">
+              {{ title }}
             </div>
-            <button v-show="showBtnAdd" class="btn-add" @click="$emit('addHandler')">+ Thêm</button>
+            <div style="display: flex; align-items: center; gap: 15px;">
+              <div class="view-switcher">
+                <button class="view-btn active" onclick="switchView('table')">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                       stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="8" y1="6" x2="21" y2="6"></line>
+                    <line x1="8" y1="12" x2="21" y2="12"></line>
+                    <line x1="8" y1="18" x2="21" y2="18"></line>
+                    <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                    <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                    <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                  </svg>
+                </button>
+                <button class="view-btn" onclick="switchView('card')">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                       stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                  </svg>
+                </button>
+              </div>
+              <button v-show="showBtnAdd" class="btn-add" @click="$emit('addHandler')">+ Thêm</button>
+            </div>
           </div>
-        </div>
+        </slot>
 
         <!-- TABLE VIEW -->
         <div>

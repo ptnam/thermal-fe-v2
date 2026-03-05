@@ -18,6 +18,8 @@ import useRequest from '@/hooks/web/useRequest'
 import PresetTourTab from '@/views/category/camera/components/PresetTourTab.vue'
 import CameraVisionPreset from '@/views/category/camera/components/CameraVisionPreset.vue'
 import AiSetting from '@/views/category/camera/components/AiSetting.vue'
+import SearchButton from '@/components/Button/SearchButton.vue'
+import DrawerForm from '@/components/Form/DrawerForm.vue'
 
 const columns = computed<TableColumn[]>(() => [
   { type: 'index', label: 'STT', width: 60, headerAlign: 'center' },
@@ -25,7 +27,16 @@ const columns = computed<TableColumn[]>(() => [
   { prop: 'name', label: 'Tên camera' },
   { prop: 'area.name', label: 'Khu vực' },
   { prop: 'cameraTypeObject.name', label: 'Chức năng camera' },
-  { prop: 'deviceStatusObject.name', label: 'Trạng thái', width: '150px' },
+  {
+    prop: 'deviceStatusObject.name',
+    label: 'Trạng thái',
+    width: '150px',
+    slots: {
+      default: ({row}) => (<span   style={{
+        color: row.deviceStatusObject.code === 'On' ? 'var(--success)' : 'var(--danger)'
+      }}>{row?.deviceStatusObject?.name}</span>)
+    },
+  },
   {
     width: '280px',
     slots: {
@@ -120,29 +131,39 @@ const saveSuccess = () => {
       :use-table-config="{
         fetchDataApi: getCameraListApi,
       }"
+      :search-props="{
+        className: ''
+      }"
       @addHandler="openDialogAdd"
       title="Danh sách camera"
     >
-      <template slot="search" v-slot="{ searchParams }">
-        <el-form-item label="Mã/tên camera">
-          <el-input v-model="searchParams.name" clearable style="width: 160px" />
-        </el-form-item>
-        <el-form-item label="Chức năng" label-width="90px">
-          <select-from-config
-            style="width: 230px"
-            key-config="cameraTypeList"
-            clearable
-            v-model="searchParams.cameraType"
-          ></select-from-config>
-        </el-form-item>
-        <el-form-item label="Khu vực" label-width="70px">
-          <tree-select-remote
-            v-model="searchParams.areaId"
-            :request-fn="getAllTreeAreaApi"
-            filterable
-            clearable
-          />
-        </el-form-item>
+      <template slot="search" v-slot="{ searchParams, tableMethods }">
+        <div class="filter-row">
+          <div class="filter-item">
+            <div class="filter-label">Mã/tên camera</div>
+            <el-input v-model="searchParams.name" class="filter-input" clearable placeholder="Nhập mã hoặc tên..." />
+          </div>
+          <div class="filter-item">
+            <div class="filter-label">Chức năng</div>
+            <select-from-config
+              class="filter-input"
+              key-config="cameraTypeList"
+              clearable
+              v-model="searchParams.cameraType"
+            ></select-from-config>
+          </div>
+          <div class="filter-item">
+            <div class="filter-label">Khu vực</div>
+            <tree-select-remote
+              class="filter-input"
+              v-model="searchParams.areaId"
+              :request-fn="getAllTreeAreaApi"
+              filterable
+              clearable
+            />
+          </div>
+          <search-button @click="tableMethods.getList"></search-button>
+        </div>
       </template>
     </list-template>
     <base-dialog
@@ -165,8 +186,8 @@ const saveSuccess = () => {
     >
       <CameraVisionPreset :visionCamera="visionCamera" />
     </base-dialog>
-    <base-dialog v-model="aiSettingDialogVisible" :destroy-on-close="true" title="Cài đặt AI">
+    <drawer-form v-model="aiSettingDialogVisible" :destroy-on-close="true" title="Cài đặt AI" style="min-width: 650px">
       <ai-setting :camera="selectedCamera" @saved="aiSettingDialogVisible = false" />
-    </base-dialog>
+    </drawer-form>
   </div>
 </template>

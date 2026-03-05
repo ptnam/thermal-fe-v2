@@ -104,6 +104,13 @@ const formatDataList = (rows: any[]) => {
           prop: `dicThermalDataResults.${key}.compareResultObject.name`,
           label: 'Trạng thái',
           align: 'center',
+          slots: {
+            default: ({row}) => {
+              const code = row?.dicThermalDataResults?.[key]?.compareResultObject?.code ?? ''
+              const backgroundColor = STATUS_COLOR_MAP[code]
+              return (<span class="status-badge" style={{backgroundColor: backgroundColor}}>{row?.dicThermalDataResults[key]?.compareResultObject?.name}</span>)
+            }
+          },
         },
       ],
     })
@@ -194,7 +201,7 @@ const exportFile = (searchParams: any) => {
       }"
       :search-props="{ visibleSearchButton: false, inline: false }"
       :span-method="objectSpanMethod"
-      :cell-style="cellStyle"
+      :show-btn-add="false"
     >
       <template v-slot:top><span></span></template>
       <template slot="search" v-slot="{ searchParams }">

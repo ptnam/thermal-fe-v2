@@ -7,6 +7,11 @@ export const getMachineTypeListApi = (searchParams: object): Promise<IResponse<[
   return request.get({ url: '/api/MachineTypes/list', params: searchParams })
 }
 
+
+export const getDetailMachineTypeApi = (id: number): Promise<IResponse> => {
+  return request.get({url: `api/MachineTypes/${id}`})
+}
+
 export const addMachineTypeApi = (data: Object): Promise<IResponse> => {
   return request.post({ url: 'api/MachineTypes', data })
 }

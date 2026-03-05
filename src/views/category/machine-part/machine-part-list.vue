@@ -3,19 +3,17 @@ import ListTemplate from '@/components/PageTemplate/List/ListTemplate.vue'
 import {TableColumn} from '@/components/Table'
 import {useLang} from '@/hooks/web/useI18n'
 import PageContainer from '@/components/PageContainer.vue'
-import {computed, ref} from 'vue'
+import {computed, onMounted, ref} from 'vue'
 import BaseDialog from '@/components/Dialog/BaseDialog.vue'
 import {STATUS_ACTIVE} from '@/constants'
 import DeleteCircleButton from '@/components/Button/DeleteCircleButton.vue'
 import EditCircleButton from '@/components/Button/EditCircleButton.vue'
-import {getAllMachineTypeApi} from '@/api/machine-type'
 
 import {deleteMachinePartApi, detailMachinePartApi, getMachinePartListApi} from '@/api/machine-part'
-import VirtualizedSelectFromUrl from '@/components/Selection/VirtualizedSelectFromUrl.vue'
 import {useRoute} from 'vue-router'
-import AddButton from '@/components/Button/AddButton.vue'
 import MachinePartForm from '@/views/category/machine-part/components/MachinePartForm.vue'
 import BackButton from "@/components/Button/BackButton.vue";
+import { getDetailMachineTypeApi } from '@/api/machine-type'
 
 const {t} = useLang()
 
@@ -45,6 +43,12 @@ const formModel = ref({})
 const route = useRoute()
 
 const machineTypeValue = ref(parseInt(route.params.machineTypeId as string))
+const machineNameValue = ref("")
+ onMounted(() => {
+   getDetailMachineTypeApi(machineTypeValue.value).then(res => {
+     machineNameValue.value = res.data.name
+   })
+ })
 const openDialogAdd = () => {
   formModel.value = {
     machineTypeId: machineTypeValue,
@@ -77,9 +81,10 @@ const saveSuccess = () => {
 </script>
 
 <template>
-  <page-container title="Danh sách bộ phận của thiết bị">
+  <page-container >
     <list-template
         ref="elTableRef"
+        title="Danh sách bộ phận của thiết bị"
         key-list="machine-part-list"
         :row-key="(row: any) => row.id"
         :default-expand-all="true"
@@ -89,22 +94,20 @@ const saveSuccess = () => {
         :use-table-config="{
           fetchDataApi: () => getMachinePartListApi({ machineTypeId: machineTypeValue })
         }"
+        @addHandler="openDialogAdd"
         v-loading="detailLoading"
     >
       <template v-slot:top>
-        <div class="flex justify-between">
-          <el-form-item label="Loại thiết bị">
-            <VirtualizedSelectFromUrl
-                v-model="machineTypeValue"
-                :request-fn="getAllMachineTypeApi"
-                style="width: 200px"
-                :disabled="true"
-                clearable
-            />
-          </el-form-item>
+        <div style="padding: 24px; display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid var(--border)">
           <div>
+            <div style="font-size: 16px; font-weight: 700; color: var(--primary); text-transform: uppercase; margin-bottom: 4px;">
+              Danh sách bộ phận</div>
+            <div style="font-size: 12px; color: var(--text-sub);">Loại thiết bị: <span style="font-weight: 600; color: var(--text-main);">{{ machineNameValue}}</span></div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px;">
             <back-button default-path="/category/machine-type"></back-button>
-            <add-button :disabled="!machineTypeValue" @click="openDialogAdd"></add-button>
+
+            <button  :disabled="!machineTypeValue" @click="openDialogAdd" class="btn-add" style="margin: 0;">+ Thêm bộ phận</button>
           </div>
         </div>
       </template>

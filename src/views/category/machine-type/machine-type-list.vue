@@ -13,6 +13,7 @@ import {deleteMachineTypeApi, getMachineTypeListApi} from '@/api/machine-type'
 import {ElButton} from 'element-plus'
 import {Plus} from '@element-plus/icons-vue'
 import {useRouter} from 'vue-router'
+import SearchButton from '@/components/Button/SearchButton.vue'
 
 const {t} = useLang()
 const router = useRouter()
@@ -59,7 +60,7 @@ const openDelete = (scope: any) => {
 }
 
 const addMachinePart = (scope: any) => {
-  router.push({name: 'machine_part', params: {machineTypeId: scope.row.id}})
+  router.push({name: 'machine_part', params: {machineTypeId: scope.row.id}, query: {  name: scope.row.mame }})
 }
 
 const saveSuccess = () => {
@@ -78,11 +79,18 @@ const saveSuccess = () => {
         fetchDataApi: getMachineTypeListApi,
       }"
         @addHandler="openDialogAdd"
+        :search-props="{
+        className: ''
+      }"
     >
-      <template slot="search" v-slot="{ searchParams }">
-        <el-form-item label="Tên">
-          <el-input v-model="searchParams.name" clearable/>
-        </el-form-item>
+      <template slot="search" v-slot="{ searchParams, tableMethods }">
+        <div class="filter-row">
+          <div class="filter-item">
+            <div class="filter-label">Tên</div>
+            <el-input v-model="searchParams.name" class="filter-input" placeholder="Nhập tên loại thiết bị..." clearable/>
+          </div>
+          <search-button @click="tableMethods.getList"></search-button>
+        </div>
       </template>
     </list-template>
     <base-dialog v-model="dialogVisible" :destroy-on-close="true">

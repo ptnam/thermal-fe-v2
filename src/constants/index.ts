@@ -32,7 +32,7 @@ export const CAMERA_COMMANDS = {
 
 export const STATUS_COLOR_MAP = {
     Bad: 'red',
-    Average: 'orange',
-    Fair: 'blue',
-    Good: 'green',
+    Average: '#FBBF24',
+    Fair: '#60A5FA',
+    Good: '#34D399',
 }

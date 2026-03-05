@@ -15,6 +15,7 @@ import TreeSelectRemote from '@/components/Tree/TreeSelectRemote.vue'
 import SelectFromConfig from '@/components/Selection/SelectFromConfig.vue'
 import { getAllSensorTypeApi } from '@/api/sensor-type'
 import VirtualizedSelectFromUrl from '@/components/Selection/VirtualizedSelectFromUrl.vue'
+import SearchButton from '@/components/Button/SearchButton.vue'
 
 const { t } = useLang()
 
@@ -23,7 +24,16 @@ const columns = computed<TableColumn[]>(() => [
   { prop: 'code', label: 'Mã cảm biến' },
   { prop: 'name', label: 'Tên cảm biến' },
   { prop: 'area.name', label: 'Khu vực' },
-  { prop: 'deviceStatusObject.name', width: 160, label: 'Trạng thái' },
+  {
+    prop: 'deviceStatusObject.name',
+    width: 160,
+    label: 'Trạng thái',
+    slots: {
+      default: ({row}) => (<span   style={{
+        color: row.deviceStatusObject.code === 'On' ? 'var(--success)' : 'var(--danger)'
+      }}>{row?.deviceStatusObject?.name}</span>)
+    },
+  },
   {
     label: t('fields.action'),
     width: '110px',
@@ -66,7 +76,7 @@ const saveSuccess = () => {
 </script>
 
 <template>
-  <page-container title="Danh sách cảm biến nhiệt">
+  <page-container>
     <list-template
       ref="elTableRef"
       key-list="sensor-list"
@@ -74,36 +84,49 @@ const saveSuccess = () => {
       :use-table-config="{
         fetchDataApi: getSensorListApi,
       }"
+      :search-props="{
+        className: ''
+      }"
       @addHandler="openDialogAdd"
+      title="Danh sách cảm biến nhiệt"
     >
-      <template slot="search" v-slot="{ searchParams }">
-        <el-form-item label="Mã/tên cảm biến">
-          <el-input v-model="searchParams.name" clearable style="width: 200px" />
-        </el-form-item>
-        <el-form-item label="Khu vực" label-width="70px">
-          <tree-select-remote
-            v-model="searchParams.areaId"
-            :request-fn="getAllTreeAreaApi"
-            filterable
-            clearable
-          />
-        </el-form-item>
-        <el-form-item label="Loại cảm biến" label-width="110px">
-          <virtualized-select-from-url
-            :request-fn="getAllSensorTypeApi"
-            v-model="searchParams.sensorTypeId"
-            clearable
-            filterable
-          />
-        </el-form-item>
-        <el-form-item :label="t('fields.status')" label-width="80px">
-          <select-from-config
-            style="width: 180px"
-            key-config="userStatusList"
-            v-model="searchParams.status"
-            clearable
-          ></select-from-config>
-        </el-form-item>
+      <template slot="search" v-slot="{ searchParams, tableMethods }">
+        <div class="filter-row">
+          <div class="filter-item">
+            <div class="filter-label">Mã/tên cảm biến</div>
+            <el-input v-model="searchParams.name" clearable class="filter-input" placeholder="Nhập mã hoặc tên..." />
+          </div>
+          <div class="filter-item">
+            <div class="filter-label">Khu vực</div>
+            <tree-select-remote
+              v-model="searchParams.areaId"
+              :request-fn="getAllTreeAreaApi"
+              filterable
+              clearable
+              class="filter-input"
+            />
+          </div>
+          <div class="filter-item">
+            <div class="filter-label">Loại cảm biến</div>
+            <virtualized-select-from-url
+              :request-fn="getAllSensorTypeApi"
+              v-model="searchParams.sensorTypeId"
+              clearable
+              filterable
+              class="filter-input"
+            />
+          </div>
+          <div class="filter-item">
+            <div class="filter-label">Trạng thái</div>
+            <select-from-config
+              key-config="userStatusList"
+              v-model="searchParams.status"
+              clearable
+              class="filter-input"
+            ></select-from-config>
+          </div>
+          <search-button @click="tableMethods.getList"></search-button>
+        </div>
       </template>
     </list-template>
     <base-dialog v-model="dialogVisible" :destroy-on-close="true" style="width: 1100px">

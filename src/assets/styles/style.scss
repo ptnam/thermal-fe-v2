@@ -2246,14 +2246,14 @@ body {
 
   /* --- 8. STATUS BADGES & ACTION BUTTONS --- */
   .status-badge {
-    padding: 4px 8px;
     border-radius: 4px;
     color: white;
     font-size: 11px;
     font-weight: 700;
     text-align: center;
     display: inline-block;
-    min-width: 80px;
+    min-width: 71px;
+    height: 22px;
   }
 
   .status-success {
