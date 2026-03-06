@@ -80,6 +80,31 @@ body {
   scrollbar-color: var(--border) var(--bg-body);
 }
 
+[data-theme="dark"] .notif-dropdown {
+  background: #1E293B !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .notif-btn:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+[data-theme="dark"] .notif-dropdown::before {
+  border-color: var(--border) !important;
+}
+
+[data-theme="dark"] .notif-item {
+  border-bottom: 1px solid var(--border) !important;
+}
+
+[data-theme="dark"] .notif-item:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+
+[data-theme="dark"] .notif-footer {
+  background: rgba(255, 255, 255, 0.02) !important;
+}
 .app-layout{
   /* --- 2. HEADER & NAVIGATION --- */
   .navbar {
@@ -721,10 +746,6 @@ body {
     background: rgba(0, 0, 0, 0.05);
   }
 
-  [data-theme="dark"] .notif-btn:hover {
-    background: rgba(255, 255, 255, 0.05);
-  }
-
   .notif-badge {
     position: absolute;
     top: 2px;
@@ -769,12 +790,6 @@ body {
     overflow: hidden;
   }
 
-  [data-theme="dark"] .notif-dropdown {
-    background: #1E293B;
-    border: 1px solid var(--border);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
-  }
-
   .notif-dropdown::before {
     content: '';
     position: absolute;
@@ -786,10 +801,6 @@ body {
     transform: rotate(45deg);
     border-left: 1px solid #F3F4F6;
     border-top: 1px solid #F3F4F6;
-  }
-
-  [data-theme="dark"] .notif-dropdown::before {
-    border-color: var(--border);
   }
 
   .notif-dropdown.show {
@@ -812,16 +823,8 @@ body {
     text-decoration: none;
   }
 
-  [data-theme="dark"] .notif-item {
-    border-bottom: 1px solid var(--border);
-  }
-
   .notif-item:hover {
     background: #F9FAFB;
-  }
-
-  [data-theme="dark"] .notif-item:hover {
-    background: rgba(255, 255, 255, 0.05);
   }
 
   .notif-title {
@@ -859,10 +862,6 @@ body {
     padding: 10px;
     text-align: center;
     background: #F9FAFB;
-  }
-
-  [data-theme="dark"] .notif-footer {
-    background: rgba(255, 255, 255, 0.02);
   }
 
   .btn-view-all {

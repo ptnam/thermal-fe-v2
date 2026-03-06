@@ -89,35 +89,41 @@ const saveSuccess = () => {
         fetchDataApi: getUserListApi,
       }"
       @addHandler="openDialogAdd"
-      :search-props="{ visibleSearchButton: false }"
+      :search-props="{ visibleSearchButton: false, className: '' }"
+
     >
       <template slot="search" v-slot="{ searchParams }">
-        <el-form-item :label="t('fields.status')">
-          <select-from-config
-            style="width: 160px"
-            key-config="userStatusList"
-            v-model="searchParams.userStatus"
-            clearable
-          ></select-from-config>
-        </el-form-item>
-        <el-form-item label="Tên">
-          <el-input v-model="searchParams.name" clearable style="width: 200px" />
-        </el-form-item>
-        <el-form-item label="Email">
-          <el-input v-model="searchParams.email" clearable style="width: 160px" />
-        </el-form-item>
-        <el-form-item label="Telegram">
-          <el-input v-model="searchParams.telegramUsername" clearable style="width: 160px" />
-        </el-form-item>
-        <el-form-item>
+        <div class="filter-row">
+          <div class="filter-item">
+            <div class="filter-label">Trạng thái</div>
+            <select-from-config
+              class="filter-input"
+              key-config="userStatusList"
+              v-model="searchParams.userStatus"
+              clearable
+            ></select-from-config>
+          </div>
+          <div class="filter-item">
+            <div class="filter-label">Tên</div>
+            <el-input v-model="searchParams.name" clearable placeholder="Nhập tên người dùng..." />
+          </div>
+          <div class="filter-item">
+            <div class="filter-label">Email</div>
+            <el-input v-model="searchParams.email" clearable placeholder="Nhập email..." />
+          </div>
+          <div class="filter-item">
+            <div class="filter-label">Telegram</div>
+            <el-input v-model="searchParams.telegramUsername" clearable placeholder="Nhập Telegram ID..." />
+          </div>
           <search-button @click="elTableRef?.refresh()" />
           <api-button
             :api="syncTelegramChatIdApi"
             :icon="Refresh"
+            class="btn-search" style="background: transparent; border: 1px solid var(--border); color: var(--text-main)"
           >
-            Đồng bộ telegram
+            ⟳ Đồng bộ Telegram
           </api-button>
-        </el-form-item>
+        </div>
       </template>
 
     </list-template>
