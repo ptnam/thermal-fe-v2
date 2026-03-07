@@ -62,5 +62,9 @@ onMounted(() => {
         loading.value = false
       })
 })
+
+defineExpose({
+  treeRef
+})
 </script>
 

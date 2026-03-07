@@ -1,10 +1,14 @@
-<script setup>
-import {getAllTreeAreaApi} from "@/api/area/index.ts";
+<script setup lang="ts">
+import {getAllTreeAreaApi} from "@/api/area";
 import SimpleAreaTree from "@/components/Tree/SimpleAreaTree.vue";
-import { computed, ref } from 'vue'
-import { number } from 'vue-types'
+import {computed, ref} from 'vue'
+import {number} from 'vue-types'
+import {BaseTable} from "@/components/Table/index";
+import {vDraggable} from "@/components/Table/v-draggable";
+import {updateCameraSettingApi} from "@/api/camera-setting";
+import {CAMERA_COMMANDS} from "@/constants";
 
-const emit = defineEmits(['close', 'updatePage'])
+const emit = defineEmits(['close', 'treeChange', 'updatePage', 'applySettings'])
 
 const props = defineProps({
   listMarked: {
@@ -14,42 +18,94 @@ const props = defineProps({
   screenNumber: {
     type: number,
     required: false
-  }
+  },
 })
 
-const selectedIds = computed(() => props.listMarked.map(u => u.id))
+const loadingSetting = ref(false)
+
+const selectedIds = computed(() => props.listMarked.map(u => u.id));
+
+const dragOptions = [
+  {
+    selector: "tbody", // add drag support for row
+    handle: '.el-table__row',
+    option: { // sortablejs's option
+      animation: 150,
+      onEnd: (evt: { oldIndex: number; newIndex: number; }) => {
+        arrayMoveInPlace(props.listMarked, evt.oldIndex, evt.newIndex)
+      },
+    },
+  },
+];
 const changeGrid = (cells) => {
   const grid = document.getElementById('mainCamGrid');
   const cols = Math.sqrt(cells);
-  grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
-  grid.style.alignContent = 'start';
-  emit("updatePage", cells)
+  if (grid) {
+    grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+    grid.style.alignContent = 'start';
+    emit("updatePage", cells)
+  }
+}
+
+const columns = [
+  {prop: 'id', label: "ID", width: 60,},
+  {prop: 'code', label: "Mã camera"},
+  {prop: 'name', label: "Tên camera"},
+];
+const arrayMoveInPlace = (array: any[], fromIndex: number, toIndex: number) => {
+  const [movedItem] = array.splice(fromIndex, 1);
+  array.splice(toIndex, 0, movedItem);
+  return array;
+}
+
+const treeRef = ref(null)
+const treeCheckChange = (r: { mapType: any; }) => {
+  if (!r.mapType) {
+    emit('treeChange', treeRef?.value?.treeRef.getCheckedNodes().filter(item => !item.mapType))
+  }
+}
+
+const applySettings = () => {
+  loadingSetting.value = true;
+  updateCameraSettingApi({
+    flagCommand: CAMERA_COMMANDS.ALL,
+    cameraIds: (props.listMarked as Array<{ id: number }>).map(item => item.id),
+    screenNumber: props.screenNumber
+  }).then((res) => {
+    emit('applySettings', res.data);
+  }).finally(() => {
+    loadingSetting.value = false;
+  })
 }
 </script>
 <template>
   <div class="drawer drawer-md" id="settingsDrawer">
     <div class="drawer-header">
       <h3>Thiết lập hiển thị</h3>
-      <button class="close-drawer" @click="()=>emit('emit')">×</button>
+      <button class="close-drawer" @click="()=>emit('close')">×</button>
     </div>
     <div class="drawer-body">
       <div class="settings-section">
         <div class="settings-title">KHU VỰC</div>
         <div class="settings-tree">
           <simple-area-tree
+              ref="treeRef"
               show-checkbox
               :request-fn="() => getAllTreeAreaApi({ cameras: true })"
               :check-strictly="true"
               :default-checked-keys="selectedIds"
+              @check-change="treeCheckChange"
           >
             <template #default="{ node }">
               <div class="st-item">
                 <label class="st-label">
-                  <svg v-if="node.data.mapType"  width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <svg v-if="node.data.mapType" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                       stroke="currentColor" stroke-width="2">
                     <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z">
                     </path>
                   </svg>
-                  <svg v-else width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <svg v-else width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                       stroke-width="2">
                     <path d="M23 7l-7 5 7 5V7z"></path>
                     <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
                   </svg>
@@ -114,39 +170,8 @@ const changeGrid = (cells) => {
         </div>
 
         <div class="settings-title" style="margin-top: 30px;">THỨ TỰ CAMERA (KÉO ĐỂ ĐỔI)</div>
-        <div class="cam-order-list" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-          <div class="cam-order-item"
-               style="background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 8px; padding: 12px; display: flex; align-items: center; gap: 10px; font-size: 13px; cursor: grab; transition: 0.2s; border: 1px solid var(--border);">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M23 7l-7 5 7 5V7z"></path>
-              <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
-            </svg>
-            <span>Cam nhiệt cố định</span>
-          </div>
-          <div class="cam-order-item"
-               style="background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 8px; padding: 12px; display: flex; align-items: center; gap: 10px; font-size: 13px; cursor: grab; transition: 0.2s; border: 1px solid var(--border);">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M23 7l-7 5 7 5V7z"></path>
-              <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
-            </svg>
-            <span>Cam nhiệt quay quét</span>
-          </div>
-          <div class="cam-order-item"
-               style="background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 8px; padding: 12px; display: flex; align-items: center; gap: 10px; font-size: 13px; cursor: grab; transition: 0.2s; border: 1px solid var(--border);">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M23 7l-7 5 7 5V7z"></path>
-              <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
-            </svg>
-            <span>Cam thường cố định</span>
-          </div>
-          <div class="cam-order-item"
-               style="background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 8px; padding: 12px; display: flex; align-items: center; gap: 10px; font-size: 13px; cursor: grab; transition: 0.2s; border: 1px solid var(--border);">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M23 7l-7 5 7 5V7z"></path>
-              <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
-            </svg>
-            <span>Cam thường quay quét</span>
-          </div>
+        <div v-if="listMarked.length" class="cam-order-list">
+          <base-table class="mt-4" :data="listMarked" :columns="columns" v-draggable="dragOptions"/>
         </div>
       </div>
     </div>
@@ -156,11 +181,13 @@ const changeGrid = (cells) => {
               style="padding: 10px 24px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: var(--text-sub); cursor: pointer; font-weight: 600;">
         Hủy
       </button>
-      <button class="btn-save"
-              onclick="applySettings()"
-              style="padding: 10px 24px; border-radius: 8px; border: none; background: var(--primary); color: white; cursor: pointer; font-weight: 700;">
+      <el-button
+          :loading="loadingSetting"
+          class="btn-save"
+          @click="applySettings"
+          style="height: 42px;padding: 10px 24px; border-radius: 8px; border: none; background: var(--primary); color: white; cursor: pointer; font-weight: 700;">
         Lưu thiết lập
-      </button>
+      </el-button>
     </div>
   </div>
 </template>

@@ -16,7 +16,8 @@
       <!-- Right Card: Monitoring Area -->
       <div class="card live-content">
         <div class="monitor-top-bar" style="border-radius: 12px 12px 0 0;">
-          <button id="sidebarToggle" class="mobile-only sidebar-toggle-btn" onclick="toggleSidebar()" style="margin-right: 10px; background: var(--primary); color: white; border: none; padding: 8px; border-radius: 4px;">
+          <button id="sidebarToggle" class="mobile-only sidebar-toggle-btn" onclick="toggleSidebar()"
+                  style="margin-right: 10px; background: var(--primary); color: white; border: none; padding: 8px; border-radius: 4px;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
               <circle cx="12" cy="10" r="3"></circle>
@@ -26,13 +27,16 @@
             <button class="btn-settings" @click="openDrawer">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <circle cx="12" cy="12" r="3"></circle>
-                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+                <path
+                    d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
                 </path>
               </svg>
               Thiết lập
             </button>
           </div>
-          <div v-show="environmentTemperature !== null" class="env-temp">Nhiệt độ môi trường: {{ environmentTemperature?.temperature ?? "" }}</div>
+          <div v-show="environmentTemperature !== null" class="env-temp">Nhiệt độ môi trường:
+            {{ environmentTemperature?.temperature ?? "" }}
+          </div>
         </div>
 
         <div class="cam-grid" id="mainCamGrid">
@@ -41,12 +45,15 @@
           </div>
         </div>
       </div>
-      <el-drawer v-model="drawerVisible" style="min-width: 650px" :destroy-on-close="true" resizable :with-header="false">
+      <el-drawer v-model="drawerVisible" style="min-width: 650px" :destroy-on-close="true" resizable
+                 :with-header="false">
         <drawer-setting
-          :list-marked="fullList"
-          :screenNumber="pageSize"
-          @close="()=>drawerVisible = false"
-          @updatePage="(value)=>pageSize.value = value"
+            :list-marked="fullList"
+            :screenNumber="pageSize"
+            @close="()=>drawerVisible = false"
+            @updatePage="updatePage"
+            @treeChange="updateFullList"
+            @applySettings="applySettings"
         >
         </drawer-setting>
       </el-drawer>
@@ -57,14 +64,13 @@
 <script setup lang="ts">
 import {computed, onMounted, ref} from "vue";
 import {getCameraSettingApi, updateCameraSettingApi} from "@/api/camera-setting";
-import {CAMERA_COMMANDS} from "@/constants";
 import {isCam} from "@/utils/cameraUtils";
 import {environmentThermalApi} from "@/api/thermal-data";
 import WebPlayer from "@/components/Video/WebPlayer.vue";
 import {getAllTreeAreaApi} from "@/api/area";
 import LiveTreeArea from "@/components/Tree/LiveTreeArea.vue";
 import DrawerSetting from '@/views/live/components/DrawerSetting.vue'
-import { ElDrawer } from 'element-plus'
+import {ElDrawer} from 'element-plus'
 
 const fullList = ref<any[]>([])
 
@@ -76,11 +82,10 @@ const visibleOrderSetting = ref(true)
 const visibleSortSetting = ref(false)
 const drawerVisible = ref(false)
 const environmentTemperature = ref<any>(null)
-const selectedAreaId =  ref(null)
+const selectedAreaId = ref(null)
 
 const paginatedData = computed(() => {
   const start = (currentPage.value - 1) * pageSize.value
-  debugger
   return fullList.value.slice(start, start + pageSize.value)
 })
 
@@ -88,18 +93,21 @@ const handlePageChange = (page: number) => {
   currentPage.value = page
 }
 
-const changePageSize = () => {
-  updateCameraSettingApi({
-    flagCommand: CAMERA_COMMANDS.SCREEN_NUMBER,
-    screenNumber: pageSize.value
-  }).then(res => {
-    updateCamSetting(res.data)
-  })
-}
 
 const updateCamSetting = (data: any) => {
   pageSize.value = data?.screenNumber ?? 4
   fullList.value = data?.cameraInfo ?? []
+}
+
+const updatePage = (value) => {
+  pageSize.value = value
+}
+const updateFullList = (value) => {
+  fullList.value = value
+}
+
+const applySettings = () => {
+
 }
 const loadCamSetting = () => {
   loadingSetting.value = true
