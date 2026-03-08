@@ -120,15 +120,6 @@ const exportFile = (searchParams: any) => {
           />
         </div>
         <div class="filter-item">
-          <div class="filter-label">Khu vực</div>
-          <tree-select-remote
-              v-model="searchParams.areaId"
-              :request-fn="getAllTreeAreaApi"
-              filterable
-              clearable
-          />
-        </div>
-        <div class="filter-item">
           <div class="filter-label">Loại thiết bị</div>
           <virtualized-select-from-url
               v-model="searchParams.machineTypeId"

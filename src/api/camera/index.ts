@@ -11,6 +11,10 @@ export const getAllTreeCameraApi = (searchParams: object): Promise<IResponse<[]>
 export const getCameraListApi = (searchParams: object): Promise<IResponse<[]>> => {
     return request.get({url: '/api/Cameras/list', params: searchParams})
 }
+
+export const getCameraDetailApi = (id: any): Promise<IResponse<[]>> => {
+  return request.get({url: `api/Cameras/${id}`})
+}
 export const getVisionPresetsApi = (searchParams: object): Promise<IResponse<[]>> => {
     return request.get({url: '/api/cameras/visionPresets', params: searchParams})
 }

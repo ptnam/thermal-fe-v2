@@ -10,6 +10,7 @@
             node-key="uniqueId"
             @updateCamSetting="updateCamSetting"
             @node-click="handleNodeClick"
+            class="overflow-auto"
         />
       </div>
 
@@ -63,7 +64,7 @@
 
 <script setup lang="ts">
 import {computed, onMounted, ref} from "vue";
-import {getCameraSettingApi, updateCameraSettingApi} from "@/api/camera-setting";
+import {getCameraSettingApi} from "@/api/camera-setting";
 import {isCam} from "@/utils/cameraUtils";
 import {environmentThermalApi} from "@/api/thermal-data";
 import WebPlayer from "@/components/Video/WebPlayer.vue";
@@ -89,20 +90,15 @@ const paginatedData = computed(() => {
   return fullList.value.slice(start, start + pageSize.value)
 })
 
-const handlePageChange = (page: number) => {
-  currentPage.value = page
-}
-
-
 const updateCamSetting = (data: any) => {
   pageSize.value = data?.screenNumber ?? 4
   fullList.value = data?.cameraInfo ?? []
 }
 
-const updatePage = (value) => {
+const updatePage = (value: any) => {
   pageSize.value = value
 }
-const updateFullList = (value) => {
+const updateFullList = (value: any[]) => {
   fullList.value = value
 }
 

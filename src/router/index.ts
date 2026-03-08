@@ -21,7 +21,6 @@ const constantRoutes: AppRouteRecordRaw[] = [
   {
     path: '/live',
     component: Layout,
-    redirect: '/live',
     meta: { icon: 'table', permission: ['live'] },
     children: [
       {
@@ -31,7 +30,7 @@ const constantRoutes: AppRouteRecordRaw[] = [
         meta: { icon: 'camera', permission: ['live'] },
       },
       {
-        path: 'detail',
+        path: 'detail/:id',
         name: 'live_detail',
         component: () => import('@/views/live/StreamDetail.vue'),
         meta: { icon: 'camera', permission: ['live'] },

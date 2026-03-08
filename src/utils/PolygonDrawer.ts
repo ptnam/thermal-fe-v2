@@ -46,6 +46,7 @@ export class PolygonDrawer {
         const rect = this.canvas.getBoundingClientRect()
         const x = e.clientX - rect.left
         const y = e.clientY - rect.top
+
         this.points.push({x, y})
         this?.onCountPoint && this.onCountPoint(this.points);
         this.redraw()
@@ -137,7 +138,7 @@ export class PolygonDrawer {
 
         const box = document.createElement('div')
         box.className =
-            "bg-white rounded-xl shadow-lg p-6 max-w-md w-full text-center transform transition-all scale-100"
+            "rounded-xl shadow-lg p-6 max-w-md w-full text-center transform transition-all scale-100"
         box.innerHTML = `
         <div class="text-2xl font-bold mb-4">${message}</div>
         <button class="px-4 py-2 rounded-lg font-semibold">

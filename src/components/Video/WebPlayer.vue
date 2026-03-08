@@ -45,16 +45,20 @@ onMounted(() => {
         loading.value = false
       })
 })
-
+const emit = defineEmits(['fullscreen'])
 const redirectFullScreen = () => {
-  router.push({name: 'live_detail', query: {key, streamKey}})
+  router.push({name: 'live_detail', params: {id: props.streamKey}})
+}
+
+function screenshot() {
+  videoStream.saveScreenshot()
 }
 </script>
 <template>
   <div class="cam-cell">
     <div class="cam-header"><div style="display:flex; align-items:center; gap:8px">
       <div class="dot-live"></div>
-      <span class="cam-name-tag">cam.name</span>
+      <span class="cam-name-tag">{{ cam?.name }}</span>
     </div>
       <span class="cam-time-tag"></span>
     </div>
@@ -73,7 +77,7 @@ const redirectFullScreen = () => {
           <line x1="8" y1="12" x2="16" y2="12"></line>
         </svg>
       </button>
-      <button class="cam-action-btn" title="Chụp ảnh">
+      <button class="cam-action-btn" title="Chụp ảnh" @click="screenshot">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
           <circle cx="12" cy="13" r="4"></circle>
