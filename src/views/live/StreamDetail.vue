@@ -81,6 +81,19 @@ function startDrawing() {
     const c = canvasRef.value
     const v = videoRef.value?.querySelector('video') as HTMLVideoElement
     if (c && v) {
+      const rect = v.getBoundingClientRect()
+
+      // size canvas theo video thật
+      c.width = v.videoWidth
+      c.height = v.videoHeight
+
+      // copy vị trí hiển thị
+      c.style.position = 'absolute'
+      c.style.left = rect.left + 'px'
+      // c.style.top = rect.top + 'px'
+      c.style.width = rect.width + 'px'
+      c.style.height = rect.height + 'px'
+
       videoWidth.value = v.clientWidth
       videoHeight.value = v.clientHeight
       if (!drawer) {
@@ -553,9 +566,6 @@ body {
 .video-wrapper {
   position: relative;
   background: #000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   overflow: hidden;
 }
 

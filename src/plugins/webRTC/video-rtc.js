@@ -244,10 +244,11 @@ export class VideoRTC extends HTMLElement {
     this.video.playsInline = true
     this.video.preload = 'auto'
     this.video.muted = true
-    this.video.style.width = '100%'
-    this.video.style.height = '100%'
+    // this.video.style.width = '100%'
+    // this.video.style.height = '100%'
     this.video.style.display = 'block'
-    this.video.style.objectFit = 'fill'
+    this.video.style.margin = 'auto'
+    // this.video.style.objectFit = 'fill'
 
     this.appendChild(this.video)
 
