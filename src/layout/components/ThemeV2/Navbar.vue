@@ -1,17 +1,17 @@
 <script setup>
 import {useAppStore} from '@/store/modules/app'
-import {onMounted} from 'vue'
+import {onMounted, computed, ref} from 'vue'
+import NarBarNotification from "@/components/DropDown/NarBarNotification.vue";
+import ChangePasswordForm from "@/layout/components/ChangePasswordForm.vue";
+import {changePasswordApi} from "@/api/user/index.ts";
+import {useDialogForm} from "@/hooks/web/useDialogForm.tsx";
+import {useUserStore} from "@/store/modules/user.ts";
+import {useLang} from "@/hooks/web/useI18n.ts";
 
 const appStore = useAppStore()
-
-const toggleNotifDropdown = () => {
-  const dropdown = document.getElementById('notifDropdown');
-  if (dropdown) dropdown.classList.toggle('show');
-}
-
+const visibleDropdown = ref(false);
 const toggleUserDropdown = () => {
-  const dropdown = document.getElementById('userDropdown');
-  if (dropdown) dropdown.classList.toggle('show');
+  visibleDropdown.value = !visibleDropdown.value;
 }
 
 const toggleMobileMenu = () => {
@@ -78,6 +78,33 @@ const loadEventMenu = () => {
   });
 }
 
+const store = useAppStore()
+const userStore = useUserStore()
+// const router = useRouter()
+
+const userName = computed(() => userStore.getUserName)
+const logout = async () => {
+  userStore.logoutConfirm()
+}
+const {showDialog, closeDialog} = useDialogForm();
+
+const {t} = useLang()
+const forgetPassword = () => {
+  showDialog(
+      {
+        component: ChangePasswordForm,
+        formModel: {
+          currentPassword: '',
+          newPassword: '',
+        },
+        requestFn: changePasswordApi,
+        onSuccess: () => {
+          closeDialog();
+        },
+      },
+      {title: t("user.changePassword")},
+  );
+}
 onMounted(() => {
   loadEventMenu()
 })
@@ -186,79 +213,7 @@ onMounted(() => {
           style="--el-switch-on-color: #10172a; --el-switch-off-color: #f3f4f6"
       />
 
-      <div class="notif-wrapper">
-        <el-button class="notif-btn" @click="toggleNotifDropdown">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-          </svg>
-          <span class="notif-badge">99+</span>
-        </el-button>
-
-        <div class="notif-dropdown" id="notifDropdown">
-          <div class="notif-list">
-            <a href="#" class="notif-item">
-              <div class="notif-title">Quá nhiệt</div>
-              <div class="notif-main-row">
-                <div class="notif-source">SĐ1S_Liên Trì</div>
-                <div class="notif-time">2026-02-12 08:12:25</div>
-              </div>
-              <div class="notif-bottom-row">
-                <span>132</span>
-                <span>132_Cin</span>
-              </div>
-            </a>
-            <a href="#" class="notif-item">
-              <div class="notif-title">Quá nhiệt</div>
-              <div class="notif-main-row">
-                <div class="notif-source">SĐ1S_Liên Trì</div>
-                <div class="notif-time">2026-02-12 08:12:25</div>
-              </div>
-              <div class="notif-bottom-row">
-                <span>132</span>
-                <span>132_Cou</span>
-              </div>
-            </a>
-            <a href="#" class="notif-item">
-              <div class="notif-title">Quá nhiệt</div>
-              <div class="notif-main-row">
-                <div class="notif-source">SĐ1S_Liên Trì</div>
-                <div class="notif-time">2026-02-12 07:58:25</div>
-              </div>
-              <div class="notif-bottom-row">
-                <span>132</span>
-                <span>132_Cou</span>
-              </div>
-            </a>
-            <a href="#" class="notif-item">
-              <div class="notif-title">Quá nhiệt</div>
-              <div class="notif-main-row">
-                <div class="notif-source">SĐ1S_Liên Trì</div>
-                <div class="notif-time">2026-02-12 07:58:25</div>
-              </div>
-              <div class="notif-bottom-row">
-                <span>132</span>
-                <span>132_Cin</span>
-              </div>
-            </a>
-            <a href="#" class="notif-item">
-              <div class="notif-title">Quá nhiệt</div>
-              <div class="notif-main-row">
-                <div class="notif-source">SĐ1S_Liên Trì</div>
-                <div class="notif-time">2026-02-12 07:49:25</div>
-              </div>
-              <div class="notif-bottom-row">
-                <span>132</span>
-                <span>132_Cin</span>
-              </div>
-            </a>
-          </div>
-          <div class="notif-footer">
-            <a href="#" class="btn-view-all">Xem tất cả</a>
-          </div>
-        </div>
-      </div>
-
+      <nar-bar-notification></nar-bar-notification>
       <div class="user-wrapper">
         <div class="user-profile" @click="toggleUserDropdown">
           <div class="user-avatar-icon">
@@ -268,14 +223,16 @@ onMounted(() => {
               <circle cx="12" cy="7" r="4"></circle>
             </svg>
           </div>
-          <span class="user-name">thangdv</span>
+          <span class="user-name">{{ userName }}</span>
         </div>
-
-        <div class="user-dropdown" id="userDropdown">
-          <a href="dashboard.html" class="dropdown-item">Home</a>
-          <a href="#" class="dropdown-item">Quên mật khẩu</a>
+        <div v-show="visibleDropdown" class="fixed w-screen h-screen bg-blue top-0 left-0" @click="toggleUserDropdown"> </div>
+        <div v-show="visibleDropdown" class="user-dropdown">
+          <router-link class="dropdown-item"
+                       to="/dashboard">Home
+          </router-link>
+          <a @click="forgetPassword" class="dropdown-item">Quên mật khẩu</a>
           <div class="user-dropdown-divider"></div>
-          <a href="#" class="dropdown-item logout">Log Out</a>
+          <a @click="logout" class="dropdown-item logout">Log Out</a>
         </div>
       </div>
     </div>

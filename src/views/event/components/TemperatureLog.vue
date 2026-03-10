@@ -1,5 +1,75 @@
 <template>
   <div v-loading="isLoading || getSettingLoading">
+    <div class="card" style="padding: 20px;">
+      <div class="summary-header">
+        <div class="summary-title">Nhật ký nhiệt độ theo điểm đo</div>
+        <div class="header-tools">
+          <div class="avg-dropdown">
+            <div class="filter-badge-simple" id="avgSelectBtn" onclick="toggleAvgMenu(event)">
+              <span class="avg-tag">AVG</span>
+              <span class="avg-text" style="font-size: 15px; font-weight: 700; color: white;">Trung
+                                    bình</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2.5" style="margin-left: 15px">
+                <path d="M6 9l6 6 6-6"/>
+              </svg>
+            </div>
+
+            <div class="avg-menu" id="avgMenu">
+              <div class="avg-item" onclick="selectAvg('MAX')">
+                <div class="avg-icon-box box-max">MAX</div>
+                <div class="avg-info">
+                  <h4>Nhiệt độ Max</h4>
+                  <p>Giá trị cao nhất trong khoảng thời gian</p>
+                </div>
+                <div class="avg-check">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3b82f6"
+                       stroke-width="3">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <div class="avg-item" onclick="selectAvg('MIN')">
+                <div class="avg-icon-box box-min">MIN</div>
+                <div class="avg-info">
+                  <h4>Nhiệt độ Min</h4>
+                  <p>Giá trị thấp nhất trong khoảng thời gian</p>
+                </div>
+                <div class="avg-check">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3b82f6"
+                       stroke-width="3">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <div class="avg-item active" onclick="selectAvg('AVG')">
+                <div class="avg-icon-box box-avg">AVG</div>
+                <div class="avg-info">
+                  <h4>Trung bình</h4>
+                  <p>Giá trị trung bình trong khoảng thời gian</p>
+                </div>
+                <div class="avg-check">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3b82f6"
+                       stroke-width="3">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="filter-badge-simple" onclick="openFilterDrawer()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2.5">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+            </svg>
+            <span class="avg-text">Bộ lọc</span> <span class="badge-count">4</span>
+          </div>
+        </div>
+      </div>
+      <div class="chart-box">
+        <div id="temperatureChart"></div>
+      </div>
+    </div>
     <el-form
         :inline="true"
     >
@@ -155,62 +225,35 @@ const PREDICT = 5
 
 const chartOptions: ApexOptions = {
   chart: {
-    height: 350,
-    type: 'line',
-    dropShadow: {
-      enabled: true,
-      color: '#000',
-      top: 18,
-      left: 7,
-      blur: 10,
-      opacity: 0.2
-    },
-    toolbar: {
-      show: false
-    }
+    height: 450,
+    type: 'area',
+    background: 'transparent',
+    toolbar: { show: false },
+    animations: { enabled: true, easing: 'easeinout', speed: 800 }
   },
-  dataLabels: {
-    enabled: false,
+  colors: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444'],
+  stroke: { curve: 'smooth', width: 3 },
+  fill: {
+    type: 'gradient',
+    gradient: { shadeIntensity: 1, opacityFrom: 0.4, opacityTo: 0.05, stops: [0, 90, 100] }
   },
-  stroke: {
-    curve: 'smooth'
-  },
-  title: {
-    align: 'left'
-  },
-  grid: {
-    borderColor: '#e7e7e7',
-    row: {
-      colors: ['#f3f3f3', 'transparent'],
-      opacity: 0.5
-    },
-  },
-  markers: {
-    size: 0,
-    hover: {
-      sizeOffset: 6
-    }
-  },
+  markers: { size: 0, hover: { size: 5 } },
   xaxis: {
     categories: [],
-    title: {},
-    stepSize: 3
+    labels: { style: { colors: '#94A3B8', fontSize: '12px' } },
+    axisBorder: { show: false },
+    axisTicks: { show: false }
   },
   yaxis: {
-    axisBorder: {
-      show: false
-    },
-    axisTicks: {
-      show: false,
-    },
     labels: {
-      show: true,
-      formatter: function (val) {
-        return val + "°C";
-      }
+      style: { colors: '#94A3B8', fontSize: '12px' },
+      formatter: (v) => v.toFixed(1) + "°C"
     },
-    title: {},
+    title: { text: 'Nhiệt độ (°C)', style: { color: '#94A3B8', fontWeight: 600 } }
   },
+  grid: { borderColor: 'rgba(255,255,255,0.05)', strokeDashArray: 4 },
+  theme: { mode: 'dark' },
+  tooltip: { x: { show: true }, theme: 'dark' },
 }
 const series = ref(
     []
