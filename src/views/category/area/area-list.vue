@@ -32,7 +32,7 @@ const columns = computed<TableColumn[]>(() => [
     label: t('fields.status'),
     slots: {
       default: ({row}) => (<span   style={{
-        color: row.status === 'Active' ? 'var(--success)' : undefined
+        color: row.status === 'Active' ? 'var(--success)' : 'var(--danger)'
       }}>{row.displayStatus}</span>)
     },
   },
@@ -104,6 +104,9 @@ const saveSuccess = () => {
     </template>
   </list-template>
   <drawer-form v-model="dialogVisible" :destroy-on-close="true" style="min-width: 650px">
-    <area-form v-model:formModel="formModel" @success="saveSuccess"></area-form>
+    <area-form
+      v-model:formModel="formModel"
+      @success="saveSuccess"
+    ></area-form>
   </drawer-form>
 </template>

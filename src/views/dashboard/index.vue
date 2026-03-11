@@ -6,7 +6,7 @@
         <div class="card kpi-card">
           <div class="kpi-label-group">
             <div class="kpi-lbl">Tổng Camera</div>
-            <div class="kpi-val">{{ data?.camera ?? 0 }}</div>
+            <div class="kpi-val">{{ 0 }}</div>
           </div>
           <div class="kpi-icon bg-blue">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -59,7 +59,10 @@
       <!-- Main Display Area -->
       <div class="card map-section" id="mainDisplayCard">
         <div class="map-toolbar">
-          <span class="card-title" id="displayTitle">Bản đồ Giám sát</span>
+          <span class="card-title" id="displayTitle">
+            {{areaItem.mapType === MAP_TYPE_MAP ? 'Bản đồ' : ''}}
+            {{areaItem.mapType === MAP_TYPE_PICTURE ? 'Sơ đồ 1 sợi' : ''}}
+          </span>
 
           <!-- Location button separated -->
           <button class="map-btn visible-mobile-only location-btn" onclick="openAreaDrawer()"
@@ -72,9 +75,9 @@
           </button>
 
           <div class="map-toggle-group">
-            <button class="map-btn active" id="btnMap" onclick="switchView('map')">Bản đồ</button>
-            <button class="map-btn" id="btnSLD" onclick="switchView('sld')">Sơ đồ 1 sợi</button>
-            <button class="map-btn" id="btnBIM"
+            <button :class="['map-btn', areaItem.mapType === MAP_TYPE_MAP ? 'active' : '']">Bản đồ</button>
+            <button :class="['map-btn', areaItem.mapType === MAP_TYPE_PICTURE ? 'active' : '']">Sơ đồ 1 sợi</button>
+            <button class="map-btn"
                     onclick="alert('Tính năng Mô hình BIM 3D đang được phát triển')">
               Mô hình BIM 3D
             </button>
@@ -218,6 +221,9 @@ const handleNodeClick = (item: any) => {
 }
 
 const loadThermalData = (area: any, invokeSignal = true) => {
+  if (!area) {
+    return;
+  }
   machinesAndResultByAreaApi({areaId: area?.id}).then((res) => {
     loadMachineComponents(res.data.item1 ?? [], invokeSignal)
     if (area.mapType == MAP_TYPE_PICTURE) {

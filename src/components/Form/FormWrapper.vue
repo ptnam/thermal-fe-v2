@@ -7,7 +7,11 @@
     require-asterisk-position="right"
     v-bind="props.formProps"
   >
-    <div class="flex flex-col">
+    <div class="drawer drawer-md">
+      <div class="drawer-header">
+        <h3>{{ title}}</h3>
+        <button type="button" class="close-drawer" @click="triggerCancel">×</button>
+      </div>
       <div class="drawer-body mt-2">
         <slot :formErrors="formErrors" />
       </div>
@@ -39,6 +43,7 @@ function triggerCancel() {
 }
 
 const props = defineProps<{
+  title?: String
   formModel: Record<string, any>
   formProps?: Partial<FormInstance>
   requestFn: (...args: any[]) => Promise<any>

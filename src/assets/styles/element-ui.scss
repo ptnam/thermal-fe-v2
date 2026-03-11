@@ -5,9 +5,11 @@
 
 html.dark {
   --el-bg-color: #1E293B;
+  --el-fill-color-blank: #1E293B;
   --el-bg-color-overlay: #1E293B;
-  --el-table-border-color: #334155;;
+  --el-table-border-color: #334155;
   --el-fill-color: #334155;;
+  --el-fill-color-light: #334155
 }
 .el-breadcrumb__inner,
 .el-breadcrumb__inner a {
@@ -59,4 +61,8 @@ html.dark {
 
 .el-form-item__label {
   font-weight: 700;
+}
+
+.el-table .cell{
+  line-height: 36px;
 }

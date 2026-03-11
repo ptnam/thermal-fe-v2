@@ -1631,7 +1631,6 @@ body {
   /* --- 8.1 AREA TREE COMPONENT (Latest Premium Style - Prefixed) --- */
   .modern-tree-sidebar {
     width: 300px;
-    background: #0f172a;
     /* Deeper Dark */
     border-right: 1px solid rgba(255, 255, 255, 0.05);
     display: flex;
@@ -2048,10 +2047,10 @@ body {
   }
 
   .drawer {
-    position: fixed;
+    position: absolute;
+    width: 100%;
     top: 0;
-    /* Default width */
-    width: 600px;
+    left: 0;
     height: 100%;
     background: var(--bg-card);
     box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
@@ -2062,9 +2061,6 @@ body {
   }
 
   /* Width Variants */
-  .drawer-md {
-    width: 600px;
-  }
 
   .drawer-lg {
     width: 800px;
@@ -2076,7 +2072,7 @@ body {
   }
 
   .drawer-header {
-    padding: 20px 24px;
+    padding: 20px 54px;
     border-bottom: 1px solid var(--border);
     display: flex;
     justify-content: space-between;

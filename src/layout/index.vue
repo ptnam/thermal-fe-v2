@@ -43,7 +43,8 @@ const checkSound = () => {
 <template>
   <div class="app-layout">
     <Navbar></Navbar>
-    <AppMain v-if="!loadConfigLoading" />
+    <el-skeleton v-if="loadConfigLoading" :rows="5" animated />
+    <AppMain v-else />
   </div>
 </template>
 

@@ -15,6 +15,7 @@ import {joinFieldValues} from "@/utils/stringUtils";
 import ApiButton from '@/components/Button/ApiButton.vue'
 import { Refresh } from '@element-plus/icons-vue'
 import SearchButton from '@/components/Button/SearchButton.vue'
+import ActionForm from '@/components/Form/ActionForm.vue'
 
 const { t } = useLang()
 const renderActionColumn = (scope: any) => {
@@ -127,9 +128,13 @@ const saveSuccess = () => {
       </template>
 
     </list-template>
-    <base-dialog v-model="dialogVisible" :destroy-on-close="true">
-      <user-form v-model:formModel="formModel" @success="saveSuccess"></user-form>
-    </base-dialog>
+    <ActionForm v-model="dialogVisible">
+      <user-form
+        v-model:formModel="formModel"
+        :title="formModel.id ? 'Cập nhật người dùng': 'Thêm người dùng mới'"
+        @success="saveSuccess"
+      ></user-form>
+    </ActionForm>
   </page-container>
 </template>
 

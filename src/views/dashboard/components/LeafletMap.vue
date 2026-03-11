@@ -11,7 +11,7 @@
         :crs="mapType === MAP_TYPE_PICTURE ? crs : null"
         @update:zoom="onZoomChange"
         v-bind="$attrs"
-        data-theme=""
+        :options="{zoomControl: false}"
 
     >
       <!-- Base map -->
