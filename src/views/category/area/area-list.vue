@@ -11,6 +11,7 @@ import EditCircleButton from '@/components/Button/EditCircleButton.vue'
 import DeleteCircleButton from '@/components/Button/DeleteCircleButton.vue'
 import SearchButton from "@/components/Button/SearchButton.vue";
 import DrawerForm from "@/components/Form/DrawerForm.vue";
+import UserForm from "@/views/category/user/components/UserForm.vue";
 
 const { t } = useLang()
 const renderActionColumn = (scope: any) => {
@@ -103,10 +104,15 @@ const saveSuccess = () => {
       <search-button @click="tableMethods.getList"></search-button>
     </template>
   </list-template>
-  <drawer-form v-model="dialogVisible" :destroy-on-close="true" style="min-width: 650px">
+  <drawer-form
+      v-model="dialogVisible"
+      :destroy-on-close="true"
+      style="min-width: 650px"
+  >
     <area-form
       v-model:formModel="formModel"
       @success="saveSuccess"
+      :title="formModel.id ? 'Cập nhật khu vực': 'Thêm khu vực mới'"
     ></area-form>
   </drawer-form>
 </template>

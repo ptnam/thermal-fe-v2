@@ -1,9 +1,10 @@
 <template>
-  <page-container title="Chi tiết nội dung cảnh báo" class="flex justify-center">
+  <page-container title="Chi tiết nội dung cảnh báo" class="flex justify-center p-6">
     <notification-form-detail
         :form-model="formModel"
         v-loading="isLoading"
         @update-status="loadNotice"
+        class="p-6"
     />
   </page-container>
 </template>

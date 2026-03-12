@@ -18,6 +18,7 @@ import SearchButton from "@/components/Button/SearchButton.vue";
 import ExportButton from "@/components/Button/ExportButton.vue";
 import {downloadFile} from "@/utils/response";
 import useRequest from "@/hooks/web/useRequest";
+import DrawerForm from "@/components/Form/DrawerForm.vue";
 
 const {t} = useLang()
 
@@ -135,13 +136,13 @@ const exportFile = (searchParams: any) => {
         </div>
       </template>
     </list-template>
-    <base-dialog
+    <drawer-form
         v-model="dialogVisible"
         align-center
         :destroy-on-close="true"
         style="min-width: 900px"
     >
       <machine-form v-model:formModel="formModel" @success="saveSuccess"></machine-form>
-    </base-dialog>
+    </drawer-form>
   </page-container>
 </template>

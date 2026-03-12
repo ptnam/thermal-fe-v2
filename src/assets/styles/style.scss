@@ -2249,8 +2249,10 @@ body {
     font-weight: 700;
     text-align: center;
     display: inline-block;
-    min-width: 71px;
     height: 22px;
+    min-width: 54px;
+    height: 22px;
+    line-height: 23px;
   }
 
   .status-success {

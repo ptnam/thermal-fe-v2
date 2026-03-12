@@ -47,7 +47,7 @@ onMounted(() => {
 })
 const emit = defineEmits(['fullscreen'])
 const redirectFullScreen = () => {
-  router.push({name: 'live_detail', params: {id: props.streamKey}})
+  return router.push({name: 'live_detail', params: {id: props.streamKey}})
 }
 
 function screenshot() {

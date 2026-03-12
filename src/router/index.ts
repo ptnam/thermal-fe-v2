@@ -38,6 +38,19 @@ const constantRoutes: AppRouteRecordRaw[] = [
     ],
   },
   {
+    path: '/stream',
+    component: Layout,
+    meta: { icon: 'table', permission: ['live'] },
+    children: [
+      {
+        path: 'detail/:id',
+        name: 'live_detail',
+        component: () => import('@/views/live/StreamDetail.vue'),
+        meta: { icon: 'camera', permission: ['live'] },
+      },
+    ],
+  },
+  {
     path: '/event',
     component: Layout,
     redirect: '/event/ai-notification',
@@ -158,30 +171,25 @@ const constantRoutes: AppRouteRecordRaw[] = [
       },
     ],
   },
-    {
-        path: '/report',
-        component: Layout,
-        name: 'report',
+  {
+    path: '/report',
+    component: Layout,
+    name: 'report',
+    meta: { icon: 'chart', permission: ['manual'] },
+    children: [
+      {
+        path: 'manual',
+        name: 'user_manual',
         meta: { icon: 'chart', permission: ['manual'] },
-        children: [
-            {
-                path: 'download/CGI Manual.pdf',
-                name: 'user_manual',
-                meta: { icon: 'chart', permission: ['manual'] },
-                beforeEnter: (_to, _from, next) => {
-                    const fileUrl = '/download/huong-dan.pdf'
-                    downloadFileFromUrl(fileUrl, 'Hướng dẫn sử dụng.pdf')
-                    next(false)
-                },
-            },
-            // {
-            //   path: 'temperature-report',
-            //   name: 'temperature_report',
-            //   component: () => import('@/views/notification/group-list.vue'),
-            //   meta: { icon: 'chart', permission: ['reporting'] },
-            // },
-        ],
-    },
+        beforeEnter: (_to, _from, next) => {
+          const fileUrl = '/report/CGI%20Manual.pdf'
+          downloadFileFromUrl(fileUrl, 'Hướng dẫn sử dụng.pdf')
+          window.close()
+          next(false)
+        }
+      }
+    ]
+  },
   {
     path: '/login',
     component: () => import('@/views/auth/login.vue'),

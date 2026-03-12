@@ -6,6 +6,7 @@
       :isEditing="isEditing"
       @success="handleSuccess"
       :transform-form-data="transformFormData"
+      :visibleCloseDrawer="false"
   >
     <template v-slot="{ formErrors }">
       <el-row :gutter="30">

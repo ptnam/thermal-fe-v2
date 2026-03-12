@@ -10,7 +10,7 @@
     <div class="drawer drawer-md">
       <div class="drawer-header">
         <h3>{{ title}}</h3>
-        <button type="button" class="close-drawer" @click="triggerCancel">×</button>
+        <button v-show="visibleCloseDrawer" type="button" class="close-drawer" @click="triggerCancel">×</button>
       </div>
       <div class="drawer-body mt-2">
         <slot :formErrors="formErrors" />
@@ -49,6 +49,7 @@ const props = defineProps<{
   requestFn: (...args: any[]) => Promise<any>
   transformFormData?: Function
   isEditing?: boolean
+  visibleCloseDrawer?: boolean
 }>()
 
 const emits = defineEmits(['success'])

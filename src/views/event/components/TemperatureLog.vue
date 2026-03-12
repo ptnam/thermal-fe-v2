@@ -10,7 +10,7 @@
                  stroke-width="2.5">
               <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
             </svg>
-            <span class="avg-text">Bộ lọc</span> <span class="badge-count">4</span>
+            <span class="avg-text">Bộ lọc</span> <span class="badge-count">{{ countValidFields(searchParams) }}</span>
           </div>
           <drawer-form
               v-model="dialogVisible"
@@ -29,104 +29,109 @@
               </div>
               <div class="drawer-body" style="padding: 10px">
                 <filter-group-input
-                  :request-fn="getAllAreaApi"
-                  v-model="searchParams.areaId"
-                  title="Khu vực"
-                 col-label="name"
-                  col-value="id"
+                    :request-fn="getAllAreaApi"
+                    v-model="searchParams.areaId"
+                    title="Khu vực"
+                    col-label="name"
+                    col-value="id"
                 />
                 <filter-group-input
-                  v-if="searchParams.areaId"
-                  :request-fn="() => getAllMachineApi({areaId:searchParams.areaId})"
-                  v-model="searchParams.machineIds"
-                  title="Thiết bị"
-                  col-label="name"
-                  col-value="id"
+                    v-if="searchParams.areaId"
+                    :request-fn="() => getAllMachineApi({areaId:searchParams.areaId})"
+                    v-model="searchParams.machineIds"
+                    title="Thiết bị"
+                    col-label="name"
+                    col-value="id"
                 />
                 <filter-group-input
-                  v-if="searchParams.machineIds"
-                  :request-fn="() => getMultiComponentsMachineApi({machineIds:searchParams.machineIds})"
-                  v-model="searchParams.machineComponentIds"
-                  title="Bộ phận"
-                  col-label="name"
-                  col-value="id"
+                    v-if="searchParams.machineIds"
+                    :request-fn="() => getMultiComponentsMachineApi({machineIds:searchParams.machineIds})"
+                    v-model="searchParams.machineComponentIds"
+                    title="Bộ phận"
+                    col-label="name"
+                    col-value="id"
                 />
                 <filter-group-input
-                  v-if="searchParams.machineComponentIds && searchParams.machineComponentIds.length === 1"
-                  :request-fn="() => allMonitorPointsByMachineComponentApi({machineComponentId: searchParams.machineComponentIds[0]})"
-                  v-model="monitorPoint"
-                  title="Điểm giám sát"
-                  col-label="name"
-                  col-value="id"
+                    v-if="searchParams.machineComponentIds && searchParams.machineComponentIds.length === 1"
+                    :request-fn="() => allMonitorPointsByMachineComponentApi({machineComponentId: searchParams.machineComponentIds[0]})"
+                    v-model="monitorPoint"
+                    title="Điểm giám sát"
+                    col-label="name"
+                    col-value="id"
                 />
                 <filter-group title="KHOẢNG THỜI GIAN">
                   <el-form-item label="">
                     <el-select
-                      v-model="searchType"
-                      filterable
-                      value-key="id"
-                      :default-first-option="true"
-                      clearable
+                        v-model="searchType"
+                        filterable
+                        value-key="id"
+                        :default-first-option="true"
+                        clearable
                     >
                       <el-option
-                        v-for="item in searchTypeOptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
+                          v-for="item in searchTypeOptions"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"
                       />
                     </el-select>
                   </el-form-item>
                   <el-form-item v-if="searchType === HOUR">
                     <el-date-picker
-                      v-model="searchParams.reportDate"
-                      type="date"
-                      placeholder="Pick a day"
-                      value-format="YYYY-MM-DD"
+                        v-model="searchParams.reportDate"
+                        type="date"
+                        placeholder="Pick a day"
+                        value-format="YYYY-MM-DD"
                     />
                   </el-form-item>
                   <el-form-item v-if="searchType === DAY">
                     <el-date-picker
-                      v-model="dateRange"
-                      type="daterange"
-                      start-placeholder="Ngày bắt đầu"
-                      end-placeholder="Ngày kết thúc"
-                      value-format="YYYY-MM-DD"
+                        v-model="dateRange"
+                        type="daterange"
+                        start-placeholder="Ngày bắt đầu"
+                        end-placeholder="Ngày kết thúc"
+                        value-format="YYYY-MM-DD"
                     />
                   </el-form-item>
                   <el-form-item v-if="searchType === TIME || searchType === PHASE">
                     <el-date-picker
-                      v-model="dateRange"
-                      type="datetimerange"
-                      start-placeholder="Ngày bắt đầu"
-                      end-placeholder="Ngày kết thúc"
-                      value-format="YYYY-MM-DD HH:mm:ss"
+                        v-model="dateRange"
+                        type="datetimerange"
+                        start-placeholder="Ngày bắt đầu"
+                        end-placeholder="Ngày kết thúc"
+                        value-format="YYYY-MM-DD HH:mm:ss"
                     />
                   </el-form-item>
                 </filter-group>
               </div>
               <div class="drawer-footer" style="gap: 10px;">
                 <el-button class="btn-reset-drawer"
-                        :loading="saveSettingLoading"
-                        @click="()=> saveSetting(searchParams)" style="flex: 1;" v-show="searchParams.machineComponentIds">
+                           @click="()=> {
+                          loadSetting()
+                        }" style="flex: 1;" v-show="searchParams.machineComponentIds">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <path d="M23 4v6h-6"></path>
                     <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
-                  </svg><span class="px-2">Đặt lại</span>
+                  </svg>
+                  <span class="px-2">Đặt lại</span>
                 </el-button>
                 <el-button
-                  :loading="saveSettingLoading"
-                  :icon="Setting"
-                  @click="()=> saveSetting(searchParams)"
-                  class="btn-save-drawer"
-                        style="flex: 1.2; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); color: var(--primary); padding: 10px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; justify-content: center; transition: 0.2s;">
+                    :loading="saveSettingLoading"
+                    :icon="Setting"
+                    @click="()=> saveSetting(searchParams)"
+                    class="btn-save-drawer"
+                    style="flex: 1.2; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); color: var(--primary); padding: 10px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; justify-content: center; transition: 0.2s;">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
                     <polyline points="17 21 17 13 7 13 7 21"></polyline>
                     <polyline points="7 3 7 8 15 8"></polyline>
                   </svg>
-                  Lưu
+                  <span class="px-2">Lưu</span>
                 </el-button>
-                <button class="btn-apply-drawer" onclick="closeFilterDrawer()" style="flex: 1.5;">
+                <button class="btn-apply-drawer" @click="() => {
+                  search();
+                  dialogVisible = false
+                }" style="flex: 1.5;">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -159,15 +164,12 @@ import {
 import useRequest from "@/hooks/web/useRequest";
 import {computed, nextTick, onMounted, ref} from 'vue'
 import VueApexChart from "vue3-apexcharts";
-import { getAllAreaApi, getAllTreeAreaApi} from "@/api/area";
-import SearchButton from "@/components/Button/SearchButton.vue";
+import {getAllAreaApi} from "@/api/area";
 import {
   componentThermalDataApi,
   dailyThermalDataApi,
   hourlyThermalDataApi, predictThermalDataApi, timeThermalDataApi,
 } from "@/api/thermal-data";
-import TreeSelectRemote from "@/components/Tree/TreeSelectRemote.vue";
-import ObjectSelectFromUrl from "@/components/Selection/ObjectSelectFromUrl.vue";
 import {Setting} from '@element-plus/icons-vue'
 import {ElMessage} from 'element-plus'
 import dayjs from 'dayjs'
@@ -175,7 +177,6 @@ import {allMonitorPointsByMachineComponentApi} from "@/api/monitor-point";
 import {ApexOptions} from "apexcharts";
 import AvgSelect from "@/views/event/components/AvgSelect.vue";
 import DrawerForm from "@/components/Form/DrawerForm.vue";
-import AreaForm from "@/views/category/area/components/AreaForm.vue";
 import FilterGroupInput from '@/views/event/components/FilterGroupInput.vue'
 import FilterGroup from '@/views/event/components/FilterGroup.vue'
 
@@ -278,7 +279,14 @@ const dateRange = computed<[string, string] | []>({
   }
 })
 const {onRequest, isLoading} = useRequest();
-
+const  countValidFields = (obj: any) => {
+  return Object.values(obj).filter(v => {
+    if (v === null || v === undefined) return false
+    if (typeof v === 'string' && v.trim() === '') return false
+    if (Array.isArray(v) && v.length === 0) return false
+    return true
+  }).length
+}
 const search = () => {
   const mapApi = {
     1: hourlyThermalDataApi,
@@ -337,12 +345,16 @@ const saveSetting = (data: any) => {
 }
 
 const {onRequest: getSettingRequest, isLoading: getSettingLoading} = useRequest();
-onMounted(() => {
+
+const loadSetting = () => {
   getSettingRequest(getMachineSettingApi).then(res => {
     searchParams.value = {...searchParams.value, ...res.data}
   }).finally(() => {
     search()
   })
+}
+onMounted(() => {
+  loadSetting()
 })
 </script>
 <style scoped>
@@ -600,7 +612,7 @@ onMounted(() => {
   background: #1e293b;
 }
 
-.btn-save-drawer{
+.btn-save-drawer {
   height: 47px;
 }
 

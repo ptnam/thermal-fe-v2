@@ -39,60 +39,7 @@ const tab = ref(1)
 
     <!-- TAB 2: THỐNG KÊ CẢNH BÁO -->
     <div :class="['tab-content', tab === 2 ? 'active' : '']">
-      <div class="card" style="padding: 20px;">
-        <div class="summary-header">
-          <div class="summary-title">Thống kê số lượng cảnh báo</div>
-        </div>
-
-        <div class="filter-section-modern">
-          <div class="filter-row-inline">
-            <div class="filter-group-inline">
-              <label>Khu vực</label>
-              <select class="select-single-modern">
-                <option>Tất cả khu vực</option>
-                <option>Trạm 110kV Nam Phú Quốc</option>
-              </select>
-            </div>
-            <div class="filter-group-inline">
-              <label>Từ ngày</label>
-              <input type="datetime-local" class="select-single-modern" value="2026-01-30T00:00">
-            </div>
-            <div class="filter-group-inline">
-              <label>Đến ngày</label>
-              <input type="datetime-local" class="select-single-modern" value="2026-02-06T09:54">
-            </div>
-            <button class="btn-search-primary">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                   stroke-width="2">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-              </svg>
-              TÌM KIẾM
-            </button>
-
-            <div class="export-dropdown" id="exportDropdown">
-              <button class="btn-export" onclick="toggleExport()">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                     stroke-width="2">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="7 10 12 15 17 10"></polyline>
-                  <line x1="12" y1="15" x2="12" y2="3"></line>
-                </svg>
-                Download
-              </button>
-              <div class="export-menu">
-                <div class="export-item">Download SVG</div>
-                <div class="export-item">Download PDF</div>
-                <div class="export-item">Download CSV</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="chart-box">
-          <div id="alertStatsChart"></div>
-        </div>
-      </div>
+     <threshold-warning></threshold-warning>
     </div>
 
   </div>

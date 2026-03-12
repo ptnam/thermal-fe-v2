@@ -193,13 +193,17 @@ onMounted(() => {
               Người dùng
             </router-link>
 
-            <a href="/report/download/CGI Manual.pdf" class="menu-link menu-item-with-bg">
+            <router-link
+                target="_blank"
+                class="menu-link menu-item-with-bg"
+                to="/report/manual"
+            >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
                 <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
               </svg>
               Hướng dẫn sử dụng
-            </a>
+            </router-link>
           </div>
         </div>
       </div>
@@ -225,7 +229,8 @@ onMounted(() => {
           </div>
           <span class="user-name">{{ userName }}</span>
         </div>
-        <div v-show="visibleDropdown" class="fixed w-screen h-screen bg-blue top-0 left-0" @click="toggleUserDropdown"> </div>
+        <div v-show="visibleDropdown" class="fixed w-screen h-screen bg-blue top-0 left-0"
+             @click="toggleUserDropdown"></div>
         <div v-show="visibleDropdown" class="user-dropdown">
           <router-link class="dropdown-item"
                        to="/dashboard">Home

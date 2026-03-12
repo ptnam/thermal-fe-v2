@@ -119,7 +119,6 @@ const saveSuccess = () => {
           <search-button @click="elTableRef?.refresh()" />
           <api-button
             :api="syncTelegramChatIdApi"
-            :icon="Refresh"
             class="btn-search" style="background: transparent; border: 1px solid var(--border); color: var(--text-main)"
           >
             ⟳ Đồng bộ Telegram

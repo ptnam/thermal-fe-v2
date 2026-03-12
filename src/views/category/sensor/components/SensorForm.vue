@@ -5,6 +5,7 @@
       :request-fn="isEditing ? editSensorApi : addSensorApi"
       :isEditing="isEditing"
       @success="handleSuccess"
+      :visibleCloseDrawer="false"
   >
     <template v-slot="{ formErrors }">
       <el-card>
