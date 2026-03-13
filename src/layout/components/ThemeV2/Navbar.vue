@@ -7,6 +7,7 @@ import {changePasswordApi} from "@/api/user/index.ts";
 import {useDialogForm} from "@/hooks/web/useDialogForm.tsx";
 import {useUserStore} from "@/store/modules/user.ts";
 import {useLang} from "@/hooks/web/useI18n.ts";
+import { useRoute } from 'vue-router'
 
 const appStore = useAppStore()
 const visibleDropdown = ref(false);
@@ -108,6 +109,11 @@ const forgetPassword = () => {
 onMounted(() => {
   loadEventMenu()
 })
+const route = useRoute()
+
+function isPrefixActive(prefix) {
+  return route.path === prefix || route.path.startsWith(prefix + '/')
+}
 </script>
 <template>
   <nav class="navbar">
@@ -130,13 +136,13 @@ onMounted(() => {
 
     <div class="nav-menu" id="mainMenu">
       <div class="nav-wrapper">
-        <router-link class="nav-link active-link" to="/dashboard">TRANG CHỦ</router-link>
+        <router-link :class="['nav-link', isPrefixActive('/dashboard') ? 'active-link': '']" to="/dashboard">TRANG CHỦ</router-link>
       </div>
       <div class="nav-wrapper">
-        <router-link class="nav-link" to="/live">GIÁM SÁT TRỰC TIẾP</router-link>
+        <router-link :class="['nav-link', isPrefixActive('/live') ? 'active-link': '']" to="/live">GIÁM SÁT TRỰC TIẾP</router-link>
       </div>
       <div class="nav-wrapper">
-        <div class="nav-link">THEO DÕI ĐIỂM ĐO
+        <div :class="['nav-link', isPrefixActive('/event') ? 'active-link': '']">THEO DÕI ĐIỂM ĐO
           <svg class="nav-arrow" width="10" viewBox="0 0 24 24">
             <path d="M7 10l5 5 5-5z"/>
           </svg>
@@ -150,7 +156,7 @@ onMounted(() => {
       </div>
 
       <div class="nav-wrapper">
-        <div class="nav-link">QUẢN TRỊ HỆ THỐNG
+        <div :class="['nav-link', (isPrefixActive('/category') || isPrefixActive('/setting')) ? 'active-link': '']">QUẢN TRỊ HỆ THỐNG
           <svg class="nav-arrow" width="10" viewBox="0 0 24 24">
             <path d="M7 10l5 5 5-5z"/>
           </svg>
