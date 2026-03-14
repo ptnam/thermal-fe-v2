@@ -23,7 +23,7 @@
             <div style="font-size: 15px; font-weight: 700; color: var(--primary); text-transform: uppercase;">
               {{ title }}
             </div>
-            <div style="display: flex; align-items: center; gap: 15px;">
+            <div v-show="showBtnSwitch" style="display: flex; align-items: center; gap: 15px;">
               <div class="view-switcher">
                 <button class="view-btn active" onclick="switchView('table')">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -116,6 +116,10 @@ const props = defineProps({
     default: true,
   },
   showBtnAdd: {
+    type: Boolean,
+    default: true,
+  },
+  showBtnSwitch: {
     type: Boolean,
     default: true,
   },

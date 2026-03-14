@@ -10,7 +10,6 @@
             node-key="uniqueId"
             @updateCamSetting="updateCamSetting"
             @node-click="handleNodeClick"
-            class="overflow-auto"
         />
       </div>
 

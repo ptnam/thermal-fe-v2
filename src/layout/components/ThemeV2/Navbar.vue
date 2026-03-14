@@ -241,9 +241,9 @@ function isPrefixActive(prefix) {
           <router-link class="dropdown-item"
                        to="/dashboard">Home
           </router-link>
-          <a @click="forgetPassword" class="dropdown-item">Quên mật khẩu</a>
+          <a @click="forgetPassword" class="cursor-pointer dropdown-item">Quên mật khẩu</a>
           <div class="user-dropdown-divider"></div>
-          <a @click="logout" class="dropdown-item logout">Log Out</a>
+          <a @click="logout" class="cursor-pointer dropdown-item logout">Log Out</a>
         </div>
       </div>
     </div>

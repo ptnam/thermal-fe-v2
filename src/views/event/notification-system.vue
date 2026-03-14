@@ -181,7 +181,6 @@ const exportFile = (searchParams: any) => {
       }"
     :show-btn-add="false"
   >
-    <template v-slot:top><span></span></template>
     <template slot="search" v-slot="{ searchParams }">
       <div class="filter-row">
         <div class="filter-item">

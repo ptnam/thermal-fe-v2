@@ -1,14 +1,20 @@
 <script setup lang="ts">
 import {getAllTreeAreaApi} from "@/api/area";
 import SimpleAreaTree from "@/components/Tree/SimpleAreaTree.vue";
-import {computed, ref} from 'vue'
+import {computed, ref, watch} from 'vue'
 import {number} from 'vue-types'
 import {BaseTable} from "@/components/Table/index";
 import {vDraggable} from "@/components/Table/v-draggable";
 import {updateCameraSettingApi} from "@/api/camera-setting";
 import {CAMERA_COMMANDS} from "@/constants";
+import {cloneObject} from "@/utils/objectUtils";
 
-const emit = defineEmits(['close', 'treeChange', 'updatePage', 'applySettings'])
+const emit = defineEmits([
+  'close',
+  'treeChange',
+  'updatePage',
+  'applySettings'
+])
 
 const props = defineProps({
   listMarked: {
@@ -24,6 +30,14 @@ const props = defineProps({
 const loadingSetting = ref(false)
 
 const selectedIds = computed(() => props.listMarked.map(u => u.id));
+const dragList = ref([]);
+watch(
+    () => props.listMarked,
+    (value) => {
+      dragList.value = value as []
+    },
+    {immediate: true}
+)
 
 const dragOptions = [
   {
@@ -32,7 +46,8 @@ const dragOptions = [
     option: { // sortablejs's option
       animation: 150,
       onEnd: (evt: { oldIndex: number; newIndex: number; }) => {
-        arrayMoveInPlace(props.listMarked, evt.oldIndex, evt.newIndex)
+        const newList = arrayMoveInPlace(cloneObject(props.listMarked), evt.oldIndex, evt.newIndex)
+        emit("treeChange", newList)
       },
     },
   },
@@ -171,7 +186,12 @@ const applySettings = () => {
 
         <div class="settings-title" style="margin-top: 30px;">THỨ TỰ CAMERA (KÉO ĐỂ ĐỔI)</div>
         <div v-if="listMarked.length" class="cam-order-list">
-          <base-table class="mt-4" :data="listMarked" :columns="columns" v-draggable="dragOptions"/>
+          <base-table
+              class="mt-4"
+              row-key="id"
+              :data="listMarked"
+              :columns="columns"
+              v-draggable="dragOptions"/>
         </div>
       </div>
     </div>

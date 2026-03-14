@@ -53,7 +53,8 @@ export default {
         device_sensor: 'Cảm biến',
         point_list: 'Điểm giám sát',
         machine_station: 'Thiết bị',
-        event_history_detail: 'Nhiệt độ vượt ngưỡng'
+        event_history_detail: 'Nhiệt độ vượt ngưỡng',
+        live_detail: "Live camera"
     },
     error: {
         noPermission: `Sorry, you don't have permission to access this page.`,

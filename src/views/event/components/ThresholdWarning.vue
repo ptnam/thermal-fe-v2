@@ -36,7 +36,7 @@
       </div>
     </div>
 
-    <div class="chart-box">
+    <div class="chart-box" v-loading="loading">
       <VueApexChart
           ref="chartBarRef"
           type="bar"
@@ -117,6 +117,8 @@ const searchParams = ref({
   endDate: formatDate(today),
 })
 
+const loading = ref(false)
+
 const chartBarRef = ref<ApexCharts>()
 
 const dateRange = computed<[string, string] | []>({
@@ -137,6 +139,7 @@ const dateRange = computed<[string, string] | []>({
   }
 })
 const refresh = () => {
+  loading.value = true
   notificationsCountApi(searchParams.value).then(res => {
     let seriesData: number[] = [];
     let categoryLabel: string[] = [];
@@ -155,6 +158,8 @@ const refresh = () => {
         categories: categoryLabel,
       }
     }, true, true)
+  }).finally(() => {
+    loading.value = false
   })
 }
 

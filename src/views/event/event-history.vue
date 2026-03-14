@@ -104,6 +104,7 @@ const formatDataList = (rows: any[]) => {
           prop: `dicThermalDataResults.${key}.compareResultObject.name`,
           label: 'Trạng thái',
           align: 'center',
+          width: 90,
           slots: {
             default: ({row}) => {
               const code = row?.dicThermalDataResults?.[key]?.compareResultObject?.code ?? ''
@@ -202,8 +203,8 @@ const exportFile = (searchParams: any) => {
       :search-props="{ visibleSearchButton: false, inline: false }"
       :span-method="objectSpanMethod"
       :show-btn-add="false"
+      :showBtnSwitch="false"
     >
-      <template v-slot:top><span></span></template>
       <template slot="search" v-slot="{ searchParams }">
         <div class="filter-row">
           <div class="filter-item">

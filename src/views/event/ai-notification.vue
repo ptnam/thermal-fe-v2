@@ -74,72 +74,62 @@ const elTableRef = ref<InstanceType<typeof ListTemplate>>()
         },
       }"
     >
-      <template v-slot:top><span></span></template>
       <template slot="search" v-slot="{ searchParams }">
-        <div class="filter-grid-ai">
-          <!-- Row 1 -->
-          <div class="filter-group-ai">
-            <label>Thời gian từ</label>
-            <div class="input-icon-wrapper">
-              <el-date-picker
+        <div class="filter-row">
+          <div class="filter-item">
+            <div class="filter-label">Thời gian từ</div>
+            <el-date-picker
                 v-model="searchParams.fromTime"
                 type="datetime"
                 placeholder="Thời gian bắt đầu"
                 value-format="YYYY-MM-DD HH:mm:ss"
                 class="!w-[-webkit-fill-available]"
-              />
-            </div>
+            />
           </div>
-          <div class="filter-group-ai">
-            <label>Thời gian đến</label>
-            <div class="input-icon-wrapper">
-              <el-date-picker
+          <div class="filter-item">
+            <div class="filter-label">Thời gian đến</div>
+            <el-date-picker
                 v-model="searchParams.toTime"
                 type="datetime"
                 placeholder="Thời gian kết thúc"
                 value-format="YYYY-MM-DD HH:mm:ss"
                 class="!w-[-webkit-fill-available]"
-              />
-            </div>
+            />
           </div>
-          <div class="filter-group-ai">
-            <label>Khu vực</label>
+          <div class="filter-item">
+            <div class="filter-label">Khu vực</div>
             <tree-select-remote
-              v-model="searchParams.areaId"
-              :request-fn="getAllTreeAreaApi"
-              filterable
-              clearable
-              @change="() => changeAreaId(searchParams)"
+                v-model="searchParams.areaId"
+                :request-fn="getAllTreeAreaApi"
+                filterable
+                clearable
+                @change="() => changeAreaId(searchParams)"
             />
           </div>
-
-          <!-- Row 2 -->
-          <div class="filter-group-ai">
-            <label>Camera</label>
+          <div class="filter-item">
+            <div class="filter-label">Camera</div>
             <virtualized-select-from-url
-              ref="cameraRef"
-              v-model="searchParams.cameraId"
-              :request-fn="() => getAllCamerasApi({ areaId: searchParams.areaId })"
-              filterable
-              value-key="id"
-              clearable
+                ref="cameraRef"
+                v-model="searchParams.cameraId"
+                :request-fn="() => getAllCamerasApi({ areaId: searchParams.areaId })"
+                filterable
+                value-key="id"
+                clearable
             />
           </div>
-          <div class="filter-group-ai">
-            <label>Loại cảnh báo</label>
+          <div class="filter-item">
+            <div class="filter-label">Loại cảnh báo</div>
             <virtualized-select-from-url
-              ref="warningEventId"
-              v-model="searchParams.warningEventId"
-              :request-fn="() => getAllWarningEventApi({warningType: WARNING_TYPE_AI})"
-              filterable
-              value-key="id"
-              clearable
+                ref="warningEventId"
+                v-model="searchParams.warningEventId"
+                :request-fn="() => getAllWarningEventApi({warningType: WARNING_TYPE_AI})"
+                filterable
+                value-key="id"
+                clearable
             />
-          </div>
-          <div class="filter-group-ai" style="justify-content: flex-end;">
-            <search-button @click="elTableRef?.refresh()" />
           </div>
         </div>
+        <search-button @click="elTableRef?.refresh()" />
       </template>
     </list-template>
   </page-container>
