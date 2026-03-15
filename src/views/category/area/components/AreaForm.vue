@@ -1,13 +1,19 @@
 <template>
   <FormWrapper
       :form-model="formModel"
-      :form-props="{ labelWidth: '120px', rules: userRules }"
+      :form-props="{ labelWidth: '160px', rules: userRules }"
       :request-fn="isEditing ? editAreaApi : addAreaApi"
       :isEditing="isEditing"
       @success="handleSuccess"
       :transform-form-data="transformFormData"
   >
     <template v-slot="{ formErrors }">
+      <el-form-item label="Tỉnh" prop="provinceId" :error="formErrors.ProvinceId">
+        <select-from-config
+            v-model="formModel.provinceId"
+            key-config="provinceList"
+        />
+      </el-form-item>
       <el-form-item label="Mã khu vực" prop="code" :error="formErrors.Code">
         <el-input v-model="formModel.code"/>
       </el-form-item>
@@ -24,8 +30,13 @@
       </el-form-item>
       <template v-if="formModel.mapType === MAP_TYPE_PICTURE">
         <Suspense>
-          <el-form-item prop="photoPath" label="Hình ảnh" :error="formErrors.PhotoPath">
+          <el-form-item prop="photoPath" label="Sơ đồ một sợi" :error="formErrors.PhotoPath">
             <ImageUploader v-model="formModel.photoPath"/>
+          </el-form-item>
+        </Suspense>
+        <Suspense>
+          <el-form-item prop="emapPhotoPath" label="Sơ đồ mặt bằng" :error="formErrors.emapPhotoPath">
+            <ImageUploader v-model="formModel.emapPhotoPath"/>
           </el-form-item>
         </Suspense>
       </template>
@@ -51,6 +62,21 @@
       <el-form-item label="Ghi chú" prop="note" :error="formErrors.Note">
         <el-input v-model="formModel.note"/>
       </el-form-item>
+      <el-form-item label="Giá trị đánh giá" prop="comparationDataMode" :error="formErrors.ComparationDataMode">
+        <select-from-config
+            v-model="formModel.comparationDataMode"
+            key-config="comparationDataModeList"
+        ></select-from-config>
+      </el-form-item>
+      <el-form-item label="Nhiệt độ môi trường" prop="environmentTemperature"
+                    :error="formErrors.EnvironmentTemperature">
+        <el-input-number
+            v-model="formModel.environmentTemperature"
+            :controls="false"
+            :min="0"
+            :max="100"
+        ></el-input-number>
+      </el-form-item>
       <el-form-item label="Trạng thái" prop="status" :error="formErrors.Status">
         <select-from-config
             key-config="userStatusList"
@@ -75,6 +101,7 @@ import LatLngPicker from '@/components/Map/LatLngPicker.vue'
 import ImageUploader from '@/components/Input/ImageUploader.vue'
 import {MAP_TYPE_PICTURE} from '@/constants'
 import {removeAllObjectInObject} from "@/utils/objectUtils";
+import InputNumber from "@/components/Input/InputNumber.vue";
 
 const props = defineProps({
   formModel: {

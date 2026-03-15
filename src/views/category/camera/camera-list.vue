@@ -8,7 +8,7 @@ import { ElButton, ElTooltip } from 'element-plus'
 import { Refresh, Rank, Aim, Notification } from '@element-plus/icons-vue'
 import SelectFromConfig from '@/components/Selection/SelectFromConfig.vue'
 import { CAMERA_NORMAL_TYPE, STATUS_ACTIVE } from '@/constants'
-import { getCameraListApi, deleteCameraApi, syncPresetsApi, listPresetsApi } from '@/api/camera'
+import {getCameraListApi, deleteCameraApi, syncPresetsApi, listPresetsApi, getCameraDetailApi} from '@/api/camera'
 import { getAllTreeAreaApi } from '@/api/area'
 import CameraFormTab from '@/views/category/camera/components/CameraFormTab.vue'
 import EditCircleButton from '@/components/Button/EditCircleButton.vue'
@@ -20,6 +20,7 @@ import CameraVisionPreset from '@/views/category/camera/components/CameraVisionP
 import AiSetting from '@/views/category/camera/components/AiSetting.vue'
 import SearchButton from '@/components/Button/SearchButton.vue'
 import DrawerForm from '@/components/Form/DrawerForm.vue'
+import {detailMachineApi} from "@/api/machine";
 
 const columns = computed<TableColumn[]>(() => [
   { type: 'index', label: 'STT', width: 60, headerAlign: 'center' },
@@ -107,9 +108,18 @@ const openDialogAdd = () => {
   }
   dialogVisible.value = true
 }
+
+const detailLoading = ref(false);
 const openDialogEdit = (scope: any) => {
-  formModel.value = JSON.parse(JSON.stringify(scope.row))
-  dialogVisible.value = true
+  detailLoading.value = true
+  getCameraDetailApi(scope.row.id)
+      .then((res) => {
+        formModel.value = res.data
+        dialogVisible.value = true
+      })
+      .finally(() => {
+        detailLoading.value = false
+      })
 }
 
 const openDelete = (scope: any) => {
@@ -173,7 +183,11 @@ const saveSuccess = () => {
       center
       align-center
     >
-      <camera-form-tab v-model:formModel="formModel" @success="saveSuccess"></camera-form-tab>
+      <camera-form-tab
+          v-model:formModel="formModel"
+          @success="saveSuccess"
+          v-loading="detailLoading"
+      ></camera-form-tab>
     </base-dialog>
     <base-dialog v-model="presetDialogVisible" title="Thông số góc quay">
       <PresetTourTab :presets="presets" :tours="cameraTours" />

@@ -10,8 +10,8 @@
           </div>
           <div class="kpi-icon bg-blue">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M23 7l-7 5 7 5V7z"/>
-              <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+              <path d="M23 7l-7 5 7 5V7z" />
+              <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
             </svg>
           </div>
         </div>
@@ -22,8 +22,8 @@
           </div>
           <div class="kpi-icon bg-purple">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-              <circle cx="12" cy="10" r="3"/>
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+              <circle cx="12" cy="10" r="3" />
             </svg>
           </div>
         </div>
@@ -34,8 +34,8 @@
           </div>
           <div class="kpi-icon bg-red">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-              <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+              <path d="M13.73 21a2 2 0 0 1-3.46 0" />
             </svg>
           </div>
         </div>
@@ -50,7 +50,7 @@
           </div>
           <div class="kpi-icon bg-green">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>
+              <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" />
             </svg>
           </div>
         </div>
@@ -60,71 +60,53 @@
       <div class="card map-section" id="mainDisplayCard">
         <div class="map-toolbar">
           <span class="card-title" id="displayTitle">
-            {{areaItem.mapType === MAP_TYPE_MAP ? 'Bản đồ' : ''}}
-            {{areaItem.mapType === MAP_TYPE_PICTURE ? 'Sơ đồ 1 sợi' : ''}}
+            {{ areaItem.mapType === MAP_TYPE_MAP ? 'Bản đồ' : '' }}
+            {{ areaItem.mapType === MAP_TYPE_PICTURE ? 'Sơ đồ 1 sợi' : '' }}
           </span>
 
           <!-- Location button separated -->
-          <button class="map-btn visible-mobile-only location-btn" onclick="openAreaDrawer()"
-                  title="Chọn khu vực">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 stroke-width="2">
+          <button class="map-btn visible-mobile-only location-btn" onclick="openAreaDrawer()" title="Chọn khu vực">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
               <circle cx="12" cy="10" r="3"></circle>
             </svg>
           </button>
 
           <div class="map-toggle-group">
-            <button :class="['map-btn', areaItem.mapType === MAP_TYPE_MAP ? 'active' : '']">Bản đồ</button>
-            <button :class="['map-btn', areaItem.mapType === MAP_TYPE_PICTURE ? 'active' : '']">Sơ đồ 1 sợi</button>
-            <button class="map-btn"
-                    onclick="alert('Tính năng Mô hình BIM 3D đang được phát triển')">
+            <button v-show="areaItem.mapType === MAP_TYPE_MAP" class="map-btn active">Bản đồ</button>
+            <span v-show="areaItem.mapType === MAP_TYPE_PICTURE">
+              <button v-show="areaItem.photoPath" :class="['map-btn', mapTypeDiagram === 'photoPath' ? 'active' : '']"
+                @click="mapTypeDiagram = 'photoPath'">Sơ đồ 1 sợi</button>
+              <button v-show="areaItem.emapPhotoPath"
+                :class="['map-btn', mapTypeDiagram === 'emapPhotoPath' ? 'active' : '']"
+                @click="mapTypeDiagram = 'emapPhotoPath'">Sơ đồ mặt bằng</button>
+            </span>
+            <button class="map-btn" onclick="alert('Tính năng Mô hình BIM 3D đang được phát triển')">
               Mô hình BIM 3D
             </button>
           </div>
         </div>
         <div class="map-view-container mode-single" id="mapContainer">
           <div class="map-pane">
-            <div class="map-label">{{ areaItem.name }}</div>
+            <div class="map-label">{{ areaItem?.name }}</div>
             <div class="w-full h-full">
-              <LeafletMap
-                  ref="leafletMapRef"
-                  :key="itemKey"
-                  :photo-path="areaItem.photoPath"
-                  :map-type="areaItem.mapType"
-                  :zoom="areaItem.zoom"
-                  :latitude="areaItem.latitude"
-                  :longitude="areaItem.longitude"
-              >
-                <sensor-marker
-                    v-for="marker in liveMarkers"
-                    :key="marker.updateAt"
-                    :lat-lng="[marker.latitude, marker.longitude]"
-                    @click="() => showMarkerInfo(marker)"
-                    v-bind="getIconPaths(marker)"
-                    @mouseover="() => markerHover(marker)"
-                >
-                  <l-tooltip permanent :key="marker.updateAt">
-                    {{marker.name}}
-                  </l-tooltip>
-                </sensor-marker>
-                <area-range
-                    :point-list="areaRangePointList"
-                    @clickMaker="(marker) => handleNodeClick(marker)"
-                />
+              <LeafletMap ref="leafletMapRef" :key="itemKey" :photo-path="areaItem[mapTypeDiagram]"
+                :map-type="areaItem.mapType" :zoom="areaItem.zoom" :latitude="areaItem.latitude"
+                :longitude="areaItem.longitude">
+                <SensorDiagram v-if="mapTypeDiagram === 'photoPath'" :live-markers="liveMarkers"
+                  :area-range-point-list="areaRangePointList" :live-temperature-map="liveTemperatureMap"
+                  @handleNodeClick="handleNodeClick" @showMarkerInfo="showMarkerInfo">
+                </SensorDiagram>
+                <CameraDiagram v-else-if="mapTypeDiagram === 'emapPhotoPath'" :live-markers="cameraMarker"
+                  @showMarkerInfo="showCameraInfo">
+                </CameraDiagram>
               </LeafletMap>
             </div>
           </div>
-          </div>
+        </div>
       </div>
-      <AreaTreeDashBoard
-          :request-fn="getAllTreeAreaApi"
-          @node-click="handleNodeClick"
-          :default-expand-all="true"
-          :check-strictly="true"
-          :highlight-current="true"
-          show-line
-      ></AreaTreeDashBoard>
+      <AreaTreeDashBoard :request-fn="getAllTreeAreaApi" @node-click="handleNodeClick" :default-expand-all="true"
+        :check-strictly="true" :highlight-current="true" show-line></AreaTreeDashBoard>
     </div>
     <base-dialog v-model="visibleThermalDetail" :close-on-click-modal="true">
       <div class="mt-4" v-loading="loadingThermalData">
@@ -132,16 +114,20 @@
         </thermal-data>
       </div>
     </base-dialog>
+    <el-dialog v-model="visibleCameraDetail" :close-on-click-modal="true">
+      <div class="mt-4">
+        <web-player :streamKey="selectedCamera.id" :cam="selectedCamera"></web-player>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
 import 'leaflet/dist/leaflet.css'
-import {nextTick, onMounted, onUnmounted, ref} from 'vue'
-import {getAllTreeAreaApi} from '@/api/area'
-import {MAP_TYPE_MAP, MAP_TYPE_PICTURE} from '@/constants'
+import { nextTick, onMounted, onUnmounted, ref } from 'vue'
+import { getAllTreeAreaApi } from '@/api/area'
+import { MAP_TYPE_MAP, MAP_TYPE_PICTURE } from '@/constants'
 import LeafletMap from '@/views/dashboard/components/LeafletMap.vue'
-import {LTooltip} from '@vue-leaflet/vue-leaflet'
 import {
   createSignalRConnection,
   startSignalR,
@@ -151,22 +137,22 @@ import {
 } from '@/plugins/signalr'
 import {
   machinesAndResultByAreaApi,
-  realTimeThermalDataApi,
   thermalByComponentApi,
 } from '@/api/thermal-data'
 import _ from 'lodash'
-import AreaRange from '@/views/dashboard/components/AreaRange.vue'
-import SensorMarker from "@/components/Map/SensorMarker.vue";
 import AreaTreeDashBoard from "@/views/dashboard/components/AreaTreeDashBoard.vue";
 import BaseDialog from "@/components/Dialog/BaseDialog.vue";
 import ThermalData from "@/views/dashboard/components/ThermalData.vue";
+import SensorDiagram from './components/SensorDiagram.vue'
+import CameraDiagram from './components/CameraDiagram.vue'
+import { getAllCamerasApi } from '@/api/camera'
 
 onMounted(() => {
   loadThermalData({}, false)
   createSignalRConnection()
   startSignalR()
   onSignalREvent('newThermalData', function (thermalData: any) {
-    liveTemperatureMap.value = {...liveTemperatureMap.value, ...thermalData}
+    liveTemperatureMap.value = { ...liveTemperatureMap.value, ...thermalData }
     liveMarkers.value = liveMarkers.value.map(function (item, index) {
       return {
         ...item,
@@ -185,46 +171,49 @@ const areaItem = ref({
   latitude: 21.0173,
   longitude: 105.8545,
   photoPath: '',
+  emapPhotoPath: '',
 })
 
-const getIconPaths = (mark: any) => {
-  const level = liveTemperatureMap.value[mark.key]?.level
-  const icon = {
-    Bad: {iconColor: 'red', isBlink: true},
-    Average: {iconColor: 'orange', isBlink: false},
-    Fair: {iconColor: 'blue', isBlink: false},
-    Good: {iconColor: 'green', isBlink: false},
-  }
-  return icon[level] ?? icon["Good"]
-}
+const mapTypeDiagram = ref('photoPath')
 
 const leafletMapRef = ref()
 const liveMarkers = ref<any[]>([])
+const cameraMarker = ref<any[]>([])
 const areaRangePointList = ref<any[]>([])
 const liveTemperatureMap = ref({})
-const thermalInfoMap = ref({})
 const itemKey = ref(0)
 const handleNodeClick = (item: any) => {
   itemKey.value = item.id
   if (item.mapType === MAP_TYPE_PICTURE) {
     item.latitude = 0
     item.longitude = 0
-    item.zoom = 0
+    item.zoom = 0;
+    mapTypeDiagram.value = item.photoPath ? "photoPath" : item.emapPhotoPath ? "emapPhotoPath" : "photoPath";
   }
   areaItem.value = item
   nextTick(() => {
     if (areaItem.value.mapType === MAP_TYPE_MAP) {
       leafletMapRef.value.flyToPoint()
     }
-  })
+  });
   loadThermalData(item)
+  loadCameraFromArea(item)
+}
+
+const loadCameraFromArea = (area: any) => {
+  if (!area) {
+    return
+  }
+  getAllCamerasApi({ areaId: area.id }).then((res) => {
+    cameraMarker.value = res.data ?? []
+  })
 }
 
 const loadThermalData = (area: any, invokeSignal = true) => {
   if (!area) {
     return;
   }
-  machinesAndResultByAreaApi({areaId: area?.id}).then((res) => {
+  machinesAndResultByAreaApi({ areaId: area?.id }).then((res) => {
     loadMachineComponents(res.data.item1 ?? [], invokeSignal)
     if (area.mapType == MAP_TYPE_PICTURE) {
       areaRangePointList.value = []
@@ -238,7 +227,7 @@ const loadMachineComponents = (components: any[], invokeSignal = true) => {
     if (invokeSignal) {
       const machineIds: string[] = [
         ...new Set(
-            components.map((item) => item.machineId).filter((val): val is string => !!val),
+          components.map((item) => item.machineId).filter((val): val is string => !!val),
         ),
       ]
       invokeSignalR('RegisterMachines', machineIds)
@@ -271,23 +260,24 @@ const showMarkerInfo = (marker: any) => {
     id: marker.id,
     deviceType: marker.deviceType,
   })
-      .then((res) => {
-        selectedThermalData.value = res.data
-      })
-      .finally(() => {
-        loadingThermalData.value = false
-      })
+    .then((res) => {
+      selectedThermalData.value = res.data
+    })
+    .finally(() => {
+      loadingThermalData.value = false
+    })
 }
 
-const markerHover = (marker: any) => {
-  realTimeThermalDataApi({
-    machineId: marker.machineId,
-    id: marker.id,
-    deviceType: marker.deviceType,
-  }).then((res) => {
-    thermalInfoMap.value[marker.id] = res.data
+const selectedCamera = ref<any>(null)
+const visibleCameraDetail = ref(false)
+
+const showCameraInfo = (marker: any) => {
+  selectedCamera.value = marker;
+  nextTick(() => {
+    visibleCameraDetail.value = true;
   })
 }
+
 </script>
 <style scoped>
 .region-temp-list {

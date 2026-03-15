@@ -107,7 +107,7 @@ const saveSuccess = () => {
   <drawer-form
       v-model="dialogVisible"
       :destroy-on-close="true"
-      style="min-width: 650px"
+      style="min-width: 750px"
   >
     <area-form
       v-model:formModel="formModel"

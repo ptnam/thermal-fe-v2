@@ -1,38 +1,72 @@
 <template>
   <el-input
-      v-model="inputValue"
-      :formatter="(value) => value.replace(/[^0-9]/g, '')"
-      @change.native="handleChange"
-      @blur.native="handleBlur"
-      v-bind="$attrs"
+    v-model="displayValue"
+    inputmode="numeric"
+    pattern="[0-9]*"
+    :maxlength="maxlength"
+    v-bind="$attrs"
+    @change="handleChange"
+    @blur="handleBlur"
   />
 </template>
-<script lang="ts" setup>
-import {computed, ref, useAttrs} from 'vue'
-const hasChange = ref(false);
+
+<script setup lang="ts">
+import { computed, ref, watch } from 'vue'
+
 const props = defineProps({
-  modelValue: {type: [String, Number], required: false},
+  modelValue: {
+    type: [Number, String],
+    default: ''
+  },
+  min: Number,
+  max: Number,
+  maxlength: Number
 })
 
-const emits = defineEmits(['update:modelValue', "changeBlur"])
+const emit = defineEmits([
+  'update:modelValue',
+  'change',
+  'blur'
+])
 
-const handleChange = () => {
-  hasChange.value = true
-}
+const internal = ref('')
 
-const handleBlur = () => {
-  emits('changeBlur', inputValue.value)
-  hasChange.value = false
-}
-
-
-const inputValue = computed<any>({
-  get() {
-    return props.modelValue ?? useAttrs().value
+watch(
+  () => props.modelValue,
+  (v) => {
+    internal.value = v?.toString() ?? ''
   },
-  set(value) {
-    emits('update:modelValue', value)
+  { immediate: true }
+)
+
+const displayValue = computed({
+  get() {
+    return internal.value
+  },
+  set(val: string) {
+    let clean = val.replace(/[^0-9]/g, '')
+
+    if (props.maxlength) {
+      clean = clean.slice(0, props.maxlength)
+    }
+
+    let num = clean ? Number(clean) : null
+
+    if (num !== null) {
+      if (props.min !== undefined && num < props.min) num = props.min
+      if (props.max !== undefined && num > props.max) num = props.max
+    }
+
+    internal.value = num !== null ? String(num) : ''
+    emit('update:modelValue', num)
   }
 })
 
+const handleChange = () => {
+  emit('change', displayValue.value)
+}
+
+const handleBlur = () => {
+  emit('blur', displayValue.value)
+}
 </script>

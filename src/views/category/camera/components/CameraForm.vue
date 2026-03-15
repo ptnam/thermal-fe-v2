@@ -55,6 +55,22 @@
           <el-form-item label="password" prop="password" :error="formErrors.Password">
             <el-input v-model="formModel.password" type="password" autocomplete="new-password"/>
           </el-form-item>
+          <el-form-item
+              v-if="formModel?.area && formModel.areaId && formModel?.area?.mapType === MAP_TYPE_PICTURE"
+              label="Sơ đồ mặt bằng"
+              :error="formErrors?.Latitude ?? formErrors?.Longitude"
+          >
+            <lat-lng-image-picker
+                v-if="formModel?.area?.mapType === MAP_TYPE_PICTURE"
+                :image-path="formModel?.area?.emapPhotoPath"
+                :map-config="formModel"
+                @input="setCoordinate"
+            />
+            <p v-if="formModel?.longitude && formModel?.latitude" class="m-0 whitespace-nowrap">
+              <span class="font-bold">Kinh độ:</span> {{ formModel?.longitude }},
+              <span class="font-bold">Vĩ độ:</span> {{ formModel?.latitude }}
+            </p>
+          </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="Tên camera" prop="name" :error="formErrors.Name">
@@ -121,10 +137,12 @@ import {FormRules} from 'element-plus'
 import {getAllTreeAreaApi} from '@/api/area'
 import {addCameraApi, editCameraApi, getAllCamerasApi} from '@/api/camera'
 import InputNumber from '@/components/Input/InputNumber.vue'
-import {CAMERA_NORMAL_TYPE, CAMERA_THERMAL_TYPE} from '@/constants'
+import {CAMERA_NORMAL_TYPE, CAMERA_THERMAL_TYPE, MAP_TYPE_MAP, MAP_TYPE_PICTURE} from '@/constants'
 import VirtualizedSelectFromUrl from "@/components/Selection/VirtualizedSelectFromUrl.vue";
 import {removeAllObjectInObject} from "@/utils/objectUtils";
 import TreeSelectRemote from "@/components/Tree/TreeSelectRemote.vue";
+import LatLngPicker from "@/components/Map/LatLngPicker.vue";
+import LatLngImagePicker from "@/components/Map/LatLngImagePicker.vue";
 
 const props = defineProps({
   formModel: {
@@ -159,8 +177,14 @@ const transformFormData = (formData: any) => {
   return removeAllObjectInObject(formData)
 }
 
-const emit = defineEmits<(e: 'success', data: any) => void>()
+const emit = defineEmits(['update:formModel', 'success'])
 const handleSuccess = (data: any) => {
   emit('success', data)
+}
+const updateFormModel = (node: any) => {
+  emit('update:formModel', {...props.formModel, ...node})
+}
+const setCoordinate = (coordinate: any) => {
+  updateFormModel(coordinate)
 }
 </script>

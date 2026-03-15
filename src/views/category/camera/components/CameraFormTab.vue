@@ -3,7 +3,7 @@
     <el-tabs v-model="activeName" class="demo-tabs">
       <el-tab-pane label="Thông số camera" name="first">
         <camera-form
-            :form-model="formModel"
+            v-model:formModel="formModel"
             :is-editing="isEditing"
             @success="saveSuccess"
         ></camera-form>
@@ -25,16 +25,12 @@ import {isFormEditing} from '@/utils/is'
 import SetViewingAngle from '@/views/category/camera/components/SetViewingAngle.vue'
 import CameraForm from '@/views/category/camera/components/CameraForm.vue'
 
-const props = defineProps({
-  formModel: {
-    type: Object,
-    required: true,
-  },
-})
+const formModel = defineModel('formModel', { required: true })
+
 const activeName = ref('first')
 const emits = defineEmits(['success'])
 const isEditing = computed(() => {
-  return isFormEditing(props.formModel)
+  return isFormEditing(formModel.value)
 })
 
 const saveSuccess = () => {

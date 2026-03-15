@@ -132,7 +132,7 @@ const marker = ref({})
 const mapCenter = ref([])
 
 const refresh = () => {
-  zoomValue.value = props.mapConfig.zoom ?? 6
+  zoomValue.value = props.mapConfig.zoom ?? 0
   marker.value = {
     latitude: props.mapConfig.latitude,
     longitude: props.mapConfig.longitude,

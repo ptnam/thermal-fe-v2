@@ -4,7 +4,6 @@ import {TableColumn} from '@/components/Table'
 import {useLang} from '@/hooks/web/useI18n'
 import PageContainer from '@/components/PageContainer.vue'
 import {computed, ref} from 'vue'
-import BaseDialog from '@/components/Dialog/BaseDialog.vue'
 import {STATUS_ACTIVE} from '@/constants'
 import DeleteCircleButton from '@/components/Button/DeleteCircleButton.vue'
 import EditCircleButton from '@/components/Button/EditCircleButton.vue'
@@ -32,8 +31,8 @@ const columns = computed<TableColumn[]>(() => [
     prop: 'displayStatus',
     label: 'Trạng thái',
     slots: {
-      default: ({row}) => (<span   style={{
-        color:  row.status === 'Active' ? 'var(--success)' : 'var(--danger)'
+      default: ({row}) => (<span style={{
+        color: row.status === 'Active' ? 'var(--success)' : 'var(--danger)'
       }}>{row?.displayStatus}</span>)
     },
   },
@@ -57,6 +56,10 @@ const formModel = ref({})
 
 const openDialogAdd = () => {
   formModel.value = {
+    machineDetail: {},
+    machineTransformer: {},
+    machineCircuitBreaker: {},
+    machineDisconnectingSwitch: {},
     dictMachineParts: {},
     status: STATUS_ACTIVE,
   }
@@ -67,6 +70,18 @@ const openDialogEdit = (scope: any) => {
   detailLoading.value = true
   detailMachineApi(scope.row.id)
       .then((res) => {
+        if (!res.data.machineDetail) {
+          res.data.machineDetail = {}
+        }
+        if (!res.data.machineTransformer) {
+          res.data.machineTransformer = {}
+        }
+        if (!res.data.machineCircuitBreaker) {
+          res.data.machineCircuitBreaker = {}
+        }
+        if (!res.data.machineDisconnectingSwitch) {
+          res.data.machineDisconnectingSwitch = {}
+        }
         formModel.value = res.data
         dialogVisible.value = true
       })
@@ -140,9 +155,13 @@ const exportFile = (searchParams: any) => {
         v-model="dialogVisible"
         align-center
         :destroy-on-close="true"
-        style="min-width: 900px"
+        style="min-width: 1100px"
     >
-      <machine-form v-model:formModel="formModel" @success="saveSuccess"></machine-form>
+      <machine-form
+          v-model:formModel="formModel"
+          @success="saveSuccess"
+          :title="formModel.id ? 'Cập nhật thiết bị': 'Thêm thiết bị'"
+      ></machine-form>
     </drawer-form>
   </page-container>
 </template>
