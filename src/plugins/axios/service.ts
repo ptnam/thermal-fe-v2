@@ -30,7 +30,10 @@ axiosInstance.interceptors.response.use(
         return res
     },
     (error: AxiosError) => {
-        ElMessage.error((error.response?.data as { message: string })?.message ?? error.message)
+        ElMessage.error({
+            message: (error.response?.data as { message: string })?.message ?? error.message,
+            showClose: true,
+        })
         if (error.status === 401 || error.message === 'Network Error') {
             const userStore = useUserStoreWithOut()
             userStore.resetAndRedirectToLogin()

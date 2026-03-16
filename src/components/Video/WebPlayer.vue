@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import {ref, onMounted} from 'vue'
 import {getStreamApi} from '@/api/camera'
-import router from '@/router'
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const props = defineProps({
   streamKey: {type: [String, Number], required: true},

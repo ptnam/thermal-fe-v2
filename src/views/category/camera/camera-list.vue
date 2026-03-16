@@ -1,14 +1,13 @@
 <script setup lang="tsx">
 import ListTemplate from '@/components/PageTemplate/List/ListTemplate.vue'
 import { TableColumn } from '@/components/Table'
-import PageContainer from '@/components/PageContainer.vue'
 import { computed, ref } from 'vue'
 import BaseDialog from '@/components/Dialog/BaseDialog.vue'
 import { ElButton, ElTooltip } from 'element-plus'
-import { Refresh, Rank, Aim, Notification } from '@element-plus/icons-vue'
+import { Refresh, Rank, Aim, Notification, Pointer } from '@element-plus/icons-vue'
 import SelectFromConfig from '@/components/Selection/SelectFromConfig.vue'
 import { CAMERA_NORMAL_TYPE, STATUS_ACTIVE } from '@/constants'
-import {getCameraListApi, deleteCameraApi, syncPresetsApi, listPresetsApi, getCameraDetailApi} from '@/api/camera'
+import {getCameraListApi, deleteCameraApi, syncPresetsApi, getCameraDetailApi, listPresetsApi} from '@/api/camera'
 import { getAllTreeAreaApi } from '@/api/area'
 import CameraFormTab from '@/views/category/camera/components/CameraFormTab.vue'
 import EditCircleButton from '@/components/Button/EditCircleButton.vue'
@@ -20,7 +19,9 @@ import CameraVisionPreset from '@/views/category/camera/components/CameraVisionP
 import AiSetting from '@/views/category/camera/components/AiSetting.vue'
 import SearchButton from '@/components/Button/SearchButton.vue'
 import DrawerForm from '@/components/Form/DrawerForm.vue'
-import {detailMachineApi} from "@/api/machine";
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const columns = computed<TableColumn[]>(() => [
   { type: 'index', label: 'STT', width: 60, headerAlign: 'center' },
@@ -39,7 +40,7 @@ const columns = computed<TableColumn[]>(() => [
     },
   },
   {
-    width: '280px',
+    width: '300px',
     slots: {
       default: (scope: any) => (
         <div>
@@ -54,6 +55,9 @@ const columns = computed<TableColumn[]>(() => [
               <ElButton circle={true} icon={Aim} onClick={() => showVisionPresets(scope.row)} />
             </ElTooltip>
           )}
+           <ElTooltip content="Cài đặt góc quay">
+            <ElButton circle={true} icon={Pointer} onClick={() => showPresetSetting(scope.row)} />
+          </ElTooltip>
           <ElTooltip content="Cài đặt AI">
             <ElButton circle={true} icon={Notification} onClick={() => showAISetting(scope.row)} />
           </ElTooltip>
@@ -81,6 +85,11 @@ const syncPresets = (item: any) => {
     presetDialogVisible.value = true
   })
 }
+
+const showPresetSetting = (item: any) => {
+  return router.push({ name: 'camera_setting', params: { id: item.id } })
+}
+
 const showPresets = (item: any) => {
   presetRequest(listPresetsApi, item.id).then((res) => {
     presets.value = res.data.presets

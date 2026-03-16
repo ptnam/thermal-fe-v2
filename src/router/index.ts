@@ -143,7 +143,12 @@ const constantRoutes: AppRouteRecordRaw[] = [
         component: () => import('@/views/category/camera/camera-list.vue'),
         meta: { icon: 'menu-camera', permission: ['common-list'] },
       },
-
+      {
+        path: 'camera-setting/:id',
+        name: 'camera_setting',
+        component: () => import('@/views/category/camera/camera-setting.vue'),
+        meta: { icon: 'setting', permission: ['common-list'] },
+      },
       {
         path: 'camera-sensor',
         name: 'device_sensor',
