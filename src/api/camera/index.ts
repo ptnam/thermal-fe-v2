@@ -66,6 +66,26 @@ export const getAiServicesApi = (params: object): Promise<IResponse> => {
   return request.get({url: '/api/Cameras/aiservices', params: params})
 }
 
+export const getTourList = (params: object): Promise<IResponse> => {
+  return request.get({url: '/api/Cameras/tourList', params: params})
+}
+
+export const addTour = (data: object): Promise<IResponse> => {
+  return request.post({url: '/api/Cameras/addTour', data: data})
+}
+
+export const apiDeleteTour = (data: object): Promise<IResponse> => {
+  return request.delete({url: '/api/Cameras/tourList', data: data})
+}
+
+export const deletePreset = (presetId: string | number,data: object): Promise<IResponse> => {
+  return request.delete({url: `/api/Cameras/deletePreset/${presetId}`, data: data})
+}
+
+export const presetList = (params: object): Promise<IResponse> => {
+  return request.get({url: '/api/Cameras/presetList', params: params})
+}
+
 export const saveAiServicesApi = (data: any): Promise<IResponse> => {
   return request.post({url: `/api/cameras/aiservices`, data: data})
 }

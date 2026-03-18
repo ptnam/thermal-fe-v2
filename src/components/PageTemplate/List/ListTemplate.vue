@@ -23,8 +23,8 @@
             <div style="font-size: 15px; font-weight: 700; color: var(--primary); text-transform: uppercase;">
               {{ title }}
             </div>
-            <div v-show="showBtnSwitch" style="display: flex; align-items: center; gap: 15px;">
-              <div class="view-switcher">
+            <div style="display: flex; align-items: center; gap: 15px;">
+              <div v-show="showBtnSwitch" class="view-switcher">
                 <button class="view-btn active" onclick="switchView('table')">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
