@@ -9,10 +9,14 @@ import {PolygonDrawer} from "@/utils/PolygonDrawer";
 import {thermalDataByAreaApi} from "@/api/thermal-data";
 
 const props = defineProps({
-  key: {
+  streamKey: {
     type: [String, Number],
     required: true,
   },
+  startDraw: {
+    type:Boolean,
+    default: false
+  }
 })
 
 const videoRef = ref<HTMLElement | null>(null)
@@ -22,6 +26,9 @@ const videoLoading = ref(true)
 const videoStream = document.createElement('video-stream') as any
 videoStream.addEventListener('stream-onopen', () => {
   videoLoading.value = false
+  if(props.startDraw) {
+    startDrawing();
+  }
 })
 videoStream.addEventListener('stream-error', () => {
   videoLoading.value = false
@@ -34,7 +41,7 @@ const preCommand = ref();
 const {onRequest} = useRequest();
 const requestCommand = (command: number) => {
   onRequest(sendCommandCameraApi, {
-    cameraId: props.key,
+    cameraId: props.streamKey,
     speed: speed.value,
     command: command,
     preCommand: preCommand.value
@@ -44,7 +51,7 @@ const requestCommand = (command: number) => {
 const speed = ref(3);
 onMounted(() => {
   loading.value = true
-  getStreamApi(props.key)
+  getStreamApi(props.streamKey)
       .then((res) => {
         const key = res.data
         const path = import.meta.env.VITE_LIVE_PATH
@@ -66,7 +73,7 @@ onMounted(() => {
         loading.value = false
       });
 
-  getCameraDetailApi(props.key).then(res => {
+  getCameraDetailApi(props.streamKey).then(res => {
     cam.value = res.data
   });
 });
@@ -88,15 +95,8 @@ function startDrawing() {
       const rect = v.getBoundingClientRect()
 
       // size canvas theo video thật
-      c.width = v.videoWidth
-      c.height = v.videoHeight
-
-      // copy vị trí hiển thị
-      c.style.position = 'absolute'
-      c.style.left = rect.left + 'px'
-      // c.style.top = rect.top + 'px'
-      c.style.width = rect.width + 'px'
-      c.style.height = rect.height + 'px'
+      c.width = v.clientWidth
+      c.height = v.clientHeight
 
       videoWidth.value = v.clientWidth
       videoHeight.value = v.clientHeight
@@ -173,7 +173,7 @@ function measureTempAction() {
   measureTempRequest(thermalDataByAreaApi, {
     videoWidth: videoWidth.value,
     videoHeight: videoHeight.value,
-    cameraId: props.key,
+    cameraId: props.streamKey,
     points: tmpPoints,
   })
       .then((res) => {
@@ -184,6 +184,10 @@ function measureTempAction() {
         drawer?.showFullScreenAlert(videoRef, e.toString())
       })
 }
+
+defineExpose({
+  startDrawing
+})
 </script>
 <template>
   <header class="live-header">
@@ -216,25 +220,14 @@ function measureTempAction() {
   <div class="live-container">
 
     <div class="video-wrapper">
-      <div ref="videoRef" class="video-feed"></div>
-      <canvas
-          ref="canvasRef"
-          class="absolute z-1 pointer-events-auto w-full h-full inset-0 "
-          v-show="isDrawing"
-      ></canvas>
-      <!--      <div class="hud-box alert" style="top: 35%; left: 42%; width: 90px; height: 140px;">-->
-      <!--        <div class="hud-label">-->
-      <!--          <span>MBA T2 (Sứ A)</span>-->
-      <!--          <span class="hud-val">58.2°C</span>-->
-      <!--        </div>-->
-      <!--      </div>-->
-      <!--      <div class="hud-box" style="top: 30%; left: 68%; width: 50px; height: 70px;">-->
-      <!--        <div class="hud-label">-->
-      <!--          <span>Sứ B</span>-->
-      <!--          <span class="hud-val">42.5°C</span>-->
-      <!--        </div>-->
-      <!--      </div>-->
-
+      <div class="video-feed">
+        <div ref="videoRef"></div>
+        <canvas
+            ref="canvasRef"
+            class="absolute"
+        >
+        </canvas>
+      </div>
     </div>
     <div class="sidebar">
       <div class="ptz-section">
@@ -313,112 +306,113 @@ function measureTempAction() {
             </button>
           </div>
         </div>
+        <slot name="sidebar">
+          <!-- Measure Temp Section -->
+          <div style="margin-top:20px; padding-top:20px; border-top:1px solid var(--border); width:100%">
+            <div
+                style="font-size:11px; font-weight:700; color:var(--text-sub); margin-bottom:12px; text-transform:uppercase;">
+              ĐO NHIỆT ĐỘ
+            </div>
 
-        <!-- Measure Temp Section -->
-        <div style="margin-top:20px; padding-top:20px; border-top:1px solid var(--border); width:100%">
-          <div
-              style="font-size:11px; font-weight:700; color:var(--text-sub); margin-bottom:12px; text-transform:uppercase;">
-            ĐO NHIỆT ĐỘ
-          </div>
+            <!-- Start Button -->
+            <div v-show="isDrawing===false">
+              <button class="v-btn action-btn-primary" @click="startDrawing">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="14 2 18 6 7 17 3 17 3 13 14 2"></polygon>
+                  <line x1="3" y1="22" x2="21" y2="22"></line>
+                </svg>
+                Vẽ điểm/vùng
+              </button>
+            </div>
+            <!-- Active Actions (Hidden by default) -->
+            <div v-show="isDrawing===true" style="display: grid; gap: 12px; grid-template-columns: 1.5fr 1fr;">
+              <el-button class="v-btn"
+                         :loading="measureTempLoading"
+                         @click="measureTemp"
+                         style="background:#3B82F6; color:white; width:100%; height:44px; display:flex; align-items:center; justify-content:center; gap:8px; border-radius:6px; font-weight:600; font-size:13px; border:none">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"></path>
+                </svg>
+                Đo nhiệt
+              </el-button>
+              <button class="v-btn" @click="stopDrawing"
+                      style="background:rgba(239, 68, 68, 0.15); border:1px solid rgba(239, 68, 68, 0.5); color:#EF4444; width:100%; height:44px; display:flex; align-items:center; justify-content:center; gap:8px; border-radius:6px; font-weight:600; font-size:13px">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+                Thoát
+              </button>
+            </div>
 
-          <!-- Start Button -->
-          <div v-show="isDrawing===false">
-            <button class="v-btn action-btn-primary" @click="startDrawing">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-                   stroke-linecap="round" stroke-linejoin="round">
-                <polygon points="14 2 18 6 7 17 3 17 3 13 14 2"></polygon>
-                <line x1="3" y1="22" x2="21" y2="22"></line>
-              </svg>
-              Vẽ điểm/vùng
-            </button>
-          </div>
-          <!-- Active Actions (Hidden by default) -->
-          <div v-show="isDrawing===true" style="display: grid; gap: 12px; grid-template-columns: 1.5fr 1fr;">
-            <el-button class="v-btn"
-                       :loading="measureTempLoading"
-                       @click="measureTemp"
-                       style="background:#3B82F6; color:white; width:100%; height:44px; display:flex; align-items:center; justify-content:center; gap:8px; border-radius:6px; font-weight:600; font-size:13px; border:none">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                   stroke-linecap="round" stroke-linejoin="round">
-                <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"></path>
-              </svg>
-              Đo nhiệt
-            </el-button>
-            <button class="v-btn" @click="stopDrawing"
-                    style="background:rgba(239, 68, 68, 0.15); border:1px solid rgba(239, 68, 68, 0.5); color:#EF4444; width:100%; height:44px; display:flex; align-items:center; justify-content:center; gap:8px; border-radius:6px; font-weight:600; font-size:13px">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                   stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-              Thoát
-            </button>
-          </div>
-
-          <!-- Measurement Results (Hidden by default) -->
-          <div v-show="visibleMeasurement" style="margin-top:15px; animation: fadeIn 0.3s ease-in-out;">
-            <div style="font-size:13px; color:var(--text-sub); margin-bottom:10px;">Kết quả đo:</div>
-            <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:8px;">
-              <!-- Max -->
-              <div
-                  style="background:rgba(239, 68, 68, 0.1); border:1px solid rgba(239, 68, 68, 0.3); border-radius:8px; padding:10px; text-align:center;">
-                <div style="font-size:11px; color:#EF4444; font-weight:600; margin-bottom:4px;">Max
+            <!-- Measurement Results (Hidden by default) -->
+            <div v-show="visibleMeasurement" style="margin-top:15px; animation: fadeIn 0.3s ease-in-out;">
+              <div style="font-size:13px; color:var(--text-sub); margin-bottom:10px;">Kết quả đo:</div>
+              <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:8px;">
+                <!-- Max -->
+                <div
+                    style="background:rgba(239, 68, 68, 0.1); border:1px solid rgba(239, 68, 68, 0.3); border-radius:8px; padding:10px; text-align:center;">
+                  <div style="font-size:11px; color:#EF4444; font-weight:600; margin-bottom:4px;">Max
+                  </div>
+                  <div style="font-family:'JetBrains Mono'; font-size:16px; font-weight:700; color:#EF4444;">
+                    {{ measurementResult?.maxTemperature }}°C
+                  </div>
                 </div>
-                <div style="font-family:'JetBrains Mono'; font-size:16px; font-weight:700; color:#EF4444;">
-                  {{ measurementResult?.maxTemperature }}°C
+                <!-- Avg -->
+                <div
+                    style="background:rgba(245, 158, 11, 0.1); border:1px solid rgba(245, 158, 11, 0.3); border-radius:8px; padding:10px; text-align:center;">
+                  <div style="font-size:11px; color:#F59E0B; font-weight:600; margin-bottom:4px;">Avg
+                  </div>
+                  <div style="font-family:'JetBrains Mono'; font-size:16px; font-weight:700; color:#F59E0B;">
+                    {{ measurementResult?.aveTemperature }}°C
+                  </div>
                 </div>
-              </div>
-              <!-- Avg -->
-              <div
-                  style="background:rgba(245, 158, 11, 0.1); border:1px solid rgba(245, 158, 11, 0.3); border-radius:8px; padding:10px; text-align:center;">
-                <div style="font-size:11px; color:#F59E0B; font-weight:600; margin-bottom:4px;">Avg
-                </div>
-                <div style="font-family:'JetBrains Mono'; font-size:16px; font-weight:700; color:#F59E0B;">
-                  {{ measurementResult?.aveTemperature }}°C
-                </div>
-              </div>
-              <!-- Min -->
-              <div
-                  style="background:rgba(16, 185, 129, 0.1); border:1px solid rgba(16, 185, 129, 0.3); border-radius:8px; padding:10px; text-align:center;">
-                <div style="font-size:11px; color:#10B981; font-weight:600; margin-bottom:4px;">Min
-                </div>
-                <div style="font-family:'JetBrains Mono'; font-size:16px; font-weight:700; color:#10B981;">
-                  {{ measurementResult?.minTemperature }}°C
+                <!-- Min -->
+                <div
+                    style="background:rgba(16, 185, 129, 0.1); border:1px solid rgba(16, 185, 129, 0.3); border-radius:8px; padding:10px; text-align:center;">
+                  <div style="font-size:11px; color:#10B981; font-weight:600; margin-bottom:4px;">Min
+                  </div>
+                  <div style="font-family:'JetBrains Mono'; font-size:16px; font-weight:700; color:#10B981;">
+                    {{ measurementResult?.minTemperature }}°C
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- Bottom Toolbar -->
-        <div style="margin-top:20px; padding-top:20px; border-top:1px solid var(--border); width:100%">
-          <div
-              style="font-size:11px; font-weight:700; color:var(--text-sub); margin-bottom:12px; text-transform:uppercase;">
-            ĐIỀU KHIỂN
-          </div>
+          <!-- Bottom Toolbar -->
+          <div style="margin-top:20px; padding-top:20px; border-top:1px solid var(--border); width:100%">
+            <div
+                style="font-size:11px; font-weight:700; color:var(--text-sub); margin-bottom:12px; text-transform:uppercase;">
+              ĐIỀU KHIỂN
+            </div>
 
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
-            <button class="v-btn action-btn-danger" title="Nút nguồn"
-                    @click="() => requestCommand(CAMERA_COMMANDS.Restart)">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-                   stroke-linecap="round" stroke-linejoin="round">
-                <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
-                <line x1="12" y1="2" x2="12" y2="12"></line>
-              </svg>
-              Nguồn
-            </button>
-            <button class="v-btn action-btn-secondary" title="Cài đặt camera">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-                   stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="3"></circle>
-                <path
-                    d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
-                </path>
-              </svg>
-              Cài đặt
-            </button>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+              <button class="v-btn action-btn-danger" title="Nút nguồn"
+                      @click="() => requestCommand(CAMERA_COMMANDS.Restart)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+                  <line x1="12" y1="2" x2="12" y2="12"></line>
+                </svg>
+                Nguồn
+              </button>
+              <button class="v-btn action-btn-secondary" title="Cài đặt camera">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="3"></circle>
+                  <path
+                      d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+                  </path>
+                </svg>
+                Cài đặt
+              </button>
+            </div>
           </div>
-        </div>
+        </slot>
       </div>
     </div>
   </div>
@@ -572,12 +566,23 @@ body {
   background: #000;
   overflow: hidden;
 }
+.video-wrapper {
+  position: relative;
+}
 
 .video-feed {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  /* Giả lập video */
+  position: relative;
+  display: inline-block;
+}
+
+.video-feed video {
+  display: block;
+}
+
+.video-feed canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 /* HUD Overlay (Lớp phủ thông tin) */

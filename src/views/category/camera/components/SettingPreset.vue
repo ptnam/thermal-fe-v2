@@ -9,17 +9,10 @@
                 searchDefaults: {cameraId: cameraId}
               }"
         :showSearchForm="false"
-        @addHandler="addTour"
+        @addHandler="addPreset"
         :show-btn-switch="false"
     >
     </list-template>
-    <ActionForm v-model="dialogVisible" style="min-width: 500px">
-      <add-tour-form
-          v-model:formModel="formModel"
-          title="Thêm mới"
-          @success="saveSuccess">
-      </add-tour-form>
-    </ActionForm>
   </div>
 </template>
 <script setup lang="tsx">
@@ -44,9 +37,9 @@ const cameraId = route.params.id as string
 const renderExpand = (scope: any) => {
   return (
       <div class="inline-block">
-        {(scope.row.cameraTourPresets || []).map((item: any) => (
+        {(scope.row.cameraMonitorPoints || []).map((item: any) => (
             <ElTag class="m-2" key={item.id} type="success" effect="dark">
-              {item.name}({item.time})
+              {item.name}
             </ElTag>
         ))}
       </div>
@@ -60,7 +53,6 @@ const tourCols = [
       default: (scope: any) => renderExpand(scope)
     }
   },
-  {prop: 'presetTypeObject.name', label: 'Loại'},
   {
     label: t('fields.action'),
     slots: {
@@ -87,11 +79,9 @@ const showMessage = (res: any) => {
     type: 'success',
   })
 }
-const addTour = () => {
-  formModel.value = {
-    tourName: '',
-    cameraTourPoints: [],
-  }
-  dialogVisible.value = true
+
+const emits = defineEmits(['addPreset'])
+const addPreset = () => {
+  emits("addPreset")
 }
 </script>
