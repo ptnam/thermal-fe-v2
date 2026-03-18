@@ -54,7 +54,8 @@ export default {
         point_list: 'Điểm giám sát',
         machine_station: 'Thiết bị',
         event_history_detail: 'Nhiệt độ vượt ngưỡng',
-        live_detail: "Live camera"
+        live_detail: "Live camera",
+        camera_setting: "Cài đặt góc quay"
     },
     error: {
         noPermission: `Sorry, you don't have permission to access this page.`,

@@ -2,7 +2,6 @@
 import ListTemplate from '@/components/PageTemplate/List/ListTemplate.vue'
 import {TableColumn} from '@/components/Table'
 import {useLang} from '@/hooks/web/useI18n'
-import PageContainer from '@/components/PageContainer.vue'
 import {computed, ref} from 'vue'
 import BaseDialog from '@/components/Dialog/BaseDialog.vue'
 import SelectFromConfig from '@/components/Selection/SelectFromConfig.vue'

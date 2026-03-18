@@ -114,10 +114,6 @@ const loadCamSetting = () => {
     loadingSetting.value = false
   })
 }
-const loadPinedCamera = () => {
-  visibleOrderSetting.value = true
-  loadCamSetting()
-}
 const handleNodeClick = (originItem: any) => {
   if (isCam(originItem)) {
     fullList.value = [originItem]
@@ -152,10 +148,6 @@ const collectCams = (node: any): any[] => {
 
   return result;
 };
-
-const showOrderDialog = () => {
-  visibleSortSetting.value = true
-}
 
 const openDrawer = () => {
   drawerVisible.value = true
