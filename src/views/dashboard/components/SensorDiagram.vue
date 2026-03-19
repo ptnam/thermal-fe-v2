@@ -5,7 +5,6 @@
             {{ marker?.name }}
         </l-tooltip>
     </sensor-marker>
-    {{liveMarkers}}
     <area-range :point-list="areaRangePointList" @clickMaker="(marker) => emit('handleNodeClick', marker)" />
 </template>
 

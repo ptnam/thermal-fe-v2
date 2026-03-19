@@ -15,6 +15,10 @@ const props = defineProps({
   startDraw: {
     type:Boolean,
     default: false
+  },
+  showBtnBack: {
+    type:Boolean,
+    default: true
   }
 })
 
@@ -85,6 +89,7 @@ const videoWidth = ref(0)
 const videoHeight = ref(0)
 let drawer: PolygonDrawer | null = null
 const pointValues = ref<any>([])
+const emits = defineEmits(['pointedClicked'])
 
 function startDrawing() {
   isDrawing.value = true
@@ -108,6 +113,7 @@ function startDrawing() {
             },
             (points) => {
               pointValues.value = points
+              emits("pointedClicked", points);
               nextTick(() => {
                 if (points.length >= 3 && !drawer?.isConvex()) {
                   drawer?.showFullScreenAlert(videoRef, 'không phải hình đa giác lồi, vui lòng vẽ lại!')
@@ -131,6 +137,10 @@ const stopDrawing = () => {
   if (timerId.value) {
     clearInterval(timerId.value);
   }
+}
+
+const clearAllPoint = () => {
+  drawer?.removeAllPoint();
 }
 
 const timerId = ref(0);
@@ -186,13 +196,14 @@ function measureTempAction() {
 }
 
 defineExpose({
-  startDrawing
+  startDrawing,
+  clearAllPoint
 })
 </script>
 <template>
   <header class="live-header">
     <div style="display:flex; align-items:center; gap:15px">
-      <router-link class="v-btn" title="Thu nhỏ / Quay lại"
+      <router-link v-show="showBtnBack" class="v-btn" title="Thu nhỏ / Quay lại"
                    style="text-decoration: none;
     background: rgba(255, 255, 255, 0.05);
     width: 36px;
@@ -565,9 +576,9 @@ body {
   position: relative;
   background: #000;
   overflow: hidden;
-}
-.video-wrapper {
-  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .video-feed {

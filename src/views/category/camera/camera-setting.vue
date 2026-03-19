@@ -2,7 +2,7 @@
   <div class="container main-container" >
     <div class="camera-setting">
 
-      <el-tabs v-model="activeName" type="border-card">
+      <el-tabs v-model="activeName" type="border-card" @tabChange="tabChange">
         <el-tab-pane label="Quản lý tour" name="1">
           <setting-tour></setting-tour>
         </el-tab-pane>
@@ -13,11 +13,27 @@
             <stream-control
                 ref="streamRef"
                 :stream-key="cameraId"
+                :show-btn-back="false"
+                @pointedClicked="pointedClicked"
             >
               <template v-slot:sidebar>
                 <div class="mt-4 flex flex-col">
                   <span class="text-sm">Điều khiển camera và chọn các điểm đo</span>
-                  <el-button class="mt-2" type="primary">Lưu điểm đo</el-button>
+                  <div>
+                    <el-tag
+                      v-for="(item) in points"
+                      :key="JSON.stringify(item)"
+                      :type="item.success"
+                      effect="dark"
+                      class=""
+                    >
+                      {{ item }}
+                    </el-tag>
+                  </div>
+                  <div  class="mt-2">
+                    <el-button :disabled="!points.length" type="primary" @click="savePreset">Lưu điểm đo</el-button>
+                    <el-button type="danger" @click="clearPoints">Xóa điểm đo</el-button>
+                  </div>
                 </div>
               </template>
             </stream-control>
@@ -40,6 +56,28 @@ const streamRef = ref();
 
 const startDraw = () => {
   activeName.value = '3'
-  streamRef?.value?.startDrawing()
+  setTimeout(() => {
+    streamRef?.value?.startDrawing()
+  }, 1000);
+}
+
+const tabChange = () => {
+  if (activeName.value == '3') {
+    setTimeout(() => {
+      streamRef?.value?.startDrawing()
+    }, 1000);
+  }
+}
+const points = ref<any>([])
+const pointedClicked = (point: any) => {
+  points.value = point
+}
+
+const clearPoints = () => {
+  streamRef?.value?.clearAllPoint()
+}
+
+const savePreset = () => {
+
 }
 </script>

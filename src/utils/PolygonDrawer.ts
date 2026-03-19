@@ -138,15 +138,13 @@ export class PolygonDrawer {
 
         const box = document.createElement('div')
         box.className =
-            "rounded-xl shadow-lg p-6 max-w-md w-full text-center transform transition-all scale-100"
+            "rounded-xl shadow-lg p-6 max-w-md w-full bg-[#1E293B] text-center transform transition-all scale-100"
         box.innerHTML = `
         <div class="text-2xl font-bold mb-4">${message}</div>
         <button class="px-4 py-2 rounded-lg font-semibold">
             Đóng
         </button>
     `
-
-        // Nút đóng
         const button = box.querySelector('button')
         button?.addEventListener('click', () => {
             overlay.remove()

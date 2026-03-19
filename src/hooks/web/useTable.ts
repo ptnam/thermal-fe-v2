@@ -128,7 +128,6 @@ export const useTable = <T extends Record<string, any> = Record<string, any>>(co
                 cancelButtonText: t('common.cancel'),
                 type: 'warning',
             }).then(async () => {
-              debugger
                 const res = await fetchDelApi(args)
                 if (res) {
                     ElMessage.success(t('common.delSuccess'))
