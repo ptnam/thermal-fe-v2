@@ -16,7 +16,9 @@
     <ActionForm v-model="dialogVisible" style="min-width: 500px">
       <add-tour-form
           v-model:formModel="formModel"
-          title="Thêm mới">
+          title="Thêm mới"
+          @success="handleSuccess"
+      >
       </add-tour-form>
     </ActionForm>
   </div>
@@ -27,7 +29,7 @@ import {useLang} from "@/hooks/web/useI18n";
 import ApiButton from "@/components/Button/ApiButton.vue";
 import {ArrowRight, SwitchButton} from "@element-plus/icons-vue";
 import {apiDeleteTour, getTourList, playTourApi} from "@/api/camera";
-import { ref} from 'vue'
+import {ref} from 'vue'
 import {useRoute} from "vue-router";
 import DeleteCircleButton from "@/components/Button/DeleteCircleButton.vue";
 import ActionForm from '@/components/Form/ActionForm.vue'
@@ -97,7 +99,7 @@ const elTableRef = ref<InstanceType<typeof ListTemplate>>()
 const dialogVisible = ref(false)
 
 const openDelete = (row: any) => {
-  elTableRef?.value?.deleteRow(()=> apiDeleteTour({
+  elTableRef?.value?.deleteRow(() => apiDeleteTour({
     "cameraId": cameraId,
     "tourId": row.tourId
   }))
@@ -115,5 +117,10 @@ const addTour = () => {
     cameraTourPresets: [],
   }
   dialogVisible.value = true
+}
+
+const handleSuccess = () => {
+  elTableRef?.value?.getList()
+  dialogVisible.value = false
 }
 </script>

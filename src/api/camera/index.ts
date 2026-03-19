@@ -89,3 +89,7 @@ export const presetList = (params: object): Promise<IResponse> => {
 export const saveAiServicesApi = (data: any): Promise<IResponse> => {
   return request.post({url: `/api/cameras/aiservices`, data: data})
 }
+
+export const addPreset = (data: any): Promise<IResponse> => {
+  return request.post({url: 'api/Cameras/addPreset', data: data})
+}
