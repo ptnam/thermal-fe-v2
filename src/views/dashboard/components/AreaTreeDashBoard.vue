@@ -4,8 +4,6 @@ import {TreeInstance} from 'element-plus'
 import {isCam} from "@/utils/cameraUtils";
 import {h} from 'vue'
 import {getElementLabelLine} from "element-tree-line";
-import {CAMERA_TYPE_COLOR} from "@/constants";
-import {CollectionTag, MapLocation, VideoCamera} from "@element-plus/icons-vue";
 
 const ElementTreeLine = getElementLabelLine(h)
 

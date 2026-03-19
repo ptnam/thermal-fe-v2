@@ -14,7 +14,7 @@
             v-for="(item, index) in newsList"
             :key="index" href="#"
             class="notif-item"
-            @click="() => router.push({name: 'event_history_detail', query: {id:item.id, dataTime:item.dataTime}})"
+            @click="() => redirect(item)"
         >
           <div class="notif-title">{{ item?.warningEventName }}</div>
           <div class="notif-main-row">
@@ -38,9 +38,9 @@
 
 <script setup lang="ts">
 import {onMounted, ref} from 'vue'
-import {Bell} from '@element-plus/icons-vue'
 import {lastestBriefApi} from '@/api/notification'
-import router from "@/router";
+import { useRouter } from 'vue-router'
+const router = useRouter();
 
 const newsList = ref<any[]>([])
 const total = ref();
@@ -50,6 +50,10 @@ const getNotices = () => {
     newsList.value = res.data?.notifications ?? []
     total.value = res.data.total ?? ''
   })
+}
+
+const redirect = (item: any) => {
+  router.push({name: 'event_history_detail', query: {id:item.id, dataTime:item.dataTime}})
 }
 const toggleNotifDropdown = () => {
   visibleDropdown.value = !visibleDropdown.value;

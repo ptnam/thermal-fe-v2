@@ -52,7 +52,7 @@ const columns = computed<TableColumn[]>(() => [
 const dialogVisible = ref(false)
 const elTableRef = ref<InstanceType<typeof ListTemplate>>()
 
-const formModel = ref({})
+const formModel = ref<any>({})
 
 const openDialogAdd = () => {
   formModel.value = {
@@ -69,19 +69,11 @@ const detailLoading = ref(false)
 const openDialogEdit = (scope: any) => {
   detailLoading.value = true
   detailMachineApi(scope.row.id)
-      .then((res) => {
-        if (!res.data.machineDetail) {
-          res.data.machineDetail = {}
-        }
-        if (!res.data.machineTransformer) {
-          res.data.machineTransformer = {}
-        }
-        if (!res.data.machineCircuitBreaker) {
-          res.data.machineCircuitBreaker = {}
-        }
-        if (!res.data.machineDisconnectingSwitch) {
-          res.data.machineDisconnectingSwitch = {}
-        }
+      .then((res: any) => {
+        res.data.machineDetail ??= {}
+        res.data.machineTransformer ??= {}
+        res.data.machineCircuitBreaker ??= {}
+        res.data.machineDisconnectingSwitch ??= {}
         formModel.value = res.data
         dialogVisible.value = true
       })

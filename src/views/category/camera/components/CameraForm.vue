@@ -137,11 +137,10 @@ import {FormRules} from 'element-plus'
 import {getAllTreeAreaApi} from '@/api/area'
 import {addCameraApi, editCameraApi, getAllCamerasApi} from '@/api/camera'
 import InputNumber from '@/components/Input/InputNumber.vue'
-import {CAMERA_NORMAL_TYPE, CAMERA_THERMAL_TYPE, MAP_TYPE_MAP, MAP_TYPE_PICTURE} from '@/constants'
+import {CAMERA_NORMAL_TYPE, CAMERA_THERMAL_TYPE, MAP_TYPE_PICTURE} from '@/constants'
 import VirtualizedSelectFromUrl from "@/components/Selection/VirtualizedSelectFromUrl.vue";
 import {removeAllObjectInObject} from "@/utils/objectUtils";
 import TreeSelectRemote from "@/components/Tree/TreeSelectRemote.vue";
-import LatLngPicker from "@/components/Map/LatLngPicker.vue";
 import LatLngImagePicker from "@/components/Map/LatLngImagePicker.vue";
 
 const props = defineProps({

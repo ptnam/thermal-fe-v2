@@ -101,7 +101,6 @@ import LatLngPicker from '@/components/Map/LatLngPicker.vue'
 import ImageUploader from '@/components/Input/ImageUploader.vue'
 import {MAP_TYPE_PICTURE} from '@/constants'
 import {removeAllObjectInObject} from "@/utils/objectUtils";
-import InputNumber from "@/components/Input/InputNumber.vue";
 
 const props = defineProps({
   formModel: {

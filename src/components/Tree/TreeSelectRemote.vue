@@ -6,7 +6,6 @@
       :check-strictly="true"
       value-key="id"
       :props="{
-        value: 'id',
         label: 'name',
         children: 'children',
       }"
@@ -19,7 +18,7 @@
 <script setup lang="ts">
 import {onMounted, ref} from 'vue'
 
-const modelValue = defineModel('modelValue', {required: true})
+const modelValue = defineModel<any>('modelValue', {required: true})
 const props = defineProps<{
   requestFn: (data?: Record<string, any>) => Promise<any>
 }>()

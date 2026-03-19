@@ -21,7 +21,7 @@
 
 <script setup lang="tsx">
 import FormWrapper from '@/components/Form/FormWrapper.vue'
-import {computed, ref} from 'vue'
+import {computed} from 'vue'
 import {rule} from '@/utils/validate'
 import {isFormEditing} from '@/utils/is'
 import {FormRules, ElInput} from 'element-plus'
@@ -30,7 +30,7 @@ import ObjectInfiniteSelect from "@/components/Selection/ObjectInfiniteSelect.vu
 import {addTour, presetList} from "@/api/camera";
 import {useRoute} from "vue-router";
 
-const formModel = defineModel('formModel', {required: true})
+const formModel = defineModel<any>('formModel')
 const route = useRoute()
 const cameraId = route.params.id as string
 const tourPointColumns = [

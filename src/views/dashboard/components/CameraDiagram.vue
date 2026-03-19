@@ -16,9 +16,9 @@ import CameraMarker from '@/components/Map/CameraMarker.vue';
 
 const emit = defineEmits(['showMarkerInfo'])
 
-const props = defineProps({
+ defineProps({
     liveMarkers: {
-        type: Array,
+        type: Array<any>,
         default: () => []
     },
 });

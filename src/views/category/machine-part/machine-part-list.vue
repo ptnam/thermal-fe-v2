@@ -45,8 +45,8 @@ const route = useRoute()
 const machineTypeValue = ref(parseInt(route.params.machineTypeId as string))
 const machineNameValue = ref("")
  onMounted(() => {
-   getDetailMachineTypeApi(machineTypeValue.value).then(res => {
-     machineNameValue.value = res.data.name
+   getDetailMachineTypeApi(machineTypeValue.value).then((res:any) => {
+     machineNameValue.value = res.data?.name
    })
  })
 const openDialogAdd = () => {

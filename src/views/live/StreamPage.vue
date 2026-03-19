@@ -79,7 +79,6 @@ const currentPage = ref(1)
 
 const loadingSetting = ref(false)
 const visibleOrderSetting = ref(true)
-const visibleSortSetting = ref(false)
 const drawerVisible = ref(false)
 const environmentTemperature = ref<any>(null)
 const selectedAreaId = ref(null)

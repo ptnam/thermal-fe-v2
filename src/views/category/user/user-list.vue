@@ -49,10 +49,20 @@ const columns = computed<TableColumn[]>(() => [
 const dialogVisible = ref(false)
 const elTableRef = ref<InstanceType<typeof ListTemplate>>()
 
-const formModel = ref({})
+const formModel = ref({
+  id: null,
+  username: '',
+  firstName: '',
+  lastMiddleName: '',
+  email: '',
+  phone: '',
+  password: '',
+  status: STATUS_ACTIVE,
+})
 
 const openDialogAdd = () => {
   formModel.value = {
+    id: null,
     username: '',
     firstName: '',
     lastMiddleName: '',

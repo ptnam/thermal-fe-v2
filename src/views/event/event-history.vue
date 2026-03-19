@@ -1,13 +1,11 @@
 <script setup lang="tsx">
 import ListTemplate from '@/components/PageTemplate/List/ListTemplate.vue'
-import PageContainer from '@/components/PageContainer.vue'
 import { nextTick, onMounted, onUnmounted, ref } from 'vue'
 import { getAllTreeAreaApi } from '@/api/area'
 import VirtualizedSelectFromUrl from '@/components/Selection/VirtualizedSelectFromUrl.vue'
 import SearchButton from '@/components/Button/SearchButton.vue'
 import ExportButton from '@/components/Button/ExportButton.vue'
 import { listThermalsApi, thermalExportApi } from '@/api/thermal-data'
-import { getAllMachineApi, getComponentMachineApi } from '@/api/machine'
 import TreeSelectRemote from '@/components/Tree/TreeSelectRemote.vue'
 import dayjs from 'dayjs'
 import SelectFromConfig from '@/components/Selection/SelectFromConfig.vue'
@@ -40,7 +38,7 @@ const columns = ref(defaultCols)
 const elTableRef = ref<ComponentRef<typeof ListTemplate>>()
 
 const machineRef = ref<InstanceType<typeof VirtualizedSelectFromUrl>>()
-const machineComponentRef = ref<InstanceType<typeof VirtualizedSelectFromUrl>>()
+// const machineComponentRef = ref<InstanceType<typeof VirtualizedSelectFromUrl>>()
 const groupFields = ['dateData', 'timeData', 'areaName', 'machineName', 'orderNumber']
 function convertToTableData(items) {
   const sorted = _.orderBy(
@@ -133,18 +131,18 @@ const objectSpanMethod = ({ row, column, columnIndex }) => {
     colspan: 1,
   }
 }
-const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
-  const key = data.column.property
-  if (key.includes('compareResultObject')) {
-    const field = key.split('.')[1]
-    const code = data.row?.dicThermalDataResults?.[field]?.compareResultObject?.code ?? ''
-    const backgroundColor = STATUS_COLOR_MAP[code]
-    return {
-      backgroundColor,
-      color: backgroundColor ? 'white' : 'inherit',
-    }
-  }
-}
+// const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
+//   const key = data.column.property
+//   if (key.includes('compareResultObject')) {
+//     const field = key.split('.')[1]
+//     const code = data.row?.dicThermalDataResults?.[field]?.compareResultObject?.code ?? ''
+//     const backgroundColor = STATUS_COLOR_MAP[code]
+//     return {
+//       backgroundColor,
+//       color: backgroundColor ? 'white' : 'inherit',
+//     }
+//   }
+// }
 
 const handleAreaChange = (searchParams: any) => {
   nextTick(() => {
@@ -154,10 +152,6 @@ const handleAreaChange = (searchParams: any) => {
   })
 }
 
-const machineChange = (searchParams: any) => {
-  searchParams.machineComponentId = null
-  machineComponentRef?.value?.fetch()
-}
 
 onMounted(() => {
   createSignalRConnection()

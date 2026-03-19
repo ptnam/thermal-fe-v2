@@ -4,7 +4,7 @@ import { ElDrawer} from "element-plus";
 
 const emits = defineEmits(['save'])
 const dialogRef = ref<InstanceType<typeof ElDrawer>>()
-const props = defineProps({
+defineProps({
   title: {type: String}
 })
 function cancelDialog() {

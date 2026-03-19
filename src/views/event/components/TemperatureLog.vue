@@ -156,13 +156,13 @@
   </div>
 </template>
 <script setup lang="ts">
-import VirtualizedSelectFromUrl from "@/components/Selection/VirtualizedSelectFromUrl.vue";
 import {
-  getAllMachineApi, getMachineSettingApi,
+   getMachineSettingApi,
+  getAllMachineApi,
   getMultiComponentsMachineApi, saveMachineSettingApi
 } from '@/api/machine'
 import useRequest from "@/hooks/web/useRequest";
-import {computed, nextTick, onMounted, ref} from 'vue'
+import {computed, onMounted, ref} from 'vue'
 import VueApexChart from "vue3-apexcharts";
 import {getAllAreaApi} from "@/api/area";
 import {
@@ -191,7 +191,7 @@ const chartOptions: ApexOptions = {
     height: 450,
     type: 'area',
     toolbar: {show: false},
-    animations: {enabled: true, easing: 'easeinout', speed: 800}
+    animations: {enabled: true, speed: 800}
   },
   colors: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444'],
   stroke: {curve: 'smooth', width: 3},
@@ -249,8 +249,8 @@ const searchTypeOptions = [
 const monitorPoint = ref();
 const dialogVisible = ref(false)
 const searchParams = ref({
-  areaId: null,
-  machineIds: null,
+  areaId: undefined,
+  machineIds: undefined,
   machineComponentIds: [],
   monitorPointId: null,
   monitorPointType: null,
@@ -260,9 +260,9 @@ const searchParams = ref({
 })
 
 const chartRef = ref<ApexCharts | null>(null)
-const machineRef = ref<InstanceType<typeof VirtualizedSelectFromUrl>>()
-const machineComponentRef = ref<InstanceType<typeof VirtualizedSelectFromUrl>>()
-const monitorPointIdRef = ref<InstanceType<typeof VirtualizedSelectFromUrl>>()
+// const machineRef = ref<InstanceType<typeof VirtualizedSelectFromUrl>>()
+// const machineComponentRef = ref<InstanceType<typeof VirtualizedSelectFromUrl>>()
+// const monitorPointIdRef = ref<InstanceType<typeof VirtualizedSelectFromUrl>>()
 
 const dateRange = computed<[string, string] | []>({
   get() {
@@ -305,33 +305,33 @@ const search = () => {
   })
 }
 
+//
+// const changeAreaId = () => {
+//   searchParams.value['machineIds'] = null
+//   searchParams.value['machineComponentIds'] = []
+//   searchParams.value['monitorPointId'] = null
+//   searchParams.value['monitorPointType'] = null
+//   nextTick(() => {
+//     machineRef?.value?.fetch()
+//   })
+// }
+// const changeMachine = () => {
+//   searchParams.value['machineComponentIds'] = []
+//   searchParams.value['monitorPointIds'] = null
+//   searchParams.value['monitorPointType'] = null
+//   machineComponentRef?.value?.fetch()
+// }
 
-const changeAreaId = () => {
-  searchParams.value['machineIds'] = null
-  searchParams.value['machineComponentIds'] = []
-  searchParams.value['monitorPointId'] = null
-  searchParams.value['monitorPointType'] = null
-  nextTick(() => {
-    machineRef?.value?.fetch()
-  })
-}
-const changeMachine = () => {
-  searchParams.value['machineComponentIds'] = []
-  searchParams.value['monitorPointIds'] = null
-  searchParams.value['monitorPointType'] = null
-  machineComponentRef?.value?.fetch()
-}
-
-const changeMachineComponent = () => {
-  searchParams.value['monitorPointIds'] = null
-  searchParams.value['monitorPointType'] = null
-  monitorPointIdRef?.value?.fetch()
-}
-
-const changeMonitorPoint = (pointItem: any) => {
-  // searchParams.value['monitorPointId'] = pointItem.id
-  searchParams.value['monitorPointType'] = pointItem.monitorPointType
-}
+// const changeMachineComponent = () => {
+//   searchParams.value['monitorPointIds'] = null
+//   searchParams.value['monitorPointType'] = null
+//   monitorPointIdRef?.value?.fetch()
+// }
+//
+// const changeMonitorPoint = (pointItem: any) => {
+//   // searchParams.value['monitorPointId'] = pointItem.id
+//   searchParams.value['monitorPointType'] = pointItem.monitorPointType
+// }
 
 const {onRequest: saveSettingRequest, isLoading: saveSettingLoading} = useRequest();
 

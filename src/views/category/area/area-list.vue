@@ -11,7 +11,6 @@ import EditCircleButton from '@/components/Button/EditCircleButton.vue'
 import DeleteCircleButton from '@/components/Button/DeleteCircleButton.vue'
 import SearchButton from "@/components/Button/SearchButton.vue";
 import DrawerForm from "@/components/Form/DrawerForm.vue";
-import UserForm from "@/views/category/user/components/UserForm.vue";
 
 const { t } = useLang()
 const renderActionColumn = (scope: any) => {
@@ -48,7 +47,7 @@ const columns = computed<TableColumn[]>(() => [
 const dialogVisible = ref(false)
 const elTableRef = ref<InstanceType<typeof ListTemplate>>()
 
-const formModel = ref({})
+const formModel = ref<any>({})
 
 const openDialogAdd = () => {
   formModel.value = {

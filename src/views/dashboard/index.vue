@@ -171,6 +171,7 @@ const areaItem = ref({
   latitude: 21.0173,
   longitude: 105.8545,
   photoPath: '',
+  name: '',
   emapPhotoPath: '',
 })
 

@@ -16,21 +16,17 @@
   </div>
 </template>
 <script setup lang="tsx">
-import {ElMessage, ElTag} from "element-plus";
+import { ElTag} from "element-plus";
 import {useLang} from "@/hooks/web/useI18n";
-import ApiButton from "@/components/Button/ApiButton.vue";
-import {ArrowRight, SwitchButton} from "@element-plus/icons-vue";
-import {apiDeleteTour, deletePreset, getTourList, playTourApi, presetList} from "@/api/camera";
+import {deletePreset, presetList} from "@/api/camera";
 import {ref} from 'vue'
 import {useRoute} from "vue-router";
 import DeleteCircleButton from "@/components/Button/DeleteCircleButton.vue";
-import ActionForm from '@/components/Form/ActionForm.vue'
-import AddTourForm from "@/views/category/camera/components/AddTourForm.vue";
 import ListTemplate from "@/components/PageTemplate/List/ListTemplate.vue";
 
 
 const {t} = useLang()
-const formModel = ref({})
+// const formModel = ref({})
 const route = useRoute()
 const cameraId = route.params.id as string
 
@@ -65,7 +61,7 @@ const tourCols = [
   },
 ]
 const elTableRef = ref<InstanceType<typeof ListTemplate>>()
-const dialogVisible = ref(false)
+// const dialogVisible = ref(false)
 
 const openDelete = (row: any) => {
   elTableRef?.value?.deleteRow(() => deletePreset(row.presetId, {
@@ -73,12 +69,12 @@ const openDelete = (row: any) => {
     "presetId": row.presetId
   }))
 }
-const showMessage = (res: any) => {
-  ElMessage({
-    message: res.message,
-    type: 'success',
-  })
-}
+// const showMessage = (res: any) => {
+//   ElMessage({
+//     message: res.message,
+//     type: 'success',
+//   })
+// }
 
 const emits = defineEmits(['addPreset'])
 const addPreset = () => {

@@ -10,7 +10,6 @@ import {thermalDataByAreaApi} from "@/api/thermal-data";
 
 const props = defineProps({
   streamKey: {
-    type: [String, Number],
     required: true,
   },
   startDraw: {
@@ -36,10 +35,10 @@ videoStream.addEventListener('stream-error', () => {
 const isPlaying = ref(false)
 const isDrawing = ref(false)
 const loading = ref(false)
-const cam = ref({});
+const cam = ref<any>({});
 const preCommand = ref();
 const {onRequest} = useRequest();
-const requestCommand = (command: number) => {
+const requestCommand = (command: number, other: any = null) => {
   onRequest(sendCommandCameraApi, {
     cameraId: props.streamKey,
     speed: speed.value,
@@ -47,6 +46,7 @@ const requestCommand = (command: number) => {
     preCommand: preCommand.value
   })
   preCommand.value = command
+  console.log(other)
 }
 const speed = ref(3);
 onMounted(() => {
@@ -79,7 +79,7 @@ onMounted(() => {
 });
 
 const press = (command) => requestCommand(CAMERA_COMMANDS[command])
-const release = () => requestCommand(CAMERA_COMMANDS.Stop)
+const release = (command) => requestCommand(CAMERA_COMMANDS.Stop, command)
 
 const videoWidth = ref(0)
 const videoHeight = ref(0)
@@ -92,7 +92,7 @@ function startDrawing() {
     const c = canvasRef.value
     const v = videoRef.value?.querySelector('video') as HTMLVideoElement
     if (c && v) {
-      const rect = v.getBoundingClientRect()
+      // const rect = v.getBoundingClientRect()
 
       // size canvas theo video thật
       c.width = v.clientWidth
@@ -152,7 +152,7 @@ function measureTemp() {
 
 const {onRequest: measureTempRequest, isLoading: measureTempLoading} = useRequest()
 const visibleMeasurement = ref(false)
-const measurementResult = ref({})
+const measurementResult = ref()
 
 function measureTempAction() {
   const video = videoRef.value?.querySelector('video') as HTMLVideoElement
@@ -207,7 +207,7 @@ defineExpose({
               d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"></path>
         </svg>
         <div>
-          <div style="line-height:1.2">{{ cam.code }}</div>
+          <div style="line-height:1.2">{{ cam?.code }}</div>
           <div style="font-size:11px; color:var(--text-sub); font-weight:400">{{ cam?.area?.name }}</div>
         </div>
       </div>

@@ -173,14 +173,13 @@ import 'element-tree-line/dist/style.css'
 import MachineSettingDialog from "@/views/category/machine/components/MachineSettingDialog.vue";
 import RemoteTable from "@/components/Table/RemoteTable.vue";
 import SelectFromConfig from "@/components/Selection/SelectFromConfig.vue";
-import {useConfigStore} from "@/store/modules/configStore";
 import MachineDetail from "@/views/category/machine/components/MachineDetail.vue";
 
 const machinePartTableRef = ref<InstanceType<typeof RemoteTable>>()
 
 const visibleSetting = ref(false)
 
-const formModel = defineModel('formModel', { required: true })
+const formModel = defineModel<any>('formModel')
 const renderCameraPointTags = (cameraPoints: any) => {
   return (
       <>
@@ -294,7 +293,6 @@ const changeMachineTypeId = () => {
 const machineTypeCode = ref(null);
 
 onMounted(() => {
-  debugger
   machineTypeCode.value = formModel.value?.machineType?.code
 })
 

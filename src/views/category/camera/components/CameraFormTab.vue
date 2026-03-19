@@ -25,7 +25,7 @@ import {isFormEditing} from '@/utils/is'
 import SetViewingAngle from '@/views/category/camera/components/SetViewingAngle.vue'
 import CameraForm from '@/views/category/camera/components/CameraForm.vue'
 
-const formModel = defineModel('formModel', { required: true })
+const formModel = defineModel<any>('formModel')
 
 const activeName = ref('first')
 const emits = defineEmits(['success'])

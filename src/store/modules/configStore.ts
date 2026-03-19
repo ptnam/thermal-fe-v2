@@ -16,19 +16,31 @@ export const useConfigStore = defineStore('config', {
         this.configs = res.data
       })
     },
-    convertToSelect(key: string, colVal = 'id', colLabel = 'name', filter = null) {
+    convertToSelect(key: string, colVal = 'id', colLabel = 'name', filter: any = null) {
       return this.convertOptions(this.getConfig(key), colVal, colLabel, filter)
     },
-    convertOptions(config: object, colVal = 'id', colLabel = 'name', filter = null) {
-      let rs = []
-      for (let index in config) {
+    convertOptions(
+      config: any,
+      colVal: any = 'id',
+      colLabel: any = 'name',
+      filter: any = null
+    ) {
+      const rs: any[] = []
+
+      for (const index in config) {
         if (!filter) {
-          rs.push({[colVal]: config[index][colVal], [colLabel]: config[index][colLabel]})
-        } else if(filter(config[index]))
-        {
-          rs.push({[colVal]: config[index][colVal], [colLabel]: config[index][colLabel]})
+          rs.push({
+            [colVal]: config[index][colVal],
+            [colLabel]: config[index][colLabel],
+          })
+        } else if (filter(config[index])) {
+          rs.push({
+            [colVal]: config[index][colVal],
+            [colLabel]: config[index][colLabel],
+          })
         }
       }
+
       return rs
     },
   },

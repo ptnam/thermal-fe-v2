@@ -83,9 +83,7 @@ const remoteMethod = () => {
       })
   }
 }
-const emit = defineEmits<{
-  (e: 'update:modelValue', value: Array<string | number>): void
-}>()
+const emit = defineEmits(["update:modelValue"])
 
 const isOpen = ref(props.defaultOpen)
 

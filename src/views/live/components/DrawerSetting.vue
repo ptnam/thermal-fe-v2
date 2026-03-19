@@ -2,7 +2,6 @@
 import {getAllTreeAreaApi} from "@/api/area";
 import SimpleAreaTree from "@/components/Tree/SimpleAreaTree.vue";
 import {computed, ref, watch} from 'vue'
-import {number} from 'vue-types'
 import {BaseTable} from "@/components/Table/index";
 import {vDraggable} from "@/components/Table/v-draggable";
 import {updateCameraSettingApi} from "@/api/camera-setting";
@@ -18,11 +17,11 @@ const emit = defineEmits([
 
 const props = defineProps({
   listMarked: {
-    type: Array,
+    type: Array<any>,
     required: true
   },
   screenNumber: {
-    type: number,
+    type: Number,
     required: false
   },
 })
@@ -73,7 +72,7 @@ const arrayMoveInPlace = (array: any[], fromIndex: number, toIndex: number) => {
   return array;
 }
 
-const treeRef = ref(null)
+const treeRef = ref()
 const treeCheckChange = (r: { mapType: any; }) => {
   if (!r.mapType) {
     emit('treeChange', treeRef?.value?.treeRef.getCheckedNodes().filter(item => !item.mapType))
@@ -148,7 +147,7 @@ const applySettings = () => {
               </div>
             </div>
           </div>
-          <div :class="['layout-option', screenNumber === 4 ? 'active': '']" @click="()=>changeGrid(4)">
+          <div :class="['layout-option', screenNumber == 4 ? 'active': '']" @click="()=>changeGrid(4)">
             <div class="grid-icon" style="display:grid; grid-template-columns:1fr 1fr; gap:3px;">
               <div style="width:11px; height:8px; border:1.5px solid currentColor; border-radius:2px;">
               </div>
@@ -160,7 +159,7 @@ const applySettings = () => {
               </div>
             </div>
           </div>
-          <div :class="['layout-option', screenNumber === 9 ? 'active': '']" @click="()=>changeGrid(9)">
+          <div :class="['layout-option', screenNumber == 9 ? 'active': '']" @click="()=>changeGrid(9)">
             <div class="grid-icon" style="display:grid; grid-template-columns:repeat(3, 1fr); gap:2px;">
               <div style="width:7px; height:5px; border:1px solid currentColor; border-radius:1px; opacity:0.6;">
               </div>

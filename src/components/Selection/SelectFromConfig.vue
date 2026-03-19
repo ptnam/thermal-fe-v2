@@ -20,7 +20,7 @@ const props = defineProps({
   colValue: {type: String, required: false, default: 'id'},
   filter: {type: Function, required: false},
 })
-const options = ref([])
+const options = ref<any[]>([])
 
 const reloadOption = () => {
   options.value = configStore.convertToSelect(props.keyConfig, props.colValue, props.colLabel, props.filter)

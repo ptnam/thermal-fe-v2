@@ -16,7 +16,7 @@ import SensorMarker from "@/components/Map/SensorMarker.vue";
 
 const props = defineProps({
     liveMarkers: {
-        type: Array,
+        type: Array<any>,
         default: () => []
     },
     areaRangePointList: {

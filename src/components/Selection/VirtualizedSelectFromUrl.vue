@@ -31,7 +31,7 @@ const props = defineProps({
   colValue: {type: String, required: false, default: 'id'},
   colLabel: {type: String, required: false, default: 'name'},
 })
-const options = ref([])
+const options = ref<any[]>([])
 const fetch = async () => {
   const res = await props.requestFn()
   options.value = configStore.convertOptions(res.data, props.colValue, props.colLabel)
