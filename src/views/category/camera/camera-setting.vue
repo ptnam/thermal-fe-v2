@@ -105,7 +105,7 @@ const cameraId = route.params.id as string
 const streamRef = ref();
 const ruleFormRef = ref<FormInstance>()
 const presetFormRef = ref<FormInstance>()
-const formModel = ref({
+const formModel = ref<any>({
   "cameraId": cameraId,
   "name": "",
   "thermalAreas": []
@@ -163,7 +163,7 @@ const clearPoints = () => {
 }
 
 const visibleThermalArea = ref(false)
-const thermalAreaForm = ref({})
+const thermalAreaForm = ref<any>({})
 const openDialogThermalAreas = () => {
   thermalAreaForm.value = {
     "name": "",

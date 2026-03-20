@@ -6,13 +6,14 @@
         <el-input v-model="formModel.tourName"/>
       </el-form-item>
       <el-form-item label="Góc quay " prop="cameraTourPresets" :error="formErrors.Name">
-        <object-infinite-select
+        <object-select-from-url
             :request-fn="presetList"
             :appendQuery="{cameraId: cameraId}"
             v-model="formModel.cameraTourPresets"
             multiple
             filterable placeholder="Chọn điểm tour"
-        ></object-infinite-select>
+            col-value="presetId"
+        ></object-select-from-url>
       </el-form-item>
       <base-table :data="formModel.cameraTourPresets" :columns="tourPointColumns"></base-table>
     </template>

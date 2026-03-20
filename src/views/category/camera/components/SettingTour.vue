@@ -16,7 +16,7 @@
     <ActionForm v-model="dialogVisible" style="min-width: 500px">
       <add-tour-form
           v-model:formModel="formModel"
-          title="Thêm mới"
+          :title="formModel.id ? 'Cập nhật':'Thêm mới'"
           @success="handleSuccess"
       >
       </add-tour-form>
@@ -89,6 +89,7 @@ const tourCols = [
                 round={true}
             >
             </ApiButton>
+            <EditCircleButton onClick={() => openDialogEdit(row)} />
             <DeleteCircleButton onClick={() => openDelete(row)}/>
           </div>
       ),
@@ -98,6 +99,11 @@ const tourCols = [
 const elTableRef = ref<InstanceType<typeof ListTemplate>>()
 const dialogVisible = ref(false)
 
+const openDialogEdit = (row: any) => {
+  debugger
+  formModel.value = JSON.parse(JSON.stringify(row))
+  dialogVisible.value = true
+}
 const openDelete = (row: any) => {
   elTableRef?.value?.deleteRow(() => apiDeleteTour({
     "cameraId": cameraId,

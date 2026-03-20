@@ -24,6 +24,7 @@ const props = defineProps({
   colValue: {type: String, required: false, default: 'id'},
   colLabel: {type: String, required: false, default: 'name'},
   colDisabled: {type: String, required: false, default: 'disabled'},
+  appendQuery: { type: [Object], required: false },
   immediate: {type: Boolean, required: false, default: true},
 })
 const options = ref<any[]>([])
@@ -35,7 +36,7 @@ onMounted(async () => {
 })
 
 const fetch = async () => {
-  const res = await props.requestFn()
+  const res = await props.requestFn(props.appendQuery)
   options.value = res.data
   loading.value = false
 }
