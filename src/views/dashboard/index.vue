@@ -1,113 +1,117 @@
 <template>
 
   <div class="container main-container">
-    <div class="grid">
-      <div class="kpi-row">
-        <div class="card kpi-card">
-          <div class="kpi-label-group">
-            <div class="kpi-lbl">Tổng Camera</div>
-            <div class="kpi-val">{{ 0 }}</div>
-          </div>
-          <div class="kpi-icon bg-blue">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M23 7l-7 5 7 5V7z" />
-              <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
-            </svg>
-          </div>
-        </div>
-        <div class="card kpi-card">
-          <div class="kpi-label-group">
-            <div class="kpi-lbl">Địa điểm giám sát</div>
-            <div class="kpi-val">2</div>
-          </div>
-          <div class="kpi-icon bg-purple">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-              <circle cx="12" cy="10" r="3" />
-            </svg>
-          </div>
-        </div>
-        <div class="card kpi-card">
-          <div class="kpi-label-group">
-            <div class="kpi-lbl">Cảnh báo Mới</div>
-            <div class="kpi-val" style="color:var(--danger)">5</div>
-          </div>
-          <div class="kpi-icon bg-red">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-              <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-            </svg>
-          </div>
-        </div>
-        <div class="card kpi-card">
-          <div style="flex: 1;">
-            <div class="kpi-lbl">Nhiệt độ Môi trường</div>
-            <div class="region-temp-list-compact">
-              <div class="temp-item-compact"><label>Bắc</label><b>22°C</b></div>
-              <div class="temp-item-compact"><label>Trung</label><b>28°C</b></div>
-              <div class="temp-item-compact"><label>Nam</label><b>34°C</b></div>
+    <data-fetcher :requestFn="summariseInfoApi">
+      <template v-slot="{ data }">
+        <div class="grid">
+          <div class="kpi-row">
+            <div class="card kpi-card">
+              <div class="kpi-label-group">
+                <div class="kpi-lbl">Tổng Camera</div>
+                <div class="kpi-val">{{ data?.numberOfCameras }}</div>
+              </div>
+              <div class="kpi-icon bg-blue">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M23 7l-7 5 7 5V7z" />
+                  <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+                </svg>
+              </div>
             </div>
+            <div class="card kpi-card">
+              <div class="kpi-label-group">
+                <div class="kpi-lbl">Địa điểm giám sát</div>
+                <div class="kpi-val">{{ data?.numberOfAreas }}</div>
+              </div>
+              <div class="kpi-icon bg-purple">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+              </div>
+            </div>
+            <div class="card kpi-card">
+              <div class="kpi-label-group">
+                <div class="kpi-lbl">Cảnh báo Mới</div>
+                <div class="kpi-val" style="color:var(--danger)">{{ data?.totalNotifications }}</div>
+              </div>
+              <div class="kpi-icon bg-red">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                  <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                </svg>
+              </div>
+            </div>
+<!--            <div class="card kpi-card">-->
+<!--              <div style="flex: 1;">-->
+<!--                <div class="kpi-lbl">Nhiệt độ Môi trường</div>-->
+<!--                <div class="region-temp-list-compact">-->
+<!--                  <div class="temp-item-compact"><label>Bắc</label><b>22°C</b></div>-->
+<!--                  <div class="temp-item-compact"><label>Trung</label><b>28°C</b></div>-->
+<!--                  <div class="temp-item-compact"><label>Nam</label><b>34°C</b></div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <div class="kpi-icon bg-green">-->
+<!--                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">-->
+<!--                  <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" />-->
+<!--                </svg>-->
+<!--              </div>-->
+<!--            </div>-->
           </div>
-          <div class="kpi-icon bg-green">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" />
-            </svg>
-          </div>
-        </div>
-      </div>
 
-      <!-- Main Display Area -->
-      <div class="card map-section" id="mainDisplayCard">
-        <div class="map-toolbar">
+          <!-- Main Display Area -->
+          <div class="card map-section" id="mainDisplayCard">
+            <div class="map-toolbar">
           <span class="card-title" id="displayTitle">
             {{ areaItem.mapType === MAP_TYPE_MAP ? 'Bản đồ' : '' }}
             {{ areaItem.mapType === MAP_TYPE_PICTURE ? 'Sơ đồ 1 sợi' : '' }}
           </span>
 
-          <!-- Location button separated -->
-          <button class="map-btn visible-mobile-only location-btn" onclick="openAreaDrawer()" title="Chọn khu vực">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-              <circle cx="12" cy="10" r="3"></circle>
-            </svg>
-          </button>
+              <!-- Location button separated -->
+              <button class="map-btn visible-mobile-only location-btn" onclick="openAreaDrawer()" title="Chọn khu vực">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+              </button>
 
-          <div class="map-toggle-group">
-            <button v-show="areaItem.mapType === MAP_TYPE_MAP" class="map-btn active">Bản đồ</button>
-            <span v-show="areaItem.mapType === MAP_TYPE_PICTURE">
+              <div class="map-toggle-group">
+                <button v-show="areaItem.mapType === MAP_TYPE_MAP" class="map-btn active">Bản đồ</button>
+                <span v-show="areaItem.mapType === MAP_TYPE_PICTURE">
               <button v-show="areaItem.photoPath" :class="['map-btn', mapTypeDiagram === 'photoPath' ? 'active' : '']"
-                @click="mapTypeDiagram = 'photoPath'">Sơ đồ 1 sợi</button>
+                      @click="mapTypeDiagram = 'photoPath'">Sơ đồ 1 sợi</button>
               <button v-show="areaItem.emapPhotoPath"
-                :class="['map-btn', mapTypeDiagram === 'emapPhotoPath' ? 'active' : '']"
-                @click="mapTypeDiagram = 'emapPhotoPath'">Sơ đồ mặt bằng</button>
+                      :class="['map-btn', mapTypeDiagram === 'emapPhotoPath' ? 'active' : '']"
+                      @click="mapTypeDiagram = 'emapPhotoPath'">Sơ đồ mặt bằng</button>
             </span>
-            <button class="map-btn" onclick="alert('Tính năng Mô hình BIM 3D đang được phát triển')">
-              Mô hình BIM 3D
-            </button>
-          </div>
-        </div>
-        <div class="map-view-container mode-single" id="mapContainer">
-          <div class="map-pane">
-            <div class="map-label">{{ areaItem?.name }}</div>
-            <div class="w-full h-full">
-              <LeafletMap ref="leafletMapRef" :key="itemKey" :photo-path="areaItem[mapTypeDiagram]"
-                :map-type="areaItem.mapType" :zoom="areaItem.zoom" :latitude="areaItem.latitude"
-                :longitude="areaItem.longitude">
-                <SensorDiagram v-if="mapTypeDiagram === 'photoPath'" :live-markers="liveMarkers"
-                  :area-range-point-list="areaRangePointList" :live-temperature-map="liveTemperatureMap"
-                  @handleNodeClick="handleNodeClick" @showMarkerInfo="showMarkerInfo">
-                </SensorDiagram>
-                <CameraDiagram v-else-if="mapTypeDiagram === 'emapPhotoPath'" :live-markers="cameraMarker"
-                  @showMarkerInfo="showCameraInfo">
-                </CameraDiagram>
-              </LeafletMap>
+                <button class="map-btn" onclick="alert('Tính năng Mô hình BIM 3D đang được phát triển')">
+                  Mô hình BIM 3D
+                </button>
+              </div>
+            </div>
+            <div class="map-view-container mode-single" id="mapContainer">
+              <div class="map-pane">
+                <div class="map-label">{{ areaItem?.name }}</div>
+                <div class="w-full h-full">
+                  <LeafletMap ref="leafletMapRef" :key="itemKey" :photo-path="areaItem[mapTypeDiagram]"
+                              :map-type="areaItem.mapType" :zoom="areaItem.zoom" :latitude="areaItem.latitude"
+                              :longitude="areaItem.longitude">
+                    <SensorDiagram v-if="mapTypeDiagram === 'photoPath'" :live-markers="liveMarkers"
+                                   :area-range-point-list="areaRangePointList" :live-temperature-map="liveTemperatureMap"
+                                   @handleNodeClick="handleNodeClick" @showMarkerInfo="showMarkerInfo">
+                    </SensorDiagram>
+                    <CameraDiagram v-else-if="mapTypeDiagram === 'emapPhotoPath'" :live-markers="cameraMarker"
+                                   @showMarkerInfo="showCameraInfo">
+                    </CameraDiagram>
+                  </LeafletMap>
+                </div>
+              </div>
             </div>
           </div>
+          <AreaTreeDashBoard :request-fn="getAllTreeAreaApi" @node-click="handleNodeClick" :default-expand-all="true"
+                             :check-strictly="true" :highlight-current="true" show-line></AreaTreeDashBoard>
         </div>
-      </div>
-      <AreaTreeDashBoard :request-fn="getAllTreeAreaApi" @node-click="handleNodeClick" :default-expand-all="true"
-        :check-strictly="true" :highlight-current="true" show-line></AreaTreeDashBoard>
-    </div>
+      </template>
+    </data-fetcher>
     <base-dialog v-model="visibleThermalDetail" :close-on-click-modal="true">
       <div class="mt-4" v-loading="loadingThermalData">
         <thermal-data :marker="selectedComponent" :thermalInfo="selectedThermalData">
@@ -146,6 +150,7 @@ import ThermalData from "@/views/dashboard/components/ThermalData.vue";
 import SensorDiagram from './components/SensorDiagram.vue'
 import CameraDiagram from './components/CameraDiagram.vue'
 import { getAllCamerasApi } from '@/api/camera'
+import {summariseInfoApi} from "@/api/common";
 
 onMounted(() => {
   loadThermalData({}, false)

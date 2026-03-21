@@ -4,6 +4,10 @@ export const getAllEnumsApi = () => {
     return request.get({url: '/api/CommonLists/allEnums'})
 }
 
+export const summariseInfoApi = () => {
+    return request.get({url: '/api/Dashboard/summariseInfo'})
+}
+
 export const getPaginationSettingApi = () => {
     return request.get({url: '/api/PageSettings/all'})
 }

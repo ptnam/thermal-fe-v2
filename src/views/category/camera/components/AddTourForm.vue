@@ -1,13 +1,18 @@
 <template>
-  <FormWrapper :form-model="formModel" :form-props="{ labelWidth: '140px', rules: formRules }"
-               :request-fn="addTour" :isEditing="isEditing" @success="handleSuccess">
+  <FormWrapper
+      :form-model="formModel"
+      :form-props="{ labelWidth: '140px', rules: formRules }"
+      :request-fn="addTour"
+      :isEditing="false"
+      @success="handleSuccess"
+  >
     <template v-slot="{ formErrors }">
       <el-form-item label="Tên" prop="tourName" :error="formErrors.TourName">
         <el-input v-model="formModel.tourName"/>
       </el-form-item>
       <el-form-item label="Góc quay " prop="cameraTourPresets" :error="formErrors.Name">
         <object-select-from-url
-            :request-fn="presetList"
+            :request-fn="() => getAllPresetList(cameraId)"
             :appendQuery="{cameraId: cameraId}"
             v-model="formModel.cameraTourPresets"
             multiple
@@ -27,8 +32,7 @@ import {rule} from '@/utils/validate'
 import {isFormEditing} from '@/utils/is'
 import {FormRules, ElInput} from 'element-plus'
 import {BaseTable} from "@/components/Table";
-import ObjectInfiniteSelect from "@/components/Selection/ObjectInfiniteSelect.vue";
-import {addTour, presetList} from "@/api/camera";
+import {addTour, getAllPresetList} from "@/api/camera";
 import {useRoute} from "vue-router";
 
 const formModel = defineModel<any>('formModel')

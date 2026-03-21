@@ -100,14 +100,13 @@ const elTableRef = ref<InstanceType<typeof ListTemplate>>()
 const dialogVisible = ref(false)
 
 const openDialogEdit = (row: any) => {
-  debugger
   formModel.value = JSON.parse(JSON.stringify(row))
   dialogVisible.value = true
 }
 const openDelete = (row: any) => {
   elTableRef?.value?.deleteRow(() => apiDeleteTour({
-    "cameraId": cameraId,
-    "tourId": row.tourId
+    cameraId: cameraId,
+    id: row.id
   }))
 }
 const showMessage = (res: any) => {

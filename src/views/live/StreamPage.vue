@@ -70,7 +70,7 @@ import WebPlayer from "@/components/Video/WebPlayer.vue";
 import {getAllTreeAreaApi} from "@/api/area";
 import LiveTreeArea from "@/components/Tree/LiveTreeArea.vue";
 import DrawerSetting from '@/views/live/components/DrawerSetting.vue'
-import {ElDrawer} from 'element-plus'
+import {ElDrawer, ElMessage} from 'element-plus'
 
 const fullList = ref<any[]>([])
 
@@ -101,7 +101,11 @@ const updateFullList = (value: any[]) => {
 }
 
 const applySettings = () => {
-
+  drawerVisible.value = false
+  ElMessage({
+    message: 'Lưu thành công!',
+    type: 'success',
+  })
 }
 const loadCamSetting = () => {
   loadingSetting.value = true
