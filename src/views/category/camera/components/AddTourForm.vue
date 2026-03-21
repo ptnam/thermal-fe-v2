@@ -29,7 +29,7 @@
 import FormWrapper from '@/components/Form/FormWrapper.vue'
 import {computed} from 'vue'
 import {rule} from '@/utils/validate'
-import {isFormEditing} from '@/utils/is'
+// import {isFormEditing} from '@/utils/is'
 import {FormRules, ElInput} from 'element-plus'
 import {BaseTable} from "@/components/Table";
 import {addTour, getAllPresetList} from "@/api/camera";
@@ -56,9 +56,9 @@ const tourPointColumns = [
   },
 ]
 
-const isEditing = computed(() => {
-  return isFormEditing(formModel.value)
-})
+// const isEditing = computed(() => {
+//   return isFormEditing(formModel.value)
+// })
 const formRules = computed<FormRules>(() => {
   const rules: FormRules = {
     tourName: [rule('required', true, 'Tên tour '), rule('min', 3, 'username')],

@@ -1,35 +1,34 @@
 <script setup lang="tsx">
 import ListTemplate from '@/components/PageTemplate/List/ListTemplate.vue'
-import { TableColumn } from '@/components/Table'
-import { useLang } from '@/hooks/web/useI18n'
-import PageContainer from '@/components/PageContainer.vue'
-import { deleteUserApi } from '@/api/user'
-import { computed, nextTick, ref } from 'vue'
+import {TableColumn} from '@/components/Table'
+import {useLang} from '@/hooks/web/useI18n'
+import {deleteUserApi} from '@/api/user'
+import {computed, nextTick, ref} from 'vue'
 import BaseDialog from '@/components/Dialog/BaseDialog.vue'
-import { STATUS_ACTIVE } from '@/constants'
+import {STATUS_ACTIVE} from '@/constants'
 import DeleteCircleButton from '@/components/Button/DeleteCircleButton.vue'
 import EditCircleButton from '@/components/Button/EditCircleButton.vue'
-import { getNotificationGroupListApi } from '@/api/notification-group'
+import {getNotificationGroupListApi} from '@/api/notification-group'
 import NotificationGroupForm from '@/views/notification/components/NotificationGroupForm.vue'
-import { getAllNotificationChannelApi } from '@/api/notification-channel'
+import {getAllNotificationChannelApi} from '@/api/notification-channel'
 import VirtualizedSelectFromUrl from '@/components/Selection/VirtualizedSelectFromUrl.vue'
-import { getAllWarningEventApi } from '@/api/warning-event'
-import { joinFieldValues } from '@/utils/stringUtils'
-import { getAllTreeAreaApi } from '@/api/area'
+import {getAllWarningEventApi} from '@/api/warning-event'
+import {joinFieldValues} from '@/utils/stringUtils'
+import {getAllTreeAreaApi} from '@/api/area'
 import TreeSelectRemote from '@/components/Tree/TreeSelectRemote.vue'
 import SearchButton from "@/components/Button/SearchButton.vue";
 
-const { t } = useLang()
+const {t} = useLang()
 
 const columns = computed<TableColumn[]>(() => [
-  { label: 'STT', type: 'index', width: '60' },
-  { prop: 'name', label: 'Bộ cảnh báo' },
+  {label: 'STT', type: 'index', width: '60'},
+  {prop: 'name', label: 'Bộ cảnh báo'},
   {
     label: 'Kênh cảnh báo',
     prop: 'notificationChannels',
     slots: {
       default: (scope: any) => (
-        <span>{joinFieldValues(scope.row.notificationChannels, 'name')}</span>
+          <span>{joinFieldValues(scope.row.notificationChannels, 'name')}</span>
       ),
     },
   },
@@ -40,16 +39,16 @@ const columns = computed<TableColumn[]>(() => [
       default: (scope: any) => <span>{joinFieldValues(scope.row.events, 'name')}</span>,
     },
   },
-  { prop: 'groupStatusObject.name', label: 'Trạng thái' },
+  {prop: 'groupStatusObject.name', label: 'Trạng thái'},
   {
     label: t('fields.action'),
     width: '110px',
     slots: {
       default: (scope: any) => (
-        <div>
-          <EditCircleButton onClick={() => openDialogEdit(scope)}></EditCircleButton>
-          <DeleteCircleButton onClick={() => openDelete(scope)}></DeleteCircleButton>
-        </div>
+          <div>
+            <EditCircleButton onClick={() => openDialogEdit(scope)}></EditCircleButton>
+            <DeleteCircleButton onClick={() => openDelete(scope)}></DeleteCircleButton>
+          </div>
       ),
     },
   },
@@ -88,8 +87,8 @@ const changeAreaId = (searchParams: GenericObject) => {
 </script>
 
 <template>
-  <page-container title="Danh sách cảnh báo hệ thống">
-    <list-template
+  <list-template
+      title="Danh sách cảnh báo hệ thống"
       ref="elTableRef"
       key-list="group-list"
       :columns="columns"
@@ -97,56 +96,55 @@ const changeAreaId = (searchParams: GenericObject) => {
         fetchDataApi: getNotificationGroupListApi,
       }"
       @addHandler="openDialogAdd"
-    >
-      <template slot="search" v-slot="{ searchParams, tableMethods }">
-        <div class="filter-row">
-          <div class="filter-item">
-            <div class="filter-label">Bộ cảnh báo</div>
-            <el-input v-model="searchParams.name" clearable  class="filter-input" placeholder="Nhập tên bộ cảnh báo..." />
-          </div>
-          <div class="filter-item">
-            <div class="filter-label">Kênh cảnh báo</div>
-            <virtualized-select-from-url
-                :request-fn="getAllNotificationChannelApi"
-                v-model="searchParams.notificationChannels"
-                class="filter-input"
-                clearable
-                :filterable="true"
-            />
-          </div>
-          <div class="filter-item">
-            <div class="filter-label">Sự kiện</div>
-            <virtualized-select-from-url
-                :request-fn="getAllWarningEventApi"
-                v-model="searchParams.events"
-                clearable
-                class="filter-input"
-            />
-          </div>
-          <div class="filter-item">
-            <div class="filter-label">Khu vực</div>
-            <tree-select-remote
-                v-model="searchParams.areaId"
-                :request-fn="getAllTreeAreaApi"
-                filterable
-                clearable
-                @change="
+  >
+    <template slot="search" v-slot="{ searchParams, tableMethods }">
+      <div class="filter-row">
+        <div class="filter-item">
+          <div class="filter-label">Bộ cảnh báo</div>
+          <el-input v-model="searchParams.name" clearable class="filter-input" placeholder="Nhập tên bộ cảnh báo..."/>
+        </div>
+        <div class="filter-item">
+          <div class="filter-label">Kênh cảnh báo</div>
+          <virtualized-select-from-url
+              :request-fn="getAllNotificationChannelApi"
+              v-model="searchParams.notificationChannels"
+              class="filter-input"
+              clearable
+              :filterable="true"
+          />
+        </div>
+        <div class="filter-item">
+          <div class="filter-label">Sự kiện</div>
+          <virtualized-select-from-url
+              :request-fn="getAllWarningEventApi"
+              v-model="searchParams.events"
+              clearable
+              class="filter-input"
+          />
+        </div>
+        <div class="filter-item">
+          <div class="filter-label">Khu vực</div>
+          <tree-select-remote
+              v-model="searchParams.areaId"
+              :request-fn="getAllTreeAreaApi"
+              filterable
+              clearable
+              @change="
               () => {
                 changeAreaId(searchParams)
               }
             "
-                class="filter-input"
-            />
-          </div>
-          <search-button @click="tableMethods?.refresh()"/>
+              class="filter-input"
+          />
         </div>
-      </template>
-    </list-template>
-    <base-dialog v-model="dialogVisible" :destroy-on-close="true">
-      <notification-group-form
+        <search-button @click="tableMethods?.refresh()"/>
+      </div>
+    </template>
+  </list-template>
+  <base-dialog v-model="dialogVisible" :destroy-on-close="true">
+    <notification-group-form
         v-model:formModel="formModel"
         @success="saveSuccess"
-      ></notification-group-form>
-    </base-dialog>
-  </page-container>
+    ></notification-group-form>
+  </base-dialog>
 </template>

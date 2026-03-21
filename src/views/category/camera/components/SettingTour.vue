@@ -27,6 +27,7 @@
 import {ElMessage, ElTag} from "element-plus";
 import {useLang} from "@/hooks/web/useI18n";
 import ApiButton from "@/components/Button/ApiButton.vue";
+import EditCircleButton from "@/components/Button/EditCircleButton.vue";
 import {ArrowRight, SwitchButton} from "@element-plus/icons-vue";
 import {apiDeleteTour, getTourList, playTourApi} from "@/api/camera";
 import {ref} from 'vue'
@@ -38,7 +39,7 @@ import ListTemplate from "@/components/PageTemplate/List/ListTemplate.vue";
 
 
 const {t} = useLang()
-const formModel = ref({})
+const formModel = ref<any>({})
 const route = useRoute()
 const cameraId = route.params.id as string
 

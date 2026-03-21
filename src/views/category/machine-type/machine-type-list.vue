@@ -2,7 +2,6 @@
 import ListTemplate from '@/components/PageTemplate/List/ListTemplate.vue'
 import {TableColumn} from '@/components/Table'
 import {useLang} from '@/hooks/web/useI18n'
-import PageContainer from '@/components/PageContainer.vue'
 import {computed, ref} from 'vue'
 import {STATUS_ACTIVE} from '@/constants'
 import DeleteCircleButton from '@/components/Button/DeleteCircleButton.vue'
@@ -60,7 +59,7 @@ const openDelete = (scope: any) => {
 }
 
 const addMachinePart = (scope: any) => {
-  router.push({name: 'machine_part', params: {machineTypeId: scope.row.id}, query: {  name: scope.row.mame }})
+  router.push({name: 'machine_part', params: {machineTypeId: scope.row.id}, query: {name: scope.row.mame}})
 }
 
 const saveSuccess = () => {
@@ -70,33 +69,32 @@ const saveSuccess = () => {
 </script>
 
 <template>
-  <page-container title="Danh sách loại thiết bị">
-    <list-template
-        ref="elTableRef"
-        key-list="machine-type-list"
-        :columns="columns"
-        :use-table-config="{
+  <list-template
+      title="Danh sách loại thiết bị"
+      ref="elTableRef"
+      key-list="machine-type-list"
+      :columns="columns"
+      :use-table-config="{
         fetchDataApi: getMachineTypeListApi,
       }"
-        @addHandler="openDialogAdd"
-        :search-props="{
+      @addHandler="openDialogAdd"
+      :search-props="{
         className: ''
       }"
-    >
-      <template slot="search" v-slot="{ searchParams, tableMethods }">
-        <div class="filter-row">
-          <div class="filter-item">
-            <div class="filter-label">Tên</div>
-            <el-input v-model="searchParams.name" class="filter-input" placeholder="Nhập tên loại thiết bị..." clearable/>
-          </div>
-          <search-button @click="tableMethods.getList"></search-button>
+  >
+    <template slot="search" v-slot="{ searchParams, tableMethods }">
+      <div class="filter-row">
+        <div class="filter-item">
+          <div class="filter-label">Tên</div>
+          <el-input v-model="searchParams.name" class="filter-input" placeholder="Nhập tên loại thiết bị..." clearable/>
         </div>
-      </template>
-    </list-template>
-    <drawer-form v-model="dialogVisible" :destroy-on-close="true">
-      <MachineTypeForm :formModel="formModel" @success="saveSuccess"></MachineTypeForm>
-    </drawer-form>
-  </page-container>
+        <search-button @click="tableMethods.getList"></search-button>
+      </div>
+    </template>
+  </list-template>
+  <drawer-form v-model="dialogVisible" :destroy-on-close="true">
+    <MachineTypeForm :formModel="formModel" @success="saveSuccess"></MachineTypeForm>
+  </drawer-form>
 </template>
 
 <style lang="scss" scoped></style>

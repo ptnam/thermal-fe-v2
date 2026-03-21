@@ -1,49 +1,48 @@
 <script setup lang="tsx">
 import ListTemplate from '@/components/PageTemplate/List/ListTemplate.vue'
-import { TableColumn } from '@/components/Table'
-import PageContainer from '@/components/PageContainer.vue'
-import { computed, nextTick, ref } from 'vue'
-import { getAllTreeAreaApi } from '@/api/area'
+import {TableColumn} from '@/components/Table'
+import {computed, nextTick, ref} from 'vue'
+import {getAllTreeAreaApi} from '@/api/area'
 import TreeSelectRemote from '@/components/Tree/TreeSelectRemote.vue'
 import VirtualizedSelectFromUrl from '@/components/Selection/VirtualizedSelectFromUrl.vue'
 import dayjs from 'dayjs'
 import SearchButton from '@/components/Button/SearchButton.vue'
-import { getVisionNotificationApi } from '@/api/notification/visionNotification'
-import { getAllCamerasApi } from '@/api/camera'
+import {getVisionNotificationApi} from '@/api/notification/visionNotification'
+import {getAllCamerasApi} from '@/api/camera'
 import {getAllWarningEventApi} from '@/api/warning-event'
-import { WARNING_TYPE_AI } from '@/constants/warningType'
-import { ElImage } from 'element-plus'
+import {WARNING_TYPE_AI} from '@/constants/warningType'
+import {ElImage} from 'element-plus'
 
 const columns = computed<TableColumn[]>(() => [
   {
     width: '120px',
     label: 'Hình ảnh',
     slots: {
-      default: ({ row }) => (
-        <div class="ai-thumb">
-          {row.imagePath && (
-            <ElImage
-              src={row.imagePath}
-              lazy={true}
-              fit="cover"
-              preview-src-list={[row.imagePath]}
-              show-progress={true}
-              preview-teleported={true}
-            />
-          )}
-        </div>
+      default: ({row}) => (
+          <div class="ai-thumb">
+            {row.imagePath && (
+                <ElImage
+                    src={row.imagePath}
+                    lazy={true}
+                    fit="cover"
+                    preview-src-list={[row.imagePath]}
+                    show-progress={true}
+                    preview-teleported={true}
+                />
+            )}
+          </div>
       ),
     },
   },
-  { prop: 'dateData', label: 'Ngày', width: 120 },
-  { prop: 'timeData', label: 'Giờ' },
-  { prop: 'areaName', label: 'Khu vực' },
-  { prop: 'cameraName', label: 'Tên camera' },
+  {prop: 'dateData', label: 'Ngày', width: 120},
+  {prop: 'timeData', label: 'Giờ'},
+  {prop: 'areaName', label: 'Khu vực'},
+  {prop: 'cameraName', label: 'Tên camera'},
   {
     prop: 'warningEventName',
     label: 'Loại cảnh báo',
     slots: {
-      default: ({row}) => (<span   style={{color: 'var(--danger)'}}>{row.warningEventName}</span>)
+      default: ({row}) => (<span style={{color: 'var(--danger)'}}>{row.warningEventName}</span>)
     },
   },
 ])
@@ -59,8 +58,7 @@ const elTableRef = ref<InstanceType<typeof ListTemplate>>()
 </script>
 
 <template>
-  <page-container title="Cảnh báo AI">
-    <list-template
+  <list-template
       ref="elTableRef"
       title="Danh sách Cảnh báo AI"
       key-list="ai-notification"
@@ -73,66 +71,65 @@ const elTableRef = ref<InstanceType<typeof ListTemplate>>()
           fromTime: dayjs().subtract(7, 'day').format('YYYY-MM-DD 00:00:00'),
         },
       }"
-    >
-      <template slot="search" v-slot="{ searchParams }">
-        <div class="filter-row">
-          <div class="filter-item">
-            <div class="filter-label">Thời gian từ</div>
-            <el-date-picker
-                v-model="searchParams.fromTime"
-                type="datetime"
-                placeholder="Thời gian bắt đầu"
-                value-format="YYYY-MM-DD HH:mm:ss"
-                class="!w-[-webkit-fill-available]"
-            />
-          </div>
-          <div class="filter-item">
-            <div class="filter-label">Thời gian đến</div>
-            <el-date-picker
-                v-model="searchParams.toTime"
-                type="datetime"
-                placeholder="Thời gian kết thúc"
-                value-format="YYYY-MM-DD HH:mm:ss"
-                class="!w-[-webkit-fill-available]"
-            />
-          </div>
-          <div class="filter-item">
-            <div class="filter-label">Khu vực</div>
-            <tree-select-remote
-                v-model="searchParams.areaId"
-                :request-fn="getAllTreeAreaApi"
-                filterable
-                clearable
-                @change="() => changeAreaId(searchParams)"
-            />
-          </div>
-          <div class="filter-item">
-            <div class="filter-label">Camera</div>
-            <virtualized-select-from-url
-                ref="cameraRef"
-                v-model="searchParams.cameraId"
-                :request-fn="() => getAllCamerasApi({ areaId: searchParams.areaId })"
-                filterable
-                value-key="id"
-                clearable
-            />
-          </div>
-          <div class="filter-item">
-            <div class="filter-label">Loại cảnh báo</div>
-            <virtualized-select-from-url
-                ref="warningEventId"
-                v-model="searchParams.warningEventId"
-                :request-fn="() => getAllWarningEventApi({warningType: WARNING_TYPE_AI})"
-                filterable
-                value-key="id"
-                clearable
-            />
-          </div>
+  >
+    <template slot="search" v-slot="{ searchParams }">
+      <div class="filter-row">
+        <div class="filter-item">
+          <div class="filter-label">Thời gian từ</div>
+          <el-date-picker
+              v-model="searchParams.fromTime"
+              type="datetime"
+              placeholder="Thời gian bắt đầu"
+              value-format="YYYY-MM-DD HH:mm:ss"
+              class="!w-[-webkit-fill-available]"
+          />
         </div>
-        <search-button @click="elTableRef?.refresh()" />
-      </template>
-    </list-template>
-  </page-container>
+        <div class="filter-item">
+          <div class="filter-label">Thời gian đến</div>
+          <el-date-picker
+              v-model="searchParams.toTime"
+              type="datetime"
+              placeholder="Thời gian kết thúc"
+              value-format="YYYY-MM-DD HH:mm:ss"
+              class="!w-[-webkit-fill-available]"
+          />
+        </div>
+        <div class="filter-item">
+          <div class="filter-label">Khu vực</div>
+          <tree-select-remote
+              v-model="searchParams.areaId"
+              :request-fn="getAllTreeAreaApi"
+              filterable
+              clearable
+              @change="() => changeAreaId(searchParams)"
+          />
+        </div>
+        <div class="filter-item">
+          <div class="filter-label">Camera</div>
+          <virtualized-select-from-url
+              ref="cameraRef"
+              v-model="searchParams.cameraId"
+              :request-fn="() => getAllCamerasApi({ areaId: searchParams.areaId })"
+              filterable
+              value-key="id"
+              clearable
+          />
+        </div>
+        <div class="filter-item">
+          <div class="filter-label">Loại cảnh báo</div>
+          <virtualized-select-from-url
+              ref="warningEventId"
+              v-model="searchParams.warningEventId"
+              :request-fn="() => getAllWarningEventApi({warningType: WARNING_TYPE_AI})"
+              filterable
+              value-key="id"
+              clearable
+          />
+        </div>
+      </div>
+      <search-button @click="elTableRef?.refresh()"/>
+    </template>
+  </list-template>
 </template>
 <style scoped>
 .ai-thumb {

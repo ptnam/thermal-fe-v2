@@ -2,7 +2,6 @@
 import ListTemplate from '@/components/PageTemplate/List/ListTemplate.vue'
 import {TableColumn} from '@/components/Table'
 import {useLang} from '@/hooks/web/useI18n'
-import PageContainer from '@/components/PageContainer.vue'
 import {computed, ref} from 'vue'
 import {STATUS_ACTIVE} from '@/constants'
 import DeleteCircleButton from '@/components/Button/DeleteCircleButton.vue'
@@ -100,60 +99,58 @@ const exportFile = (searchParams: any) => {
 </script>
 
 <template>
-  <page-container title="Danh sách thiết bị">
-    <list-template
-        ref="elTableRef"
-        :search-props="{ visibleSearchButton: false }"
-        key-list="machine-list"
-        :columns="columns"
-        :use-table-config="{
+  <list-template
+      ref="elTableRef"
+      :search-props="{ visibleSearchButton: false }"
+      key-list="machine-list"
+      :columns="columns"
+      :use-table-config="{
           fetchDataApi: getMachineListApi,
         }"
-        @addHandler="openDialogAdd"
-        v-loading="detailLoading"
-        title="Danh sách thiết bị"
-    >
-      <template slot="search" v-slot="{ searchParams }">
-        <div class="filter-item">
-          <div class="filter-label">Thiết bị</div>
-          <el-input class="filter-input" v-model="searchParams.name" clearable placeholder="Nhập tên thiết bị..."/>
-        </div>
-        <div class="filter-item">
-          <div class="filter-label">Khu vực</div>
-          <tree-select-remote
-              v-model="searchParams.areaId"
-              :request-fn="getAllTreeAreaApi"
-              filterable
-              clearable
-          />
-        </div>
-        <div class="filter-item">
-          <div class="filter-label">Loại thiết bị</div>
-          <virtualized-select-from-url
-              v-model="searchParams.machineTypeId"
-              :request-fn="getAllMachineTypeApi"
-              filterable
-              clearable
-              value-key="id"
-          />
-        </div>
-        <div class="flex justify-center">
-          <search-button @click="elTableRef?.refresh()"/>
-          <export-button @click="() => exportFile(searchParams)" :loading="isLoadingExport"/>
-        </div>
-      </template>
-    </list-template>
-    <drawer-form
-        v-model="dialogVisible"
-        align-center
-        :destroy-on-close="true"
-        style="min-width: 1100px"
-    >
-      <machine-form
-          v-model:formModel="formModel"
-          @success="saveSuccess"
-          :title="formModel.id ? 'Cập nhật thiết bị': 'Thêm thiết bị'"
-      ></machine-form>
-    </drawer-form>
-  </page-container>
+      @addHandler="openDialogAdd"
+      v-loading="detailLoading"
+      title="Danh sách thiết bị"
+  >
+    <template slot="search" v-slot="{ searchParams }">
+      <div class="filter-item">
+        <div class="filter-label">Thiết bị</div>
+        <el-input class="filter-input" v-model="searchParams.name" clearable placeholder="Nhập tên thiết bị..."/>
+      </div>
+      <div class="filter-item">
+        <div class="filter-label">Khu vực</div>
+        <tree-select-remote
+            v-model="searchParams.areaId"
+            :request-fn="getAllTreeAreaApi"
+            filterable
+            clearable
+        />
+      </div>
+      <div class="filter-item">
+        <div class="filter-label">Loại thiết bị</div>
+        <virtualized-select-from-url
+            v-model="searchParams.machineTypeId"
+            :request-fn="getAllMachineTypeApi"
+            filterable
+            clearable
+            value-key="id"
+        />
+      </div>
+      <div class="flex justify-center">
+        <search-button @click="elTableRef?.refresh()"/>
+        <export-button @click="() => exportFile(searchParams)" :loading="isLoadingExport"/>
+      </div>
+    </template>
+  </list-template>
+  <drawer-form
+      v-model="dialogVisible"
+      align-center
+      :destroy-on-close="true"
+      style="min-width: 1100px"
+  >
+    <machine-form
+        v-model:formModel="formModel"
+        @success="saveSuccess"
+        :title="formModel.id ? 'Cập nhật thiết bị': 'Thêm thiết bị'"
+    ></machine-form>
+  </drawer-form>
 </template>

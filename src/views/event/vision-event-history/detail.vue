@@ -1,21 +1,19 @@
 <template>
-  <page-container title="Chi tiết nội dung cảnh báo" class="flex justify-center">
-    <vision-detail-form
+  <vision-detail-form
       :form-model="formModel"
+      title="Chi tiết nội dung cảnh báo"
       v-loading="isLoading"
-    ></vision-detail-form>
-  </page-container>
+  ></vision-detail-form>
 </template>
 <script setup lang="ts">
-import PageContainer from '@/components/PageContainer.vue'
 import useRequest from '@/hooks/web/useRequest'
-import { onMounted, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import {onMounted, ref, watch} from 'vue'
+import {useRoute} from 'vue-router'
 import VisionDetailForm from '@/views/event/vision-event-history/VisionDetailForm.vue'
-import { getVisionNotificationDetailApi } from '@/api/notification/visionNotification'
+import {getVisionNotificationDetailApi} from '@/api/notification/visionNotification'
 
 const formModel = ref<any>({})
-const { onRequest, isLoading } = useRequest()
+const {onRequest, isLoading} = useRequest()
 
 const route = useRoute()
 const loadNotice = () => {
@@ -27,10 +25,10 @@ onMounted(() => {
   loadNotice()
 })
 watch(
-  () => route.fullPath,
-  () => {
-    loadNotice()
-  },
-  { deep: true },
+    () => route.fullPath,
+    () => {
+      loadNotice()
+    },
+    {deep: true},
 )
 </script>
