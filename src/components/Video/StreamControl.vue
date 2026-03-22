@@ -197,7 +197,8 @@ function measureTempAction() {
 
 defineExpose({
   startDrawing,
-  clearAllPoint
+  clearAllPoint,
+  videoRef
 })
 </script>
 <template>

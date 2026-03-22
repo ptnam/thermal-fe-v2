@@ -17,7 +17,7 @@
             v-model="formModel.cameraTourPresets"
             multiple
             filterable placeholder="Chọn điểm tour"
-            col-value="presetId"
+            col-value="id"
         ></object-select-from-url>
       </el-form-item>
       <base-table :data="formModel.cameraTourPresets" :columns="tourPointColumns"></base-table>

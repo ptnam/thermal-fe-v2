@@ -198,7 +198,21 @@ const savePreset = () => {
   presetFormRef?.value?.validate((valid) => {
     if (valid) {
       saveLoading.value = true
-      addPreset(formModel.value).then(() => {
+      const video = streamRef.value?.videoRef?.querySelector('video') as HTMLVideoElement
+      const rect = video.getBoundingClientRect()
+      interface Point {
+        x: number
+        y: number
+      }
+
+      const data = {...formModel.value}
+      for (const items of data.thermalAreas) {
+        for (const item of items.points as Point[]) {
+          item.x = Number(((item.x / rect.width) * 100).toFixed(2))
+          item.y = Number(((item.y / rect.height) * 100).toFixed(2))
+        }
+      }
+      addPreset(data).then(() => {
         clearPoints()
         visibleDialogPreset.value = false
         ElMessage({
