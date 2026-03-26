@@ -2,12 +2,13 @@ importScripts('https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js
 importScripts('https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js')
 
 firebase.initializeApp({
-  apiKey: 'AIzaSyDQ468DVxk3199-gAbdxQUCJtisJoFuoCs',
-  authDomain: 'thermal-b13b9.firebaseapp.com',
-  projectId: 'thermal-b13b9',
-  storageBucket: 'thermal-b13b9.firebasestorage.app',
-  messagingSenderId: '524070383945',
-  appId: '1:524070383945:web:ea9e08fefdc1c1228eea98',
+  apiKey: "AIzaSyDfi7YzNJC70UwnxGPqSsMmCu6KcTKmMHE",
+  authDomain: "thermalmonitoring-eab3d.firebaseapp.com",
+  projectId: "thermalmonitoring-eab3d",
+  storageBucket: "thermalmonitoring-eab3d.firebasestorage.app",
+  messagingSenderId: "823669812203",
+  appId: "1:823669812203:web:057216cf04229ab23f87ae",
+  measurementId: "G-JTLV00XQJ0"
 })
 
 const messaging = firebase.messaging()
