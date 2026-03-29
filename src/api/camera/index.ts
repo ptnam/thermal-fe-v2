@@ -97,3 +97,17 @@ export const saveAiServicesApi = (data: any): Promise<IResponse> => {
 export const addPreset = (data: any): Promise<IResponse> => {
   return request.post({url: 'api/Cameras/addPreset', data: data})
 }
+
+export const exportCameraIECApi = (searchParams: object): Promise<IResponse<[]>> => {
+  return request.get({
+    url: '/api/Cameras/exportMachineIEC',
+    params: searchParams,
+    responseType: 'blob'
+  })
+}
+
+export const importCameraIECApi = (data: any): Promise<IResponse> => {
+  return request.post({
+    url: '/api/Cameras/importIEC', data, headers: {'Content-Type': 'multipart/form-data'}
+  })
+}

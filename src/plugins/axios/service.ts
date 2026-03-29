@@ -31,7 +31,7 @@ axiosInstance.interceptors.response.use(
     },
     (error: AxiosError) => {
         ElMessage.error({
-            message: (error.response?.data as { message: string })?.message ?? error.message,
+            message: error.response?.data?.message ?? error.message,
             showClose: true,
         })
         if (error.status === 401 || error.message === 'Network Error') {

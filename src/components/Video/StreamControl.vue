@@ -91,7 +91,7 @@ let drawer: PolygonDrawer | null = null
 const pointValues = ref<any>([])
 const emits = defineEmits(['pointedClicked'])
 
-function startDrawing() {
+function startDrawing(ranges = []) {
   isDrawing.value = true
   nextTick(() => {
     const c = canvasRef.value
@@ -120,7 +120,10 @@ function startDrawing() {
                 }
               })
             },
-        )
+        );
+        if (ranges.length) {
+          drawer.loadRanges(ranges)
+        }
       }
 
       drawer.removeAllPoint() // always start fresh
@@ -141,6 +144,10 @@ const stopDrawing = () => {
 
 const clearAllPoint = () => {
   drawer?.removeAllPoint();
+}
+
+const clearPoint = () => {
+  drawer?.removePoint();
 }
 
 const timerId = ref(0);
@@ -165,26 +172,11 @@ const visibleMeasurement = ref(false)
 const measurementResult = ref()
 
 function measureTempAction() {
-  const video = videoRef.value?.querySelector('video') as HTMLVideoElement
-  const rect = video.getBoundingClientRect()
-
-  interface Point {
-    x: number
-    y: number
-  }
-
-  const tmpPoints: Point[] = []
-
-  for (const item of pointValues.value as Point[]) {
-    const x = (item.x / rect.width) * 100
-    const y = (item.y / rect.height) * 100
-    tmpPoints.push({x, y})
-  }
   measureTempRequest(thermalDataByAreaApi, {
     videoWidth: videoWidth.value,
     videoHeight: videoHeight.value,
     cameraId: props.streamKey,
-    points: tmpPoints,
+    points: pointValues.value,
   })
       .then((res) => {
         visibleMeasurement.value = true;
@@ -195,10 +187,18 @@ function measureTempAction() {
       })
 }
 
+const loadRanges = (ranges) => {
+  if(drawer) {
+    drawer.loadRanges(ranges)
+  }
+}
+
 defineExpose({
   startDrawing,
   clearAllPoint,
-  videoRef
+  clearPoint,
+  videoRef,
+  loadRanges
 })
 </script>
 <template>
@@ -569,7 +569,7 @@ body {
   grid-template-columns: 1fr 320px;
   /* Video | Controls */
   flex: 1;
-  height: calc(100vh - 50px - 64px);
+  height: unset;
 }
 
 /* --- VIDEO AREA --- */

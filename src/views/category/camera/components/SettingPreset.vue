@@ -23,6 +23,7 @@ import {ref} from 'vue'
 import {useRoute} from "vue-router";
 import DeleteCircleButton from "@/components/Button/DeleteCircleButton.vue";
 import ListTemplate from "@/components/PageTemplate/List/ListTemplate.vue";
+import EditCircleButton from "@/components/Button/EditCircleButton.vue";
 
 
 const {t} = useLang()
@@ -55,6 +56,7 @@ const tourCols = [
       default: ({row}) => (
           <div>
             <DeleteCircleButton onClick={() => openDelete(row)}/>
+            <EditCircleButton onClick={() => emits('edit', row)}/>
           </div>
       ),
     },
@@ -76,7 +78,7 @@ const openDelete = (row: any) => {
 //   })
 // }
 
-const emits = defineEmits(['addPreset'])
+const emits = defineEmits(['addPreset', 'edit'])
 const addPreset = () => {
   emits("addPreset")
 }

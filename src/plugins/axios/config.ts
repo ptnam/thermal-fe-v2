@@ -3,7 +3,6 @@ import {ElMessage} from 'element-plus'
 import {useUserStoreWithOut} from '@/store/modules/user'
 
 const defaultRequestInterceptors = (config: InternalAxiosRequestConfig) => {
-    config.headers.set('Content-Type', 'application/json-patch+json')
     config.headers.set('accept', '*/*')
     return config
 }

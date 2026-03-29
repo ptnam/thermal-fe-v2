@@ -9,12 +9,16 @@ import DeleteCircleButton from '@/components/Button/DeleteCircleButton.vue'
 import EditCircleButton from '@/components/Button/EditCircleButton.vue'
 import {getAllTreeAreaApi} from '@/api/area'
 import SensorForm from '@/views/category/sensor/components/SensorForm.vue'
-import {deleteSensorApi, getSensorListApi} from '@/api/sensor'
+import {deleteSensorApi, exportSensorsIECApi, getSensorListApi, importSensorsIECApi} from '@/api/sensor'
 import TreeSelectRemote from '@/components/Tree/TreeSelectRemote.vue'
 import SelectFromConfig from '@/components/Selection/SelectFromConfig.vue'
 import {getAllSensorTypeApi} from '@/api/sensor-type'
 import VirtualizedSelectFromUrl from '@/components/Selection/VirtualizedSelectFromUrl.vue'
 import SearchButton from '@/components/Button/SearchButton.vue'
+import useRequest from "@/hooks/web/useRequest";
+import {exportCameraIECApi, importCameraIECApi} from "@/api/camera";
+import {downloadFile} from "@/utils/response";
+import {ElButton} from "element-plus";
 
 const {t} = useLang()
 
@@ -72,6 +76,27 @@ const saveSuccess = () => {
   elTableRef?.value?.refresh()
   dialogVisible.value = false
 }
+
+
+const {onRequest: requestExport, isLoading: isLoadingExport} = useRequest()
+
+const visibleUpload = ref(false);
+const showImport = () => {
+  visibleUpload.value = true
+}
+
+const exportEICFile = (searchParams: any) => {
+  requestExport(exportSensorsIECApi, searchParams).then((res) => {
+    downloadFile(res)
+  })
+}
+
+const uploadApi = (file: File) => {
+  const formData = new FormData()
+  formData.append('file', file)
+
+  return importSensorsIECApi(formData)
+}
 </script>
 
 <template>
@@ -124,9 +149,22 @@ const saveSuccess = () => {
           ></select-from-config>
         </div>
         <search-button @click="tableMethods.getList"></search-button>
+        <el-button class="!h-[40px]" @click="() => exportEICFile(searchParams)" :loading="isLoadingExport">Export IEC
+        </el-button>
+        <el-button class="!h-[40px]" @click="showImport">Import IEC</el-button>
       </div>
     </template>
   </list-template>
+  <base-dialog
+      v-model="visibleUpload"
+      title="Import IEC"
+      width="500px"
+  >
+    <base-upload
+        :api="uploadApi"
+        @success="() => visibleUpload = false"
+    ></base-upload>
+  </base-dialog>
   <base-dialog v-model="dialogVisible" :destroy-on-close="true" style="width: 1100px">
     <sensor-form v-model:formModel="formModel" @success="saveSuccess"></sensor-form>
   </base-dialog>

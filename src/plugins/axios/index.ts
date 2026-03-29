@@ -13,7 +13,6 @@ const request = (option: AxiosConfig) => {
     data: data,
     responseType: responseType,
     headers: {
-      'Content-Type': CONTENT_TYPE,
       'Authorization': `Bearer ${userStore.getAccessToken}`,
       ...headers
     }

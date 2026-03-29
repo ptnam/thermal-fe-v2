@@ -6,7 +6,13 @@ import {computed, ref} from 'vue'
 import {STATUS_ACTIVE} from '@/constants'
 import DeleteCircleButton from '@/components/Button/DeleteCircleButton.vue'
 import EditCircleButton from '@/components/Button/EditCircleButton.vue'
-import {deleteMachineApi, detailMachineApi, exportMonitorPointsApi, getMachineListApi} from '@/api/machine'
+import {
+  deleteMachineApi,
+  detailMachineApi,
+  exportMachineIECApi,
+  exportMonitorPointsApi,
+  getMachineListApi, importIECApi
+} from '@/api/machine'
 import {getAllTreeAreaApi} from '@/api/area'
 import MachineForm from '@/views/category/machine/components/MachineForm.vue'
 import TreeSelectRemote from '@/components/Tree/TreeSelectRemote.vue'
@@ -96,6 +102,22 @@ const exportFile = (searchParams: any) => {
     downloadFile(res)
   })
 }
+const visibleUpload = ref(false);
+const showImport = () => {
+  visibleUpload.value = true
+}
+const exportEICFile = (searchParams: any) => {
+  requestExport(exportMachineIECApi, searchParams).then((res) => {
+    downloadFile(res)
+  })
+}
+
+const uploadApi = (file: File) => {
+  const formData = new FormData()
+  formData.append('file', file)
+
+  return importIECApi(formData)
+}
 </script>
 
 <template>
@@ -138,9 +160,22 @@ const exportFile = (searchParams: any) => {
       <div class="flex justify-center">
         <search-button @click="elTableRef?.refresh()"/>
         <export-button @click="() => exportFile(searchParams)" :loading="isLoadingExport"/>
+        <el-button class="!h-[40px]" @click="() => exportEICFile(searchParams)" :loading="isLoadingExport">Export IEC
+        </el-button>
+        <el-button class="!h-[40px]" @click="showImport">Import IEC</el-button>
       </div>
     </template>
   </list-template>
+  <base-dialog
+      v-model="visibleUpload"
+      title="Import IEC"
+      width="500px"
+  >
+    <base-upload
+        :api="uploadApi"
+        @success="() => visibleUpload = false"
+    ></base-upload>
+  </base-dialog>
   <drawer-form
       v-model="dialogVisible"
       align-center

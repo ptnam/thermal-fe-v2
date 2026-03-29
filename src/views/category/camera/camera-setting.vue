@@ -7,7 +7,10 @@
           <setting-tour></setting-tour>
         </el-tab-pane>
         <el-tab-pane label="Quản lý góc quay" name="2">
-          <setting-preset @addPreset="startDraw"></setting-preset>
+          <setting-preset
+              @addPreset="startDraw"
+              @edit="startEditPreset"
+          ></setting-preset>
         </el-tab-pane>
         <el-tab-pane label="Live" name="3">
           <stream-control
@@ -18,12 +21,22 @@
           >
             <template v-slot:sidebar>
               <div class="mt-4 flex flex-col">
-                <span class="text-sm">Điều khiển camera và chọn các điểm đo</span>
-
-                <div class="mt-2">
-                  <el-button :disabled="!points.length" type="primary" @click="openDialogThermalAreas">Lưu vùng đo
+                <div v-show="newDrawing" class="flex flex-col">
+                  <span class="text-sm">Điều khiển camera và chọn các điểm đo</span>
+                  <div class="mt-2">
+                    <el-button :disabled="!points.length" type="primary" @click="openDialogThermalAreas">Lưu vùng đo
+                    </el-button>
+                    <el-button type="danger" @click="clearPoints">Xóa vùng đo</el-button>
+                  </div>
+                </div>
+                <div v-show="!newDrawing" class="flex">
+                  <el-button type="danger" @click="clearPoints">Vẽ lại</el-button>
+                  <el-button
+                      :disabled="!points.length"
+                      type="primary" @click="saveEditingPreset"
+                  >
+                    Lưu vùng đo
                   </el-button>
-                  <el-button type="danger" @click="clearPoints">Xóa vùng đo</el-button>
                 </div>
               </div>
               <div v-show="formModel.thermalAreas.length" class="mt-4">
@@ -97,9 +110,11 @@ import {rule} from "@/utils/validate";
 import {addPreset} from "@/api/camera";
 import {BaseTable} from "@/components/Table";
 import {vDraggable} from "@/components/Table/v-draggable";
+import EditCircleButton from "@/components/Button/EditCircleButton.vue";
+import DeleteCircleButton from "@/components/Button/DeleteCircleButton.vue";
 
 const activeName = ref("1")
-
+const newDrawing = ref(true);
 const route = useRoute()
 const cameraId = route.params.id as string
 const streamRef = ref();
@@ -120,6 +135,17 @@ const formRules = computed<FormRules>(() => {
 
 const thermalAreasColumns = [
   {prop: 'name', label: "Tên vùng"},
+  {
+    label: "",
+    slots: {
+      default: (scope) => (
+          <div>
+            <DeleteCircleButton onClick={() => deleteThermalArea(scope.$index)}/>
+            <EditCircleButton onClick={() => editThermalArea(scope.$index, scope.row)}/>
+          </div>
+      ),
+    },
+  },
 ]
 const arrayMoveInPlace = (array: any[], fromIndex: number, toIndex: number) => {
   const [movedItem] = array.splice(fromIndex, 1);
@@ -131,7 +157,7 @@ const dragOptions = [
   {
     selector: "tbody", // add drag support for row
     handle: '.el-table__row',
-    option: { // sortablejs's option
+    option: {
       animation: 150,
       onEnd: (evt: any) => {
         arrayMoveInPlace(formModel.value.thermalAreas, evt.oldIndex, evt.newIndex)
@@ -141,16 +167,50 @@ const dragOptions = [
 ];
 const startDraw = () => {
   activeName.value = '3'
+  newDrawing.value = true;
   setTimeout(() => {
-    streamRef?.value?.startDrawing()
+    const ranges = formModel.value.thermalAreas.map((item) => {
+      item['strokeStyle'] = '#1F19BF'
+      item['fillStyle'] = '#1F19BF';
+      return item;
+    })
+
+    streamRef?.value?.startDrawing(ranges)
   }, 1000);
+}
+
+
+const startEditPreset = (row: any) => {
+  row.thermalAreas = convertToRanges(row.cameraMonitorPoints)
+  formModel.value = row;
+  startDraw()
+}
+
+function convertToRanges(data: any): Range[] {
+  return data.map(item => {
+    const points = item.points
+        .match(/\(([^)]+)\)/g) // lấy từng (x,y)
+        ?.map(p => {
+          const [x, y] = p
+              .replace(/[()]/g, '')
+              .split(',')
+              .map(Number)
+
+          return {x, y}
+        }) || []
+
+    return {
+      ...item,
+      points,
+      strokeStyle: '#1f19bf', // default
+      fillStyle: '#1f19bf' // default
+    }
+  })
 }
 
 const tabChange = () => {
   if (activeName.value == '3') {
-    setTimeout(() => {
-      streamRef?.value?.startDrawing()
-    }, 1000);
+    startDraw()
   }
 }
 const points = ref<any[]>([])
@@ -159,7 +219,7 @@ const pointedClicked = (pos: any[]) => {
 }
 
 const clearPoints = () => {
-  streamRef?.value?.clearAllPoint()
+  streamRef?.value?.clearPoint()
 }
 
 const visibleThermalArea = ref(false)
@@ -182,6 +242,12 @@ const addThermalArea = () => {
       })
       visibleThermalArea.value = true;
       clearPoints()
+      const ranges = formModel.value.thermalAreas.map((item) => {
+        item['strokeStyle'] = '#1F19BF'
+        item['fillStyle'] = '#1F19BF';
+        return item;
+      })
+      streamRef?.value?.loadRanges(ranges)
       visibleThermalArea.value = false;
     }
   })
@@ -200,18 +266,10 @@ const savePreset = () => {
       saveLoading.value = true
       const video = streamRef.value?.videoRef?.querySelector('video') as HTMLVideoElement
       const rect = video.getBoundingClientRect()
-      interface Point {
-        x: number
-        y: number
-      }
 
       const data = {...formModel.value}
-      for (const items of data.thermalAreas) {
-        for (const item of items.points as Point[]) {
-          item.x = Number(((item.x / rect.width) * 100).toFixed(2))
-          item.y = Number(((item.y / rect.height) * 100).toFixed(2))
-        }
-      }
+      data["videoWidth"] = rect.width
+      data["videoHeight"] = rect.height
       addPreset(data).then(() => {
         clearPoints()
         visibleDialogPreset.value = false
@@ -224,10 +282,44 @@ const savePreset = () => {
           "name": "",
           "thermalAreas": []
         }
+        newDrawing.value = true;
       }).finally(() => {
         saveLoading.value = false
       })
     }
   })
+}
+
+const drawItem = ref(null)
+const drawIndex = ref(null)
+const editThermalArea = (index, row) => {
+  clearPoints();
+  const ranges = formModel.value.thermalAreas.map((item) => {
+    item['strokeStyle'] = '#1F19BF'
+    item['fillStyle'] = '#1F19BF';
+    return item;
+  })
+  ranges[index]['strokeStyle'] = '#3FF500'
+  ranges[index]['fillStyle'] = '#3FF500'
+  streamRef?.value?.loadRanges(ranges)
+  newDrawing.value = false;
+  drawItem.value = row
+  drawIndex.value = index
+}
+
+const saveEditingPreset = () => {
+  formModel.value.thermalAreas[drawIndex.value].points = points.value;
+
+  const ranges = formModel.value.thermalAreas.map((item) => {
+    item['strokeStyle'] = '#1F19BF'
+    item['fillStyle'] = '#1F19BF';
+    return item;
+  })
+  streamRef?.value?.loadRanges(ranges)
+  clearPoints();
+}
+
+const deleteThermalArea = (index) => {
+  formModel.value.thermalAreas.splice(index, 1)
 }
 </script>

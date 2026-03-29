@@ -19,3 +19,17 @@ export const editSensorApi = (id: number, data: any): Promise<IResponse> => {
 export const deleteSensorApi = (id: number): Promise<IResponse> => {
   return request.delete({ url: `api/Sensors/${id}` })
 }
+
+export const exportSensorsIECApi = (searchParams: object): Promise<IResponse<[]>> => {
+  return request.get({
+    url: '/api/Sensors/exportMachineIEC',
+    params: searchParams,
+    responseType: 'blob'
+  })
+}
+
+export const importSensorsIECApi = (data: any): Promise<IResponse> => {
+  return request.post({
+    url: '/api/Sensors/importIEC', data, headers: {'Content-Type': 'multipart/form-data'}
+  })
+}
