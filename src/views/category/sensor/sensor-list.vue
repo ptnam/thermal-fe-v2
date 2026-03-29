@@ -149,7 +149,7 @@ const uploadApi = (file: File) => {
           ></select-from-config>
         </div>
         <search-button @click="tableMethods.getList"></search-button>
-        <el-button class="!h-[40px]" @click="() => exportEICFile(searchParams)" :loading="isLoadingExport">Export IEC
+        <el-button class="!h-[40px]" @click="() => exportEICFile(searchParams)" :loading="isLoadingExport">Export
         </el-button>
         <el-button class="!h-[40px]" @click="showImport">Import IEC</el-button>
       </div>

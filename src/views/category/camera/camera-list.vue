@@ -13,7 +13,8 @@ import {
   syncPresetsApi,
   getCameraDetailApi,
   listPresetsApi,
-  importCameraIECApi, exportCameraIECApi
+  importCameraIECApi,
+  exportCameraIECApi
 } from '@/api/camera'
 import {getAllTreeAreaApi} from '@/api/area'
 import CameraFormTab from '@/views/category/camera/components/CameraFormTab.vue'
@@ -27,7 +28,6 @@ import AiSetting from '@/views/category/camera/components/AiSetting.vue'
 import SearchButton from '@/components/Button/SearchButton.vue'
 import DrawerForm from '@/components/Form/DrawerForm.vue'
 import {useRouter} from 'vue-router';
-import {exportMachineIECApi, exportMonitorPointsApi, importIECApi} from "@/api/machine";
 import {downloadFile} from "@/utils/response";
 
 const router = useRouter();
@@ -211,7 +211,7 @@ const uploadApi = (file: File) => {
             />
           </div>
           <search-button @click="tableMethods.getList"></search-button>
-          <el-button class="!h-[40px]" @click="() => exportEICFile(searchParams)" :loading="isLoadingExport">Export IEC
+          <el-button class="!h-[40px]" @click="() => exportEICFile(searchParams)" :loading="isLoadingExport">Export
           </el-button>
           <el-button class="!h-[40px]" @click="showImport">Import IEC</el-button>
         </div>

@@ -22,7 +22,7 @@ export const deleteSensorApi = (id: number): Promise<IResponse> => {
 
 export const exportSensorsIECApi = (searchParams: object): Promise<IResponse<[]>> => {
   return request.get({
-    url: '/api/Sensors/exportMachineIEC',
+    url: '/api/Sensors/exportSensors',
     params: searchParams,
     responseType: 'blob'
   })

@@ -100,7 +100,7 @@ export const addPreset = (data: any): Promise<IResponse> => {
 
 export const exportCameraIECApi = (searchParams: object): Promise<IResponse<[]>> => {
   return request.get({
-    url: '/api/Cameras/exportMachineIEC',
+    url: '/api/Cameras/exportCameras',
     params: searchParams,
     responseType: 'blob'
   })
