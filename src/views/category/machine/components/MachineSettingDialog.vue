@@ -74,7 +74,15 @@
                 </select-options>
               </el-form-item>
             </el-col>
-            <el-col :span="12"></el-col>
+            <el-col :span="12">
+              <el-form-item
+                  label="Địa chỉ IEC"
+                  prop="iecObjectAddress"
+                  label-width="100px"
+              >
+                <input-number v-model="item.iecObjectAddress"></input-number>
+              </el-form-item>
+            </el-col>
           </el-row>
           <el-row :gutter="10">
             <el-col :span="12">
@@ -91,7 +99,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="Sensor" label-width="60px">
+              <el-form-item label="Sensor" label-width="100px">
                 <virtualized-select-from-url
                     ref="sensorRef"
                     v-model="item.sensorId"
@@ -251,6 +259,7 @@ import LatLngPicker from '@/components/Map/LatLngPicker.vue'
 import LatLngImagePicker from '@/components/Map/LatLngImagePicker.vue'
 import SelectOptions from "@/components/Selection/SelectOptions.vue";
 import ObjectSelectPoints from "@/views/category/machine/components/ObjectSelectPoints.vue";
+import InputNumber from "@/components/Input/InputNumber.vue";
 
 const emits = defineEmits(['cancel', 'save'])
 const editableTabsValue = ref(0)

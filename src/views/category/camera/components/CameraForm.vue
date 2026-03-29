@@ -122,6 +122,13 @@
                 col-value="code"
             />
           </el-form-item>
+          <el-form-item
+              label="Địa chỉ IEC"
+              prop="iecObjectAddress"
+              :error="formErrors.IecObjectAddress"
+          >
+            <input-number v-model="formModel.iecObjectAddress"></input-number>
+          </el-form-item>
         </el-col>
       </el-row>
     </template>

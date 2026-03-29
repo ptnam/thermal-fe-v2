@@ -1,5 +1,4 @@
 import service from './service'
-import { CONTENT_TYPE } from '@/constants'
 import { useUserStoreWithOut } from '@/store/modules/user'
 
 const request = (option: AxiosConfig) => {

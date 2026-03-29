@@ -308,6 +308,7 @@ const editThermalArea = (index, row) => {
 }
 
 const saveEditingPreset = () => {
+  if (drawIndex.value != null)
   formModel.value.thermalAreas[drawIndex.value].points = points.value;
 
   const ranges = formModel.value.thermalAreas.map((item) => {

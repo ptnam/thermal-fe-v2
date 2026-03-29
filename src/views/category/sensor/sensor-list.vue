@@ -16,7 +16,6 @@ import {getAllSensorTypeApi} from '@/api/sensor-type'
 import VirtualizedSelectFromUrl from '@/components/Selection/VirtualizedSelectFromUrl.vue'
 import SearchButton from '@/components/Button/SearchButton.vue'
 import useRequest from "@/hooks/web/useRequest";
-import {exportCameraIECApi, importCameraIECApi} from "@/api/camera";
 import {downloadFile} from "@/utils/response";
 import {ElButton} from "element-plus";
 

@@ -30,7 +30,7 @@ import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 
 interface Props {
-  title: string
+  title?: string
   api: (file: File) => Promise<any>
 }
 

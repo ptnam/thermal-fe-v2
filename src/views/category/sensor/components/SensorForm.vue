@@ -66,6 +66,13 @@
             <el-form-item label="Độ dài dữ liệu" prop="numberOfPoints" :error="formErrors.NumberOfPoints">
               <InputNumber v-model="formModel.numberOfPoints"/>
             </el-form-item>
+            <el-form-item
+                label="Địa chỉ IEC"
+                prop="iecObjectAddress"
+                :error="formErrors.IecObjectAddress"
+            >
+              <input-number v-model="formModel.iecObjectAddress"></input-number>
+            </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="Tên cảm biến" prop="name" :error="formErrors.Name">
