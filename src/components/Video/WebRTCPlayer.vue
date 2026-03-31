@@ -255,7 +255,8 @@ function startDrawing() {
               pointValues.value = points
               nextTick(() => {
                 if (pointCount.value >= 3 && !drawer?.isConvex()) {
-                  drawer?.showFullScreenAlert(videoRef, 'không phải hình đa giác lồi, vui lòng vẽ lại!')
+                  drawer?.showFullScreenAlert(videoRef, 'không phải hình đa giác lồi, vui lòng vẽ lại!');
+                  drawer?.clearLastPoint()
                 }
               })
             },
