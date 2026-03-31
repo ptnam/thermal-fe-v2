@@ -2,13 +2,13 @@
   <l-polygon
     v-for="data in openstreetmap.polygonBaoQuanh"
     :lat-lngs="data.latlngs"
-    :l-style="openstreetmap.polygonbao.style"
+    :l-style="{...openstreetmap.polygonbao.style, fillColor: store.isDark ? '#090909' : '#aad3df'}"
     :weight="2"
     :opacity="1"
-    color="#aad3df"
+    :color="store.isDark ? '#090909' : '#aad3df'"
     dashArray=""
     :fillOpacity="1"
-    fillColor="#aad3df"
+    :fillColor="store.isDark ? '#090909' : '#aad3df'"
   >
   </l-polygon>
   <l-polygon
@@ -19,7 +19,7 @@
     color="#a29ab5"
     dashArray="3"
     :fillOpacity="1"
-    fillColor="#aad3df"
+    :fillColor="store.isDark ? '#090909' : '#aad3df'"
   >
   </l-polygon>
   <l-marker :visible="zoom >= 4" :lat-lng="[16.5, 113]">
@@ -43,8 +43,12 @@
 <script setup lang="ts">
 import openstreetmap from '@/assets/map/openstreetmap.json'
 import { LPolygon, LMarker, LIcon } from '@vue-leaflet/vue-leaflet'
+import { useAppStore } from '@/store/modules/app'
 
 defineProps({
   zoom: { type: Number, default: 6 },
 })
+
+const store = useAppStore()
+
 </script>

@@ -41,21 +41,21 @@
                 </svg>
               </div>
             </div>
-<!--            <div class="card kpi-card">-->
-<!--              <div style="flex: 1;">-->
-<!--                <div class="kpi-lbl">Nhiệt độ Môi trường</div>-->
-<!--                <div class="region-temp-list-compact">-->
-<!--                  <div class="temp-item-compact"><label>Bắc</label><b>22°C</b></div>-->
-<!--                  <div class="temp-item-compact"><label>Trung</label><b>28°C</b></div>-->
-<!--                  <div class="temp-item-compact"><label>Nam</label><b>34°C</b></div>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--              <div class="kpi-icon bg-green">-->
-<!--                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">-->
-<!--                  <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" />-->
-<!--                </svg>-->
-<!--              </div>-->
-<!--            </div>-->
+            <div class="card kpi-card">
+              <div style="flex: 1;">
+                <div class="kpi-lbl">Nhiệt độ Môi trường</div>
+                <div class="region-temp-list-compact">
+                  <div class="temp-item-compact"><label>Bắc</label><b>22°C</b></div>
+                  <div class="temp-item-compact"><label>Trung</label><b>28°C</b></div>
+                  <div class="temp-item-compact"><label>Nam</label><b>34°C</b></div>
+                </div>
+              </div>
+              <div class="kpi-icon bg-green">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" />
+                </svg>
+              </div>
+            </div>
           </div>
 
           <!-- Main Display Area -->
