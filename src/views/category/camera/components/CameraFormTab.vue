@@ -8,7 +8,7 @@
             @success="saveSuccess"
         ></camera-form>
       </el-tab-pane>
-      <el-tab-pane v-if="isEditing" label="Điều khiểm cam" name="second">
+      <el-tab-pane v-if="isEditing" label="Điều khiển cam" name="second">
         <set-viewing-angle
             :form-model="formModel"
             :isEditing="isEditing"

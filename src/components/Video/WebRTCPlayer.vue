@@ -276,6 +276,7 @@ const drawResultText = ref("");
 const stopDrawing = () => {
   drawer?.removeAllPoint();
   drawResultText.value = "";
+  isDrawing.value = false;
   if(timerId.value) {
     clearInterval(timerId.value);
   }
@@ -297,26 +298,11 @@ function measureTemp() {
 }
 
 function measureTempAction() {
-  const video = videoRef.value?.querySelector('video') as HTMLVideoElement
-  const rect = video.getBoundingClientRect()
-
-  interface Point {
-    x: number
-    y: number
-  }
-
-  const tmpPoints: Point[] = []
-
-  for (const item of pointValues.value as Point[]) {
-    const x = (item.x / rect.width) * 100
-    const y = (item.y / rect.height) * 100
-    tmpPoints.push({x, y})
-  }
   measureTempRequest(thermalDataByAreaApi, {
     videoWidth: videoWidth.value,
     videoHeight: videoHeight.value,
     cameraId: props.streamKey,
-    points: tmpPoints,
+    points: pointValues.value,
   })
       .then((res) => {
         if (res.data) {
