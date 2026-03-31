@@ -70,6 +70,13 @@ export class PolygonDrawer {
     }
   }
 
+  private clearLastPoint()
+  {
+    this.points.pop()
+    this?.onCountPoint && this.onCountPoint(this.points);
+    this.redraw();
+  }
+
   private redraw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
 
@@ -181,7 +188,7 @@ export class PolygonDrawer {
     return true
   }
 
-  showFullScreenAlert(element, message: string) {
+  showFullScreenAlert(element, message: string, callBack = null) {
     const overlay = document.createElement('div')
     overlay.className =
       "fixed inset-0 bg-opacity-60 flex items-center justify-center z-[9999]"
@@ -198,6 +205,9 @@ export class PolygonDrawer {
     const button = box.querySelector('button')
     button?.addEventListener('click', () => {
       overlay.remove()
+      if (callBack) {
+        callBack()
+      }
     })
 
     overlay.appendChild(box)
