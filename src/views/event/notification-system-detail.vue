@@ -3,7 +3,7 @@
       :form-model="formModel"
       v-loading="isLoading"
       @update-status="loadNotice"
-      title="Chi tiết nội dung cảnh báo" class="flex justify-center p-6"
+      title="Chi tiết nội dung cảnh báo" class=" justify-center p-6"
   />
 </template>
 <script setup lang="ts">

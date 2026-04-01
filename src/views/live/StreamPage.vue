@@ -3,14 +3,15 @@
     <div class="grid monitor-layout-grid">
 
       <!-- Left Card: Area Tree -->
-      <div class="card modern-tree-sidebar">
-        <LiveTreeArea
+      <div>
+        <area-tree-live
+            ref="treeLiveRef"
             :request-fn="() => getAllTreeAreaApi({ cameras: true })"
             default-expand-all
             node-key="uniqueId"
             @updateCamSetting="updateCamSetting"
-            @node-click="handleNodeClick"
-        />
+            @nodeClick="handleNodeClick">
+        </area-tree-live>
       </div>
 
       <!-- Right Card: Monitoring Area -->
@@ -39,7 +40,8 @@
           </div>
         </div>
 
-        <div class="cam-grid" id="mainCamGrid">
+        <div class="cam-grid" id="mainCamGrid"
+             :style="{gridTemplateColumns: `repeat(${Math.sqrt(pageSize)}, 1fr)`, alignContent: 'start'}">
           <div v-for="cam in paginatedData" :key="cam.id" class="cam-cell">
             <web-player :cam="cam" :streamKey="cam.id"></web-player>
           </div>
@@ -68,12 +70,13 @@ import {isCam} from "@/utils/cameraUtils";
 import {environmentThermalApi} from "@/api/thermal-data";
 import WebPlayer from "@/components/Video/WebPlayer.vue";
 import {getAllTreeAreaApi} from "@/api/area";
-import LiveTreeArea from "@/components/Tree/LiveTreeArea.vue";
 import DrawerSetting from '@/views/live/components/DrawerSetting.vue'
 import {ElDrawer, ElMessage} from 'element-plus'
+import AreaTreeLive from "@/views/live/components/AreaTreeLive.vue";
 
 const fullList = ref<any[]>([])
 
+const treeLiveRef = ref()
 const pageSize = ref()
 const currentPage = ref(1)
 
@@ -102,6 +105,7 @@ const updateFullList = (value: any[]) => {
 
 const applySettings = () => {
   drawerVisible.value = false
+  treeLiveRef?.value?.fetch()
   ElMessage({
     message: 'Lưu thành công!',
     type: 'success',

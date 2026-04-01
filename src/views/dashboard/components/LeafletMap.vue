@@ -26,9 +26,9 @@
 
       <!-- Image overlay -->
       <l-image-overlay
-          v-if="mapType === MAP_TYPE_PICTURE && photoPath"
+          v-if="mapType === MAP_TYPE_PICTURE && photoPathValue"
           :opacity="mapType === MAP_TYPE_PICTURE ? 1 : 0"
-          :url="photoPath"
+          :url="photoPathValue"
           :cross-origin="false"
           :bounds="bounds"
       />
@@ -94,11 +94,16 @@ const flyToPoint = () => {
 
 const {imageCenter, bounds, updateBound} = useImageBounds()
 
+const photoPathValue = ref("")
 watch(
     () => props.photoPath,
     (path) => {
-      if (!path) return
-      updateBound(path)
+      if (!path) {
+        photoPathValue.value = '/images/blank.png'
+      } else {
+        photoPathValue.value = path;
+      }
+      updateBound(photoPathValue.value)
     },
     {immediate: true},
 )

@@ -12,8 +12,8 @@
               </div>
               <div class="kpi-icon bg-blue">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M23 7l-7 5 7 5V7z" />
-                  <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+                  <path d="M23 7l-7 5 7 5V7z"/>
+                  <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
                 </svg>
               </div>
             </div>
@@ -24,8 +24,8 @@
               </div>
               <div class="kpi-icon bg-purple">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                  <circle cx="12" cy="10" r="3" />
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                  <circle cx="12" cy="10" r="3"/>
                 </svg>
               </div>
             </div>
@@ -36,8 +36,8 @@
               </div>
               <div class="kpi-icon bg-red">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                  <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                  <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
                 </svg>
               </div>
             </div>
@@ -45,14 +45,14 @@
               <div style="flex: 1;">
                 <div class="kpi-lbl">Nhiệt độ Môi trường</div>
                 <div class="region-temp-list-compact">
-                  <div class="temp-item-compact"><label>Bắc</label><b>22°C</b></div>
-                  <div class="temp-item-compact"><label>Trung</label><b>28°C</b></div>
-                  <div class="temp-item-compact"><label>Nam</label><b>34°C</b></div>
+                  <div class="temp-item-compact"><label>Bắc</label><b>-°C</b></div>
+                  <div class="temp-item-compact"><label>Trung</label><b>-°C</b></div>
+                  <div class="temp-item-compact"><label>Nam</label><b>-°C</b></div>
                 </div>
               </div>
               <div class="kpi-icon bg-green">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" />
+                  <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>
                 </svg>
               </div>
             </div>
@@ -77,15 +77,12 @@
               <div class="map-toggle-group">
                 <button v-show="areaItem.mapType === MAP_TYPE_MAP" class="map-btn active">Bản đồ</button>
                 <span v-show="areaItem.mapType === MAP_TYPE_PICTURE">
-              <button v-show="areaItem.photoPath" :class="['map-btn', mapTypeDiagram === 'photoPath' ? 'active' : '']"
-                      @click="mapTypeDiagram = 'photoPath'">Sơ đồ 1 sợi</button>
-              <button v-show="areaItem.emapPhotoPath"
-                      :class="['map-btn', mapTypeDiagram === 'emapPhotoPath' ? 'active' : '']"
-                      @click="mapTypeDiagram = 'emapPhotoPath'">Sơ đồ mặt bằng</button>
-            </span>
-                <button class="map-btn" onclick="alert('Tính năng Mô hình BIM 3D đang được phát triển')">
-                  Mô hình BIM 3D
-                </button>
+                  <button v-show="areaItem.photoPath" :class="['map-btn', mapTypeDiagram === 'photoPath' ? 'active' : '']"
+                          @click="mapTypeDiagram = 'photoPath'">Sơ đồ 1 sợi</button>
+                  <button v-show="areaItem.emapPhotoPath"
+                          :class="['map-btn', mapTypeDiagram === 'emapPhotoPath' ? 'active' : '']"
+                          @click="mapTypeDiagram = 'emapPhotoPath'"> Mô hình BIM 3D</button>
+                </span>
               </div>
             </div>
             <div class="map-view-container mode-single" id="mapContainer">
@@ -96,7 +93,8 @@
                               :map-type="areaItem.mapType" :zoom="areaItem.zoom" :latitude="areaItem.latitude"
                               :longitude="areaItem.longitude">
                     <SensorDiagram v-if="mapTypeDiagram === 'photoPath'" :live-markers="liveMarkers"
-                                   :area-range-point-list="areaRangePointList" :live-temperature-map="liveTemperatureMap"
+                                   :area-range-point-list="areaRangePointList"
+                                   :live-temperature-map="liveTemperatureMap"
                                    @handleNodeClick="handleNodeClick" @showMarkerInfo="showMarkerInfo">
                     </SensorDiagram>
                     <CameraDiagram v-else-if="mapTypeDiagram === 'emapPhotoPath'" :live-markers="cameraMarker"
@@ -107,15 +105,25 @@
               </div>
             </div>
           </div>
-          <AreaTreeDashBoard :request-fn="getAllTreeAreaApi" @node-click="handleNodeClick" :default-expand-all="true"
-                             :check-strictly="true" :highlight-current="true" show-line></AreaTreeDashBoard>
+          <AreaTreeDashBoard
+              :request-fn="getAllTreeAreaApi"
+              @node-click="handleNodeClick"
+              :default-expand-all="true"
+              :check-strictly="true"
+              :highlight-current="true"
+          ></AreaTreeDashBoard>
         </div>
       </template>
     </data-fetcher>
     <base-dialog v-model="visibleThermalDetail" :close-on-click-modal="true">
       <div class="mt-4" v-loading="loadingThermalData">
-        <thermal-data :marker="selectedComponent" :thermalInfo="selectedThermalData">
-        </thermal-data>
+        <div v-if="selectedComponent.deviceType === 'Sensor'" class="text-center">
+            Nhiệt độ: {{ selectedThermalData?.temperature }}
+        </div>
+        <div v-else>
+          <thermal-data :marker="selectedComponent" :thermalInfo="selectedThermalData">
+          </thermal-data>
+        </div>
       </div>
     </base-dialog>
     <el-dialog v-model="visibleCameraDetail" :close-on-click-modal="true">
@@ -128,9 +136,9 @@
 
 <script setup lang="ts">
 import 'leaflet/dist/leaflet.css'
-import { nextTick, onMounted, onUnmounted, ref } from 'vue'
-import { getAllTreeAreaApi } from '@/api/area'
-import { MAP_TYPE_MAP, MAP_TYPE_PICTURE } from '@/constants'
+import {nextTick, onMounted, onUnmounted, ref} from 'vue'
+import {getAllTreeAreaApi} from '@/api/area'
+import {MAP_TYPE_MAP, MAP_TYPE_PICTURE} from '@/constants'
 import LeafletMap from '@/views/dashboard/components/LeafletMap.vue'
 import {
   createSignalRConnection,
@@ -140,6 +148,7 @@ import {
   stopSignalR,
 } from '@/plugins/signalr'
 import {
+  environmentThermalApi,
   machinesAndResultByAreaApi,
   thermalByComponentApi,
 } from '@/api/thermal-data'
@@ -149,7 +158,7 @@ import BaseDialog from "@/components/Dialog/BaseDialog.vue";
 import ThermalData from "@/views/dashboard/components/ThermalData.vue";
 import SensorDiagram from './components/SensorDiagram.vue'
 import CameraDiagram from './components/CameraDiagram.vue'
-import { getAllCamerasApi } from '@/api/camera'
+import {getAllCamerasApi} from '@/api/camera'
 import {summariseInfoApi} from "@/api/common";
 
 onMounted(() => {
@@ -157,7 +166,7 @@ onMounted(() => {
   createSignalRConnection()
   startSignalR()
   onSignalREvent('newThermalData', function (thermalData: any) {
-    liveTemperatureMap.value = { ...liveTemperatureMap.value, ...thermalData }
+    liveTemperatureMap.value = {...liveTemperatureMap.value, ...thermalData}
     liveMarkers.value = liveMarkers.value.map(function (item, index) {
       return {
         ...item,
@@ -210,7 +219,7 @@ const loadCameraFromArea = (area: any) => {
   if (!area) {
     return
   }
-  getAllCamerasApi({ areaId: area.id }).then((res) => {
+  getAllCamerasApi({areaId: area.id}).then((res) => {
     cameraMarker.value = res.data ?? []
   })
 }
@@ -219,7 +228,7 @@ const loadThermalData = (area: any, invokeSignal = true) => {
   if (!area) {
     return;
   }
-  machinesAndResultByAreaApi({ areaId: area?.id }).then((res) => {
+  machinesAndResultByAreaApi({areaId: area?.id}).then((res) => {
     loadMachineComponents(res.data.item1 ?? [], invokeSignal)
     if (area.mapType == MAP_TYPE_PICTURE) {
       areaRangePointList.value = []
@@ -233,7 +242,7 @@ const loadMachineComponents = (components: any[], invokeSignal = true) => {
     if (invokeSignal) {
       const machineIds: string[] = [
         ...new Set(
-          components.map((item) => item.machineId).filter((val): val is string => !!val),
+            components.map((item) => item.machineId).filter((val): val is string => !!val),
         ),
       ]
       invokeSignalR('RegisterMachines', machineIds)
@@ -254,24 +263,29 @@ const selectedThermalData = ref<any[]>([])
 const loadingThermalData = ref(false)
 const visibleThermalDetail = ref(false)
 const showMarkerInfo = (marker: any) => {
-  if (marker.deviceType === 'Sensor') {
-    return
-  }
   visibleThermalDetail.value = true
   selectedComponentId.value = marker.id
   selectedComponent.value = marker
   loadingThermalData.value = true
-  thermalByComponentApi({
-    machineId: marker.machineId,
-    id: marker.id,
-    deviceType: marker.deviceType,
-  })
-    .then((res) => {
+  if (marker.deviceType === 'Sensor') {
+    environmentThermalApi({areaId: areaItem.value}).then(res => {
       selectedThermalData.value = res.data
-    })
-    .finally(() => {
+    }) .finally(() => {
       loadingThermalData.value = false
     })
+  } else {
+    thermalByComponentApi({
+      machineId: marker.machineId,
+      id: marker.id,
+      deviceType: marker.deviceType,
+    })
+        .then((res) => {
+          selectedThermalData.value = res.data
+        })
+        .finally(() => {
+          loadingThermalData.value = false
+        })
+  }
 }
 
 const selectedCamera = ref<any>(null)

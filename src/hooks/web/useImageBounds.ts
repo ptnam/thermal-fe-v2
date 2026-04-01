@@ -42,7 +42,6 @@ export function useImageBounds() {
             ]
         }
         img.onerror = () => {
-            console.error('Failed to load image at', path)
             imageCenter.value = [0, 0]
             bounds.value = [
               [0, 0],

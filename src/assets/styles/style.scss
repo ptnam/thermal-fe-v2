@@ -1509,8 +1509,6 @@ body {
   .tree-search-box {
     width: 100%;
     padding: 10px 14px;
-    background: var(--bg-body);
-    border: 1px solid var(--border);
     border-radius: 8px;
     font-size: 13px;
     color: var(--text-main);
@@ -1631,6 +1629,7 @@ body {
   /* --- 8.1 AREA TREE COMPONENT (Latest Premium Style - Prefixed) --- */
   .modern-tree-sidebar {
     width: 300px;
+    background: #0f172a;
     /* Deeper Dark */
     border-right: 1px solid rgba(255, 255, 255, 0.05);
     display: flex;

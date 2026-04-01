@@ -2,10 +2,7 @@
 import {onMounted, ref, watch} from 'vue'
 import {TreeInstance} from 'element-plus'
 import {isCam} from "@/utils/cameraUtils";
-import {h} from 'vue'
-import {getElementLabelLine} from "element-tree-line";
 
-const ElementTreeLine = getElementLabelLine(h)
 
 interface Tree {
   [key: string]: any
@@ -80,14 +77,7 @@ onMounted(() => {
           v-bind="$attrs"
       >
         <template #default="{ node }">
-          <ElementTreeLine
-              :node="node"
-              :showLabelLine="true"
-          >
-            <template #node-label>
-              <span class="at-node">{{ node.data.name }}</span>
-            </template>
-          </ElementTreeLine>
+          <span class="at-node">{{ node.data.name }}</span>
         </template>
       </el-tree>
     </div>
