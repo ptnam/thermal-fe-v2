@@ -13,6 +13,7 @@ import {joinFieldValues} from "@/utils/stringUtils";
 import ApiButton from '@/components/Button/ApiButton.vue'
 import SearchButton from '@/components/Button/SearchButton.vue'
 import ActionForm from '@/components/Form/ActionForm.vue'
+import UserCard from "@/views/category/user/components/UserCard.vue";
 
 const {t} = useLang()
 const renderActionColumn = (scope: any) => {
@@ -98,7 +99,9 @@ const saveSuccess = () => {
       }"
       @addHandler="openDialogAdd"
       :search-props="{ visibleSearchButton: false, className: '' }"
-
+      :cardComponent="UserCard"
+      @edit="openDialogEdit"
+      @delete="openDelete"
   >
     <template slot="search" v-slot="{ searchParams }">
       <div class="filter-row">

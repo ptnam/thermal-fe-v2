@@ -9,13 +9,15 @@
       <div v-show="row.note" class="sc-info-item">📝 {{row.note}}</div>
     </div>
     <div class="sc-actions">
-      <button class="action-btn-circle btn-edit-round" @click="() => emit('edit', {row:row})">✎</button>
-      <button class="action-btn-circle btn-delete-round" @click="() => emit('delete', {row:row})">🗑</button></div>
+      <button class="action-btn-circle btn-edit-round" @click="() => $emit('edit', {row:row})">✎</button>
+      <button class="action-btn-circle btn-delete-round" @click="() => $emit('delete', {row:row})">🗑</button>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { TableColumn } from './TableCard.vue'
+
+import {TableColumn} from "@/components/Table/TableCard.vue";
 
 type RowData = Record<string, unknown>
 defineProps<{
@@ -24,7 +26,5 @@ defineProps<{
   index: number
   loading: boolean
 }>()
-
-const emit = defineEmits("edit", "delete")
 
 </script>

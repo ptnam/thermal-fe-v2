@@ -17,6 +17,7 @@ import {joinFieldValues} from '@/utils/stringUtils'
 import {getAllTreeAreaApi} from '@/api/area'
 import TreeSelectRemote from '@/components/Tree/TreeSelectRemote.vue'
 import SearchButton from "@/components/Button/SearchButton.vue";
+import GroupCard from "@/views/notification/components/GroupCard.vue";
 
 const {t} = useLang()
 
@@ -39,7 +40,16 @@ const columns = computed<TableColumn[]>(() => [
       default: (scope: any) => <span>{joinFieldValues(scope.row.events, 'name')}</span>,
     },
   },
-  {prop: 'groupStatusObject.name', label: 'Trạng thái'},
+  {
+    prop: 'displayStatus',
+    width: 140,
+    label: t('fields.status'),
+    slots: {
+      default: ({row}) => (<span   style={{
+        color: row.status === 'Active' ? 'var(--success)' : 'var(--danger)'
+      }}>{row?.groupStatusObject?.name}</span>)
+    },
+  },
   {
     label: t('fields.action'),
     width: '110px',
@@ -96,6 +106,9 @@ const changeAreaId = (searchParams: GenericObject) => {
         fetchDataApi: getNotificationGroupListApi,
       }"
       @addHandler="openDialogAdd"
+      :card-component="GroupCard"
+      @edit="openDialogEdit"
+      @delete="openDelete"
   >
     <template slot="search" v-slot="{ searchParams, tableMethods }">
       <div class="filter-row">

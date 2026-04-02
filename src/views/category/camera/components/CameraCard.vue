@@ -1,13 +1,13 @@
 <template>
   <div class="sensor-card-item">
-    <div class="sc-header"><span class="sc-id">{{row?.code}}</span>
-      <span :style="{color: row.status === 'Active' ? 'var(--success)' : 'var(--danger)', fontSize: '12px'}">● Online</span>
+    <div class="sc-header"><span class="sc-id">{{ row?.code }}</span>
+      <span
+          :style="{color: row.status === 'Active' ? 'var(--success)' : 'var(--danger)', fontSize: '12px'}">● Online</span>
     </div>
-    <div class="sc-img-wrap"><img src="https://9dpi.github.io/ifs_trambienap/html/images/cam-02.png" class="sc-img" alt="Camera"></div>
-    <div class="sc-name">{{row?.name}}</div>
+    <div class="sc-name">{{ row?.name }}</div>
     <div class="sc-info">
-      <div class="sc-info-item">📍 {{row?.area?.name }}</div>
-      <div class="sc-info-item">🎥 {{row?.cameraTypeObject?.name }}</div>
+      <div class="sc-info-item">📍 {{ row?.area?.name }}</div>
+      <div class="sc-info-item">🎥 {{ row?.cameraTypeObject?.name }}</div>
     </div>
     <div class="sc-actions">
       <div class="action-group">
@@ -19,7 +19,8 @@
             <path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path>
           </svg>
         </button>
-        <button class="action-btn-circle btn-gray-outline" title="Xem danh sách góc quay" @click="() => emits('showPresets', row)">
+        <button class="action-btn-circle btn-gray-outline" title="Xem danh sách góc quay"
+                @click="() => emits('showPresets', row)">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="5 9 2 12 5 15"></polyline>
             <polyline points="9 5 12 2 15 5"></polyline>
@@ -29,11 +30,17 @@
             <line x1="12" y1="2" x2="12" y2="22"></line>
           </svg>
         </button>
-        <button v-if="row.cameraType === CAMERA_NORMAL_TYPE" class="action-btn-circle btn-gray-outline" title="Chỉnh góc quay" @click="() => emits('showVisionPresets', {row:row})">
-          <el-icon><Aim /></el-icon>
+        <button v-if="row.cameraType === CAMERA_NORMAL_TYPE" class="action-btn-circle btn-gray-outline"
+                title="Chỉnh góc quay" @click="() => emits('showVisionPresets', {row:row})">
+          <el-icon>
+            <Aim/>
+          </el-icon>
         </button>
-        <button class="action-btn-circle btn-gray-outline" title="Cài đặt góc quay" @click="() => emits('showPresetSetting', row)">
-          <el-icon><Pointer /></el-icon>
+        <button class="action-btn-circle btn-gray-outline" title="Cài đặt góc quay"
+                @click="() => emits('showPresetSetting', row)">
+          <el-icon>
+            <Pointer/>
+          </el-icon>
         </button>
         <button class="action-btn-circle btn-blue" title="Sửa" @click="() => emits('edit', {row:row})">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -50,11 +57,17 @@
             <line x1="14" y1="11" x2="14" y2="17"></line>
           </svg>
         </button>
-        <button class="action-btn-circle btn-gray-outline" title="Cài đặt góc quay" @click="() => emits('showVisionPresets', {row:row})">
-          <el-icon><Aim /></el-icon>
+        <button class="action-btn-circle btn-gray-outline" title="Cài đặt góc quay"
+                @click="() => emits('showVisionPresets', {row:row})">
+          <el-icon>
+            <Aim/>
+          </el-icon>
         </button>
-        <button class="action-btn-circle btn-gray-outline" title="Cài đặt AI" @click="() => emits('showAISetting', {row:row})">
-          <el-icon><Notification /></el-icon>
+        <button class="action-btn-circle btn-gray-outline" title="Cài đặt AI"
+                @click="() => emits('showAISetting', row)">
+          <el-icon>
+            <Notification/>
+          </el-icon>
         </button>
       </div>
     </div>
@@ -62,9 +75,9 @@
 </template>
 
 <script setup lang="ts">
-import type { TableColumn } from './TableCard.vue'
-import { CAMERA_NORMAL_TYPE } from '@/constants'
-import { Aim, Notification, Pointer } from '@element-plus/icons-vue'
+import type {TableColumn} from './TableCard.vue'
+import {CAMERA_NORMAL_TYPE} from '@/constants'
+import {Aim, Notification, Pointer} from '@element-plus/icons-vue'
 
 type RowData = Record<string, unknown>
 defineProps<{

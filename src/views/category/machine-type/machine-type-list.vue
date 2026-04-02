@@ -13,6 +13,7 @@ import {Plus} from '@element-plus/icons-vue'
 import {useRouter} from 'vue-router'
 import SearchButton from '@/components/Button/SearchButton.vue'
 import DrawerForm from "@/components/Form/DrawerForm.vue";
+import MachineTypeCard from "@/views/category/machine-type/components/MachineTypeCard.vue";
 
 const {t} = useLang()
 const router = useRouter()
@@ -20,7 +21,16 @@ const router = useRouter()
 const columns = computed<TableColumn[]>(() => [
   {prop: 'code', label: 'Mã loại thiết bị'},
   {prop: 'name', label: 'Tên loại thiết bị'},
-  {prop: 'statusObject.name', width: 140, label: t('fields.status')},
+  {
+    prop: 'displayStatus',
+    width: 140,
+    label: t('fields.status'),
+    slots: {
+      default: ({row}) => (<span   style={{
+        color: row.status === 'Active' ? 'var(--success)' : 'var(--danger)'
+      }}>{row.displayStatus}</span>)
+    },
+  },
   {prop: 'createdAt', width: 160, label: t('fields.created_at')},
   {
     label: t('fields.action'),
@@ -59,7 +69,7 @@ const openDelete = (scope: any) => {
 }
 
 const addMachinePart = (scope: any) => {
-  router.push({name: 'machine_part', params: {machineTypeId: scope.row.id}, query: {name: scope.row.mame}})
+  router.push({name: 'machine_part', params: {machineTypeId: scope.row.id}})
 }
 
 const saveSuccess = () => {
@@ -81,6 +91,10 @@ const saveSuccess = () => {
       :search-props="{
         className: ''
       }"
+      :card-component="MachineTypeCard"
+      @edit="openDialogEdit"
+      @delete="openDelete"
+      @addMachinePart="addMachinePart"
   >
     <template slot="search" v-slot="{ searchParams, tableMethods }">
       <div class="filter-row">

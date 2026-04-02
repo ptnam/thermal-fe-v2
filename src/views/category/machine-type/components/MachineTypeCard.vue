@@ -9,13 +9,12 @@
     </div>
     <div class="sc-name">{{ row.name }}</div>
     <div class="sc-info">
-      <div class="sc-info-item">📍 {{ row?.area?.name }}</div>
-      <div class="sc-info-item">📦 Loại: {{row?.machineType?.name}}</div>
-    </div>
-    <div class="sc-info">
       <div class="sc-info-item">📅 {{ row.createdAt }}</div>
     </div>
     <div class="sc-actions">
+      <button class="btn-add" @click="() => $emit('addMachinePart',{row:row} )"
+              style="padding: 4px 12px; font-size: 11px;">+ Bộ phận
+      </button>
       <button class="action-btn-circle btn-edit-round" @click="() => $emit('edit', {row:row})">✎</button>
       <button class="action-btn-circle btn-delete-round" @click="() => $emit('delete', {row:row})">🗑</button>
     </div>

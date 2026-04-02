@@ -87,8 +87,8 @@ const saveSuccess = () => {
       :default-expand-all="false"
       @addHandler="openDialogAdd"
       :tree-props="{ children: 'children', checkStrictly: true }"
-      @edit="(scope) => openDialogEdit(scope)"
-      @delete="(scope) => openDelete(scope)"
+      @edit="openDialogEdit"
+      @delete="openDelete"
   >
     <template slot="search" v-slot="{ searchParams, tableMethods }">
       <div class="filter-item">

@@ -14,6 +14,7 @@ import {getUserListApi} from '@/api/user'
 import InfiniteSelect from '@/components/Selection/InfiniteSelect.vue'
 import {joinFieldValues} from '@/utils/stringUtils'
 import SearchButton from "@/components/Button/SearchButton.vue";
+import ChannelCard from "@/views/notification/components/ChannelCard.vue";
 
 const {t} = useLang()
 
@@ -27,7 +28,16 @@ const columns = computed<TableColumn[]>(() => [
       default: (scope: any) => <span>{joinFieldValues(scope.row.users, 'firstName')}</span>,
     },
   },
-  {prop: 'displayStatus', label: 'Trạng thái'},
+  {
+    prop: 'displayStatus',
+    width: 140,
+    label: t('fields.status'),
+    slots: {
+      default: ({row}) => (<span   style={{
+        color: row.status === 'Active' ? 'var(--success)' : 'var(--danger)'
+      }}>{row.displayStatus}</span>)
+    },
+  },
   {prop: 'createdAt', label: 'Ngày tạo'},
   {
     label: t('fields.action'),
@@ -80,6 +90,9 @@ const saveSuccess = () => {
       }"
       @addHandler="openDialogAdd"
       :search-props="{className:''}"
+      :card-component="ChannelCard"
+      @edit="openDialogEdit"
+      @delete="openDelete"
   >
     <template slot="search" v-slot="{ searchParams, tableMethods }">
       <div class="filter-row">

@@ -191,6 +191,7 @@ const uploadApi = (file: File) => {
         @edit="openDialogEdit"
         @delete="openDelete"
         @showPresetSetting="showPresetSetting"
+        @showAISetting="showAISetting"
     >
       <template slot="search" v-slot="{ searchParams, tableMethods }">
         <div class="filter-row">
