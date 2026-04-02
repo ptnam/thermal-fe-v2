@@ -7,6 +7,7 @@ import useRequest from "@/hooks/web/useRequest";
 import {CAMERA_COMMANDS} from "@/constants/camera";
 import {PolygonDrawer} from "@/utils/PolygonDrawer";
 import {thermalDataByAreaApi} from "@/api/thermal-data";
+import { useClock } from '@/hooks/web/useClock'
 
 const props = defineProps({
   streamKey: {
@@ -21,6 +22,8 @@ const props = defineProps({
     default: true
   }
 })
+
+const { localTime } = useClock();
 
 const videoRef = ref<HTMLElement | null>(null)
 const canvasRef = ref<HTMLCanvasElement | null>(null)
@@ -227,7 +230,7 @@ defineExpose({
     </div>
     <div style="display:flex; gap:15px; align-items:center">
       <div class="live-badge">LIVE FEED</div>
-      <div style="font-family:'JetBrains Mono'; font-size:13px; color:#94A3B8"></div>
+      <div style="font-family:'JetBrains Mono'; font-size:13px; color:#94A3B8">{{localTime}}</div>
     </div>
   </header>
   <div class="live-container">

@@ -25,7 +25,7 @@
             </div>
             <div style="display: flex; align-items: center; gap: 15px;">
               <div v-show="showBtnSwitch" class="view-switcher">
-                <button class="view-btn active" onclick="switchView('table')">
+                <button class="view-btn" :class="{active: viewLayout ==='table'}" @click="()=>switchView('table')">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="8" y1="6" x2="21" y2="6"></line>
@@ -36,7 +36,7 @@
                     <line x1="3" y1="18" x2="3.01" y2="18"></line>
                   </svg>
                 </button>
-                <button class="view-btn" onclick="switchView('card')">
+                <button class="view-btn" :class="{active: viewLayout ==='card'}" @click="() => switchView('card')">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="3" y="3" width="7" height="7"></rect>
@@ -52,7 +52,7 @@
         </slot>
 
         <!-- TABLE VIEW -->
-        <div>
+        <div v-if="viewLayout ==='table'">
           <BaseTable
               :data="dataList"
               :loading="loading"
@@ -61,6 +61,16 @@
               v-bind="$attrs"
           >
           </BaseTable>
+        </div>
+        <div  v-if="viewLayout ==='card'" class="card-view-grid">
+          <TableCard
+            :data="dataList"
+            :loading="loading"
+            :columns="columnValue"
+            :card-component="cardComponent"
+            :card-props="cardProps"
+            v-bind="$attrs"
+          />
         </div>
         <BasePagination
             v-if="showPagination"
@@ -84,10 +94,11 @@ import BaseTable from '@/components/Table/BaseTable.vue'
 import {useTable} from '@/hooks/web/useTable'
 import type {UseTableConfig} from '@/hooks/web/useTable'
 import SearchForm from '@/components/PageTemplate/List/SearchForm.vue'
-import {onMounted, PropType, ref, watch} from 'vue'
+import { onMounted, PropType, ref, useAttrs, watch} from 'vue'
 import BasePagination from '@/components/Pagination/BasePagination.vue'
 import {TableColumn} from '@/components/Table'
 import {usePaginationStore} from '@/store/modules/paginationStore'
+import BasicColsCard from '@/components/Table/BasicColsCard.vue'
 
 const props = defineProps({
   keyList: {
@@ -102,6 +113,13 @@ const props = defineProps({
   useTableConfig: {
     type: Object as PropType<UseTableConfig>,
     required: true,
+  },
+  cardComponent: {
+    default: BasicColsCard,
+    required: false,
+  },
+  cardProps: {
+    required: false,
   },
   title: {
     type: String,
@@ -128,12 +146,17 @@ const props = defineProps({
     default: true,
   },
 })
+const attrs = useAttrs()
+
 const paginationStore = usePaginationStore()
 const {tableRegister, searchParams, tableState, tableMethods} = useTable(props.useTableConfig)
 const {loading, dataList} = tableState
 const columnValue = ref(props.columns)
 const paginationSetting = ref<object>({})
-
+const viewLayout = ref("table");
+const switchView = (layout:string) => {
+  viewLayout.value = layout
+}
 const applyPaginationColumns = (paginationSettingValue: object) => {
   paginationSetting.value = paginationSettingValue
   const cols = props.columns.map((col) => ({...col}))

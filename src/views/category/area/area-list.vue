@@ -11,6 +11,7 @@ import EditCircleButton from '@/components/Button/EditCircleButton.vue'
 import DeleteCircleButton from '@/components/Button/DeleteCircleButton.vue'
 import SearchButton from "@/components/Button/SearchButton.vue";
 import DrawerForm from "@/components/Form/DrawerForm.vue";
+import AreaCard from '@/views/category/area/components/AreaCard.vue'
 
 const { t } = useLang()
 const renderActionColumn = (scope: any) => {
@@ -78,6 +79,7 @@ const saveSuccess = () => {
       title="Danh sách khu vực"
       key-list="area-list"
       :columns="columns"
+      :card-component="AreaCard"
       :use-table-config="{
         fetchDataApi: getAreaListApi,
       }"
@@ -85,6 +87,8 @@ const saveSuccess = () => {
       :default-expand-all="false"
       @addHandler="openDialogAdd"
       :tree-props="{ children: 'children', checkStrictly: true }"
+      @edit="(scope) => openDialogEdit(scope)"
+      @delete="(scope) => openDelete(scope)"
   >
     <template slot="search" v-slot="{ searchParams, tableMethods }">
       <div class="filter-item">

@@ -8,6 +8,7 @@
     }"
       :loading="loading"
       :disabled="loading"
+      :fit-input-width="false"
       v-bind="$attrs"
       @change="handleChange"
   >

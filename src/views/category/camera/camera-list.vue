@@ -29,6 +29,7 @@ import SearchButton from '@/components/Button/SearchButton.vue'
 import DrawerForm from '@/components/Form/DrawerForm.vue'
 import {useRouter} from 'vue-router';
 import {downloadFile} from "@/utils/response";
+import CameraCard from '@/views/category/camera/components/CameraCard.vue'
 
 const router = useRouter();
 
@@ -176,14 +177,20 @@ const uploadApi = (file: File) => {
         ref="elTableRef"
         key-list="camera-list"
         :columns="columns"
+        :card-component="CameraCard"
         :use-table-config="{
-        fetchDataApi: getCameraListApi,
-      }"
+          fetchDataApi: getCameraListApi,
+        }"
         :search-props="{
-        className: ''
-      }"
+          className: ''
+        }"
         @addHandler="openDialogAdd"
         title="Danh sách camera"
+        @syncPresets="syncPresets"
+        @showPresets="showPresets"
+        @edit="openDialogEdit"
+        @delete="openDelete"
+        @showPresetSetting="showPresetSetting"
     >
       <template slot="search" v-slot="{ searchParams, tableMethods }">
         <div class="filter-row">

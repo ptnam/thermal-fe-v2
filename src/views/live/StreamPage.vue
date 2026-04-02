@@ -41,7 +41,7 @@
         </div>
 
         <div class="cam-grid" id="mainCamGrid"
-             :style="{gridTemplateColumns: `repeat(${Math.sqrt(pageSize)}, 1fr)`, alignContent: 'start'}">
+             :style="{gridTemplateColumns: `repeat(${pageSizeCol}, 1fr)`, alignContent: 'start'}">
           <div v-for="cam in paginatedData" :key="cam.id" class="cam-cell">
             <web-player :cam="cam" :streamKey="cam.id"></web-player>
           </div>
@@ -89,6 +89,13 @@ const selectedAreaId = ref(null)
 const paginatedData = computed(() => {
   const start = (currentPage.value - 1) * pageSize.value
   return fullList.value.slice(start, start + pageSize.value)
+})
+
+const pageSizeCol = computed(() => {
+  if (fullList.value.length === 1) {
+    return 1
+  }
+  return Math.sqrt(pageSize)
 })
 
 const updateCamSetting = (data: any) => {

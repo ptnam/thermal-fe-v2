@@ -1,0 +1,80 @@
+<template>
+  <div class="sensor-card-item">
+    <div class="sc-header"><span class="sc-id">{{row?.code}}</span>
+      <span :style="{color: row.status === 'Active' ? 'var(--success)' : 'var(--danger)', fontSize: '12px'}">● Online</span>
+    </div>
+    <div class="sc-img-wrap"><img src="https://9dpi.github.io/ifs_trambienap/html/images/cam-02.png" class="sc-img" alt="Camera"></div>
+    <div class="sc-name">{{row?.name}}</div>
+    <div class="sc-info">
+      <div class="sc-info-item">📍 {{row?.area?.name }}</div>
+      <div class="sc-info-item">🎥 {{row?.cameraTypeObject?.name }}</div>
+    </div>
+    <div class="sc-actions">
+      <div class="action-group">
+        <button class="action-btn-circle btn-gray-outline" title="Đồng bộ" @click="() => emits('syncPresets', row)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 2v6h-6"></path>
+            <path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path>
+            <path d="M3 22v-6h6"></path>
+            <path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path>
+          </svg>
+        </button>
+        <button class="action-btn-circle btn-gray-outline" title="Xem danh sách góc quay" @click="() => emits('showPresets', row)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="5 9 2 12 5 15"></polyline>
+            <polyline points="9 5 12 2 15 5"></polyline>
+            <polyline points="15 19 12 22 9 19"></polyline>
+            <polyline points="19 9 22 12 19 15"></polyline>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+            <line x1="12" y1="2" x2="12" y2="22"></line>
+          </svg>
+        </button>
+        <button v-if="row.cameraType === CAMERA_NORMAL_TYPE" class="action-btn-circle btn-gray-outline" title="Chỉnh góc quay" @click="() => emits('showVisionPresets', {row:row})">
+          <el-icon><Aim /></el-icon>
+        </button>
+        <button class="action-btn-circle btn-gray-outline" title="Cài đặt góc quay" @click="() => emits('showPresetSetting', row)">
+          <el-icon><Pointer /></el-icon>
+        </button>
+        <button class="action-btn-circle btn-blue" title="Sửa" @click="() => emits('edit', {row:row})">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+        </button>
+        <button class="action-btn-circle btn-red" title="Xóa" @click="() => emits('delete', {row:row})">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+            </path>
+            <line x1="10" y1="11" x2="10" y2="17"></line>
+            <line x1="14" y1="11" x2="14" y2="17"></line>
+          </svg>
+        </button>
+        <button class="action-btn-circle btn-gray-outline" title="Cài đặt góc quay" @click="() => emits('showVisionPresets', {row:row})">
+          <el-icon><Aim /></el-icon>
+        </button>
+        <button class="action-btn-circle btn-gray-outline" title="Cài đặt AI" @click="() => emits('showAISetting', {row:row})">
+          <el-icon><Notification /></el-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import type { TableColumn } from './TableCard.vue'
+import { CAMERA_NORMAL_TYPE } from '@/constants'
+import { Aim, Notification, Pointer } from '@element-plus/icons-vue'
+import { ElButton } from 'element-plus'
+
+type RowData = Record<string, unknown>
+defineProps<{
+  row: RowData
+  columns: TableColumn[]
+  index: number
+  loading: boolean
+}>()
+
+const emits = defineEmits("edit", "delete")
+
+</script>

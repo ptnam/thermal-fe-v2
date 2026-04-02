@@ -118,7 +118,7 @@
     <base-dialog v-model="visibleThermalDetail" :close-on-click-modal="true">
       <div class="mt-4" v-loading="loadingThermalData">
         <div v-if="selectedComponent.deviceType === 'Sensor'" class="text-center">
-            Nhiệt độ: {{ selectedThermalData?.temperature }}
+            Nhiệt độ: {{ selectedEnvironmentThermal?.temperature }}
         </div>
         <div v-else>
           <thermal-data :marker="selectedComponent" :thermalInfo="selectedThermalData">
@@ -259,6 +259,7 @@ const loadMachineComponents = (components: any[], invokeSignal = true) => {
 
 const selectedComponentId = ref(null)
 const selectedComponent = ref<any>(null)
+const selectedEnvironmentThermal = ref<any>()
 const selectedThermalData = ref<any[]>([])
 const loadingThermalData = ref(false)
 const visibleThermalDetail = ref(false)
@@ -269,7 +270,7 @@ const showMarkerInfo = (marker: any) => {
   loadingThermalData.value = true
   if (marker.deviceType === 'Sensor') {
     environmentThermalApi({areaId: areaItem.value}).then(res => {
-      selectedThermalData.value = res.data
+      selectedEnvironmentThermal.value = res.data
     }) .finally(() => {
       loadingThermalData.value = false
     })
