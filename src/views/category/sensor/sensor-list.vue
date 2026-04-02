@@ -18,6 +18,7 @@ import SearchButton from '@/components/Button/SearchButton.vue'
 import useRequest from "@/hooks/web/useRequest";
 import {downloadFile} from "@/utils/response";
 import {ElButton} from "element-plus";
+import SensorCard from '@/views/category/sensor/components/SensorCard.vue'
 
 const {t} = useLang()
 
@@ -111,6 +112,9 @@ const uploadApi = (file: File) => {
       }"
       @addHandler="openDialogAdd"
       title="Danh sách cảm biến nhiệt"
+      :card-component="SensorCard"
+      @edit="openDialogEdit"
+      @delete="openDelete"
   >
     <template slot="search" v-slot="{ searchParams, tableMethods }">
       <div class="filter-row">

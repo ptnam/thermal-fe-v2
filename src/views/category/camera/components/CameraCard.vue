@@ -65,7 +65,6 @@
 import type { TableColumn } from './TableCard.vue'
 import { CAMERA_NORMAL_TYPE } from '@/constants'
 import { Aim, Notification, Pointer } from '@element-plus/icons-vue'
-import { ElButton } from 'element-plus'
 
 type RowData = Record<string, unknown>
 defineProps<{

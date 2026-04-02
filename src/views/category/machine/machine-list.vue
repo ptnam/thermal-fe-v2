@@ -23,6 +23,7 @@ import ExportButton from "@/components/Button/ExportButton.vue";
 import {downloadFile} from "@/utils/response";
 import useRequest from "@/hooks/web/useRequest";
 import DrawerForm from "@/components/Form/DrawerForm.vue";
+import MachineCard from '@/views/category/machine/components/MachineCard.vue'
 
 const {t} = useLang()
 
@@ -130,8 +131,11 @@ const uploadApi = (file: File) => {
           fetchDataApi: getMachineListApi,
         }"
       @addHandler="openDialogAdd"
+      :card-component="MachineCard"
       v-loading="detailLoading"
       title="Danh sách thiết bị"
+      @edit="openDialogEdit"
+      @delete="openDelete"
   >
     <template slot="search" v-slot="{ searchParams }">
       <div class="filter-item">
