@@ -42,9 +42,11 @@
                     title="Thiết bị"
                     col-label="name"
                     col-value="id"
+                    @change="changeMachineIds"
                 />
                 <filter-group-input
-                    v-if="searchParams.machineIds"
+                    v-show="searchParams.machineIds"
+                    ref="machineComponentInputRef"
                     :request-fn="() => getMultiComponentsMachineApi({machineIds:searchParams.machineIds})"
                     v-model="searchParams.machineComponentIds"
                     title="Bộ phận"
@@ -52,7 +54,7 @@
                     col-value="id"
                 />
                 <filter-group-input
-                    v-if="searchParams.machineComponentIds && searchParams.machineComponentIds.length === 1"
+                    v-show="searchParams.machineComponentIds && searchParams.machineComponentIds.length === 1"
                     :request-fn="() => allMonitorPointsByMachineComponentApi({machineComponentId: searchParams.machineComponentIds[0]})"
                     v-model="monitorPoint"
                     title="Điểm giám sát"
@@ -162,7 +164,7 @@ import {
   getMultiComponentsMachineApi, saveMachineSettingApi
 } from '@/api/machine'
 import useRequest from "@/hooks/web/useRequest";
-import {computed, onMounted, ref} from 'vue'
+import {computed, onMounted, ref, watch } from 'vue'
 import VueApexChart from "vue3-apexcharts";
 import {getAllAreaApi} from "@/api/area";
 import {
@@ -287,6 +289,11 @@ const  countValidFields = (obj: any) => {
     return true
   }).length
 }
+
+const machineComponentInputRef = ref(null);
+const changeMachineIds = ()=> {
+  machineComponentInputRef?.value?.fetch()
+};
 const search = () => {
   const mapApi = {
     1: hourlyThermalDataApi,

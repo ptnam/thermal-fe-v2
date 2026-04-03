@@ -20,7 +20,7 @@
       </svg>
     </div>
 
-    <div v-show="isOpen" class="filter-group-content">
+    <div v-show="isOpen" class="filter-group-content" v-loading="loading">
       <div class="filter-list scroll-list">
         <div
           v-for="item in options"
@@ -68,9 +68,9 @@ onMounted(() => {
   init()
 })
 const init = async () => {
-  remoteMethod()
+  fetch()
 }
-const remoteMethod = () => {
+const fetch = () => {
   if (loading.value === false) {
     loading.value = true
     props
@@ -83,7 +83,7 @@ const remoteMethod = () => {
       })
   }
 }
-const emit = defineEmits(["update:modelValue"])
+const emit = defineEmits(["update:modelValue", "change"])
 
 const isOpen = ref(props.defaultOpen)
 
@@ -112,7 +112,12 @@ function toggleItem(id: string | number) {
   }
 
   emit('update:modelValue', next)
+  emit('change', next)
 }
+
+defineExpose({
+  fetch
+})
 </script>
 
 <style scoped>

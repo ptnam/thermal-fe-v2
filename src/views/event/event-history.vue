@@ -23,6 +23,7 @@ import {
 } from '@/plugins/signalr'
 import { downloadByPathApi } from '@/api/common'
 import { downloadFile } from '@/utils/response'
+import EventHistoryCard from '@/views/event/components/EventHistoryCard.vue'
 
 const defaultCols = [
   { prop: 'dateData', label: 'Ngày', width: 160, align: 'center' },
@@ -194,10 +195,10 @@ const exportFile = (searchParams: any) => {
           toTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
         },
       }"
-      :search-props="{ visibleSearchButton: false, inline: false }"
+      :search-props="{ visibleSearchButton: false, inline: false, className:'' }"
       :span-method="objectSpanMethod"
       :show-btn-add="false"
-      :showBtnSwitch="false"
+      :card-component="EventHistoryCard"
     >
       <template slot="search" v-slot="{ searchParams }">
         <div class="filter-row">

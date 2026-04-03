@@ -17,7 +17,6 @@ import {
 import {getAllMachineApi} from '@/api/machine'
 import VirtualizedSelectFromUrl from '@/components/Selection/VirtualizedSelectFromUrl.vue'
 import dayjs from 'dayjs'
-import BaseDialog from '@/components/Dialog/BaseDialog.vue'
 import NotificationFormDetail from '@/views/event/components/NotificationFormDetail.vue'
 import useRequest from '@/hooks/web/useRequest'
 import SearchButton from '@/components/Button/SearchButton.vue'
@@ -32,6 +31,7 @@ import {
 import {downloadByPathApi} from '@/api/common'
 import {downloadFile} from '@/utils/response'
 import {ElImage} from 'element-plus'
+import NotificationSystemCard from '@/views/event/components/NotificationSystemCard.vue'
 
 const {confirmModal} = useConfirmModal()
 
@@ -172,7 +172,7 @@ const exportFile = (searchParams: any) => {
     title="Danh sách Nhiệt độ vượt ngưỡng"
     key-list="notification-system"
     :columns="columns"
-    :search-props="{ visibleSearchButton: false, inline: false }"
+    :search-props="{ visibleSearchButton: false, inline: false, className:'' }"
     :use-table-config="{
         fetchDataApi: listNotificationApi,
         searchDefaults: {
@@ -180,6 +180,7 @@ const exportFile = (searchParams: any) => {
         },
       }"
     :show-btn-add="false"
+    :card-component="NotificationSystemCard"
   >
     <template slot="search" v-slot="{ searchParams }">
       <div class="filter-row">
@@ -232,10 +233,13 @@ const exportFile = (searchParams: any) => {
 
     </template>
   </list-template>
-  <base-dialog v-model="detailVisible" v-loading="isLoading" :close-on-click-modal="true">
+  <drawer-form v-model="detailVisible" v-loading="isLoading"
+               :close-on-click-modal="true"
+               :destroy-on-close="true"
+               style="min-width: 750px">
     <notification-form-detail
       :form-model="formModel"
       @update-status="() => elTableRef?.refresh()"
     />
-  </base-dialog>
+  </drawer-form>
 </template>
