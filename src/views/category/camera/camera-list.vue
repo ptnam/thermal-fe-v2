@@ -235,7 +235,7 @@ const uploadApi = (file: File) => {
           @success="() => visibleUpload = false"
       ></base-upload>
     </base-dialog>
-    <base-dialog
+    <drawer-form
         :destroy-on-close="true"
         v-model="dialogVisible"
         style="width: 1100px"
@@ -247,7 +247,7 @@ const uploadApi = (file: File) => {
           @success="saveSuccess"
           v-loading="detailLoading"
       ></camera-form-tab>
-    </base-dialog>
+    </drawer-form>
     <base-dialog v-model="presetDialogVisible" title="Thông số góc quay">
       <PresetTourTab :presets="presets" :tours="cameraTours"/>
     </base-dialog>

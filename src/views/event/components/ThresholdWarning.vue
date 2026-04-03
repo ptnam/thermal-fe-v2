@@ -149,7 +149,7 @@ const refresh = () => {
       categoryLabel.push(item.dataDate);
     }
     series.value = [{
-      name: "Total",
+      name: "Số lượng cảnh báo",
       data: seriesData
     }]
     chartBarRef.value?.updateSeries(series.value, true)
