@@ -3,7 +3,6 @@
     v-model="displayValue"
     inputmode="numeric"
     pattern="[0-9]*"
-    :maxlength="maxlength"
     v-bind="$attrs"
     @change="handleChange"
     @blur="handleBlur"
@@ -20,7 +19,6 @@ const props = defineProps({
   },
   min: Number,
   max: Number,
-  maxlength: Number
 })
 
 const emit = defineEmits([
@@ -46,8 +44,8 @@ const displayValue = computed({
   set(val: string) {
     let clean = val.replace(/[^0-9]/g, '')
 
-    if (props.maxlength) {
-      clean = clean.slice(0, props.maxlength)
+    if (props?.maxlength) {
+      clean = clean.slice(0, props?.maxlength)
     }
 
     let num = clean ? Number(clean) : null

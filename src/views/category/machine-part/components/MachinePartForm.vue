@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <FormWrapper
         ref="formRef"
         :form-model="formModel"
@@ -8,6 +7,7 @@
         :request-fn="isEditing ? editMachinePartApi : addMachinePartApi"
         :isEditing="isEditing"
         @success="handleSuccess"
+        :title="title"
     >
       <template v-slot="{ formErrors }">
         <el-form-item label="Tên bộ phận" prop="name" :error="formErrors.Name">
@@ -46,10 +46,12 @@
         </el-form-item>
       </template>
       <template v-slot:button>
-        <div class="mt-4 w-full text-center">
-          <cancel-button @click="() => formRef.triggerCancel()"></cancel-button>
+        <div class="mt-4 w-full flex justify-between">
           <el-button type="warning" @click="openTemperatureThreshold">Thiết lập ngưỡng nhiệt</el-button>
-          <save-button :loading="formRef?.loading" @click="() => formRef.submitForm()"></save-button>
+          <div>
+            <cancel-button @click="() => formRef.triggerCancel()"></cancel-button>
+            <save-button :loading="formRef?.loading" @click="() => formRef.submitForm()"></save-button>
+          </div>
         </div>
       </template>
 
@@ -85,6 +87,10 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  title: {
+    type: String,
+    required: false,
+  }
 })
 
 const formRef = ref()

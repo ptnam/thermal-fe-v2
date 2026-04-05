@@ -1,10 +1,12 @@
 <template>
-  <notification-form-detail
-      :form-model="formModel"
-      v-loading="isLoading"
-      @update-status="loadNotice"
-      title="Chi tiết nội dung cảnh báo" class=" justify-center p-6"
-  />
+  <div>
+    <notification-form-detail
+        :form-model="formModel"
+        v-loading="isLoading"
+        @update-status="loadNotice"
+        title="Chi tiết nội dung cảnh báo" class=" justify-center p-6"
+    />
+  </div>
 </template>
 <script setup lang="ts">
 import useRequest from "@/hooks/web/useRequest";

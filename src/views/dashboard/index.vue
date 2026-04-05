@@ -107,7 +107,7 @@
             </div>
           </div>
           <AreaTreeDashBoardV2
-              :request-fn="getAllTreeAreaApi"
+              :request-fn="() => getAllTreeAreaApi({warnings: true})"
               @node-click="handleNodeClick"
           ></AreaTreeDashBoardV2>
         </div>

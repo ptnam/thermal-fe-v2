@@ -1,37 +1,35 @@
 <template>
   <el-tabs
       v-model="activeName"
-      type="border-card"
-      class="demo-tabs"
   >
-    <el-form>
-      <el-tab-pane v-for="(mode, indexMode) in thresholdList"
-                   :key="indexMode"
-                   :label="mode.name"
-                   :name="indexMode">
-        <div class="space-y-4">
-          <el-form-item
-              v-show="['Threshold'].includes(mode.code)"
-              label="Ngưỡng nhiệt"
-              label-position="top"
-          >
-            <input-number v-model="mode.threshold" :readonly="readonly"></input-number>
-          </el-form-item>
-          <AlertRange
-              v-for="(level, indexLevel) in defaultLevels"
-              :key="`${indexMode}_${indexLevel}`"
-              v-model:toModel="mode.temperatureThresholds[indexLevel].maxTemperature"
-              :fromModel="
-                                    indexLevel === 0
+    <el-tab-pane
+        v-for="(mode, indexMode) in thresholdList"
+        :key="indexMode"
+        :label="mode.name"
+        :name="indexMode"
+        style="width: 600px"
+    >
+      <div class="space-y-4">
+        <el-form-item
+            v-show="['Threshold'].includes(mode.code)"
+            label="Ngưỡng nhiệt"
+            label-position="top"
+        >
+          <input-number v-model="mode.threshold" :readonly="readonly"></input-number>
+        </el-form-item>
+        <AlertRange
+            v-for="(level, indexLevel) in defaultLevels"
+            :key="`${indexMode}_${indexLevel}`"
+            v-model:toModel="mode.temperatureThresholds[indexLevel].maxTemperature"
+            :fromModel="indexLevel === 0
                                       ? 0
                                       : mode.temperatureThresholds[indexLevel - 1].maxTemperature
                                   "
-              v-bind="level"
-              :readonly="readonly"
-          />
-        </div>
-      </el-tab-pane>
-    </el-form>
+            :item="level"
+            :readonly="readonly"
+        />
+      </div>
+    </el-tab-pane>
   </el-tabs>
 </template>
 <script setup lang="ts">
@@ -55,8 +53,8 @@ defineProps({
 
 </script>
 <style scoped lang="scss">
-.demo-tabs{
-  .el-input{
+.demo-tabs {
+  .el-input {
     .el-input__wrapper {
       .el-input__inner {
         color: #000000 !important;

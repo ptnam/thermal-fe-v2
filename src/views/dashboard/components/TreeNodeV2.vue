@@ -24,13 +24,17 @@ const onClick = () => {
   if (props.node.children) {
     toggle()
   }
+}
+
+const clickItem = () => {
+
   emit('node-click', props.node)
 }
 </script>
 
 <template>
   <div class="at-node" :class="{ expanded: node.expanded }">
-    <div class="at-item" @click="onClick">
+    <div class="at-item">
       <svg
           v-if="node.children?.length"
           class="at-arrow"
@@ -38,12 +42,13 @@ const onClick = () => {
           fill="none"
           stroke="currentColor"
           stroke-width="3"
+          @click="toggle"
       >
         <path d="M9 18l6-6-6-6"></path>
       </svg>
       <div v-else style="width:14px"></div>
 
-      {{ node.name }}
+      <span @click="clickItem">{{ node.name }}</span>
 
       <div class="at-badge">
         <span class="alert-count yellow">{{ node.totalWarnings || 0 }}</span>

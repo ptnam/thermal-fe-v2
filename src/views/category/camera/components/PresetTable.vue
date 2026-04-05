@@ -1,6 +1,6 @@
 <template>
   <div>
-    <base-table :data="data" :columns="columns"></base-table>
+    <base-table :data="data" :columns="columns" :border="true"></base-table>
   </div>
 </template>
 <script setup lang="tsx">

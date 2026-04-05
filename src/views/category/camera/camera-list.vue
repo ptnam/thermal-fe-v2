@@ -242,7 +242,7 @@ const uploadApi = (file: File) => {
           v-loading="detailLoading"
       ></camera-form-tab>
     </drawer-form>
-    <drawer-form size="50%" v-model="presetDialogVisible" title="Thông số góc quay">
+    <drawer-form :show-close="true" size="50%" v-model="presetDialogVisible" title="Thông số góc quay">
       <PresetTourTab :presets="presets" :tours="cameraTours"/>
     </drawer-form>
     <base-dialog

@@ -13,10 +13,19 @@ import {useRoute} from 'vue-router'
 import MachinePartForm from '@/views/category/machine-part/components/MachinePartForm.vue'
 import BackButton from "@/components/Button/BackButton.vue";
 import {getDetailMachineTypeApi} from '@/api/machine-type'
+import {buildIndexMap} from "@/utils/table";
 
 const {t} = useLang()
 
 const columns = computed<TableColumn[]>(() => [
+  {
+    prop: 'index', label: 'STT',  width: 80,
+    slots: {
+      default: (scope: any) => (
+          <span>{scope.row._index}</span>
+      ),
+    },
+  },
   {prop: 'name', label: 'Tên'},
   {prop: 'code', label: 'Mã'},
   {prop: 'statusObject.name', width: 140, label: t('fields.status')},
@@ -90,7 +99,8 @@ const saveSuccess = () => {
       :columns="columns"
       :show-search-form="false"
       :use-table-config="{
-          fetchDataApi: () => getMachinePartListApi({ machineTypeId: machineTypeValue })
+          fetchDataApi: () => getMachinePartListApi({ machineTypeId: machineTypeValue }),
+          formatDataList: buildIndexMap
         }"
       @addHandler="openDialogAdd"
       v-loading="detailLoading"
@@ -116,7 +126,11 @@ const saveSuccess = () => {
       </div>
     </template>
   </list-template>
-  <base-dialog v-model="dialogVisible" :destroy-on-close="true" style="min-width: 500px">
-    <MachinePartForm v-model:formModel="formModel" @success="saveSuccess"></MachinePartForm>
-  </base-dialog>
+  <drawer-form v-model="dialogVisible" :destroy-on-close="true" style="min-width: 500px">
+    <MachinePartForm
+        :title="formModel.id ? 'Sửa bộ phận': 'Thêm mới bộ phận'"
+        v-model:formModel="formModel"
+        @success="saveSuccess"
+    ></MachinePartForm>
+  </drawer-form>
 </template>
