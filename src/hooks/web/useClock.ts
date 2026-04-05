@@ -22,7 +22,7 @@ export function useClock(formatString = 'YYYY-MM-DD HH:mm:ss') {
 
   updateTime();
 
-  let timer = null;
+  let timer = 0;
   onMounted(() => {
     timer = setInterval(updateTime, 1000);
   });

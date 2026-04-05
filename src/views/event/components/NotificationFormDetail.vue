@@ -126,16 +126,10 @@
   </div>
 </template>
 <script setup lang="ts">
-import {ElButton, ElImage} from 'element-plus'
 import {useConfirmModal} from '@/hooks/web/useModal'
 import {notificationDetailApi, updateNotificationStatusApi} from '@/api/notification'
-import ViewInput from '@/components/Input/ViewInput.vue'
 import {ref, watch} from 'vue'
 
-const typeStatus = {
-  Resolved: 'success',
-  Pending: 'danger',
-}
 const formModelValue = ref<any>({
   id: null,
   compareResultObject: {},

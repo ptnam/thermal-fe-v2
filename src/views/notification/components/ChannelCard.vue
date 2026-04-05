@@ -23,7 +23,7 @@
           <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
           <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
         </svg>
-        ND: {{ joinFieldValues(row?.users ?? [], 'firstName') }}
+        ND: {{ joinFieldValues(row?.users as [], 'firstName') }}
       </div>
       <div class="sc-info-item" style="font-size: 11px; color: var(--text-sub); margin-top: 8px;">
         <svg style="width:12px; height:12px; margin-right:4px; vertical-align:middle" viewBox="0 0 24 24" fill="none"

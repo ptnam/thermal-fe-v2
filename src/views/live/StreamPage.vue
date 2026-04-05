@@ -17,13 +17,6 @@
       <!-- Right Card: Monitoring Area -->
       <div class="card live-content">
         <div class="monitor-top-bar" style="border-radius: 12px 12px 0 0;">
-          <button id="sidebarToggle" class="mobile-only sidebar-toggle-btn" onclick="toggleSidebar()"
-                  style="margin-right: 10px; background: var(--primary); color: white; border: none; padding: 8px; border-radius: 4px;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-              <circle cx="12" cy="10" r="3"></circle>
-            </svg>
-          </button>
           <div class="ctrl-group">
             <button class="btn-settings" @click="openDrawer">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -34,14 +27,15 @@
               </svg>
               Thiết lập
             </button>
+            <el-button :icon="FullScreen" @click="requestFullScreen" title="Toàn màn hình"></el-button>
           </div>
           <div v-show="environmentTemperature !== null" class="env-temp">Nhiệt độ môi trường:
             {{ environmentTemperature?.temperature ?? "" }}
           </div>
         </div>
 
-        <div class="cam-grid" id="mainCamGrid"
-             :style="{gridTemplateColumns: `repeat(${pageSizeCol}, 1fr)`, alignContent: 'start'}">
+        <div class="cam-grid" id="mainCamGrid" ref="mainCamGridRef"
+             :style="{gridTemplateColumns: pageSizeCol, alignContent: 'start'}">
           <div v-for="cam in paginatedData" :key="cam.id" class="cam-cell">
             <web-player :cam="cam" :streamKey="cam.id"></web-player>
           </div>
@@ -73,6 +67,7 @@ import {getAllTreeAreaApi} from "@/api/area";
 import DrawerSetting from '@/views/live/components/DrawerSetting.vue'
 import {ElDrawer, ElMessage} from 'element-plus'
 import AreaTreeLive from "@/views/live/components/AreaTreeLive.vue";
+import {FullScreen} from "@element-plus/icons-vue";
 
 const fullList = ref<any[]>([])
 
@@ -93,11 +88,15 @@ const paginatedData = computed(() => {
 
 const pageSizeCol = computed(() => {
   if (fullList.value.length === 1) {
-    return 1
+    return 'repeat(1, 1fr)'
   }
-  return Math.sqrt(pageSize)
+  const va = Math.sqrt(pageSize.value)
+  return `repeat(${va}, 1fr)`
 })
-
+const mainCamGridRef = ref()
+const requestFullScreen = () => {
+  mainCamGridRef.value.requestFullscreen()
+}
 const updateCamSetting = (data: any) => {
   pageSize.value = data?.screenNumber ?? 4
   fullList.value = data?.cameraInfo ?? []

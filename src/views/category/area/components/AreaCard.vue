@@ -5,7 +5,7 @@
     </div>
     <div class="sc-name">{{ row.code }}</div>
     <div class="sc-info">
-      <div class="sc-info-item">🗺️ Loại: {{ row?.mapTypeObject?.name}}</div>
+      <div class="sc-info-item">🗺️ Loại: {{ row?.mapTypeObject?.['name'] }}</div>
       <div v-show="row.note" class="sc-info-item">📝 {{row.note}}</div>
     </div>
     <div class="sc-actions">

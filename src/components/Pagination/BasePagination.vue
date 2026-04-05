@@ -47,7 +47,6 @@
 </template>
 
 <script setup lang="ts">
-import { Setting } from '@element-plus/icons-vue'
 import { ref } from 'vue'
 import SaveButton from '@/components/Button/SaveButton.vue'
 import CancelButton from '@/components/Button/CancelButton.vue'

@@ -94,7 +94,7 @@ import BaseTable from '@/components/Table/BaseTable.vue'
 import {useTable} from '@/hooks/web/useTable'
 import type {UseTableConfig} from '@/hooks/web/useTable'
 import SearchForm from '@/components/PageTemplate/List/SearchForm.vue'
-import { onMounted, PropType, ref, useAttrs, watch} from 'vue'
+import {onBeforeUnmount, onMounted, PropType, ref, useAttrs, watch} from 'vue'
 import BasePagination from '@/components/Pagination/BasePagination.vue'
 import {TableColumn} from '@/components/Table'
 import {usePaginationStore} from '@/store/modules/paginationStore'
@@ -157,6 +157,28 @@ const viewLayout = ref("table");
 const switchView = (layout:string) => {
   viewLayout.value = layout
 }
+
+// auto switch mobile
+const autoSwitchViewOnMobile = () => {
+  if (window.innerWidth <= 768) {
+    switchView('card')
+    console.log('📱 Auto-switched to card view for mobile')
+  }
+}
+
+// optional: handle resize
+const handleResize = () => {
+  autoSwitchViewOnMobile()
+}
+
+onMounted(() => {
+  autoSwitchViewOnMobile()
+  window.addEventListener('resize', handleResize)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', handleResize)
+})
 const applyPaginationColumns = (paginationSettingValue: object) => {
   paginationSetting.value = paginationSettingValue
   const cols = props.columns.map((col) => ({...col}))

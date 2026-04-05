@@ -43,14 +43,14 @@
           </svg>
           TÌM KIẾM
         </button>
-        <button class="btn-export" @click="exportFile">
+        <el-button :loading="isLoadingExport" class="btn-export" @click="exportFile">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
             <polyline points="7 10 12 15 17 10"></polyline>
             <line x1="12" y1="15" x2="12" y2="3"></line>
           </svg>
           Download
-        </button>
+        </el-button>
       </div>
     </div>
 
@@ -68,11 +68,14 @@
 
 <script setup lang="ts">
 import { onMounted, ref} from "vue";
-import {notificationsCountApi} from "@/api/notification";
+import {exportCountApi, notificationsCountApi} from "@/api/notification";
 import VueApexChart from "vue3-apexcharts";
 import {ApexOptions} from "apexcharts";
 import {getAllTreeAreaApi} from "@/api/area";
 import TreeSelectRemote from "@/components/Tree/TreeSelectRemote.vue";
+import useRequest from "@/hooks/web/useRequest";
+import {exportSensorsIECApi} from "@/api/sensor";
+import {downloadFile} from "@/utils/response";
 
 const chartOptions = ref<ApexOptions>({
   chart: {
@@ -180,9 +183,11 @@ const refresh = () => {
     loading.value = false
   })
 }
-
+const {onRequest: requestExport, isLoading: isLoadingExport} = useRequest()
 const exportFile = () => {
-
+  requestExport(exportCountApi, searchParams.value).then((res) => {
+    downloadFile(res)
+  })
 }
 
 onMounted(() => {

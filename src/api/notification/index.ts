@@ -16,6 +16,14 @@ export const notificationsCountApi = (searchParams: object): Promise<IResponse<[
     return request.get({url: 'api/Notifications/count', params: searchParams})
 }
 
+export const exportCountApi = (searchParams: object): Promise<IResponse<[]>> => {
+  return request.get({
+    url: '/api/Notifications/exportCount',
+    params: searchParams,
+    responseType: 'blob'
+  })
+}
+
 export const notificationExportApi = (searchParams: object): Promise<IResponse<[]>> => {
     return request.get({
         url: '/api/Export/exportNotifications',

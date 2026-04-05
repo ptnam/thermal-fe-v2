@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { type Component, useAttrs } from 'vue'
+import { type Component } from 'vue'
 
 export interface TableColumn {
   prop: string
