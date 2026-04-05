@@ -77,7 +77,8 @@
               <div class="map-toggle-group">
                 <button v-show="areaItem.mapType === MAP_TYPE_MAP" class="map-btn active">Bản đồ</button>
                 <span v-show="areaItem.mapType === MAP_TYPE_PICTURE">
-                  <button v-show="areaItem.photoPath" :class="['map-btn', mapTypeDiagram === 'photoPath' ? 'active' : '']"
+                  <button v-show="areaItem.photoPath"
+                          :class="['map-btn', mapTypeDiagram === 'photoPath' ? 'active' : '']"
                           @click="mapTypeDiagram = 'photoPath'">Sơ đồ 1 sợi</button>
                   <button v-show="areaItem.emapPhotoPath"
                           :class="['map-btn', mapTypeDiagram === 'emapPhotoPath' ? 'active' : '']"
@@ -105,20 +106,17 @@
               </div>
             </div>
           </div>
-          <AreaTreeDashBoard
+          <AreaTreeDashBoardV2
               :request-fn="getAllTreeAreaApi"
               @node-click="handleNodeClick"
-              :default-expand-all="true"
-              :check-strictly="true"
-              :highlight-current="true"
-          ></AreaTreeDashBoard>
+          ></AreaTreeDashBoardV2>
         </div>
       </template>
     </data-fetcher>
     <base-dialog v-model="visibleThermalDetail" :close-on-click-modal="true">
       <div class="mt-4" v-loading="loadingThermalData">
         <div v-if="selectedComponent.deviceType === 'Sensor'" class="text-center">
-            Nhiệt độ: {{ selectedEnvironmentThermal?.temperature }}
+          Nhiệt độ: {{ selectedEnvironmentThermal?.temperature }}
         </div>
         <div v-else>
           <thermal-data :marker="selectedComponent" :thermalInfo="selectedThermalData">
@@ -160,6 +158,7 @@ import SensorDiagram from './components/SensorDiagram.vue'
 import CameraDiagram from './components/CameraDiagram.vue'
 import {getAllCamerasApi} from '@/api/camera'
 import {summariseInfoApi} from "@/api/common";
+import AreaTreeDashBoardV2 from "@/views/dashboard/components/AreaTreeDashBoardV2.vue";
 
 onMounted(() => {
   loadThermalData({}, false)
@@ -271,7 +270,7 @@ const showMarkerInfo = (marker: any) => {
   if (marker.deviceType === 'Sensor') {
     environmentThermalApi({areaId: areaItem.value}).then(res => {
       selectedEnvironmentThermal.value = res.data
-    }) .finally(() => {
+    }).finally(() => {
       loadingThermalData.value = false
     })
   } else {

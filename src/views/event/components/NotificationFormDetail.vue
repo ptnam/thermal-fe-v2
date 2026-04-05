@@ -12,7 +12,7 @@
           <img :src="formModelValue.imagePath" alt="Thermal Image">
           <div style="margin-top: 20px;">
             <div class="info-label" style="margin-bottom: 10px;">Ghi chú cảnh báo</div>
-            <div class="info-value" style="height: 100px; align-items: flex-start; padding-top: 12px;">
+            <div style="height: 100px; align-items: flex-start; padding-top: 12px;">
               <el-input type="textarea" v-model="formModelValue.note"></el-input>
             </div>
           </div>
@@ -93,15 +93,17 @@
             </div>
             <div class="info-field">
               <div class="info-label">Trạng thái</div>
-              <div class="info-value">
-                <span class="status-badge status-warning" style="min-width: unset; width: 100%;">{{formModelValue?.statusObject?.name}}</span>
+              <div>
+               <select-from-config v-model="formModelValue.status" key-config="notificationStatusList"></select-from-config>
               </div>
             </div>
           </div>
 
           <div style="margin-top: 10px;">
             <div class="info-label">Nhân viên xử lý</div>
-            <div class="info-value">---------------</div>
+            <div>
+              <el-input v-model="formModelValue.processingStaff" type="text"></el-input>
+            </div>
           </div>
         </div>
       </div>
@@ -150,8 +152,10 @@ const emits = defineEmits(['updateStatus'])
 const changeStatus = () => {
   confirmModal('Cập nhật trạng thái', 'Bạn có chắc muốn cập nhật trạng thái đã xử lý?', () => {
     updateNotificationStatusApi(formModelValue.value.id, {
-      status: formModelValue.value.statusObject.code === 'Pending' ? 2 : 1,
+      status: formModelValue.value.status, //chưa xử lý = 1, đã xử lý là 2
       dataTime: formModelValue.value.dataTime,
+      processingStaff: formModelValue.value.processingStaff,
+      note: formModelValue.value.note,
     }).then(() => {
       notificationDetailApi({
         id: formModelValue.value.id,

@@ -60,8 +60,8 @@
         >
           <slot>
             <l-tile-layer
-                layer-type="base"
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                :url="tile.url"
+                :attribution="tile.attribution"
             />
           </slot>
           <l-marker
@@ -75,12 +75,13 @@
   </div>
 </template>
 <script setup>
-import {onMounted, ref} from 'vue'
+import {computed, onMounted, ref} from 'vue'
 import {LMap, LTileLayer, LMarker} from '@vue-leaflet/vue-leaflet'
 import 'leaflet/dist/leaflet.css'
 import {LocationInformation} from '@element-plus/icons-vue'
 import Islands from '@/components/Map/islands.vue'
 import { MAP_TYPE_MAP } from '@/constants/index.js'
+import {useAppStore} from "@/store/modules/app.ts";
 
 const props = defineProps({
   buttonText: {
@@ -121,21 +122,37 @@ const props = defineProps({
 
 const emit = defineEmits(['input'])
 
+const appStore = useAppStore();
+const tile = computed(() => {
+  if (appStore.isDark) {
+    return {
+      url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+      attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+    }
+  }
+  return {
+    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    attribution: '&copy; OpenStreetMap contributors',
+  }
+})
 const mapRef = ref(null)
 const modalShow = ref(false)
 const coordinateShow = ref(true)
 
-const zoomValue = ref(0)
+const zoomValue = ref(6)
 
-const marker = ref({})
+const marker = ref({
+  latitude: 21.33232,
+  longitude: 105.8545,
+})
 
 const mapCenter = ref([])
 
 const refresh = () => {
-  zoomValue.value = props.mapConfig.zoom ?? 0
+  zoomValue.value = props.mapConfig.zoom ?? 6
   marker.value = {
-    latitude: props.mapConfig.latitude,
-    longitude: props.mapConfig.longitude,
+    latitude: props.mapConfig.latitude ?? 21.0173,
+    longitude: props.mapConfig.longitude ?? 105.8545,
   }
   if (props.updateCenter) {
     mapCenter.value = [props.mapConfig.latitude ?? 21.0173, props.mapConfig.longitude ?? 105.8545]

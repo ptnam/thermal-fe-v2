@@ -84,3 +84,26 @@ defineExpose({
   triggerCancel
 })
 </script>
+<style>
+
+.close-drawer:hover {
+  color: var(--danger);
+  transform: scale(1.1);
+}
+
+.drawer-body {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.drawer-footer {
+  padding: 24px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  background: var(--bg-card);
+}
+
+</style>

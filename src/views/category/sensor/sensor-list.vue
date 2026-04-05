@@ -168,7 +168,7 @@ const uploadApi = (file: File) => {
         @success="() => visibleUpload = false"
     ></base-upload>
   </base-dialog>
-  <base-dialog v-model="dialogVisible" :destroy-on-close="true" style="width: 1100px">
+  <base-dialog v-model="dialogVisible" :destroy-on-close="true" style="width: 90%">
     <sensor-form v-model:formModel="formModel" @success="saveSuccess"></sensor-form>
   </base-dialog>
 </template>

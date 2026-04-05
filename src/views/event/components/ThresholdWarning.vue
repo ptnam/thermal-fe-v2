@@ -16,13 +16,23 @@
           />
         </div>
         <div class="filter-group-inline">
-          <label>Khoảng thời gian</label>
+          <label>Từ ngày</label>
           <el-date-picker
-              v-model="dateRange"
-              type="daterange"
-              start-placeholder="Ngày bắt đầu"
-              end-placeholder="Ngày kết thúc"
+              v-model="searchParams.startDate"
+              type="date"
+              placeholder="Ngày bắt đầu"
               value-format="YYYY-MM-DD"
+              class="select-single-modern !w-full"
+          />
+        </div>
+        <div class="filter-group-inline">
+          <label>Đến ngày</label>
+          <el-date-picker
+              v-model="searchParams.endDate"
+              type="date"
+              placeholder="Ngày kết thúc"
+              value-format="YYYY-MM-DD"
+              class="select-single-modern !w-full"
           />
         </div>
         <button class="btn-search-primary" @click="refresh">
@@ -32,6 +42,14 @@
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
           TÌM KIẾM
+        </button>
+        <button class="btn-export" @click="exportFile">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Download
         </button>
       </div>
     </div>
@@ -49,7 +67,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, nextTick, onMounted, ref} from "vue";
+import { onMounted, ref} from "vue";
 import {notificationsCountApi} from "@/api/notification";
 import VueApexChart from "vue3-apexcharts";
 import {ApexOptions} from "apexcharts";
@@ -121,23 +139,23 @@ const loading = ref(false)
 
 const chartBarRef = ref<ApexCharts>()
 
-const dateRange = computed<[string, string] | []>({
-  get() {
-    return searchParams.value.startDate && searchParams.value.endDate
-        ? [searchParams.value.startDate, searchParams.value.endDate]
-        : []
-  },
-  set([start, end]) {
-    searchParams.value = {
-      ...searchParams.value,
-      startDate: start ?? '',
-      endDate: end ?? ''
-    }
-    nextTick(() => {
-      refresh()
-    })
-  }
-})
+// const dateRange = computed<[string, string] | []>({
+//   get() {
+//     return searchParams.value.startDate && searchParams.value.endDate
+//         ? [searchParams.value.startDate, searchParams.value.endDate]
+//         : []
+//   },
+//   set([start, end]) {
+//     searchParams.value = {
+//       ...searchParams.value,
+//       startDate: start ?? '',
+//       endDate: end ?? ''
+//     }
+//     nextTick(() => {
+//       refresh()
+//     })
+//   }
+// })
 const refresh = () => {
   loading.value = true
   notificationsCountApi(searchParams.value).then(res => {
@@ -161,6 +179,10 @@ const refresh = () => {
   }).finally(() => {
     loading.value = false
   })
+}
+
+const exportFile = () => {
+
 }
 
 onMounted(() => {

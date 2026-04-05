@@ -3,6 +3,10 @@ import request from '@/plugins/axios'
 export const getAllMachineApi = (searchParams: object): Promise<IResponse<[]>> => {
   return request.get({url: '/api/Machines/All', params: searchParams})
 }
+
+export const getMachinesByAreasApi = (searchParams: object): Promise<IResponse<[]>> => {
+  return request.get({url: '/api/machines/machinesByAreas', params: searchParams})
+}
 export const getMachineListApi = (searchParams: object): Promise<IResponse<[]>> => {
   return request.get({url: '/api/Machines/list', params: searchParams})
 }

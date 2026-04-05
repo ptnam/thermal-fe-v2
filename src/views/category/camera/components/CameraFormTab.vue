@@ -1,5 +1,5 @@
 <template>
-  <el-tabs v-model="activeName">
+  <el-tabs v-model="activeName" >
     <el-tab-pane label="Thông số camera" name="first">
       <camera-form
         v-model:formModel="formModel"

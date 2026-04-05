@@ -4,7 +4,7 @@
       <div class="summary-header">
         <div class="summary-title">Nhật ký nhiệt độ theo điểm đo</div>
         <div class="header-tools">
-          <AvgSelect v-model="avgType"/>
+          <AvgSelect v-model="avgType" @change="()=>search()"/>
           <div class="filter-badge-simple" @click="()=>dialogVisible = true">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                  stroke-width="2.5">
@@ -28,16 +28,15 @@
                 <button class="close-drawer" @click="()=>dialogVisible = false">×</button>
               </div>
               <div class="drawer-body" style="padding: 10px">
-                <filter-group-input
-                    :request-fn="getAllAreaApi"
-                    v-model="searchParams.areaId"
+                <filter-group-input-tree
+                    v-model="searchParams.areaIds"
                     title="Khu vực"
-                    col-label="name"
-                    col-value="id"
+                    @change="changeAreaIds"
                 />
                 <filter-group-input
-                    v-if="searchParams.areaId"
-                    :request-fn="() => getAllMachineApi({areaId:searchParams.areaId})"
+                    v-show="searchParams.areaIds"
+                    ref="machineInputRef"
+                    :request-fn="() => getMachinesByAreasApi({areaIds:searchParams.areaIds})"
                     v-model="searchParams.machineIds"
                     title="Thiết bị"
                     col-label="name"
@@ -55,7 +54,7 @@
                 />
                 <filter-group-input
                     v-show="searchParams.machineComponentIds && searchParams.machineComponentIds.length === 1"
-                    :request-fn="() => allMonitorPointsByMachineComponentApi({machineComponentId: searchParams.machineComponentIds[0]})"
+                    :request-fn="() => allMonitorPointsByMachineComponentApi({machineComponentIds: searchParams.machineComponentIds})"
                     v-model="monitorPoint"
                     title="Điểm giám sát"
                     col-label="name"
@@ -159,14 +158,12 @@
 </template>
 <script setup lang="ts">
 import {
-   getMachineSettingApi,
-  getAllMachineApi,
-  getMultiComponentsMachineApi, saveMachineSettingApi
+  getMachineSettingApi,
+  getMultiComponentsMachineApi, saveMachineSettingApi, getMachinesByAreasApi
 } from '@/api/machine'
 import useRequest from "@/hooks/web/useRequest";
-import {computed, onMounted, ref, watch } from 'vue'
+import {computed, onMounted, ref} from 'vue'
 import VueApexChart from "vue3-apexcharts";
-import {getAllAreaApi} from "@/api/area";
 import {
   componentThermalDataApi,
   dailyThermalDataApi,
@@ -180,6 +177,7 @@ import {ApexOptions} from "apexcharts";
 import AvgSelect from "@/views/event/components/AvgSelect.vue";
 import DrawerForm from "@/components/Form/DrawerForm.vue";
 import FilterGroupInput from '@/views/event/components/FilterGroupInput.vue'
+import FilterGroupInputTree from '@/views/event/components/FilterGroupInputTree.vue'
 import FilterGroup from '@/views/event/components/FilterGroup.vue'
 
 const HOUR = 1
@@ -223,7 +221,7 @@ const chartOptions: ApexOptions = {
 const series = ref(
     []
 )
-const avgType = ref<'MAX' | 'MIN' | 'AVG'>('AVG')
+const avgType = ref<'1' | '2' | '3'>('3')
 const searchType = ref(TIME)
 const searchTypeOptions = [
   {
@@ -251,8 +249,8 @@ const searchTypeOptions = [
 const monitorPoint = ref();
 const dialogVisible = ref(false)
 const searchParams = ref({
-  areaId: undefined,
-  machineIds: undefined,
+  areaIds: [],
+  machineIds: [],
   machineComponentIds: [],
   monitorPointId: null,
   monitorPointType: null,
@@ -281,7 +279,7 @@ const dateRange = computed<[string, string] | []>({
   }
 })
 const {onRequest, isLoading} = useRequest();
-const  countValidFields = (obj: any) => {
+const countValidFields = (obj: any) => {
   return Object.values(obj).filter(v => {
     if (v === null || v === undefined) return false
     if (typeof v === 'string' && v.trim() === '') return false
@@ -291,8 +289,20 @@ const  countValidFields = (obj: any) => {
 }
 
 const machineComponentInputRef = ref(null);
-const changeMachineIds = ()=> {
-  machineComponentInputRef?.value?.fetch()
+const machineInputRef = ref(null);
+const changeMachineIds = () => {
+  machineComponentInputRef?.value?.fetch();
+  searchParams.value = {
+    ...searchParams.value,
+    machineComponentIds: []
+  }
+};
+const changeAreaIds = () => {
+  machineInputRef?.value?.fetch()
+  searchParams.value = {
+    ...searchParams.value,
+    machineIds: []
+  }
 };
 const search = () => {
   const mapApi = {
@@ -302,7 +312,7 @@ const search = () => {
     4: componentThermalDataApi,
     5: predictThermalDataApi
   }
-  onRequest(mapApi[searchType.value], searchParams.value).then(res => {
+  onRequest(mapApi[searchType.value], {...searchParams.value, dataMode: avgType.value}).then(res => {
     chartRef.value?.updateOptions({
       xaxis: {
         categories: res.data.categories,
@@ -344,6 +354,8 @@ const {onRequest: saveSettingRequest, isLoading: saveSettingLoading} = useReques
 
 const saveSetting = (data: any) => {
   saveSettingRequest(saveMachineSettingApi, data).then(_res => {
+    search()
+    dialogVisible.value = false
     ElMessage({
       message: 'Lưu thành công!',
       type: 'success',

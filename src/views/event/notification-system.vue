@@ -41,6 +41,10 @@ const changeStatus = (row: any) => {
       status: row.statusObject.code === 'Pending' ? 2 : 1,
       dataTime: row.dataTime,
     }).then(() => {
+      ElMessage({
+        message: 'Lưu thành công!',
+        type: 'success',
+      })
       elTableRef?.value?.refresh()
     })
   })
@@ -140,6 +144,15 @@ const openDetail = (row: any) => {
     formModel.value = res.data
   })
 }
+const updateStatusSuccess = () => {
+  detailVisible.value = false;
+  ElMessage({
+    message: 'Lưu thành công!',
+    type: 'success',
+  })
+  elTableRef?.value?.refresh()
+}
+
 onMounted(() => {
   createSignalRConnection()
   startSignalR()
@@ -168,67 +181,67 @@ const exportFile = (searchParams: any) => {
 
 <template>
   <list-template
-    ref="elTableRef"
-    title="Danh sách Nhiệt độ vượt ngưỡng"
-    key-list="notification-system"
-    :columns="columns"
-    :search-props="{ visibleSearchButton: false, inline: false, className:'' }"
-    :use-table-config="{
+      ref="elTableRef"
+      title="Danh sách Nhiệt độ vượt ngưỡng"
+      key-list="notification-system"
+      :columns="columns"
+      :search-props="{ visibleSearchButton: false, inline: false, className:'' }"
+      :use-table-config="{
         fetchDataApi: listNotificationApi,
         searchDefaults: {
           fromTime: dayjs().subtract(7, 'day').format('YYYY-MM-DD 00:00:00'),
         },
       }"
-    :show-btn-add="false"
-    :card-component="NotificationSystemCard"
+      :show-btn-add="false"
+      :card-component="NotificationSystemCard"
   >
     <template slot="search" v-slot="{ searchParams }">
       <div class="filter-row">
         <div class="filter-item">
           <div class="filter-label">Thời gian từ</div>
           <el-date-picker
-            v-model="searchParams.fromTime"
-            type="datetime"
-            placeholder="Thời gian bắt đầu"
-            value-format="YYYY-MM-DD HH:mm:ss"
-            class="!w-[-webkit-fill-available] filter-input"
+              v-model="searchParams.fromTime"
+              type="datetime"
+              placeholder="Thời gian bắt đầu"
+              value-format="YYYY-MM-DD HH:mm:ss"
+              class="!w-[-webkit-fill-available] filter-input"
           />
         </div>
         <div class="filter-item">
           <div class="filter-label">Thời gian đến</div>
           <el-date-picker
-            v-model="searchParams.toTime"
-            type="datetime"
-            placeholder="Thời gian kết thúc"
-            value-format="YYYY-MM-DD HH:mm:ss"
-            class="!w-[-webkit-fill-available] filter-input"
+              v-model="searchParams.toTime"
+              type="datetime"
+              placeholder="Thời gian kết thúc"
+              value-format="YYYY-MM-DD HH:mm:ss"
+              class="!w-[-webkit-fill-available] filter-input"
           />
         </div>
         <div class="filter-item">
           <div class="filter-label">Khu vực</div>
           <tree-select-remote
-            class="filter-input"
-            v-model="searchParams.areaId"
-            :request-fn="getAllTreeAreaApi"
-            filterable
-            clearable
-            @change="() => changeAreaId(searchParams)"
+              class="filter-input"
+              v-model="searchParams.areaId"
+              :request-fn="getAllTreeAreaApi"
+              filterable
+              clearable
+              @change="() => changeAreaId(searchParams)"
           />
         </div>
         <div class="filter-item">
           <div class="filter-label">Thiết bị</div>
           <virtualized-select-from-url
-            ref="machineRef"
-            v-model="searchParams.machineId"
-            :request-fn="() => getAllMachineApi({ areaId: searchParams.areaId })"
-            filterable
-            value-key="id"
-            clearable
-            class="filter-input"
+              ref="machineRef"
+              v-model="searchParams.machineId"
+              :request-fn="() => getAllMachineApi({ areaId: searchParams.areaId })"
+              filterable
+              value-key="id"
+              clearable
+              class="filter-input"
           />
         </div>
         <search-button @click="elTableRef?.refresh()"/>
-        <export-button  @click="() => exportFile(searchParams)" :loading="isExportLoading"></export-button>
+        <export-button @click="() => exportFile(searchParams)" :loading="isExportLoading"></export-button>
       </div>
 
     </template>
@@ -238,8 +251,8 @@ const exportFile = (searchParams: any) => {
                :destroy-on-close="true"
                style="min-width: 750px">
     <notification-form-detail
-      :form-model="formModel"
-      @update-status="() => elTableRef?.refresh()"
+        :form-model="formModel"
+        @update-status="updateStatusSuccess"
     />
   </drawer-form>
 </template>

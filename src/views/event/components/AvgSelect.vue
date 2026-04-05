@@ -1,34 +1,35 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 
-type AvgType = 'MAX' | 'MIN' | 'AVG'
+type AvgType = '1' | '2' | '3'
 
 const props = defineProps<{
   modelValue: AvgType
 }>()
 
-const emit = defineEmits<{
-  (e: 'update:modelValue', value: AvgType): void
-}>()
+const emit = defineEmits(['update:modelValue', 'change'])
 
 const open = ref(false)
 const root = ref<HTMLElement>()
 
 const options = [
   {
-    value: 'MAX',
+    value: '1',
+    label: 'MAX',
     title: 'Nhiệt độ Max',
     desc: 'Giá trị cao nhất trong khoảng thời gian',
     class: 'box-max'
   },
   {
-    value: 'MIN',
+    value: '2',
+    label: 'MIN',
     title: 'Nhiệt độ Min',
     desc: 'Giá trị thấp nhất trong khoảng thời gian',
     class: 'box-min'
   },
   {
-    value: 'AVG',
+    value: '3',
+    label: 'AVG',
     title: 'Trung bình',
     desc: 'Giá trị trung bình trong khoảng thời gian',
     class: 'box-avg'
@@ -45,6 +46,7 @@ function toggle() {
 
 function select(opt: typeof options[number]) {
   emit('update:modelValue', opt.value as AvgType)
+  emit('change', opt.value as AvgType)
   open.value = false
 }
 
@@ -71,7 +73,7 @@ onBeforeUnmount(() => {
          @click="toggle">
 
       <span class="avg-tag" :class="selected?.class">
-        {{ selected?.value }}
+        {{ selected?.label }}
       </span>
 
       <span class="avg-text text-[15px] font-bold text-white">
