@@ -1,14 +1,14 @@
 <template>
   <div class="modern-at-node" :class="[ isOpen ? 'expanded' :'open' ]">
-    <div v-if="hasChildren" class="modern-at-item" @click="toggle">
+    <div v-if="hasChildren" class="modern-at-item">
       <div class="modern-at-parent-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
           <circle cx="12" cy="10" r="3"></circle>
         </svg>
       </div>
-      <span class="card-title">{{ node.name }}</span>
-      <svg class="modern-at-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+      <span class="card-title" @click="nodeClick">{{ node.name }}</span>
+      <svg  @click="toggle" class="modern-at-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
         <path d="M6 9l6 6 6-6"></path>
       </svg>
     </div>
