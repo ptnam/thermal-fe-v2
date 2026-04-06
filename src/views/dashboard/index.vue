@@ -83,6 +83,7 @@
                   <button v-show="areaItem.emapPhotoPath"
                           :class="['map-btn', mapTypeDiagram === 'emapPhotoPath' ? 'active' : '']"
                           @click="mapTypeDiagram = 'emapPhotoPath'"> Mô hình BIM 3D</button>
+                  <button @click="showBimMap" class="map-btn">BIM 3D</button>
                 </span>
               </div>
             </div>
@@ -90,6 +91,14 @@
               <div class="map-pane">
                 <div class="map-label">{{ areaItem?.name }}</div>
                 <div class="w-full h-full">
+                  <vue3dLoader
+                      :showFps="true"
+                      :filePath="['/NPQ.glb']"
+                      :backgroundColor="0xff00ff"
+                      fileType="glb"
+                      :cameraPosition="{ x: 1, y: -5, z: -20 }"
+                      :height="350"
+                  ></vue3dLoader>
                   <LeafletMap ref="leafletMapRef" :key="itemKey" :photo-path="areaItem[mapTypeDiagram]"
                               :map-type="areaItem.mapType" :zoom="areaItem.zoom" :latitude="areaItem.latitude"
                               :longitude="areaItem.longitude">
@@ -138,6 +147,7 @@ import {nextTick, onMounted, onUnmounted, ref} from 'vue'
 import {getAllTreeAreaApi} from '@/api/area'
 import {MAP_TYPE_MAP, MAP_TYPE_PICTURE} from '@/constants'
 import LeafletMap from '@/views/dashboard/components/LeafletMap.vue'
+import {vue3dLoader} from "vue-3d-loader";
 import {
   createSignalRConnection,
   startSignalR,
@@ -214,6 +224,10 @@ const handleNodeClick = (item: any) => {
   loadCameraFromArea(item)
 }
 
+
+const showBimMap = () => {
+
+}
 const loadCameraFromArea = (area: any) => {
   if (!area) {
     return
