@@ -7,7 +7,7 @@
       </svg>
       <span class="notif-badge">{{ total }}</span>
     </el-button>
-    <div v-show="visibleDropdown" class="fixed w-screen h-screen bg-blue top-0 left-0" @click="toggleNotifDropdown"> </div>
+    <div v-show="visibleDropdown" class="fixed w-screen h-screen top-0 left-0" @click="toggleNotifDropdown"> </div>
     <div v-show="visibleDropdown" class="notif-dropdown">
       <div class="notif-list">
         <a

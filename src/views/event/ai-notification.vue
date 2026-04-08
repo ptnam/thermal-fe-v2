@@ -12,6 +12,7 @@ import {getAllCamerasApi} from '@/api/camera'
 import {getAllWarningEventApi} from '@/api/warning-event'
 import {WARNING_TYPE_AI} from '@/constants/warningType'
 import {ElImage} from 'element-plus'
+import AICard from '@/views/event/components/AICard.vue'
 
 const columns = computed<TableColumn[]>(() => [
   {
@@ -71,6 +72,7 @@ const elTableRef = ref<InstanceType<typeof ListTemplate>>()
           fromTime: dayjs().subtract(7, 'day').format('YYYY-MM-DD 00:00:00'),
         },
       }"
+      :card-component="AICard"
   >
     <template slot="search" v-slot="{ searchParams }">
       <div class="filter-grid-ai">

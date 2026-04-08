@@ -151,7 +151,6 @@ import {
   thermalByComponentApi,
 } from '@/api/thermal-data'
 import _ from 'lodash'
-import AreaTreeDashBoard from "@/views/dashboard/components/AreaTreeDashBoard.vue";
 import BaseDialog from "@/components/Dialog/BaseDialog.vue";
 import ThermalData from "@/views/dashboard/components/ThermalData.vue";
 import SensorDiagram from './components/SensorDiagram.vue'

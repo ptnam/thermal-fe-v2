@@ -235,7 +235,7 @@ function isPrefixActive(prefix) {
           </div>
           <span class="user-name">{{ userName }}</span>
         </div>
-        <div v-show="visibleDropdown" class="fixed w-screen h-screen bg-blue top-0 left-0"
+        <div v-show="visibleDropdown" class="fixed w-screen h-screen top-0 left-0"
              @click="toggleUserDropdown"></div>
         <div v-show="visibleDropdown" class="user-dropdown">
           <router-link class="dropdown-item"
