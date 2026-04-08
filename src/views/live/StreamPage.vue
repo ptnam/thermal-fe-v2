@@ -90,6 +90,9 @@ const pageSizeCol = computed(() => {
   if (fullList.value.length === 1) {
     return 'repeat(1, 1fr)'
   }
+  if (fullList.value.length === 2) {
+    return 'repeat(2, 1fr)'
+  }
   const va = Math.sqrt(pageSize.value)
   return `repeat(${va}, 1fr)`
 })

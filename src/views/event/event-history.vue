@@ -208,6 +208,7 @@ const exportFile = (searchParams: any) => {
               v-model="searchParams.fromTime"
               type="datetime"
               placeholder="Thời gian bắt đầu"
+              format="YYYY/MM/DD hh:mm:ss A"
               value-format="YYYY-MM-DD HH:mm:ss"
               class="!w-[-webkit-fill-available] filter-input"
             />
@@ -218,6 +219,7 @@ const exportFile = (searchParams: any) => {
               v-model="searchParams.toTime"
               type="datetime"
               placeholder="Thời gian kết thúc"
+              format="YYYY/MM/DD hh:mm:ss A"
               value-format="YYYY-MM-DD HH:mm:ss"
               class="!w-[-webkit-fill-available] filter-input"
             />

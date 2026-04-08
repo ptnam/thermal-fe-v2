@@ -2,9 +2,9 @@
   <div class="sensor-card-item">
     <div class="sc-header"><span class="sc-id">{{ row?.code }}</span>
       <span
-          :style="{color: row.status === 'Active' ? 'var(--success)' : 'var(--danger)', fontSize: '12px'}">● Online</span>
+          :style="{color: row.deviceStatusObject.code === 'On' ? 'var(--success)' : 'var(--danger)', fontSize: '12px'}">● {{row?.deviceStatusObject?.name}}</span>
     </div>
-    <div class="sc-name">{{ row?.name }}</div>
+    <div class="sc-name text-blue-600 hover:underline cursor-pointer" @click="()=>$emit('redirectDetail', row)">{{ row?.name }}</div>
     <div class="sc-info">
       <div class="sc-info-item">📍 {{ row?.area?.name }}</div>
       <div class="sc-info-item">🎥 {{ row?.cameraTypeObject?.name }}</div>

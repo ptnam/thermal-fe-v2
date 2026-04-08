@@ -374,7 +374,7 @@ defineExpose({
                   <div style="font-size:11px; color:#EF4444; font-weight:600; margin-bottom:4px;">Max
                   </div>
                   <div style="font-family:'JetBrains Mono'; font-size:16px; font-weight:700; color:#EF4444;">
-                    {{ measurementResult?.maxTemperature }}°C
+                    {{ Number(measurementResult?.maxTemperature).toFixed(1) }}°C
                   </div>
                 </div>
                 <!-- Avg -->
@@ -383,7 +383,7 @@ defineExpose({
                   <div style="font-size:11px; color:#F59E0B; font-weight:600; margin-bottom:4px;">Avg
                   </div>
                   <div style="font-family:'JetBrains Mono'; font-size:16px; font-weight:700; color:#F59E0B;">
-                    {{ measurementResult?.aveTemperature }}°C
+                    {{ Number(measurementResult?.aveTemperature).toFixed(1) }}°C
                   </div>
                 </div>
                 <!-- Min -->
@@ -392,7 +392,7 @@ defineExpose({
                   <div style="font-size:11px; color:#10B981; font-weight:600; margin-bottom:4px;">Min
                   </div>
                   <div style="font-family:'JetBrains Mono'; font-size:16px; font-weight:700; color:#10B981;">
-                    {{ measurementResult?.minTemperature }}°C
+                    {{ Number(measurementResult?.minTemperature).toFixed(1) }}°C
                   </div>
                 </div>
               </div>

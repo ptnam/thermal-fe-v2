@@ -55,8 +55,12 @@
           <el-form-item label="password" prop="password" :error="formErrors.Password">
             <el-input v-model="formModel.password" type="password" autocomplete="new-password"/>
           </el-form-item>
+
           <el-form-item
-              v-if="formModel?.area && formModel.areaId && formModel?.area?.mapType === MAP_TYPE_PICTURE"
+              v-if="formModel?.area &&
+               formModel.areaId &&
+                formModel?.area?.mapType === MAP_TYPE_PICTURE &&
+                 formModel?.area?.emapPhotoPath"
               label="Sơ đồ mặt bằng"
               :error="formErrors?.Latitude ?? formErrors?.Longitude"
           >

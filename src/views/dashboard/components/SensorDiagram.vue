@@ -2,7 +2,7 @@
     <sensor-marker v-for="marker in liveMarkers" :key="marker.updateAt" :lat-lng="[marker.latitude, marker.longitude]"
         @click="() => emit('showMarkerInfo', marker)" v-bind="getIconPaths(marker)">
         <l-tooltip permanent :key="marker?.updateAt">
-            {{ marker?.name }}
+            {{ marker?.temperature ?? '--' }}°C
         </l-tooltip>
     </sensor-marker>
     <area-range :point-list="areaRangePointList" @clickMaker="(marker) => emit('handleNodeClick', marker)" />

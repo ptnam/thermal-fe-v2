@@ -102,20 +102,21 @@ const columns = computed<TableColumn[]>(() => [
   {prop: 'areaName', label: 'Khu vực', width: 200},
   {prop: 'machineName', label: 'Thiết bị', width: 120},
   {prop: 'machineComponentName', label: 'Bộ phận', width: 120},
-  {prop: 'monitorPointCode', label: 'Điểm nhiệt'},
+  {prop: 'monitorPointCode', label: 'Điểm nhiệt',  width: 120},
   {
     prop: 'componentValue',
     label: 'Nhiệt độ',
+    width: 120,
     slots: {
       default: ({row}) => (<span style={{color: 'var(--danger)'}}>{row.componentValue}</span>)
     },
   },
-  {prop: 'compareTypeObject.name', label: 'Kiểu cảnh báo', width: 160},
+  {prop: 'compareTypeObject.name', label: 'Kiểu cảnh báo', width: 200},
   {prop: 'warningEventName', label: 'Loại cảnh báo', width: 120},
-  {prop: 'compareComponent', label: 'Đối tượng so sánh', width: 120},
-  {prop: 'compareValue', label: 'Nhiệt độ so sánh'},
-  {prop: 'deltaValue', label: 'Chênh lệch'},
-  {prop: 'compareResultObject.name', label: 'Đánh giá'},
+  {prop: 'compareComponent', label: 'Đối tượng so sánh', width: 160},
+  {prop: 'compareValue', label: 'Nhiệt độ so sánh', width: 160},
+  {prop: 'deltaValue', label: 'Chênh lệch', width: 120},
+  {prop: 'compareResultObject.name', label: 'Đánh giá', width: 100},
   {prop: 'statusObject.name', label: 'Trạng thái', width: 120},
   {prop: 'resolveTime', label: 'Thời gian xử lý', width: 140},
 ])
@@ -203,6 +204,7 @@ const exportFile = (searchParams: any) => {
               v-model="searchParams.fromTime"
               type="datetime"
               placeholder="Thời gian bắt đầu"
+              format="YYYY/MM/DD hh:mm:ss A"
               value-format="YYYY-MM-DD HH:mm:ss"
               class="!w-[-webkit-fill-available] filter-input"
           />
@@ -213,6 +215,7 @@ const exportFile = (searchParams: any) => {
               v-model="searchParams.toTime"
               type="datetime"
               placeholder="Thời gian kết thúc"
+              format="YYYY/MM/DD hh:mm:ss A"
               value-format="YYYY-MM-DD HH:mm:ss"
               class="!w-[-webkit-fill-available] filter-input"
           />

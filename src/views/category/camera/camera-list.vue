@@ -36,7 +36,20 @@ const router = useRouter();
 const columns = computed<TableColumn[]>(() => [
   {type: 'index', label: 'STT', width: 60, headerAlign: 'center'},
   {prop: 'code', label: 'Mã camera'},
-  {prop: 'name', label: 'Tên camera'},
+  {
+    prop: 'name',
+    label: 'Tên camera',
+    slots: {
+      default: ({ row }) => (
+          <span
+              class="text-blue-600 hover:underline cursor-pointer"
+              onClick={() => redirectDetail(row)}
+          >
+        {row.name}
+      </span>
+      )
+    },
+  },
   {prop: 'area.name', label: 'Khu vực'},
   {prop: 'cameraTypeObject.name', label: 'Chức năng camera'},
   {
@@ -169,6 +182,10 @@ const uploadApi = (file: File) => {
 
   return importCameraIECApi(formData)
 }
+
+const redirectDetail = (row) => {
+  return router.push({name: 'live_detail', params: {id: row.id}})
+}
 </script>
 
 <template>
@@ -192,6 +209,7 @@ const uploadApi = (file: File) => {
         @delete="openDelete"
         @showPresetSetting="showPresetSetting"
         @showAISetting="showAISetting"
+        @redirectDetail="redirectDetail"
     >
       <template slot="search" v-slot="{ searchParams, tableMethods }">
         <div class="filter-row">

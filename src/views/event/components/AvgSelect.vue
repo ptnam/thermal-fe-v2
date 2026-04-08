@@ -76,7 +76,7 @@ onBeforeUnmount(() => {
         {{ selected?.label }}
       </span>
 
-      <span class="avg-text text-[15px] font-bold text-white">
+      <span class="avg-text text-[15px] font-bold">
         {{ selected?.title }}
       </span>
 
@@ -154,7 +154,7 @@ onBeforeUnmount(() => {
 }
 
 .filter-badge-simple {
-  background: #111827;
+  background: var(--bg-card);
   border: 1px solid var(--border);
   padding: 6px 12px;
   border-radius: 6px;
