@@ -36,7 +36,16 @@ const columns = computed<TableColumn[]>(() => [
       ),
     },
   },
-  {prop: 'displayStatus', width: 140, label: t('fields.status')},
+  {
+    prop: 'displayStatus',
+    width: 140,
+    label: t('fields.status'),
+    slots: {
+      default: ({row}) => (<span   style={{
+        color: row.status === 'Active' ? 'var(--success)' : 'var(--danger)'
+      }}>{row.displayStatus}</span>)
+    },
+  },
   {prop: 'createdAt', width: 160, label: t('fields.created_at')},
   {
     label: t('fields.action'),
@@ -137,7 +146,7 @@ const saveSuccess = () => {
     </template>
 
   </list-template>
-  <ActionForm v-model="dialogVisible">
+  <ActionForm v-model="dialogVisible" size="45%">
     <user-form
         v-model:formModel="formModel"
         :title="formModel.id ? 'Cập nhật người dùng': 'Thêm người dùng mới'"

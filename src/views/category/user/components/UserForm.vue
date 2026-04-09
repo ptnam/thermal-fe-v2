@@ -7,52 +7,65 @@
       @success="handleSuccess"
   >
     <template v-slot="{ formErrors }">
-      <el-form-item label="Tên đăng nhập" prop="username" :error="formErrors.Username">
-        <el-input v-model="formModel.username"/>
-      </el-form-item>
-      <el-form-item label="Mật khẩu" prop="password" :error="formErrors.Password">
-        <el-input v-model="formModel.password" type="password"/>
-      </el-form-item>
-      <el-form-item label="Tên" prop="firstName" :error="formErrors.FirstName">
-        <el-input v-model="formModel.firstName"/>
-      </el-form-item>
-      <el-form-item label="Họ và tên đệm" prop="lastMiddleName" :error="formErrors.LastMiddleName">
-        <el-input v-model="formModel.lastMiddleName"/>
-      </el-form-item>
-      <el-form-item label="Email" prop="email" :error="formErrors.Email">
-        <el-input v-model="formModel.email"/>
-      </el-form-item>
-      <el-form-item label="Số điện thoại" prop="phone" :error="formErrors.Phone">
-        <el-input v-model="formModel.phone"/>
-      </el-form-item>
-      <el-form-item label="Telegram User" prop="telegramUsername" :error="formErrors.TelegramUsername">
-        <el-input v-model="formModel.telegramUsername"/>
-      </el-form-item>
-      <el-form-item label="Quyền" prop="roles" :error="formErrors.Roles">
-        <ObjectSelectFromUrl
+      <div class="flex justify-between gap-2">
+        <el-form-item label="Tên đăng nhập" prop="username" :error="formErrors.Username">
+          <el-input v-model="formModel.username"  placeholder="Nhập tên đăng nhập..."/>
+        </el-form-item>
+        <el-form-item label="Mật khẩu" prop="password" :error="formErrors.Password">
+          <el-input v-model="formModel.password" type="password" placeholder="••••••"/>
+        </el-form-item>
+      </div>
+      <div class="flex justify-between gap-2">
+        <el-form-item label="Tên" prop="firstName" :error="formErrors.FirstName">
+          <el-input v-model="formModel.firstName"  placeholder="Nhập tên..."/>
+        </el-form-item>
+        <el-form-item label="Họ và tên đệm" prop="lastMiddleName" :error="formErrors.LastMiddleName">
+          <el-input v-model="formModel.lastMiddleName" placeholder="Nhập họ và tên đệm..."/>
+        </el-form-item>
+      </div>
+      <div class="flex justify-between gap-2">
+        <el-form-item label="Email" prop="email" :error="formErrors.Email">
+          <el-input v-model="formModel.email" placeholder="example@gmail.com"/>
+        </el-form-item>
+        <el-form-item label="Số điện thoại" prop="phone" :error="formErrors.Phone">
+          <el-input v-model="formModel.phone" placeholder="Nhập số điện thoại..."/>
+        </el-form-item>
+      </div>
+      <div class="flex justify-between gap-2">
+        <el-form-item label="Telegram User" prop="telegramUsername" :error="formErrors.TelegramUsername">
+          <el-input v-model="formModel.telegramUsername"/>
+        </el-form-item>
+        <el-form-item label="Quyền" prop="roles" :error="formErrors.Roles">
+          <ObjectSelectFromUrl
             v-model="formModel.roles"
             :requestFn="getAllRoleApi"
             col-value="id"
             value-key="id"
             multiple
             filterable
-        />
-      </el-form-item>
-      <el-form-item label="Khu vực" prop="areaIds" :error="formErrors.AreaIds">
-        <tree-select-remote
+            style="width: 232px;"
+          />
+        </el-form-item>
+      </div>
+      <div class="flex justify-between gap-2">
+        <el-form-item label="Khu vực" prop="areaIds" :error="formErrors.AreaIds">
+          <tree-select-remote
             v-model="formModel.areaIds"
             :requestFn="getAllTreeAreaApi"
             multiple
             filterable
-        />
-      </el-form-item>
-      <el-form-item label="Trạng thái" prop="status" :error="formErrors.Status">
-        <select-from-config
+            style="width: 232px;"
+          />
+        </el-form-item>
+        <el-form-item label="Trạng thái" prop="status" :error="formErrors.Status">
+          <select-from-config
             key-config="userStatusList"
             v-model="formModel.status"
             col-value="code"
-        />
-      </el-form-item>
+            style="width: 232px;"
+          />
+        </el-form-item>
+      </div>
     </template>
   </FormWrapper>
 </template>

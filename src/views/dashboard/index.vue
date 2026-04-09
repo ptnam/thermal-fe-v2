@@ -82,7 +82,7 @@
                           @click="mapTypeDiagram = 'photoPath'">Sơ đồ 1 sợi</button>
                   <button v-show="areaItem.emapPhotoPath"
                           :class="['map-btn', mapTypeDiagram === 'emapPhotoPath' ? 'active' : '']"
-                          @click="mapTypeDiagram = 'emapPhotoPath'"> Mô hình BIM 3D</button>
+                          @click="mapTypeDiagram = 'emapPhotoPath'"> Sơ đồ mặt bằng</button>
                 </span>
               </div>
             </div>
@@ -201,7 +201,7 @@ const handleNodeClick = (item: any) => {
     item.latitude = 0
     item.longitude = 0
     item.zoom = 0;
-    mapTypeDiagram.value = item.photoPath ? "photoPath" : item.emapPhotoPath ? "emapPhotoPath" : "photoPath";
+    mapTypeDiagram.value = item.photoPath ? "photoPath" : (item.emapPhotoPath ? "emapPhotoPath" : "photoPath");
   }
   areaItem.value = item
   nextTick(() => {

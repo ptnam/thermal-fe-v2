@@ -1,5 +1,5 @@
 <template>
-  <el-dialog
+  <el-drawer
       :lock-scroll="false"
       :destroy-on-close="true"
       :append-to-body="true"
@@ -23,17 +23,15 @@
           name="main"
           label="Khai báo riêng"
       >
-        <div class="p-4 border border-dashed border-gray-300 ml-2 min-h-[400px]">
+        <div class="p-4 ml-2 min-h-[400px]">
           <el-form-item
               label="Loại ngưỡng cảnh báo"
               label-position="top"
           >
-            <object-select-from-config
-                :teleported="false"
-                key-config="thresholdTypeList"
-                v-model="thresholdListModel"
-                :multiple="true"
-                @change="changeThresholdTypeList"
+            <ThresholdFilter
+              v-model="thresholdListModel"
+              :options="options"
+              @change="changeThresholdTypeList"
             />
           </el-form-item>
           <threshold-tab :threshold-list="thresholdList"/>
@@ -42,12 +40,12 @@
     </el-tabs>
 
     <template #footer>
-      <div class="flex justify-end space-x-2">
+      <div class="flex justify-between space-x-2">
         <cancel-button @click="emits('cancel')"></cancel-button>
-        <save-button @click="emits('save', thresholdList)"></save-button>
+        <el-button type="primary" @click="emits('save', thresholdList)">Lưu cấu hình</el-button>
       </div>
     </template>
-  </el-dialog>
+  </el-drawer>
 </template>
 
 <script setup lang="ts">
@@ -58,6 +56,8 @@ import ObjectSelectFromConfig from "@/components/Selection/ObjectSelectFromConfi
 import {cloneObject} from "@/utils/objectUtils";
 import {defaultLevels} from "@/views/category/machine/components/levels";
 import ThresholdTab from "@/views/category/machine/components/ThresholdTab.vue";
+import ThresholdFilter from '@/views/category/machine-part/components/ThresholdFilter.vue'
+import { useConfigStore } from '@/store/modules/configStore'
 
 // Props
 const props = defineProps({
@@ -76,6 +76,9 @@ const props = defineProps({
 })
 
 const tabModel = ref(props.tab)
+
+const configStore = useConfigStore();
+const options = ref(configStore.getConfig('thresholdTypeList') ?? [])
 
 // Emits
 const emits = defineEmits(['save', 'cancel', 'update:thresholdList'])

@@ -146,10 +146,10 @@
           <table class="table-auto border-collapse w-full">
             <thead>
             <tr>
-              <th class="px-2 py-1 text-left w-[120px]">Mã</th>
-              <th class="px-2 py-1 text-left w-[120px]">Tên</th>
-              <th class="px-2 py-1 text-left w-[130px]">Trạng thái</th>
-              <th class="px-2 py-1 text-left w-[90x]"></th>
+              <th class="px-2 py-1 text-left min-w-[120px]">Mã</th>
+              <th class="px-2 py-1 text-left min-w-[120px]">Tên</th>
+              <th class="px-2 py-1 text-left min-w-[130px]">Trạng thái</th>
+              <th class="px-2 py-1 text-left min-w-[90x]"></th>
             </tr>
             </thead>
             <tbody>

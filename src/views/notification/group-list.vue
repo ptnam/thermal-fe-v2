@@ -105,6 +105,9 @@ const changeAreaId = (searchParams: GenericObject) => {
       :use-table-config="{
         fetchDataApi: getNotificationGroupListApi,
       }"
+      :search-props="{
+        className: ''
+      }"
       @addHandler="openDialogAdd"
       :card-component="GroupCard"
       @edit="openDialogEdit"

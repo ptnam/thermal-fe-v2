@@ -71,7 +71,7 @@
                 :error="formErrors.OperationAndMaintenance">
     <el-input type="textarea" v-model="machineDetail.operationAndMaintenance"/>
   </el-form-item>
-  <el-collapse>
+  <el-collapse v-if="machineTypeCode">
     <el-collapse-item :title="`Thông tin riêng của: ${machineTypeCode}`">
       <div v-if="machineTypeCode ==='MBA'">
         <el-form-item label="Công suất" prop="burden" :error="formErrors.burden">

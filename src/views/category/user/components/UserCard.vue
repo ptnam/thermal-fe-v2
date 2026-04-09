@@ -5,7 +5,7 @@
           style="width: 40px; height: 40px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700;">
         SA
       </div>
-      <span style="color:var(--success); font-size:12px">● Active</span>
+      <span :style="{color: row.status === 'Active' ? 'var(--success)' : 'var(--danger)', fontSize: '12px'}">● {{row.displayStatus}}</span>
     </div>
     <div class="sc-name">{{ row.fullName }}</div>
     <div class="sc-info">
