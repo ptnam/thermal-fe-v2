@@ -372,7 +372,6 @@
     .tree-sidebar,
     .modern-tree-sidebar {
       position: fixed;
-      left: -100%;
       top: 56px;
       width: 280px;
       height: calc(100vh - 56px);
@@ -1716,22 +1715,7 @@
     }
 
     /* Live Monitoring Sidebar & Content */
-    .live-sidebar,
-    .modern-tree-sidebar {
-      position: fixed !important;
-      left: -100%;
-      top: 56px;
-      width: 280px;
-      height: calc(100vh - 56px) !important;
-      z-index: 2100;
-      transition: left 0.3s ease;
-      padding: 16px !important;
-      margin: 0 !important;
-      border-radius: 0 !important;
-      box-shadow: 10px 0 30px rgba(0, 0, 0, 0.3) !important;
-      display: flex !important;
-      flex-direction: column;
-    }
+
 
     .live-sidebar.open,
     .modern-tree-sidebar.open {

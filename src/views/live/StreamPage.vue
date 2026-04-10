@@ -3,7 +3,7 @@
     <div class="grid monitor-layout-grid">
 
       <!-- Left Card: Area Tree -->
-      <div>
+      <div class="hidden md:block">
         <area-tree-live
             ref="treeLiveRef"
             :request-fn="() => getAllTreeAreaApi({ cameras: true })"
@@ -18,6 +18,12 @@
       <div class="card live-content">
         <div class="monitor-top-bar" style="border-radius: 12px 12px 0 0;">
           <div class="ctrl-group">
+            <el-button class="mobile-btn" @click="() => drawerVisibleTree = !drawerVisibleTree">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+            </el-button>
             <button class="btn-settings" @click="openDrawer">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <circle cx="12" cy="12" r="3"></circle>
@@ -36,12 +42,21 @@
 
         <div class="cam-grid" id="mainCamGrid" ref="mainCamGridRef"
              :style="{gridTemplateColumns: pageSizeCol, alignContent: 'start'}">
-          <div v-for="cam in paginatedData" :key="cam.id" class="cam-cell">
-            <web-player :cam="cam" :streamKey="cam.id"></web-player>
-          </div>
+          <web-player v-for="cam in paginatedData" :key="cam.id" :cam="cam" :streamKey="cam.id"></web-player>
         </div>
       </div>
-      <el-drawer v-model="drawerVisible" style="min-width: 650px" :destroy-on-close="true" resizable
+      <el-drawer class="block md:hidden" v-model="drawerVisibleTree" direction="ltr" size="90%">
+        <area-tree-live
+          ref="treeLiveRef"
+          :request-fn="() => getAllTreeAreaApi({ cameras: true })"
+          default-expand-all
+          node-key="uniqueId"
+          outer-class="card modern-tree-sidebar !relative !w-full"
+          @updateCamSetting="updateCamSetting"
+          @nodeClick="handleNodeClick">
+        </area-tree-live>
+      </el-drawer>
+      <el-drawer v-model="drawerVisible" style="min-width: 550px" :destroy-on-close="true" resizable
                  :with-header="false">
         <drawer-setting
             :list-marked="fullList"
@@ -78,6 +93,7 @@ const currentPage = ref(1)
 const loadingSetting = ref(false)
 const visibleOrderSetting = ref(true)
 const drawerVisible = ref(false)
+const drawerVisibleTree = ref(false)
 const environmentTemperature = ref<any>(null)
 const selectedAreaId = ref(null)
 
@@ -90,7 +106,7 @@ const pageSizeCol = computed(() => {
   if (fullList.value.length === 1) {
     return 'repeat(1, 1fr)'
   }
-  if (fullList.value.length === 2) {
+  if (fullList.value.length === 2 || pageSize.value) {
     return 'repeat(2, 1fr)'
   }
   const va = Math.sqrt(pageSize.value)
@@ -140,6 +156,7 @@ const handleNodeClick = (originItem: any) => {
     loadEnvironmentThermal(originItem.id)
   }
   visibleOrderSetting.value = false;
+  drawerVisibleTree.value =false
 }
 
 const loadEnvironmentThermal = (areaId: any) => {

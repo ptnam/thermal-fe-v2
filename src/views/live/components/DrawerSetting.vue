@@ -53,10 +53,7 @@ const dragOptions = [
 ];
 const changeGrid = (cells) => {
   const grid = document.getElementById('mainCamGrid');
-  const cols = Math.sqrt(cells);
   if (grid) {
-    grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
-    grid.style.alignContent = 'start';
     emit("updatePage", cells)
   }
 }

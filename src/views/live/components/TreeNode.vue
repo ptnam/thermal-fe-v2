@@ -18,7 +18,7 @@
           v-for="child in node.children"
           :key="child.id"
           :node="child"
-          @nodeClick="emits('nodeClick', node)"
+          @nodeClick="(n) => emits('nodeClick', n)"
       >
         <template #default="scope">
           <slot v-bind="scope"/>

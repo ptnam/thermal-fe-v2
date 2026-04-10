@@ -39,6 +39,20 @@
             <ImageUploader v-model="formModel.emapPhotoPath"/>
           </el-form-item>
         </Suspense>
+        <Suspense>
+          <el-form-item prop="emapPhotoPath" label="Sơ đồ mặt bằng" :error="formErrors.emapPhotoPath">
+            <GlbUploadButton
+              :file-path="formModel.emapFile"
+              :model-position="formModel?.emapPosition?.modelPosition"
+              :model-rotation="formModel?.emapPosition?.modelRotation"
+              :model-scale="formModel?.emapPosition?.modelScale"
+              :camera-position="formModel?.emapPosition?.cameraPosition"
+              :target="formModel?.emapPosition?.target"
+              @change-file="handleChangeLocalFile"
+              @save-preview="handleSavePreview"
+            />
+          </el-form-item>
+        </Suspense>
       </template>
       <el-form-item label="Khu vực cha" prop="parentId" :error="formErrors.ParentId">
         <tree-select-remote
@@ -91,16 +105,17 @@
 <script setup lang="ts">
 import FormWrapper from '@/components/Form/FormWrapper.vue'
 import SelectFromConfig from '@/components/Selection/SelectFromConfig.vue'
-import {computed, nextTick, ref, watch} from 'vue'
-import {rule} from '@/utils/validate'
-import {isFormEditing} from '@/utils/is'
-import {FormRules} from 'element-plus'
-import {addAreaApi, editAreaApi, getAllTreeAreaApi} from '@/api/area'
+import { computed, nextTick, ref, watch } from 'vue'
+import { rule } from '@/utils/validate'
+import { isFormEditing } from '@/utils/is'
+import { FormRules } from 'element-plus'
+import { addAreaApi, editAreaApi, getAllTreeAreaApi } from '@/api/area'
 import TreeSelectRemote from '@/components/Tree/TreeSelectRemote.vue'
 import LatLngPicker from '@/components/Map/LatLngPicker.vue'
 import ImageUploader from '@/components/Input/ImageUploader.vue'
-import {MAP_TYPE_PICTURE} from '@/constants'
-import {removeAllObjectInObject} from "@/utils/objectUtils";
+import { MAP_TYPE_PICTURE } from '@/constants'
+import { buildFormData, removeAllObjectInObject } from '@/utils/objectUtils'
+
 
 const props = defineProps({
   formModel: {
@@ -109,8 +124,34 @@ const props = defineProps({
   },
 })
 const mapPicker = ref<InstanceType<typeof LatLngPicker>>()
-const transformFormData = (formData: any) => {
-  return removeAllObjectInObject(formData)
+
+const pendingGlbFile = ref<File | null>(null)
+function handleChangeLocalFile(payload: { file: File | null; localUrl: string; fileName: string }) {
+  pendingGlbFile.value = payload.file
+}
+
+function handleSavePreview(payload: {
+  filePath: string
+  modelPosition: { x: number; y: number; z: number }
+  modelRotation: { x: number; y: number; z: number }
+  modelScale: { x: number; y: number; z: number }
+  cameraPosition: { x: number; y: number; z: number }
+  target: { x: number; y: number; z: number }
+}) {
+  updateFormModel({
+    emapPosition: {
+      modelPosition: payload.modelPosition,
+      modelRotation: payload.modelRotation,
+      modelScale: payload.modelScale,
+      cameraPosition: payload.cameraPosition,
+      target: payload.target,
+    }
+  })
+}
+const transformFormData = (data: any) => {
+  const formData = buildFormData(data);
+  formData.append('emapFile', pendingGlbFile.value)
+  return formData;
 }
 
 watch(

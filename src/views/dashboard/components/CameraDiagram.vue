@@ -2,7 +2,7 @@
     <camera-marker 
         v-for="marker in liveMarkers" 
         :key="marker.id" 
-        :lat-lng="[marker.latitude, marker.longitude]"
+        :lat-lng="[marker?.latitude ?? 0, marker?.longitude ?? 0]"
         @click="() => emit('showMarkerInfo', marker)">
         <l-tooltip permanent :key="marker?.id">
             {{ marker?.name }}

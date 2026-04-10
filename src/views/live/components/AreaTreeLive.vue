@@ -1,5 +1,5 @@
 <template>
-  <div class="card modern-tree-sidebar">
+  <div :class="outerClass">
     <!-- TITLE -->
     <div class="modern-tree-title">
       <span>Danh sách khu vực</span>
@@ -30,7 +30,7 @@
             v-for="node in area.children"
             :key="node.id"
             :node="node"
-            @nodeClick="emits('nodeClick', node)"
+            @nodeClick="(n) => emits('nodeClick', n)"
         >
           <template #default="scope">
             <slot v-bind="scope"/>
@@ -45,9 +45,15 @@
 import {ref, computed, onMounted} from 'vue'
 import TreeNode from './TreeNode.vue'
 
-const props = defineProps<{
-  requestFn: (data?: any) => Promise<any>
-}>()
+const props = defineProps({
+  requestFn: {
+    type: Function,
+  },
+  outerClass: {
+    type: String,
+    default: 'card modern-tree-sidebar'
+  }
+})
 const emits = defineEmits(['nodeClick'])
 const data = ref<any[]>([])
 const keyword = ref('')

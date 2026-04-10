@@ -83,6 +83,7 @@
                   <button v-show="areaItem.emapPhotoPath"
                           :class="['map-btn', mapTypeDiagram === 'emapPhotoPath' ? 'active' : '']"
                           @click="mapTypeDiagram = 'emapPhotoPath'"> Sơ đồ mặt bằng</button>
+                  <button v-show="areaItem.emapFile" @click="showBimMap" class="map-btn">BIM 3D</button>
                 </span>
               </div>
             </div>
@@ -90,18 +91,24 @@
               <div class="map-pane">
                 <div class="map-label">{{ areaItem?.name }}</div>
                 <div class="w-full h-full">
-                  <LeafletMap ref="leafletMapRef" :key="itemKey" :photo-path="areaItem[mapTypeDiagram]"
-                              :map-type="areaItem.mapType" :zoom="areaItem.zoom" :latitude="areaItem.latitude"
-                              :longitude="areaItem.longitude">
-                    <SensorDiagram v-if="mapTypeDiagram === 'photoPath'" :live-markers="liveMarkers"
-                                   :area-range-point-list="areaRangePointList"
-                                   :live-temperature-map="liveTemperatureMap"
-                                   @handleNodeClick="handleNodeClick" @showMarkerInfo="showMarkerInfo">
-                    </SensorDiagram>
-                    <CameraDiagram v-else-if="mapTypeDiagram === 'emapPhotoPath'" :live-markers="cameraMarker"
-                                   @showMarkerInfo="showCameraInfo">
-                    </CameraDiagram>
-                  </LeafletMap>
+                  <ViewLoader
+                    v-if="mapTypeDiagram === 'emapFile'"
+                    :areaItem="areaItem"
+                  ></ViewLoader>
+                  <div v-else class="w-full h-full">
+                    <LeafletMap ref="leafletMapRef" :key="itemKey" :photo-path="areaItem[mapTypeDiagram]"
+                                :map-type="areaItem.mapType" :zoom="areaItem.zoom" :latitude="areaItem.latitude"
+                                :longitude="areaItem.longitude">
+                      <SensorDiagram v-if="mapTypeDiagram === 'photoPath'" :live-markers="liveMarkers"
+                                     :area-range-point-list="areaRangePointList"
+                                     :live-temperature-map="liveTemperatureMap"
+                                     @handleNodeClick="handleNodeClick" @showMarkerInfo="showMarkerInfo">
+                      </SensorDiagram>
+                      <CameraDiagram v-else-if="mapTypeDiagram === 'emapPhotoPath'" :live-markers="cameraMarker"
+                                     @showMarkerInfo="showCameraInfo">
+                      </CameraDiagram>
+                    </LeafletMap>
+                  </div>
                 </div>
               </div>
             </div>
@@ -151,6 +158,7 @@ import {
   thermalByComponentApi,
 } from '@/api/thermal-data'
 import _ from 'lodash'
+import AreaTreeDashBoard from "@/views/dashboard/components/AreaTreeDashBoard.vue";
 import BaseDialog from "@/components/Dialog/BaseDialog.vue";
 import ThermalData from "@/views/dashboard/components/ThermalData.vue";
 import SensorDiagram from './components/SensorDiagram.vue'
@@ -158,6 +166,7 @@ import CameraDiagram from './components/CameraDiagram.vue'
 import {getAllCamerasApi} from '@/api/camera'
 import {summariseInfoApi} from "@/api/common";
 import AreaTreeDashBoardV2 from "@/views/dashboard/components/AreaTreeDashBoardV2.vue";
+import ViewLoader from '@/views/dashboard/components/ViewLoader.vue'
 
 onMounted(() => {
   loadThermalData({}, false)
@@ -200,7 +209,7 @@ const handleNodeClick = (item: any) => {
   if (item.mapType === MAP_TYPE_PICTURE) {
     item.latitude = 0
     item.longitude = 0
-    item.zoom = 0;
+    item.zoom = 1;
     mapTypeDiagram.value = item.photoPath ? "photoPath" : (item.emapPhotoPath ? "emapPhotoPath" : "photoPath");
   }
   areaItem.value = item
@@ -213,6 +222,10 @@ const handleNodeClick = (item: any) => {
   loadCameraFromArea(item)
 }
 
+
+const showBimMap = () => {
+  mapTypeDiagram.value = 'emapFile'
+}
 const loadCameraFromArea = (area: any) => {
   if (!area) {
     return

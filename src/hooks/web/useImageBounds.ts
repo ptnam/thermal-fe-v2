@@ -6,6 +6,7 @@ export function useImageBounds() {
         [0, 0],
         [0, 0]
     ],)
+    const isError = ref(false);
 
     const getBestFitSize = (
         imageWidth: number,
@@ -40,8 +41,10 @@ export function useImageBounds() {
                 [0, 0],
                 [newVal.height, newVal.width],
             ]
+            isError.value = false;
         }
         img.onerror = () => {
+            isError.value = true;
             imageCenter.value = [0, 0]
             bounds.value = [
               [0, 0],

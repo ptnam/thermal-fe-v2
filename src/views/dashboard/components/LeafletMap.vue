@@ -3,7 +3,7 @@
     <l-map
         ref="mapRef"
         class="rounded"
-        :zoom="zoom"
+        :zoom="zoomValue"
         :center="mapType === MAP_TYPE_PICTURE ? imageCenter : [latitude, longitude]"
         :useGlobalLeaflet="true"
         :zoom-snap="0.01"
@@ -26,7 +26,7 @@
 
       <!-- Image overlay -->
       <l-image-overlay
-          v-if="mapType === MAP_TYPE_PICTURE && photoPathValue"
+          v-if="!isError && mapType === MAP_TYPE_PICTURE && photoPathValue"
           :opacity="mapType === MAP_TYPE_PICTURE ? 1 : 0"
           :url="photoPathValue"
           :cross-origin="false"
@@ -92,7 +92,7 @@ const flyToPoint = () => {
   mapRef.value?.leafletObject?.flyTo([props.latitude, props.longitude], props.zoom)
 }
 
-const {imageCenter, bounds, updateBound} = useImageBounds()
+const {imageCenter,isError, bounds, updateBound} = useImageBounds()
 
 const photoPathValue = ref("")
 watch(
@@ -113,18 +113,20 @@ watch(bounds, async (newBounds) => {
       props.mapType === MAP_TYPE_PICTURE &&
       newBounds
   ) {
-    await nextTick()
+    if (!isError) {
 
-    // Delay to ensure image overlay has rendered
-    setTimeout(() => {
-      const map = mapRef.value?.leafletObject
-      if (map && newBounds) {
-        map.fitBounds(newBounds, {
-          padding: [10, 10],
-          animate: false
-        })
-      }
-    }, 100)
+      await nextTick()
+      // Delay to ensure image overlay has rendered
+      setTimeout(() => {
+        const map = mapRef.value?.leafletObject
+        if (map && newBounds) {
+          map.fitBounds(newBounds, {
+            padding: [10, 10],
+            animate: false
+          })
+        }
+      }, 100)
+    }
   }
 })
 
