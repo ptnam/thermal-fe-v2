@@ -22,7 +22,7 @@
       </el-button>
 
       <el-button
-        v-if="localFile"
+        v-if="localFile || filePath"
         type="danger"
         @click="clearLocalFile"
       >
@@ -169,7 +169,7 @@ const form = reactive({
 })
 
 const status = ref('đang khởi tạo')
-const prettyCurrent = computed(() => JSON.stringify(form, null, 2))
+// const prettyCurrent = computed(() => JSON.stringify(form, null, 2))
 
 const previewSrc = computed(() => {
   return localObjectUrl.value || props.filePath || ''

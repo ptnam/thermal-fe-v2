@@ -83,8 +83,7 @@
                   <button v-show="areaItem.emapPhotoPath"
                           :class="['map-btn', mapTypeDiagram === 'emapPhotoPath' ? 'active' : '']"
                           @click="mapTypeDiagram = 'emapPhotoPath'"> Sơ đồ mặt bằng</button>
-                  <button v-show="areaItem.emapFile" @click="showBimMap" class="map-btn">BIM 3D</button>
-                </span>
+              </span>
               </div>
             </div>
             <div class="map-view-container mode-single" id="mapContainer">
@@ -92,8 +91,9 @@
                 <div class="map-label">{{ areaItem?.name }}</div>
                 <div class="w-full h-full">
                   <ViewLoader
-                    v-if="mapTypeDiagram === 'emapFile'"
-                    :areaItem="areaItem"
+                    v-if="mapTypeDiagram === 'emapPhotoPath'"
+                    :src="areaItem.emapPhotoPath"
+                    :emap-position="areaItem?.emapPosition"
                   ></ViewLoader>
                   <div v-else class="w-full h-full">
                     <LeafletMap ref="leafletMapRef" :key="itemKey" :photo-path="areaItem[mapTypeDiagram]"
@@ -104,9 +104,9 @@
                                      :live-temperature-map="liveTemperatureMap"
                                      @handleNodeClick="handleNodeClick" @showMarkerInfo="showMarkerInfo">
                       </SensorDiagram>
-                      <CameraDiagram v-else-if="mapTypeDiagram === 'emapPhotoPath'" :live-markers="cameraMarker"
-                                     @showMarkerInfo="showCameraInfo">
-                      </CameraDiagram>
+<!--                      <CameraDiagram v-else-if="mapTypeDiagram === 'emapPhotoPath'" :live-markers="cameraMarker"-->
+<!--                                     @showMarkerInfo="showCameraInfo">-->
+<!--                      </CameraDiagram>-->
                     </LeafletMap>
                   </div>
                 </div>
@@ -367,7 +367,7 @@ const showCameraInfo = (marker: any) => {
   overflow: hidden;
   gap: 20px;
   display: grid;
-  height: calc(100vh - 100px);
+  //height: calc(100vh - 100px);
 }
 
 @media (max-width: 1200px) {
@@ -388,10 +388,6 @@ const showCameraInfo = (marker: any) => {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .tree-card,
-  .map-section {
-    height: 500px !important;
-  }
 }
 
 @media (max-width: 540px) {
@@ -405,10 +401,6 @@ const showCameraInfo = (marker: any) => {
     padding: 12px 16px !important;
   }
 
-  .tree-card,
-  .map-section {
-    height: 400px !important;
-  }
 }
 
 .status-badge {

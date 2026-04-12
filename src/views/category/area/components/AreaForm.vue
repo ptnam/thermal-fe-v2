@@ -36,13 +36,8 @@
         </Suspense>
         <Suspense>
           <el-form-item prop="emapPhotoPath" label="Sơ đồ mặt bằng" :error="formErrors.emapPhotoPath">
-            <ImageUploader v-model="formModel.emapPhotoPath"/>
-          </el-form-item>
-        </Suspense>
-        <Suspense>
-          <el-form-item prop="emapPhotoPath" label="Sơ đồ mặt bằng" :error="formErrors.emapPhotoPath">
             <GlbUploadButton
-              :file-path="formModel.emapFile"
+              :file-path="formModel.emapPhotoPath"
               :model-position="formModel?.emapPosition?.modelPosition"
               :model-rotation="formModel?.emapPosition?.modelRotation"
               :model-scale="formModel?.emapPosition?.modelScale"
@@ -127,6 +122,9 @@ const mapPicker = ref<InstanceType<typeof LatLngPicker>>()
 
 const pendingGlbFile = ref<File | null>(null)
 function handleChangeLocalFile(payload: { file: File | null; localUrl: string; fileName: string }) {
+  if (!payload.localUrl) {
+    updateFormModel({emapPhotoPath: null})
+  }
   pendingGlbFile.value = payload.file
 }
 
@@ -149,6 +147,7 @@ function handleSavePreview(payload: {
   })
 }
 const transformFormData = (data: any) => {
+  data.emapPosition = JSON.stringify(data.emapPosition);
   const formData = buildFormData(data);
   formData.append('emapFile', pendingGlbFile.value)
   return formData;
