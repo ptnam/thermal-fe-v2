@@ -20,7 +20,7 @@
     </div>
 
     <!-- TREE -->
-    <div class="modern-area-tree">
+    <div class="modern-area-tree" v-loading="loading">
       <template v-for="area in filteredData" :key="area.id">
         <div class="modern-tree-section-header">
           {{ area.name }}
@@ -57,14 +57,24 @@ const props = defineProps({
 const emits = defineEmits(['nodeClick'])
 const data = ref<any[]>([])
 const keyword = ref('')
+const loading = ref(false);
 
 onMounted(async () => {
-  fetch()
+  void fetch()
 })
 
 const fetch = async () => {
-  const res = await props.requestFn()
-  data.value = res.data
+  loading.value = true;
+  try {
+
+    const res = await props.requestFn()
+    data.value = res.data
+
+  }catch (e) {
+
+  }finally {
+    loading.value = false;
+  }
 }
 
 const filterNode = (node: any, keyword: string): boolean => {

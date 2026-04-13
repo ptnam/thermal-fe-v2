@@ -1904,7 +1904,8 @@ body {
     align-items: start;
     gap: 4px;
     padding: 4px;
-    overflow-y: auto;
+    min-height: 638px;
+    overflow: hidden;
   }
 
   .cam-cell {
@@ -1921,6 +1922,9 @@ body {
     height: 100%;
     object-fit: cover;
     opacity: 0.8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .cam-header {

@@ -44,6 +44,17 @@
              :style="{gridTemplateColumns: pageSizeCol, alignContent: 'start'}">
           <web-player v-for="cam in paginatedData" :key="cam.id" :cam="cam" :streamKey="cam.id"></web-player>
         </div>
+        <div class="mt-2 flex justify-center">
+          <el-pagination
+            v-show="totalItems"
+            @current-change="handlePageChange"
+            :current-page="currentPage"
+            :page-size="pageSize"
+            :total="totalItems"
+            layout="prev, pager, next"
+          >
+          </el-pagination>
+        </div>
       </div>
       <el-drawer class="block md:hidden" v-model="drawerVisibleTree" direction="ltr" size="90%">
         <area-tree-live
@@ -97,16 +108,18 @@ const drawerVisibleTree = ref(false)
 const environmentTemperature = ref<any>(null)
 const selectedAreaId = ref(null)
 
+const totalItems = computed(() => fullList.value.length)
+
 const paginatedData = computed(() => {
   const start = (currentPage.value - 1) * pageSize.value
   return fullList.value.slice(start, start + pageSize.value)
 })
 
 const pageSizeCol = computed(() => {
-  if (fullList.value.length === 1) {
+  if (fullList.value.length === 1 || pageSize.value === 1) {
     return 'repeat(1, 1fr)'
   }
-  if (fullList.value.length === 2 || pageSize.value) {
+  if (fullList.value.length === 2 || pageSize.value === 2) {
     return 'repeat(2, 1fr)'
   }
   const va = Math.sqrt(pageSize.value)
@@ -135,6 +148,10 @@ const applySettings = () => {
     message: 'Lưu thành công!',
     type: 'success',
   })
+}
+
+const handlePageChange = (page: number) => {
+  currentPage.value = page
 }
 const loadCamSetting = () => {
   loadingSetting.value = true
