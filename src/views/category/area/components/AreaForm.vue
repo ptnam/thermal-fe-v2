@@ -30,21 +30,21 @@
       </el-form-item>
       <template v-if="formModel.mapType === MAP_TYPE_PICTURE">
         <Suspense>
-          <el-form-item prop="photoPath" label="Sơ đồ một sợi" :error="formErrors.PhotoPath">
-            <ImageUploader v-model="formModel.photoPath"/>
+          <el-form-item prop="photoFile" label="Sơ đồ một sợi" :error="formErrors.photoFile">
+            <ImageUploader v-model="formModel.photoPath" @onfile="changePhotoFile"/>
           </el-form-item>
         </Suspense>
         <Suspense>
           <el-form-item prop="emapPhotoPath" label="Sơ đồ mặt bằng" :error="formErrors.emapPhotoPath">
             <GlbUploadButton
-              :file-path="formModel.emapPhotoPath"
-              :model-position="formModel?.emapPosition?.modelPosition"
-              :model-rotation="formModel?.emapPosition?.modelRotation"
-              :model-scale="formModel?.emapPosition?.modelScale"
-              :camera-position="formModel?.emapPosition?.cameraPosition"
-              :target="formModel?.emapPosition?.target"
-              @change-file="handleChangeLocalFile"
-              @save-preview="handleSavePreview"
+                :file-path="formModel.emapPhotoPath"
+                :model-position="formModel?.emapPosition?.modelPosition"
+                :model-rotation="formModel?.emapPosition?.modelRotation"
+                :model-scale="formModel?.emapPosition?.modelScale"
+                :camera-position="formModel?.emapPosition?.cameraPosition"
+                :target="formModel?.emapPosition?.target"
+                @change-file="handleChangeLocalFile"
+                @save-preview="handleSavePreview"
             />
           </el-form-item>
         </Suspense>
@@ -100,16 +100,16 @@
 <script setup lang="ts">
 import FormWrapper from '@/components/Form/FormWrapper.vue'
 import SelectFromConfig from '@/components/Selection/SelectFromConfig.vue'
-import { computed, nextTick, ref, watch } from 'vue'
-import { rule } from '@/utils/validate'
-import { isFormEditing } from '@/utils/is'
-import { FormRules } from 'element-plus'
-import { addAreaApi, editAreaApi, getAllTreeAreaApi } from '@/api/area'
+import {computed, nextTick, ref, watch} from 'vue'
+import {rule} from '@/utils/validate'
+import {isFormEditing} from '@/utils/is'
+import {FormRules} from 'element-plus'
+import {addAreaApi, editAreaApi, getAllTreeAreaApi} from '@/api/area'
 import TreeSelectRemote from '@/components/Tree/TreeSelectRemote.vue'
 import LatLngPicker from '@/components/Map/LatLngPicker.vue'
 import ImageUploader from '@/components/Input/ImageUploader.vue'
-import { MAP_TYPE_PICTURE } from '@/constants'
-import { buildFormData, removeAllObjectInObject } from '@/utils/objectUtils'
+import {MAP_TYPE_PICTURE} from '@/constants'
+import {buildFormData, removeAllObjectInObject} from '@/utils/objectUtils'
 
 
 const props = defineProps({
@@ -121,6 +121,12 @@ const props = defineProps({
 const mapPicker = ref<InstanceType<typeof LatLngPicker>>()
 
 const pendingGlbFile = ref<File | null>(null)
+const photoFile = ref<File | null>(null)
+
+const changePhotoFile = (file) => {
+  photoFile.value = file;
+}
+
 function handleChangeLocalFile(payload: { file: File | null; localUrl: string; fileName: string }) {
   if (!payload.localUrl) {
     updateFormModel({emapPhotoPath: null})
@@ -146,10 +152,12 @@ function handleSavePreview(payload: {
     }
   })
 }
+
 const transformFormData = (data: any) => {
   data.emapPosition = JSON.stringify(data.emapPosition);
   const formData = buildFormData(data);
   formData.append('emapFile', pendingGlbFile.value)
+  formData.append('photoFile', photoFile.value)
   return formData;
 }
 

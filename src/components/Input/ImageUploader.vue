@@ -23,7 +23,7 @@ const props = defineProps({
   modelValue: String,
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'onfile'])
 
 const previewData = ref(props.modelValue || null)
 
@@ -42,10 +42,12 @@ const handlePreview = (file) => {
     emit('update:modelValue', reader.result)
   }
   reader.readAsDataURL(file)
+  emit("onfile", file)
 }
 
 const removeImage = () => {
   previewData.value = null
   emit('update:modelValue', null)
+  emit("onfile", null)
 }
 </script>
