@@ -1775,7 +1775,7 @@
   .modern-tree-sidebar {
     grid-column: 1 / 2;
     grid-row: span 3;
-    height: calc(100vh - 120px);
+    height: calc(100vh - 100px);
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -1786,7 +1786,7 @@
     grid-row: span 3;
     padding: 0;
     overflow: hidden;
-    height: calc(100vh - 120px);
+    height: calc(100vh - 100px);
     display: flex;
     flex-direction: column;
   }
