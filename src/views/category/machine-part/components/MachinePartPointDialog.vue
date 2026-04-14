@@ -132,7 +132,7 @@ const changeThresholdTypeList = () => {
 }
 
 .filter-badge {
-  background: #1e293b;
+  background: var(--bg-body);
   border: 1px solid var(--border);
   padding: 6px 14px;
   border-radius: 20px;

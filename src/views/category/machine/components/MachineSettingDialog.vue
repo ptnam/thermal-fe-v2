@@ -433,7 +433,7 @@ const setCoordinate = (componentIndex: number, coordinate: any) => {
 }
 
 .point-tag-solid {
-  background: #1e293b;
+  background: var(--bg-body);
   color: var(--text-main);
   border: 1px solid var(--border);
 }

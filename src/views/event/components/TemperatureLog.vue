@@ -474,7 +474,7 @@ onMounted(() => {
   top: calc(100% + 8px);
   right: 0;
   width: 280px;
-  background: #1a202c;
+  background: var(--bg-body);
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 8px;
@@ -628,7 +628,7 @@ onMounted(() => {
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   display: flex;
   gap: 12px;
-  background: #1e293b;
+  background: var(--bg-card);
 }
 
 .btn-save-drawer {

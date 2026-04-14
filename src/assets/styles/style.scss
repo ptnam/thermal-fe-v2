@@ -364,8 +364,8 @@ body {
   }
 
   .btn-settings {
-    background: #334155;
-    color: white !important;
+    background: var(--bg-body);
+    color: var(--text-main);
     border: none;
     border-radius: 4px;
     padding: 6px 16px;
@@ -380,9 +380,6 @@ body {
     transition: 0.2s;
   }
 
-  .btn-settings:hover {
-    background: #475569;
-  }
 
   .hidden-view {
     display: none !important;
@@ -1083,6 +1080,7 @@ body {
   .card-title {
     font-size: 15px;
     font-weight: 700;
+    color: var(--text-main);
   }
 
   .kpi-card {
@@ -1628,7 +1626,7 @@ body {
   /* --- 8.1 AREA TREE COMPONENT (Latest Premium Style - Prefixed) --- */
   .modern-tree-sidebar {
     width: 300px;
-    background: #0f172a;
+    background:  var(--bg-body) ;
     /* Deeper Dark */
     border-right: 1px solid rgba(255, 255, 255, 0.05);
     display: flex;
@@ -1641,7 +1639,7 @@ body {
   .modern-tree-title {
     font-size: 16px;
     font-weight: 700;
-    color: #f8fafc;
+    color: var(--text-main);
     margin-bottom: 20px;
   }
 
@@ -1757,8 +1755,8 @@ body {
   }
 
   .modern-at-leaf.active {
-    background: #1e293b;
-    color: #f1f5f9;
+    background: var(--bg-body);
+    color: var(--text-main);
   }
 
   .modern-at-leaf-icon-box {

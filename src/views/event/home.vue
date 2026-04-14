@@ -599,7 +599,7 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
 .drawer {
   width: 420px;
   height: 100%;
-  background: #1e293b;
+  background: var(--bg-body);
   box-shadow: -10px 0 40px rgba(0, 0, 0, 0.4);
   display: flex;
   flex-direction: column;
@@ -845,7 +845,7 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   display: flex;
   gap: 12px;
-  background: #1e293b;
+  background: var(--bg-card);
 }
 
 .btn-reset-drawer {
