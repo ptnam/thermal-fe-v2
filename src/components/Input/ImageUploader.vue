@@ -39,7 +39,6 @@ const handlePreview = (file) => {
   const reader = new FileReader()
   reader.onload = () => {
     previewData.value = reader.result
-    emit('update:modelValue', reader.result)
   }
   reader.readAsDataURL(file)
   emit("onfile", file)
@@ -47,7 +46,6 @@ const handlePreview = (file) => {
 
 const removeImage = () => {
   previewData.value = null
-  emit('update:modelValue', null)
   emit("onfile", null)
 }
 </script>

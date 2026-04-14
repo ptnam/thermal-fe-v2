@@ -478,7 +478,7 @@ const showCameraInfo = (marker: any) => {
 
 .map-section {
   grid-column: 1 / 2 !important;
-  height: 100%;
+  height: calc(100vh - 240px);
 }
 
 
