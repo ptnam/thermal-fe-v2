@@ -27,10 +27,6 @@ export const buildFormData = (
       ? `${parentKey}[${key}]`
       : key
 
-    if (value === null || value === undefined) {
-      return
-    }
-
     // File hoặc Blob
     if (value instanceof File || value instanceof Blob) {
       formData.append(formKey, value)

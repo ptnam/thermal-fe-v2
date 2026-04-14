@@ -125,6 +125,9 @@ const photoFile = ref<File | null>(null)
 
 const changePhotoFile = (file) => {
   photoFile.value = file;
+  if (!file) {
+    updateFormModel({photoPath: null})
+  }
 }
 
 function handleChangeLocalFile(payload: { file: File | null; localUrl: string; fileName: string }) {
@@ -154,7 +157,7 @@ function handleSavePreview(payload: {
 }
 
 const transformFormData = (data: any) => {
-  data.emapPosition = JSON.stringify(data.emapPosition);
+  data.emapPosition = "";
   const formData = buildFormData(data);
   formData.append('emapFile', pendingGlbFile.value)
   formData.append('photoFile', photoFile.value)
