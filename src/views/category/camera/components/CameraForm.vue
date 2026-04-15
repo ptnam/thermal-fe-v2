@@ -55,26 +55,6 @@
           <el-form-item label="password" prop="password" :error="formErrors.Password">
             <el-input v-model="formModel.password" type="password" autocomplete="new-password"/>
           </el-form-item>
-
-          <el-form-item
-              v-if="formModel?.area &&
-               formModel.areaId &&
-                formModel?.area?.mapType === MAP_TYPE_PICTURE &&
-                 formModel?.area?.emapPhotoPath"
-              label="Sơ đồ mặt bằng"
-              :error="formErrors?.Latitude ?? formErrors?.Longitude"
-          >
-            <lat-lng-image-picker
-                v-if="formModel?.area?.mapType === MAP_TYPE_PICTURE"
-                :image-path="formModel?.area?.emapPhotoPath"
-                :map-config="formModel"
-                @input="setCoordinate"
-            />
-            <p v-if="formModel?.longitude && formModel?.latitude" class="m-0 whitespace-nowrap">
-              <span class="font-bold">Kinh độ:</span> {{ formModel?.longitude }},
-              <span class="font-bold">Vĩ độ:</span> {{ formModel?.latitude }}
-            </p>
-          </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="Tên camera" prop="name" :error="formErrors.Name">

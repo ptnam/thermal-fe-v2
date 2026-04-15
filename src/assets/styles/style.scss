@@ -1689,7 +1689,6 @@ body {
     padding: 8px 4px;
     cursor: pointer;
     gap: 12px;
-    color: #f1f5f9;
     font-weight: 600;
   }
 
@@ -1744,14 +1743,8 @@ body {
     border-radius: 8px;
     cursor: pointer;
     gap: 12px;
-    color: #94a3b8;
     transition: 0.2s;
     font-size: 13px;
-  }
-
-  .modern-at-leaf:hover {
-    color: #f1f5f9;
-    background: rgba(255, 255, 255, 0.03);
   }
 
   .modern-at-leaf.active {

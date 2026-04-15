@@ -33,7 +33,7 @@
               </svg>
               Thiết lập
             </button>
-            <el-button :icon="FullScreen" @click="requestFullScreen" title="Toàn màn hình"></el-button>
+<!--            <el-button :icon="FullScreen" @click="requestFullScreen" title="Toàn màn hình"></el-button>-->
             <div class="mt-2 flex justify-center">
               <el-pagination
                 v-show="totalItems"
@@ -84,7 +84,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, onMounted, ref, watch } from "vue";
+import {computed, nextTick, onMounted, ref, watch } from "vue";
 import {getCameraSettingApi} from "@/api/camera-setting";
 import {isCam} from "@/utils/cameraUtils";
 import {environmentThermalApi} from "@/api/thermal-data";
@@ -134,8 +134,8 @@ const cellWidth = ref(0)
 const cellHeight = ref(0)
 
 const cellStyle = computed(() => ({
-  width: `${cellWidth.value}px`,
-  height: `${cellHeight.value}px`,
+  width: cellWidth.value >= 0 ? `${cellWidth.value}px` : undefined,
+  height: cellHeight.value >= 0 ? `${cellHeight.value}px` : undefined,
   minWidth: '0',
   minHeight: '0',
   overflow: 'hidden',
@@ -159,6 +159,11 @@ function getGridLayout(count) {
 
 function updateGridLayout() {
   const gridEl = mainCamGridRef.value
+  if (paginatedData.value.length === 1) {
+    cellWidth.value = -1;
+    cellHeight.value = -1;
+    return;
+  }
   if (!gridEl) return
 
   const layout = getGridLayout(pageSize.value)
@@ -179,17 +184,16 @@ function updateGridLayout() {
   cellHeight.value = Math.max(nextCellHeight, 0)
 }
 
-async function refreshGridLayout() {
-  await nextTick()
-  updateGridLayout()
-}
-
 watch(pageSizeCol, function(value) {
-  updateGridLayout()
+  nextTick(() => {
+    updateGridLayout()
+  })
 })
 
+const isFullScreen = ref(false)
 const requestFullScreen = () => {
   mainCamGridRef.value.requestFullscreen()
+  isFullScreen.value = !isFullScreen.value
 }
 const updateCamSetting = (data: any) => {
   pageSize.value = data?.screenNumber ?? 4
@@ -273,7 +277,6 @@ onMounted(() => {
 video{
   width: 100%;
   height: 100%;
-  object-fit: cover;
   display: block;
 }
 video-stream{
