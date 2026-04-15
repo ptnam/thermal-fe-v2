@@ -34,6 +34,17 @@
               Thiết lập
             </button>
             <el-button :icon="FullScreen" @click="requestFullScreen" title="Toàn màn hình"></el-button>
+            <div class="mt-2 flex justify-center">
+              <el-pagination
+                v-show="totalItems"
+                @current-change="handlePageChange"
+                :current-page="currentPage"
+                :page-size="pageSize"
+                :total="totalItems"
+                layout="prev, pager, next"
+              >
+              </el-pagination>
+            </div>
           </div>
           <div v-show="environmentTemperature !== null" class="env-temp">Nhiệt độ môi trường:
             {{ environmentTemperature?.temperature ?? "" }}
@@ -42,18 +53,7 @@
 
         <div class="cam-grid" id="mainCamGrid" ref="mainCamGridRef"
              :style="{gridTemplateColumns: pageSizeCol, alignContent: 'start'}">
-          <web-player v-for="cam in paginatedData" :key="cam.id" :cam="cam" :streamKey="cam.id"></web-player>
-        </div>
-        <div class="mt-2 flex justify-center">
-          <el-pagination
-            v-show="totalItems"
-            @current-change="handlePageChange"
-            :current-page="currentPage"
-            :page-size="pageSize"
-            :total="totalItems"
-            layout="prev, pager, next"
-          >
-          </el-pagination>
+          <web-player v-for="cam in paginatedData" :key="cam.id" :cam="cam" :streamKey="cam.id" :style="cellStyle"></web-player>
         </div>
       </div>
       <el-drawer class="block md:hidden" v-model="drawerVisibleTree" direction="ltr" size="90%">
@@ -84,7 +84,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, onMounted, ref} from "vue";
+import {computed, onMounted, ref, watch } from "vue";
 import {getCameraSettingApi} from "@/api/camera-setting";
 import {isCam} from "@/utils/cameraUtils";
 import {environmentThermalApi} from "@/api/thermal-data";
@@ -126,6 +126,68 @@ const pageSizeCol = computed(() => {
   return `repeat(${va}, 1fr)`
 })
 const mainCamGridRef = ref()
+
+const gridGap = ref(8)
+const colCount = ref(1)
+const rowCount = ref(1)
+const cellWidth = ref(0)
+const cellHeight = ref(0)
+
+const cellStyle = computed(() => ({
+  width: `${cellWidth.value}px`,
+  height: `${cellHeight.value}px`,
+  minWidth: '0',
+  minHeight: '0',
+  overflow: 'hidden',
+}))
+
+function getGridLayout(count) {
+  if (count <= 1) {
+    return { colCount: 1, rowCount: 1 }
+  }
+
+  if (count === 2) {
+    return { colCount: 2, rowCount: 1 }
+  }
+
+  if (count <= 4) {
+    return { colCount: 2, rowCount: 2 }
+  }
+
+  return { colCount: 3, rowCount: 3 }
+}
+
+function updateGridLayout() {
+  const gridEl = mainCamGridRef.value
+  if (!gridEl) return
+
+  const layout = getGridLayout(pageSize.value)
+
+  const containerWidth = gridEl.clientWidth
+  const containerHeight = gridEl.clientHeight
+  const gap = gridGap.value
+
+  const totalGapWidth = (layout.colCount - 1) * gap
+  const totalGapHeight = (layout.rowCount - 1) * gap
+
+  const nextCellWidth = Math.floor((containerWidth - totalGapWidth) / layout.colCount)
+  const nextCellHeight = Math.floor((containerHeight - totalGapHeight) / layout.rowCount)
+
+  colCount.value = layout.colCount
+  rowCount.value = layout.rowCount
+  cellWidth.value = Math.max(nextCellWidth, 0)
+  cellHeight.value = Math.max(nextCellHeight, 0)
+}
+
+async function refreshGridLayout() {
+  await nextTick()
+  updateGridLayout()
+}
+
+watch(pageSizeCol, function(value) {
+  updateGridLayout()
+})
+
 const requestFullScreen = () => {
   mainCamGridRef.value.requestFullscreen()
 }

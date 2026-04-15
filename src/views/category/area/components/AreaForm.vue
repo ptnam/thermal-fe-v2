@@ -75,6 +75,7 @@
         <select-from-config
             v-model="formModel.comparationDataMode"
             key-config="comparationDataModeList"
+            col-value="code"
         ></select-from-config>
       </el-form-item>
       <el-form-item label="Nhiệt độ môi trường" prop="environmentTemperature"
