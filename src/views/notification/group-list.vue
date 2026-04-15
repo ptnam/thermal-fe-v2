@@ -2,15 +2,14 @@
 import ListTemplate from '@/components/PageTemplate/List/ListTemplate.vue'
 import {TableColumn} from '@/components/Table'
 import {useLang} from '@/hooks/web/useI18n'
-import {deleteUserApi} from '@/api/user'
 import {computed, nextTick, ref} from 'vue'
 import BaseDialog from '@/components/Dialog/BaseDialog.vue'
 import {STATUS_ACTIVE} from '@/constants'
 import DeleteCircleButton from '@/components/Button/DeleteCircleButton.vue'
 import EditCircleButton from '@/components/Button/EditCircleButton.vue'
-import {getNotificationGroupListApi} from '@/api/notification-group'
+import { deleteNotificationGroupApi, getNotificationGroupListApi} from '@/api/notification-group'
 import NotificationGroupForm from '@/views/notification/components/NotificationGroupForm.vue'
-import {getAllNotificationChannelApi} from '@/api/notification-channel'
+import { getAllNotificationChannelApi} from '@/api/notification-channel'
 import VirtualizedSelectFromUrl from '@/components/Selection/VirtualizedSelectFromUrl.vue'
 import {getAllWarningEventApi} from '@/api/warning-event'
 import {joinFieldValues} from '@/utils/stringUtils'
@@ -82,7 +81,7 @@ const openDialogEdit = (scope: any) => {
 }
 
 const openDelete = (scope: any) => {
-  elTableRef?.value?.deleteRow(deleteUserApi, scope.row.id)
+  elTableRef?.value?.deleteRow(deleteNotificationGroupApi, scope.row.id)
 }
 
 const saveSuccess = () => {
