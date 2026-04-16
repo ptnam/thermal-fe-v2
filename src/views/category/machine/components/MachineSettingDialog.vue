@@ -39,14 +39,12 @@
                   v-if="formModel?.area?.mapType === MAP_TYPE_MAP"
                   :map-config="item"
                   @input="(coordinate) => setCoordinate(index, coordinate)"
-                  style="background: #FBBF24; color: #000; border: none; height: 38px;"
                 />
                 <lat-lng-image-picker
                   v-if="formModel?.area?.mapType === MAP_TYPE_PICTURE"
                   :image-path="formModel?.area?.photoPath"
                   :map-config="item"
                   @input="(coordinate) => setCoordinate(index, coordinate)"
-                  style="background: #FBBF24; color: #000; border: none; height: 38px;"
                 />
                 <p v-if="item.longitude && item.latitude" class="m-0 whitespace-nowrap">
                   <span class="font-bold">Kinh độ:</span> {{ item.longitude }},

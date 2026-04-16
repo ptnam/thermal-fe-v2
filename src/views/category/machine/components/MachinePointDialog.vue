@@ -17,7 +17,7 @@
         name="gen"
         label="Khai báo chung từ loại thiết bị"
       >
-        <threshold-tab :threshold-list="machinePartThresholdList" :readonly="true"/>
+        <threshold-tab :threshold-list="machinePartThresholdList"/>
       </el-tab-pane>
       <el-tab-pane
           name="main"
