@@ -127,7 +127,7 @@ const pageSizeCol = computed(() => {
 })
 const mainCamGridRef = ref()
 
-const gridGap = ref(8)
+const gridGap = ref(10)
 const colCount = ref(1)
 const rowCount = ref(1)
 const cellWidth = ref(0)
@@ -147,7 +147,7 @@ function getGridLayout(count) {
   }
 
   if (count === 2) {
-    return { colCount: 2, rowCount: 1 }
+    return { colCount: 2, rowCount: 2 }
   }
 
   if (count <= 4) {
