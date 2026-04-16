@@ -33,7 +33,7 @@
               </svg>
               Thiết lập
             </button>
-<!--            <el-button :icon="FullScreen" @click="requestFullScreen" title="Toàn màn hình"></el-button>-->
+            <el-button :icon="FullScreen" @click="requestFullScreen" title="Toàn màn hình"></el-button>
             <div class="mt-2 flex justify-center">
               <el-pagination
                 v-show="totalItems"
@@ -84,16 +84,16 @@
 </template>
 
 <script setup lang="ts">
-import {computed, nextTick, onMounted, ref, watch } from "vue";
-import {getCameraSettingApi} from "@/api/camera-setting";
-import {isCam} from "@/utils/cameraUtils";
-import {environmentThermalApi} from "@/api/thermal-data";
-import WebPlayer from "@/components/Video/WebPlayer.vue";
-import {getAllTreeAreaApi} from "@/api/area";
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { getCameraSettingApi } from '@/api/camera-setting'
+import { isCam } from '@/utils/cameraUtils'
+import { environmentThermalApi } from '@/api/thermal-data'
+import WebPlayer from '@/components/Video/WebPlayer.vue'
+import { getAllTreeAreaApi } from '@/api/area'
 import DrawerSetting from '@/views/live/components/DrawerSetting.vue'
-import {ElDrawer, ElMessage} from 'element-plus'
-import AreaTreeLive from "@/views/live/components/AreaTreeLive.vue";
-import {FullScreen} from "@element-plus/icons-vue";
+import { ElDrawer, ElMessage } from 'element-plus'
+import AreaTreeLive from '@/views/live/components/AreaTreeLive.vue'
+import { FullScreen } from '@element-plus/icons-vue'
 
 const fullList = ref<any[]>([])
 
@@ -160,8 +160,8 @@ function getGridLayout(count) {
 function updateGridLayout() {
   const gridEl = mainCamGridRef.value
   if (paginatedData.value.length === 1) {
-    cellWidth.value = -1;
-    cellHeight.value = -1;
+    cellWidth.value = gridEl.clientWidth;
+    cellHeight.value = gridEl.clientHeight;
     return;
   }
   if (!gridEl) return
@@ -192,8 +192,7 @@ watch(pageSizeCol, function(value) {
 
 const isFullScreen = ref(false)
 const requestFullScreen = () => {
-  mainCamGridRef.value.requestFullscreen()
-  isFullScreen.value = !isFullScreen.value
+  mainCamGridRef.value.requestFullscreen();
 }
 const updateCamSetting = (data: any) => {
   pageSize.value = data?.screenNumber ?? 4
@@ -269,8 +268,19 @@ const openDrawer = () => {
   drawerVisible.value = true
 }
 
+const handleFullscreenChange = async () => {
+  isFullScreen.value = document.fullscreenElement === mainCamGridRef.value
+
+  await nextTick()
+  updateGridLayout()
+}
+
 onMounted(() => {
-  loadCamSetting()
+  loadCamSetting();
+  document.addEventListener('fullscreenchange', handleFullscreenChange)
+})
+onBeforeUnmount(() => {
+  document.removeEventListener('fullscreenchange', handleFullscreenChange)
 })
 </script>
 <style>
