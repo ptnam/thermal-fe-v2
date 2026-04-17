@@ -158,6 +158,11 @@ function getGridLayout(count) {
 }
 
 function updateGridLayout() {
+  if (isMobile.value) {
+    cellWidth.value = -1;
+    cellHeight.value = -1;
+    return;
+  }
   const gridEl = mainCamGridRef.value
   if (paginatedData.value.length === 1) {
     cellWidth.value = gridEl.clientWidth;
@@ -275,12 +280,27 @@ const handleFullscreenChange = async () => {
   updateGridLayout()
 }
 
+const isMobile = ref(false)
+
+const checkIsMobile = () => {
+  isMobile.value = window.innerWidth <= 768
+}
+
+const handleResize = () => {
+  checkIsMobile()
+  nextTick(()=> {
+    updateGridLayout()
+  })
+}
+
 onMounted(() => {
   loadCamSetting();
   document.addEventListener('fullscreenchange', handleFullscreenChange)
+  window.addEventListener('resize', handleResize)
 })
 onBeforeUnmount(() => {
   document.removeEventListener('fullscreenchange', handleFullscreenChange)
+  window.removeEventListener('resize', handleResize)
 })
 </script>
 <style>
