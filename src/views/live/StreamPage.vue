@@ -294,6 +294,7 @@ const handleResize = () => {
 }
 
 onMounted(() => {
+  checkIsMobile()
   loadCamSetting();
   document.addEventListener('fullscreenchange', handleFullscreenChange)
   window.addEventListener('resize', handleResize)
