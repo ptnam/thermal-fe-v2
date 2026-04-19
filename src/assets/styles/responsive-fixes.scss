@@ -338,11 +338,7 @@
     /* === ACTION BUTTONS === */
     .action-group {
       display: flex !important;
-      width: 100% !important;
-      justify-content: space-between !important;
-      gap: 0 !important;
-      /* Let space-between handle it */
-      flex-wrap: nowrap;
+      flex-wrap: wrap;
     }
 
     .action-btn-circle {
@@ -714,7 +710,6 @@
     .drawer-footer .btn-reset-drawer,
     .drawer-footer .btn-apply-drawer {
       width: auto !important;
-      flex: 1;
       min-width: 80px;
       height: auto !important;
       min-height: 40px;
@@ -1389,7 +1384,28 @@
 
     /* Hide "Nhảy tới" text on mobile, keep input */
     .pagination-group>div {
+      display: flex;
+    }
+    //.pagination-group .btn-prev {
+    //  display: none;
+    //}
+    //.pagination-group .btn-next {
+    //  display: none;
+    //}
+    .pagination-group .el-pagination__sizes {
       display: none;
+    }
+    .pagination-group .el-pagination__goto {
+      display: none;
+    }
+    .pagination-group .el-pagination__editor {
+      display: none;
+    }
+    .pagination-group .el-pager {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
     }
 
     /* Jump to page input */
@@ -2014,7 +2030,6 @@
 
     .drawer-footer button {
       width: 100%;
-      flex: none !important;
       justify-content: center;
       padding: 12px !important;
     }

@@ -1,7 +1,7 @@
 <template>
   <FormWrapper
       :form-model="formModel"
-      :form-props="{ labelWidth: '160px', rules: userRules }"
+      :form-props="{ labelWidth: '160px', rules: userRules, labelPosition: isMobile ? 'top': 'left'}"
       :request-fn="isEditing ? editAreaApi : addAreaApi"
       :isEditing="isEditing"
       @success="handleSuccess"
@@ -111,6 +111,7 @@ import LatLngPicker from '@/components/Map/LatLngPicker.vue'
 import ImageUploader from '@/components/Input/ImageUploader.vue'
 import {MAP_TYPE_PICTURE} from '@/constants'
 import {buildFormData, removeAllObjectInObject} from '@/utils/objectUtils'
+import { useAppStore } from '@/store/modules/app'
 
 
 const props = defineProps({
@@ -119,6 +120,9 @@ const props = defineProps({
     required: true,
   },
 })
+
+const appStore = useAppStore();
+const isMobile = computed(() => appStore.isMobile)
 const mapPicker = ref<InstanceType<typeof LatLngPicker>>()
 
 const pendingGlbFile = ref<File | null>(null)

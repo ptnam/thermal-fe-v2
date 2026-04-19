@@ -12,9 +12,12 @@ interface AreaNode {
   expanded?: boolean
 }
 
-const props = defineProps<{
-  requestFn: () => Promise<any>
-}>()
+const props = withDefaults(defineProps<{
+  requestFn: () => () => Promise<IResponse<[]>>
+  treeClass?: string
+}>(), {
+  treeClass: 'tree-card'
+})
 
 const emit = defineEmits<{
   (e: 'node-click', node: AreaNode): void
@@ -65,7 +68,7 @@ const handleNodeClick = (node: AreaNode) => {
 </script>
 
 <template>
-  <div class="card tree-card">
+  <div class="card" :class="treeClass">
     <div class="card-header" style="margin-bottom: 20px;">
       <div class="card-title">Danh sách khu vực</div>
     </div>

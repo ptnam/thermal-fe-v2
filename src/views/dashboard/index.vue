@@ -67,7 +67,7 @@
           </span>
 
               <!-- Location button separated -->
-              <button class="map-btn visible-mobile-only location-btn" onclick="openAreaDrawer()" title="Chọn khu vực">
+              <button class="map-btn visible-mobile-only location-btn" @click="visibleTreeMoble = true" title="Chọn khu vực">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                   <circle cx="12" cy="10" r="3"></circle>
@@ -117,10 +117,17 @@
               :request-fn="() => getAllTreeAreaApi({warnings: true})"
               @node-click="handleNodeClick"
           ></AreaTreeDashBoardV2>
+          <el-drawer v-model="visibleTreeMoble" size="100%" title="DANH SÁCH KHU VỰC">
+            <AreaTreeDashBoardV2
+              treeClass="mobile-tree"
+              :request-fn="() => getAllTreeAreaApi({warnings: true})"
+              @node-click="handleNodeClick"
+            ></AreaTreeDashBoardV2>
+          </el-drawer>
         </div>
       </template>
     </data-fetcher>
-    <base-dialog v-model="visibleThermalDetail" :close-on-click-modal="true">
+    <base-dialog v-model="visibleThermalDetail" :close-on-click-modal="true" class="!w-[90%] !lg:w-1/2">
       <div class="mt-4" v-loading="loadingThermalData">
         <div v-if="selectedComponent.deviceType === 'Sensor'" class="text-center">
           Nhiệt độ: {{ selectedEnvironmentThermal?.temperature }}
@@ -199,6 +206,7 @@ const areaItem = ref({
 const mapTypeDiagram = ref('photoPath')
 
 const leafletMapRef = ref()
+const visibleTreeMoble = ref(false)
 const liveMarkers = ref<any[]>([])
 const cameraMarker = ref<any[]>([])
 const areaRangePointList = ref<any[]>([])

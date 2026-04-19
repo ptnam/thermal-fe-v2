@@ -29,6 +29,7 @@ export const useAppStore = defineStore('app', {
   },
   getters: {
     isDark: (s) => s.theme === "dark",
+    isMobile: (s) => s.device === 'mobile',
     getPageLoading(): boolean {
       return <boolean>this.pageLoading
     },

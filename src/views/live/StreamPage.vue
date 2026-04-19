@@ -34,7 +34,7 @@
               Thiết lập
             </button>
             <el-button :icon="FullScreen" @click="requestFullScreen" title="Toàn màn hình"></el-button>
-            <div class="mt-2 flex justify-center">
+            <div class="mt-2 flex justify-center max-w-[120px] overflow-x-auto lg:max-w-none">
               <el-pagination
                 v-show="totalItems"
                 @current-change="handlePageChange"
@@ -67,7 +67,7 @@
           @nodeClick="handleNodeClick">
         </area-tree-live>
       </el-drawer>
-      <el-drawer v-model="drawerVisible" style="min-width: 550px" :destroy-on-close="true" resizable
+      <el-drawer v-model="drawerVisible" style="min-width: 300px;" :destroy-on-close="true" resizable
                  :with-header="false">
         <drawer-setting
             :list-marked="fullList"

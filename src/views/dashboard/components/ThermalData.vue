@@ -6,7 +6,7 @@
     <div class="node-popup-body">
       <!-- Content will be populated by JS -->
       <div id="popupContentArea">
-        <div class="node-popup-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+        <div class="node-popup-grid grid grid-cols-1 lg:grid-cols-2 gap-[15px]">
           <div v-for="(items, index) in thermalInfo" class="analysis-card">
             <div class="analysis-title">
               <span>{{ index }}</span>

@@ -16,7 +16,7 @@
               v-model="dialogVisible"
               :destroy-on-close="true"
               title="Bộ lọc dữ liệu"
-              style="min-width: 650px">
+              style="min-width: 300px">
             <div class="drawer">
               <div class="drawer-header">
                 <h3>
@@ -673,6 +673,48 @@ onMounted(() => {
   gap: 8px;
   transition: 0.2s;
   height: 47px;
+}
+
+.btn-apply-drawer:hover {
+  background: #3b82f6;
+  transform: translateY(-1px);
+}
+.btn-reset-drawer {
+  flex: 1;
+  background: #94A3B8;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: 0.2s;
+}
+
+.btn-reset-drawer:hover {
+  background: #64748b;
+}
+
+.btn-apply-drawer {
+  /* flex: 1.5; */
+  background: #60a5fa;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  /* display: flex; */
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: 0.2s;
 }
 
 .btn-apply-drawer:hover {
