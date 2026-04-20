@@ -14,6 +14,7 @@ import ApiButton from '@/components/Button/ApiButton.vue'
 import SearchButton from '@/components/Button/SearchButton.vue'
 import ActionForm from '@/components/Form/ActionForm.vue'
 import UserCard from "@/views/category/user/components/UserCard.vue";
+import { useAppStore } from '@/store/modules/app'
 
 const {t} = useLang()
 const renderActionColumn = (scope: any) => {
@@ -94,6 +95,8 @@ const saveSuccess = () => {
   elTableRef?.value?.refresh()
   dialogVisible.value = false
 }
+const appStore = useAppStore();
+const isMobile = computed(() => appStore.isMobile)
 </script>
 
 <template>
@@ -145,7 +148,7 @@ const saveSuccess = () => {
     </template>
 
   </list-template>
-  <ActionForm v-model="dialogVisible" size="45%">
+  <ActionForm v-model="dialogVisible" :size="isMobile? '100%': '50%'">
     <user-form
         v-model:formModel="formModel"
         :title="formModel.id ? 'Cập nhật người dùng': 'Thêm người dùng mới'"

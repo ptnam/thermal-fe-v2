@@ -15,7 +15,6 @@ provide('cancelDialog', cancelDialog)
       ref="dialogRef"
       :destroy-on-close="true"
       resizable
-      :with-header="false"
       v-bind="$attrs">
     <slot></slot>
   </el-drawer>

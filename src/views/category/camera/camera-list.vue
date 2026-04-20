@@ -30,6 +30,7 @@ import DrawerForm from '@/components/Form/DrawerForm.vue'
 import {useRouter} from 'vue-router';
 import {downloadFile} from "@/utils/response";
 import CameraCard from '@/views/category/camera/components/CameraCard.vue'
+import { useAppStore } from '@/store/modules/app'
 
 const router = useRouter();
 
@@ -186,6 +187,9 @@ const uploadApi = (file: File) => {
 const redirectDetail = (row) => {
   return router.push({name: 'live_detail', params: {id: row.id}})
 }
+
+const appStore = useAppStore();
+const isMobile = computed(() => appStore.isMobile)
 </script>
 
 <template>
@@ -253,14 +257,14 @@ const redirectDetail = (row) => {
           @success="() => visibleUpload = false"
       ></base-upload>
     </base-dialog>
-    <drawer-form v-model="dialogVisible" :append-to-body="true" size="70%" :show-close="false">
+    <drawer-form v-model="dialogVisible" :append-to-body="true" :size="isMobile ? '100%': '70%'" :show-close="true">
       <camera-form-tab
           v-model:formModel="formModel"
           @success="saveSuccess"
           v-loading="detailLoading"
       ></camera-form-tab>
     </drawer-form>
-    <drawer-form :show-close="true" size="50%" v-model="presetDialogVisible" title="Thông số góc quay">
+    <drawer-form :show-close="true" :size="isMobile ? '100%': '50%'" v-model="presetDialogVisible">
       <PresetTourTab :presets="presets" :tours="cameraTours"/>
     </drawer-form>
     <base-dialog
@@ -271,7 +275,7 @@ const redirectDetail = (row) => {
     >
       <CameraVisionPreset :visionCamera="visionCamera"/>
     </base-dialog>
-    <drawer-form v-model="aiSettingDialogVisible" :destroy-on-close="true" title="Cài đặt AI" style="min-width: 650px">
+    <drawer-form v-model="aiSettingDialogVisible" :destroy-on-close="true" title="Cài đặt AI" :size="isMobile ? '100%': '70%'">
       <ai-setting :camera="selectedCamera" @saved="aiSettingDialogVisible = false"/>
     </drawer-form>
   </div>

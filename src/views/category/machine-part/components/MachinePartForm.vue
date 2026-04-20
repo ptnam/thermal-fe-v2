@@ -3,7 +3,7 @@
     <FormWrapper
         ref="formRef"
         :form-model="formModel"
-        :form-props="{ labelWidth: '140px', rules: userRules }"
+        :form-props="{ labelWidth: '140px', labelPosition: appStore.isMobile ? 'top': 'left' }"
         :request-fn="isEditing ? editMachinePartApi : addMachinePartApi"
         :isEditing="isEditing"
         @success="handleSuccess"
@@ -63,7 +63,7 @@
         @save="saveMachinePoint"
         align-center
         class="h-fit"
-        style="max-width: 600px"
+        :size="appStore.isMobile ? '100%' : '50%'"
     ></MachinePartPointDialog>
   </div>
 
@@ -81,6 +81,7 @@ import TreeSelectRemote from '@/components/Tree/TreeSelectRemote.vue'
 import CancelButton from "@/components/Button/CancelButton.vue";
 import SaveButton from "@/components/Button/SaveButton.vue";
 import MachinePartPointDialog from '@/views/category/machine-part/components/MachinePartPointDialog.vue'
+import { useAppStore } from '@/store/modules/app'
 
 const props = defineProps({
   formModel: {
@@ -99,6 +100,8 @@ const dialogMachinePointVisible = ref(false)
 
 const machinePartThresholdList = ref(props.formModel.machinePartThresholdList ?? [])
 
+const appStore = useAppStore();
+
 const isEditing = computed(() => {
   return isFormEditing(props.formModel)
 })
@@ -114,19 +117,7 @@ const saveMachinePoint = (data: any) => {
   emits('update:formModel', form)
   dialogMachinePointVisible.value = false
 }
-const userRules = computed<FormRules>(() => {
-  const rules: FormRules = {
-    name: [rule('required', true, '')],
-    code: [rule('required', true, '')],
-    status: [rule('required', true, '')],
-  }
 
-  if (!isEditing.value) {
-    rules.password = [rule('required', true, 'password'), rule('min', 6, 'password')]
-  }
-
-  return rules
-})
 const emits = defineEmits(['update:formModel', 'success'])
 const handleSuccess = (data: any) => {
   emits('success', data)

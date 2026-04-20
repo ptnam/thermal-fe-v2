@@ -1,7 +1,7 @@
 <template>
   <FormWrapper
       :form-model="formModel"
-      :form-props="{ labelWidth: '180px', rules: formRules }"
+      :form-props="{ labelWidth: '180px', rules: formRules, labelPosition: isMobile? 'top': 'left' }"
       :request-fn="isEditing ? editNotificationGroupApi : addNotificationGroupApi"
       :isEditing="isEditing"
       @success="handleSuccess"
@@ -81,6 +81,7 @@ import {getAllTreeAreaApi} from '@/api/area'
 import SelectFromConfig from '@/components/Selection/SelectFromConfig.vue'
 import {getAllWarningEventApi} from '@/api/warning-event'
 import TreeSelectRemote from "@/components/Tree/TreeSelectRemote.vue";
+import { useAppStore } from '@/store/modules/app'
 
 const props = defineProps({
   formModel: {
@@ -89,6 +90,8 @@ const props = defineProps({
   },
 })
 
+const appStore = useAppStore();
+const isMobile = computed(() => appStore.isMobile)
 const emits = defineEmits(['update:formModel', 'success'])
 
 const isEditing = computed(() => {

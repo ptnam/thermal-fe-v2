@@ -14,6 +14,7 @@ import {useRouter} from 'vue-router'
 import SearchButton from '@/components/Button/SearchButton.vue'
 import DrawerForm from "@/components/Form/DrawerForm.vue";
 import MachineTypeCard from "@/views/category/machine-type/components/MachineTypeCard.vue";
+import { useAppStore } from '@/store/modules/app'
 
 const {t} = useLang()
 const router = useRouter()
@@ -76,6 +77,9 @@ const saveSuccess = () => {
   elTableRef?.value?.refresh()
   dialogVisible.value = false
 }
+
+const appStore = useAppStore();
+const isMobile = computed(() => appStore.isMobile)
 </script>
 
 <template>
@@ -106,7 +110,7 @@ const saveSuccess = () => {
       </div>
     </template>
   </list-template>
-  <drawer-form v-model="dialogVisible" :destroy-on-close="true">
+  <drawer-form v-model="dialogVisible" :size="isMobile ? '100%': '50%'" :show-close="true">
     <MachineTypeForm :formModel="formModel" @success="saveSuccess"></MachineTypeForm>
   </drawer-form>
 </template>

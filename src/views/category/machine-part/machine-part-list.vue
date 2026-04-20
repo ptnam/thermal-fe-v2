@@ -14,6 +14,8 @@ import MachinePartForm from '@/views/category/machine-part/components/MachinePar
 import BackButton from "@/components/Button/BackButton.vue";
 import {getDetailMachineTypeApi} from '@/api/machine-type'
 import {buildIndexMap} from "@/utils/table";
+import { useAppStore } from '@/store/modules/app'
+import MachinePartCard from '@/views/category/machine-part/components/MachinePartCard.vue'
 
 const {t} = useLang()
 
@@ -86,6 +88,8 @@ const saveSuccess = () => {
   elTableRef?.value?.refresh()
   dialogVisible.value = false
 }
+const appStore = useAppStore();
+const isMobile = computed(() => appStore.isMobile)
 </script>
 
 <template>
@@ -104,6 +108,9 @@ const saveSuccess = () => {
         }"
       @addHandler="openDialogAdd"
       v-loading="detailLoading"
+      :cardComponent="MachinePartCard"
+      @edit="openDialogEdit"
+      @delete="openDelete"
   >
     <template v-slot:top>
       <div
@@ -126,7 +133,7 @@ const saveSuccess = () => {
       </div>
     </template>
   </list-template>
-  <drawer-form v-model="dialogVisible" :destroy-on-close="true" style="min-width: 500px">
+  <drawer-form v-model="dialogVisible" :destroy-on-close="true" :size="isMobile ? '100%': '50%'">
     <MachinePartForm
         :title="formModel.id ? 'Sửa bộ phận': 'Thêm mới bộ phận'"
         v-model:formModel="formModel"

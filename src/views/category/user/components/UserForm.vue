@@ -1,21 +1,21 @@
 <template>
   <FormWrapper
       :form-model="formModel"
-      :form-props="{ labelWidth: '140px', rules: formRules }"
+      :form-props="{ labelWidth: '140px', rules: formRules, labelPosition: isMobile ? 'top': 'left' }"
       :request-fn="isEditing ? editUserApi : addUserApi"
       :isEditing="isEditing"
       @success="handleSuccess"
   >
     <template v-slot="{ formErrors }">
-      <div class="flex justify-between gap-2">
+      <div class="flex flex-col md:flex-row gap-2">
         <el-form-item label="Tên đăng nhập" prop="username" :error="formErrors.Username">
           <el-input v-model="formModel.username"  placeholder="Nhập tên đăng nhập..."/>
         </el-form-item>
         <el-form-item label="Mật khẩu" prop="password" :error="formErrors.Password">
-          <el-input v-model="formModel.password" type="password" placeholder="••••••"/>
+          <el-input v-model="formModel.password" type="password" placeholder="••••••" :autocomplete="false"/>
         </el-form-item>
       </div>
-      <div class="flex justify-between gap-2">
+      <div class="flex flex-col md:flex-row gap-2">
         <el-form-item label="Tên" prop="firstName" :error="formErrors.FirstName">
           <el-input v-model="formModel.firstName"  placeholder="Nhập tên..."/>
         </el-form-item>
@@ -23,7 +23,7 @@
           <el-input v-model="formModel.lastMiddleName" placeholder="Nhập họ và tên đệm..."/>
         </el-form-item>
       </div>
-      <div class="flex justify-between gap-2">
+      <div class="flex flex-col md:flex-row gap-2">
         <el-form-item label="Email" prop="email" :error="formErrors.Email">
           <el-input v-model="formModel.email" placeholder="example@gmail.com"/>
         </el-form-item>
@@ -31,7 +31,7 @@
           <el-input v-model="formModel.phone" placeholder="Nhập số điện thoại..."/>
         </el-form-item>
       </div>
-      <div class="flex justify-between gap-2">
+      <div class="flex flex-col md:flex-row gap-2">
         <el-form-item label="Telegram User" prop="telegramUsername" :error="formErrors.TelegramUsername">
           <el-input v-model="formModel.telegramUsername"/>
         </el-form-item>
@@ -47,7 +47,7 @@
           />
         </el-form-item>
       </div>
-      <div class="flex justify-between gap-2">
+      <div class="flex flex-col md:flex-row gap-2">
         <el-form-item label="Khu vực" prop="areaIds" :error="formErrors.AreaIds">
           <tree-select-remote
             v-model="formModel.areaIds"
@@ -82,6 +82,7 @@ import {getAllRoleApi} from '@/api/role'
 import ObjectSelectFromUrl from '@/components/Selection/ObjectSelectFromUrl.vue'
 import {getAllTreeAreaApi} from "@/api/area";
 import TreeSelectRemote from "@/components/Tree/TreeSelectRemote.vue";
+import { useAppStore } from '@/store/modules/app'
 
 const props = defineProps({
   formModel: {
@@ -89,6 +90,9 @@ const props = defineProps({
     required: true,
   },
 })
+
+const appStore = useAppStore();
+const isMobile = computed(() => appStore.isMobile)
 
 const isEditing = computed(() => {
   return isFormEditing(props.formModel)

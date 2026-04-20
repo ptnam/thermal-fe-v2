@@ -1,7 +1,7 @@
 <template>
   <FormWrapper
     :form-model="formModel"
-    :form-props="{ labelWidth: '140px', rules: userRules }"
+    :form-props="{ labelWidth: '140px', labelPosition:  appStore.isMobile ? 'top': 'left' }"
     :request-fn="isEditing ? editMachineTypeApi : addMachineTypeApi"
     :isEditing="isEditing"
     @success="handleSuccess"
@@ -32,7 +32,8 @@ import { rule } from '@/utils/validate'
 import { isFormEditing } from '@/utils/is'
 import { FormRules } from 'element-plus'
 import { addMachineTypeApi, editMachineTypeApi } from '@/api/machine-type'
-
+import { useAppStore } from '@/store/modules/app'
+const appStore = useAppStore();
 const props = defineProps({
   formModel: {
     type: Object,
@@ -43,21 +44,9 @@ const props = defineProps({
 const isEditing = computed(() => {
   return isFormEditing(props.formModel)
 })
-const userRules = computed<FormRules>(() => {
-  const rules: FormRules = {
-    name: [rule('required', true, 'username')],
-    code: [rule('required', true, 'email')],
-    status: [rule('required', true, 'status')],
-  }
-
-  if (!isEditing.value) {
-    rules.password = [rule('required', true, 'password'), rule('min', 6, 'password')]
-  }
-
-  return rules
-})
 const emit = defineEmits<(e: 'success', data: any) => void>()
 const handleSuccess = (data: any) => {
   emit('success', data)
 }
+
 </script>

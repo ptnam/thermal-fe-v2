@@ -76,6 +76,7 @@ export const useUserStore = defineStore('user', {
         cancelButtonText: 'Hủy',
         type: 'warning',
       }).then(async () => {
+        debugger
         const token = await getFirebaseToken();
         await logoutApi({
           firebaseToken: token,

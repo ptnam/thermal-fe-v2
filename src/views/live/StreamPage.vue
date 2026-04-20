@@ -309,6 +309,7 @@ video{
   width: 100%;
   height: 100%;
   display: block;
+  object-fit: fill;
 }
 video-stream{
   width: 100%;

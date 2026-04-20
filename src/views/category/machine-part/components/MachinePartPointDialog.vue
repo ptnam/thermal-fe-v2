@@ -4,7 +4,6 @@
       :destroy-on-close="true"
       :append-to-body="true"
       @open="dialogOpen"
-      style="min-width: 600px"
       :show-close="false"
       v-bind="$attrs">
     <template #header>
@@ -13,14 +12,12 @@
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2.5">
             <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"></path>
           </svg>
-          <h3 style="color: #3b82f6; font-size: 18px; text-transform: uppercase;">THIẾT LẬP NGƯỠNG CẢNH BÁO
-          </h3>
+          <h3 class="text-[14px] md:text-[18px] text-[#3b82f6] uppercase">THIẾT LẬP NGƯỠNG CẢNH BÁO</h3>
         </div>
       </div>
     </template>
     <div class="p-4 ml-2 min-h-[400px]">
-      <div class="absolute" style="    right: 39px;
-    top: 32px;">
+      <div class="absolute" style="right: 39px; top: 44px;">
         <ThresholdFilter
             v-model="thresholdListModel"
             :options="options"

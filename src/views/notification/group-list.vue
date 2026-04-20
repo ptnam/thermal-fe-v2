@@ -17,6 +17,7 @@ import {getAllTreeAreaApi} from '@/api/area'
 import TreeSelectRemote from '@/components/Tree/TreeSelectRemote.vue'
 import SearchButton from "@/components/Button/SearchButton.vue";
 import GroupCard from "@/views/notification/components/GroupCard.vue";
+import { useAppStore } from '@/store/modules/app'
 
 const {t} = useLang()
 
@@ -93,6 +94,8 @@ const changeAreaId = (searchParams: GenericObject) => {
   searchParams['cameras'] = null
   cameraRef?.value?.fetch()
 }
+const appStore = useAppStore();
+const isMobile = computed(() => appStore.isMobile)
 </script>
 
 <template>
@@ -156,7 +159,7 @@ const changeAreaId = (searchParams: GenericObject) => {
       </div>
     </template>
   </list-template>
-  <base-dialog v-model="dialogVisible" :destroy-on-close="true">
+  <base-dialog v-model="dialogVisible" :destroy-on-close="true" :width="isMobile? '100%': '50%'">
     <notification-group-form
         v-model:formModel="formModel"
         @success="saveSuccess"

@@ -57,6 +57,14 @@ export async function requestAndSendFcmToken(): Promise<void> {
 }
 
 export async function getFirebaseToken() {
+  if (!('Notification' in window)) {
+    console.log('Browser không hỗ trợ Notification API')
+    return
+  }
+  if (!window.isSecureContext) {
+    console.log('Không phải secure context')
+    return
+  }
   const permission = await Notification.requestPermission()
   if (permission !== 'granted') {
     console.log('Notification permission denied.')

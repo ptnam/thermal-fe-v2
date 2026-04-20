@@ -1,6 +1,5 @@
 <template>
   <el-drawer
-      style="min-width: 800px"
       @open="loadForm"
       :close-on-click-modal="false"
       :center="true"
@@ -172,15 +171,13 @@
       </el-tabs>
     </div>
     <template #footer>
-      <div class="flex justify-between space-x-2">
-        <div>
-          <cancel-button @click="emits('cancel')"></cancel-button>
-          <el-button v-show="modelComponents.length" type="warning"
-                     @click="() => openTemperatureThreshold(editableTabsValue)">
-            Thiết lập ngưỡng nhiệt
-          </el-button>
-        </div>
-        <save-button @click="() => saveForm(true)"></save-button>
+      <div class="flex flex-col justify-between md:flex-row justify-between gap-2">
+        <cancel-button class="w-full md:w-fit" @click="emits('cancel')"></cancel-button>
+        <el-button class="!m-0 w-full md:w-fit" v-show="modelComponents.length" type="warning"
+                   @click="() => openTemperatureThreshold(editableTabsValue)">
+          Thiết lập ngưỡng nhiệt
+        </el-button>
+        <save-button class="!m-0 w-full md:w-fit" @click="() => saveForm(true)"></save-button>
       </div>
     </template>
   </el-drawer>
@@ -194,14 +191,14 @@
       :append-to-body="true"
       align-center
       class="h-fit"
-      style="max-width: 600px"
+      :size="isMobile ? '100%': '50%'"
   ></MachinePointDialog>
 </template>
 
 <script setup lang="ts">
 import VirtualizedSelectFromUrl from '@/components/Selection/VirtualizedSelectFromUrl.vue'
 import {getAllCamerasApi} from '@/api/camera'
-import {nextTick, ref} from 'vue'
+import { computed, nextTick, ref} from 'vue'
 import {getAllSensorsApi} from '@/api/sensor'
 import {getAllMonitorPointByCamApi, getAllMonitorPointBySensorApi} from '@/api/monitor-point'
 import MachinePointButton from '@/views/category/machine/components/MachinePointButton.vue'
@@ -217,6 +214,7 @@ import LatLngImagePicker from '@/components/Map/LatLngImagePicker.vue'
 import SelectOptions from "@/components/Selection/SelectOptions.vue";
 import ObjectSelectPoints from "@/views/category/machine/components/ObjectSelectPoints.vue";
 import InputNumber from "@/components/Input/InputNumber.vue";
+import { useAppStore } from '@/store/modules/app'
 
 const emits = defineEmits(['cancel', 'save'])
 const editableTabsValue = ref(0)
@@ -234,6 +232,9 @@ const props = defineProps({
     required: true,
   },
 })
+
+const appStore = useAppStore();
+const isMobile = computed(() => appStore.isMobile)
 
 const machineComponent = ref({
   cameraId: null,

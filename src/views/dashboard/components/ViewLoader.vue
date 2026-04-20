@@ -1,8 +1,6 @@
 <template>
-  <div class="glb-editor">
-    <div class="viewer-wrap">
-      <div ref="containerRef" class="viewer"></div>
-    </div>
+  <div class="w-full h-full">
+    <div ref="containerRef" class="viewer"></div>
   </div>
 </template>
 
@@ -27,8 +25,6 @@ type ViewerPreset = {
   target: Vec3
 }
 
-const STORAGE_KEY = 'three-glb-best-view-preset'
-
 const props = withDefaults(
     defineProps<{
       src: string
@@ -50,12 +46,7 @@ function defaultPreset(): ViewerPreset {
     modelScale: { x: 1.5, y: 1.5, z: 1.5 },
     cameraPosition: { x: 4, y: 3, z: 6 },
     target: { x: 0, y: 0, z: 0 },
-    ...props.emapPosition
   }
-}
-
-function clonePreset(v: ViewerPreset): ViewerPreset {
-  return JSON.parse(JSON.stringify(v))
 }
 
 const containerRef = ref<HTMLDivElement | null>(null)
@@ -76,7 +67,6 @@ let frameId = 0
 function centerModel(object: THREE.Object3D) {
   const box = new THREE.Box3().setFromObject(object)
   const center = box.getCenter(new THREE.Vector3())
-
   object.position.x -= center.x
   object.position.y -= center.y
   object.position.z -= center.z
@@ -167,7 +157,7 @@ async function loadModel(src: string) {
           ========================= */
 
           fitCameraToObject(modelRoot)
-
+          modelRoot.position.y += 8
           resolve()
         },
 
@@ -320,7 +310,8 @@ onBeforeUnmount(() => {
 <style scoped>
 .viewer {
   width: 100%;
-  height: 680px;
+  min-height: 100%;
+  height: 100%;
   border: 1px solid #dcdfe6;
   border-radius: 10px;
   overflow: hidden;

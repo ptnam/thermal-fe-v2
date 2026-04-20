@@ -48,6 +48,7 @@
               </div>
               <button v-show="showBtnAdd" class="btn-add" @click="$emit('addHandler')">+ Thêm</button>
             </div>
+            <slot name="appendTop"></slot>
           </div>
         </slot>
 

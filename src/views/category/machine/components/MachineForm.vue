@@ -1,7 +1,7 @@
 <template>
   <FormWrapper
       :form-model="formModel"
-      :form-props="{ labelWidth: '200px', rules: formRules }"
+      :form-props="{ labelWidth: '200px', rules: formRules, labelPosition: isMobile ? 'top': 'left' }"
       :request-fn="isEditing ? editMachineApi : addMachineApi"
       :isEditing="isEditing"
       @success="handleSuccess"
@@ -16,7 +16,7 @@
               </div>
             </template>
             <el-row :gutter="10">
-              <el-col :span="12">
+              <el-col :span="isMobile ? 24 : 12">
                 <el-form-item label="Khu vực" prop="areaId" :error="formErrors.AreaId">
                   <tree-select-remote
                       v-model="formModel.areaId"
@@ -27,7 +27,7 @@
                   />
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :span="isMobile ? 24 : 12">
                 <el-form-item
                     v-if="formModel?.area && formModel.areaId"
                     label="Tọa độ"
@@ -53,12 +53,12 @@
               </el-col>
             </el-row>
             <el-row :gutter="10">
-              <el-col :span="12">
+              <el-col :span="isMobile ? 24 : 12">
                 <el-form-item label="Mã thiết bị" prop="code" :error="formErrors.Code">
                   <el-input v-model="formModel.code"/>
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :span="isMobile ? 24 : 12">
                 <el-form-item
                     label="Tên thiết bị"
                     prop="code"
@@ -70,7 +70,7 @@
               </el-col>
             </el-row>
             <el-row :gutter="10">
-              <el-col :span="12">
+              <el-col :span="isMobile ? 24 : 12">
                 <el-form-item
                     label="Chu kỳ lấy data (phút)"
                     prop="frequency"
@@ -79,7 +79,7 @@
                   <InputNumber v-model="formModel.frequency"/>
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :span="isMobile ? 24 : 12">
                 <el-form-item
                     label="Loại thiết bị"
                     prop="machineTypeId"
@@ -98,8 +98,8 @@
               </el-col>
             </el-row>
             <el-row :gutter="10">
-              <el-col :span="12"></el-col>
-              <el-col :span="12">
+              <el-col :span="isMobile ? 24 : 12"></el-col>
+              <el-col :span="isMobile ? 24 : 12">
 
                 <el-form-item
                     label="Trạng thái"
@@ -134,6 +134,7 @@
               :machine-part-id="machinePartId"
               @cancel="()=> visibleSetting = false"
               @save="saveMachinePart"
+              :size="isMobile ? '100%': '50%'"
           />
         </el-tab-pane>
         <el-tab-pane label="Thông tin chi tiết">
@@ -174,8 +175,13 @@ import MachineSettingDialog from "@/views/category/machine/components/MachineSet
 import RemoteTable from "@/components/Table/RemoteTable.vue";
 import SelectFromConfig from "@/components/Selection/SelectFromConfig.vue";
 import MachineDetail from "@/views/category/machine/components/MachineDetail.vue";
+import { useAppStore } from '@/store/modules/app'
 
 const machinePartTableRef = ref<InstanceType<typeof RemoteTable>>()
+
+
+const appStore = useAppStore();
+const isMobile = computed(() => appStore.isMobile)
 
 const visibleSetting = ref(false)
 

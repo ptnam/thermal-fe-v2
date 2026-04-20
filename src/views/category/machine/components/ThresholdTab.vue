@@ -1,13 +1,13 @@
 <template>
   <el-tabs
       v-model="activeName"
+      style="width: stretch"
   >
     <el-tab-pane
         v-for="(mode, indexMode) in thresholdList"
         :key="indexMode"
         :label="mode.name"
         :name="indexMode"
-        style="width: 600px"
     >
       <div class="space-y-4">
         <el-form-item

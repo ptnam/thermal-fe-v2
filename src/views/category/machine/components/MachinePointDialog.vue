@@ -6,7 +6,7 @@
       @open="dialogOpen"
       :center="true"
       align-center
-      style="min-width: 800px"
+      :show-close="false"
       v-bind="$attrs">
     <el-tabs
         v-model="tabModel"

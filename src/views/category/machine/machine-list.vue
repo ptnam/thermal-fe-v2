@@ -24,6 +24,7 @@ import {downloadFile} from "@/utils/response";
 import useRequest from "@/hooks/web/useRequest";
 import DrawerForm from "@/components/Form/DrawerForm.vue";
 import MachineCard from '@/views/category/machine/components/MachineCard.vue'
+import { useAppStore } from '@/store/modules/app'
 
 const {t} = useLang()
 
@@ -119,6 +120,8 @@ const uploadApi = (file: File) => {
 
   return importIECApi(formData)
 }
+const appStore = useAppStore();
+const isMobile = computed(() => appStore.isMobile)
 </script>
 
 <template>
@@ -161,19 +164,19 @@ const uploadApi = (file: File) => {
             value-key="id"
         />
       </div>
-      <div class="flex justify-center">
-        <search-button @click="elTableRef?.refresh()"/>
-        <export-button @click="() => exportFile(searchParams)" :loading="isLoadingExport"/>
-        <el-button class="!h-[40px]" @click="() => exportEICFile(searchParams)" :loading="isLoadingExport">Export IEC
+      <div class="flex flex-col md:flex-row justify-center gap-2 w-full md:w-fit">
+        <search-button class="!m-0" @click="elTableRef?.refresh()"/>
+        <export-button class="!m-0" @click="() => exportFile(searchParams)" :loading="isLoadingExport"/>
+        <el-button class="!m-0 !h-[40px]" @click="() => exportEICFile(searchParams)" :loading="isLoadingExport">Export IEC
         </el-button>
-        <el-button class="!h-[40px]" @click="showImport">Import IEC</el-button>
+        <el-button class="!m-0 !h-[40px]" @click="showImport">Import IEC</el-button>
       </div>
     </template>
   </list-template>
   <base-dialog
       v-model="visibleUpload"
       title="Import IEC"
-      width="500px"
+      :size="isMobile ? '100%': '50%'"
   >
     <base-upload
         :api="uploadApi"
@@ -184,7 +187,7 @@ const uploadApi = (file: File) => {
       v-model="dialogVisible"
       align-center
       :destroy-on-close="true"
-      style="min-width: 1100px"
+      :size="isMobile ? '100%': '50%'"
   >
     <machine-form
         v-model:formModel="formModel"
