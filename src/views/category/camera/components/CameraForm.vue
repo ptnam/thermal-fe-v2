@@ -1,7 +1,7 @@
 <template>
   <FormWrapper
       :form-model="formModel"
-      :form-props="{ labelWidth: '190px', rules: formRules }"
+      :form-props="{ labelWidth: '190px', rules: formRules, labelPosition: isMobile ? 'top' : 'left' }"
       :request-fn="isEditing ? editCameraApi : addCameraApi"
       :isEditing="isEditing"
       @success="handleSuccess"
@@ -10,7 +10,7 @@
   >
     <template v-slot="{ formErrors }">
       <el-row :gutter="30">
-        <el-col :span="12">
+        <el-col :span="isMobile ? 24 : 12">
           <el-form-item label="Mã camera" prop="code" :error="formErrors.Code">
             <el-input v-model="formModel.code"/>
           </el-form-item>
@@ -56,7 +56,7 @@
             <el-input v-model="formModel.password" type="password" autocomplete="new-password"/>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="isMobile ? 24 : 12">
           <el-form-item label="Tên camera" prop="name" :error="formErrors.Name">
             <el-input v-model="formModel.name"/>
           </el-form-item>
@@ -133,6 +133,7 @@ import VirtualizedSelectFromUrl from "@/components/Selection/VirtualizedSelectFr
 import {removeAllObjectInObject} from "@/utils/objectUtils";
 import TreeSelectRemote from "@/components/Tree/TreeSelectRemote.vue";
 import LatLngImagePicker from "@/components/Map/LatLngImagePicker.vue";
+import { useAppStore } from '@/store/modules/app'
 
 const props = defineProps({
   formModel: {
@@ -144,6 +145,9 @@ const props = defineProps({
     default: false,
   },
 })
+
+const appStore = useAppStore();
+const isMobile = computed(() => appStore.isMobile)
 
 const formRules = computed<FormRules>(() => {
   const rules: FormRules = {

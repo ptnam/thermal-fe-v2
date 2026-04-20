@@ -31,7 +31,7 @@
           </svg>
         </button>
         <button v-if="row.cameraType === CAMERA_NORMAL_TYPE" class="action-btn-circle btn-gray-outline"
-                title="Chỉnh góc quay" @click="() => emits('showVisionPresets', {row:row})">
+                title="Chỉnh góc quay" @click="() => emits('showVisionPresets', row)">
           <el-icon>
             <Aim/>
           </el-icon>
@@ -56,12 +56,6 @@
             <line x1="10" y1="11" x2="10" y2="17"></line>
             <line x1="14" y1="11" x2="14" y2="17"></line>
           </svg>
-        </button>
-        <button class="action-btn-circle btn-gray-outline" title="Cài đặt góc quay"
-                @click="() => emits('showVisionPresets', {row:row})">
-          <el-icon>
-            <Aim/>
-          </el-icon>
         </button>
         <button class="action-btn-circle btn-gray-outline" title="Cài đặt AI"
                 @click="() => emits('showAISetting', row)">

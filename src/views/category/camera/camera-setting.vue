@@ -23,7 +23,7 @@
               <div class="mt-4 flex flex-col">
                 <div v-show="newDrawing" class="flex flex-col">
                   <span class="text-sm">Điều khiển camera và chọn các điểm đo</span>
-                  <div class="mt-2">
+                  <div class="mt-2 flex flex-row">
                     <el-button :disabled="!points.length" type="primary" @click="openDialogThermalAreas">Lưu vùng đo
                     </el-button>
                     <el-button type="danger" @click="clearPoints">Xóa vùng đo</el-button>

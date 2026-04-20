@@ -8,25 +8,25 @@
     >
       <template v-slot="{ formErrors }">
         <div>
-          <div class="flex mx-4 items-center">
+          <div class="flex flex-col md:flex-row mx-4 items-center">
             <el-form-item label="Tốc độ quay" prop="speed" :error="formErrors.speed">
               <el-slider
                   :min="0"
                   :step="3"
-                  :max="63"
+                  :max="5"
                   :show-stops="true"
                   v-model="speed"
                   style="width: 160px"
               />
             </el-form-item>
-            <div class="flex items-center gap-8 ml-20">
+            <div class="flex items-center gap-2 md:ml-20">
               <div>
                 <game-controller-pad
                     @press="(command) => requestCommand(CAMERA_COMMANDS[command])"
                     @release="() => requestCommand(CAMERA_COMMANDS.Stop)"
                 />
               </div>
-              <div class="flex">
+              <div class="flex flex-row">
                 <el-button
                     circle
                     :icon="ZoomIn"
@@ -42,7 +42,7 @@
                     title="Thu nhỏ"
                 ></el-button>
               </div>
-              <div class="flex">
+              <div class="flex flex-row">
                 <el-button
                     color="#FACE38"
                     circle

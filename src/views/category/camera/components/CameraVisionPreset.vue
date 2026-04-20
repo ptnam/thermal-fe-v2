@@ -12,7 +12,7 @@
       >
       </select-options>
     </el-form-item>
-    <div class="flex">
+    <div class="flex flex-col md:flex-row">
       <div class="w-[320px]">
 
         <base-table

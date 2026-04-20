@@ -13,7 +13,7 @@
         :show-btn-switch="false"
     >
     </list-template>
-    <ActionForm v-model="dialogVisible" style="min-width: 500px">
+    <ActionForm v-model="dialogVisible" :size="isMobile? '100%' : '50%'">
       <add-tour-form
           v-model:formModel="formModel"
           :title="formModel.id ? 'Cập nhật':'Thêm mới'"
@@ -30,14 +30,17 @@ import ApiButton from "@/components/Button/ApiButton.vue";
 import EditCircleButton from "@/components/Button/EditCircleButton.vue";
 import {ArrowRight, SwitchButton} from "@element-plus/icons-vue";
 import {apiDeleteTour, getTourList, playTourApi} from "@/api/camera";
-import {ref} from 'vue'
+import { computed, ref} from 'vue'
 import {useRoute} from "vue-router";
 import DeleteCircleButton from "@/components/Button/DeleteCircleButton.vue";
 import ActionForm from '@/components/Form/ActionForm.vue'
 import AddTourForm from "@/views/category/camera/components/AddTourForm.vue";
 import ListTemplate from "@/components/PageTemplate/List/ListTemplate.vue";
+import { useAppStore } from '@/store/modules/app'
 
 
+const appStore = useAppStore();
+const isMobile = computed(() => appStore.isMobile)
 const {t} = useLang()
 const formModel = ref<any>({})
 const route = useRoute()

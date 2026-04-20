@@ -212,6 +212,7 @@ const isMobile = computed(() => appStore.isMobile)
         @edit="openDialogEdit"
         @delete="openDelete"
         @showPresetSetting="showPresetSetting"
+        @showVisionPresets="showVisionPresets"
         @showAISetting="showAISetting"
         @redirectDetail="redirectDetail"
     >
@@ -271,7 +272,8 @@ const isMobile = computed(() => appStore.isMobile)
         v-model="presetVisionVisible"
         :destroy-on-close="true"
         title="Thông số góc quay"
-        style="min-width: 850px"
+        :width="isMobile? '100%': '50%'"
+        :show-close="true"
     >
       <CameraVisionPreset :visionCamera="visionCamera"/>
     </base-dialog>
