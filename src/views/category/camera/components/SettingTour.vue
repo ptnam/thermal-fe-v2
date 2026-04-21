@@ -11,6 +11,9 @@
         :showSearchForm="false"
         @addHandler="addTour"
         :show-btn-switch="false"
+        :cardComponent="SettingTourCard"
+        @edit="openDialogEdit"
+        @delete="openDelete"
     >
     </list-template>
     <ActionForm v-model="dialogVisible" :size="isMobile? '100%' : '50%'">
@@ -37,6 +40,7 @@ import ActionForm from '@/components/Form/ActionForm.vue'
 import AddTourForm from "@/views/category/camera/components/AddTourForm.vue";
 import ListTemplate from "@/components/PageTemplate/List/ListTemplate.vue";
 import { useAppStore } from '@/store/modules/app'
+import SettingTourCard from '@/views/category/camera/components/SettingTourCard.vue'
 
 
 const appStore = useAppStore();

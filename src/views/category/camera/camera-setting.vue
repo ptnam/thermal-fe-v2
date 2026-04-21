@@ -76,7 +76,7 @@
           </div>
         </el-form>
       </base-dialog>
-      <base-dialog v-model="visibleThermalArea">
+      <base-dialog v-model="visibleThermalArea" :width="isMobile ? '100%' : '50%'">
         <el-form
             ref="ruleFormRef"
             style="max-width: 600px"
@@ -112,6 +112,7 @@ import {BaseTable} from "@/components/Table";
 import {vDraggable} from "@/components/Table/v-draggable";
 import EditCircleButton from "@/components/Button/EditCircleButton.vue";
 import DeleteCircleButton from "@/components/Button/DeleteCircleButton.vue";
+import { useAppStore } from '@/store/modules/app'
 
 const activeName = ref("1")
 const newDrawing = ref(true);
@@ -120,6 +121,10 @@ const cameraId = route.params.id as string
 const streamRef = ref();
 const ruleFormRef = ref<FormInstance>()
 const presetFormRef = ref<FormInstance>()
+
+const appStore = useAppStore();
+const isMobile = computed(() => appStore.isMobile)
+
 const formModel = ref<any>({
   "cameraId": cameraId,
   "name": "",
@@ -268,8 +273,8 @@ const savePreset = () => {
       const rect = video.getBoundingClientRect()
 
       const data = {...formModel.value}
-      data["videoWidth"] = rect.width
-      data["videoHeight"] = rect.height
+      data["videoWidth"] = parseInt(rect.width)
+      data["videoHeight"] = parseInt(rect.height)
       addPreset(data).then(() => {
         clearPoints()
         visibleDialogPreset.value = false

@@ -11,6 +11,9 @@
         :showSearchForm="false"
         @addHandler="addPreset"
         :show-btn-switch="false"
+        :cardComponent="SettingPresetCard"
+        @edit="(row) => emits('edit', row)"
+        @delete="openDelete"
     >
     </list-template>
   </div>
@@ -24,6 +27,7 @@ import {useRoute} from "vue-router";
 import DeleteCircleButton from "@/components/Button/DeleteCircleButton.vue";
 import ListTemplate from "@/components/PageTemplate/List/ListTemplate.vue";
 import EditCircleButton from "@/components/Button/EditCircleButton.vue";
+import SettingPresetCard from '@/views/category/camera/components/SettingPresetCard.vue'
 
 
 const {t} = useLang()
