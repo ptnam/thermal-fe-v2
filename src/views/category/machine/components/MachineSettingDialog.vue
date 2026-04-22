@@ -2,11 +2,11 @@
   <el-drawer
       @open="loadForm"
       :close-on-click-modal="false"
-      :center="true"
       :resizable="true"
       @close="() => (modelComponents = [])"
       :append-to-body="true"
       v-bind="$attrs"
+      header-class="!m-0"
   >
     <div class="min-h-[300px]">
       <el-tabs
@@ -106,6 +106,50 @@
                 </el-form-item>
               </el-col>
             </el-row>
+            <el-form-item
+              v-if="item.cameraId"
+              label="Điểm giám sát của camera được chọn"
+              label-position="top"
+              label-width="120px"
+            >
+              <ObjectSelectPoints
+                :ref="(el) => (monitorPointCameraRefs[index] = el)"
+                v-model="item.machineMonitorCameraPoints"
+                :formModel="formModel"
+                fieldPoint="machineMonitorCameraPoints"
+                :exceptPoints="item.machineMonitorCameraPoints"
+                :request-fn="() => getAllMonitorPointByCamApi(item.cameraId)"
+                multiple
+                value-key="monitorPointId"
+                col-value="monitorPointId"
+                col-label="name"
+                placeholder="Chọn điểm giám sát"
+                filterable
+              >
+              </ObjectSelectPoints>
+            </el-form-item>
+            <el-form-item
+              v-if="item.sensorId"
+              label-position="top"
+              label="Điểm giám sát của Sensor được chọn"
+              label-width="120px"
+            >
+              <ObjectSelectPoints
+                :ref="(el) => (monitorPointSensorRefs[index] = el)"
+                v-model="item.machineMonitorSensorPoints"
+                :formModel="formModel"
+                fieldPoint="machineMonitorSensorPoints"
+                :exceptPoints="item.machineMonitorSensorPoints"
+                :request-fn="() => getAllMonitorPointBySensorApi(item.sensorId)"
+                multiple
+                value-key="monitorPointId"
+                col-value="monitorPointId"
+                col-label="name"
+                placeholder="Chọn điểm giám sát"
+                filterable
+              >
+              </ObjectSelectPoints>
+            </el-form-item>
             <div class="form-item-v" v-show="item?.machineMonitorCameraPoints?.length">
               <p class="font-bold">Danh sách điểm giám sát của camera</p>
               <div class="flex gap-2 mt-2">
@@ -298,11 +342,13 @@ const saveForm = (closeSetting = false) => {
 const changeCamera = (index: number) => {
   nextTick(() => {
     monitorPointCameraRefs?.value?.[index]?.fetch()
+    modelComponents.value[index].machineMonitorCameraPoints = []
   })
 }
 const changeSensor = (index: number) => {
   nextTick(() => {
     monitorPointSensorRefs?.value?.[index]?.fetch()
+    modelComponents.value[index].machineMonitorSensorPoints = []
   })
 }
 

@@ -119,7 +119,7 @@
       </div>
     </div>
     <div class="drawer-footer">
-      <button class="btn-save" style="width: 100%; height: 50px; font-size: 16px;" @click="changeStatus">
+      <button class="btn-save" style="width: 100%; max-width:unset!important; height: 50px; font-size: 16px;" @click="changeStatus">
         Xác nhận &amp; Cập nhật trạng thái
       </button>
     </div>

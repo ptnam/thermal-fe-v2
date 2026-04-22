@@ -1,7 +1,7 @@
 <template>
   <div class="relative inline-block">
     <el-button
-        :type="point && point.comparationModeObjectList?.length ? 'success': ''"
+        :type="point && point?.comparationModeObjectList?.length ? 'success': ''"
         class="pr-6"
     >
       {{ point.name }}
@@ -9,9 +9,9 @@
     <button
         type="button"
         @click="emits('remove')"
-        class="absolute -top-1 -right-1 bg-white rounded-full border border-gray-300 hover:bg-red-500 hover:text-white p-0 w-[20px] h-[20px] cursor-pointer"
+        class="absolute -top-1 -right-1 rounded-full border border-gray-300 hover:bg-red-500 hover:text-white p-0 w-[20px] h-[20px] cursor-pointer"
     >
-      <el-icon size="12">
+      <el-icon size="12" style="top: -3px">
         <Close/>
       </el-icon>
     </button>

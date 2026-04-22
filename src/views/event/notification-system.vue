@@ -32,6 +32,7 @@ import {downloadByPathApi} from '@/api/common'
 import {downloadFile} from '@/utils/response'
 import {ElImage} from 'element-plus'
 import NotificationSystemCard from '@/views/event/components/NotificationSystemCard.vue'
+import { useAppStore } from '@/store/modules/app'
 
 const {confirmModal} = useConfirmModal()
 
@@ -139,6 +140,9 @@ const formModel = ref<any>({
 const {onRequest, isLoading} = useRequest()
 
 const detailVisible = ref(false)
+
+const appStore = useAppStore();
+const isMobile = computed(() => appStore.isMobile)
 const openDetail = (row: any) => {
   detailVisible.value = true
   onRequest(notificationDetailApi, {id: row.id, dataTime: row.dataTime}).then((res) => {
@@ -249,10 +253,15 @@ const exportFile = (searchParams: any) => {
 
     </template>
   </list-template>
-  <drawer-form v-model="detailVisible" v-loading="isLoading"
-               :close-on-click-modal="true"
-               :destroy-on-close="true"
-               style="min-width: 750px">
+  <drawer-form
+    v-model="detailVisible"
+    v-loading="isLoading"
+    :close-on-click-modal="true"
+    :destroy-on-close="true"
+    :size="isMobile ? '100%': '50%'"
+    header-class="!m-0"
+    body-class="!pt-0"
+  >
     <notification-form-detail
         :form-model="formModel"
         @update-status="updateStatusSuccess"
