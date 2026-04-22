@@ -28,11 +28,11 @@ import EventHistoryCard from '@/views/event/components/EventHistoryCard.vue'
 const defaultCols = [
   { prop: 'dateData', label: 'Ngày', width: 160, align: 'center' },
   { prop: 'timeData', label: 'Giờ', align: 'center' },
-  { prop: 'areaName', label: 'Khu vực', align: 'center' },
+  { prop: 'areaName', label: 'Khu vực', align: 'center', minWidth: 160,  },
   { prop: 'machineName', label: 'Thiết bị', align: 'center' },
-  { prop: 'machineComponentName', label: 'Bộ phận', align: 'center' },
-  { prop: 'monitorPointCode', label: 'Điểm nhiệt', align: 'center' },
-  { prop: 'maxTemperature', label: 'Nhiệt độ', align: 'center' },
+  { prop: 'machineComponentName', label: 'Bộ phận', align: 'center', minWidth: 120, },
+  { prop: 'monitorPointCode', label: 'Điểm nhiệt', align: 'center', minWidth: 120, },
+  { prop: 'maxTemperature', label: 'Nhiệt độ', align: 'center', minWidth: 100, },
 ]
 const columns = ref(defaultCols)
 
@@ -92,18 +92,19 @@ const formatDataList = (rows: any[]) => {
       align: 'center',
       children: [
         { prop: `dicThermalDataResults.${key}.compareValue`, label: '°C', align: 'center' },
-        { prop: `dicThermalDataResults.${key}.deltaValue`, label: 'Chênh lệch', align: 'center' },
+        { prop: `dicThermalDataResults.${key}.deltaValue`, label: 'Chênh lệch', align: 'center', width: '110' },
         {
           prop: `dicThermalDataResults.${key}.compareComponent`,
           label: 'Đ.tượng SS',
           align: 'center',
+          width: '110',
           hidden: ['Enviroment', 'Threshold'].includes(value?.compareTypeObject?.code),
         },
         {
           prop: `dicThermalDataResults.${key}.compareResultObject.name`,
           label: 'Trạng thái',
           align: 'center',
-          width: 90,
+          width: 120,
           slots: {
             default: ({row}) => {
               const code = row?.dicThermalDataResults?.[key]?.compareResultObject?.code ?? ''

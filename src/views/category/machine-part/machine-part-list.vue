@@ -31,7 +31,7 @@ const columns = computed<TableColumn[]>(() => [
   {prop: 'name', label: 'Tên'},
   {prop: 'code', label: 'Mã'},
   {prop: 'statusObject.name', width: 140, label: t('fields.status')},
-  {prop: 'createdAt', width: 160, label: t('fields.created_at')},
+  {prop: 'createdAt', width: 260, label: t('fields.created_at')},
   {
     label: t('fields.action'),
     width: '110px',

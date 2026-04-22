@@ -64,6 +64,7 @@ const columns = computed<TableColumn[]>(() => [
     },
   },
   {
+    label: 'Hành động',
     width: '300px',
     slots: {
       default: (scope: any) => (
@@ -74,11 +75,19 @@ const columns = computed<TableColumn[]>(() => [
             <ElTooltip content="Xem danh sách góc quay">
               <ElButton circle={true} icon={Rank} onClick={() => showPresets(scope.row)}/>
             </ElTooltip>
-            {scope.row.cameraType === CAMERA_NORMAL_TYPE && (
-                <ElTooltip content="Chỉnh góc quay">
-                  <ElButton circle={true} icon={Aim} onClick={() => showVisionPresets(scope.row)}/>
-                </ElTooltip>
-            )}
+            <ElTooltip content="Chỉnh góc quay">
+              <ElButton
+                circle={true}
+                icon={Aim}
+                style={{
+                  visibility:
+                    scope.row.cameraType === CAMERA_NORMAL_TYPE
+                      ? 'visible'
+                      : 'hidden'
+                }}
+                onClick={() => showVisionPresets(scope.row)}
+              />
+            </ElTooltip>
             <ElTooltip content="Cài đặt góc quay">
               <ElButton circle={true} icon={Pointer} onClick={() => showPresetSetting(scope.row)}/>
             </ElTooltip>
