@@ -100,7 +100,7 @@ const columns = computed<TableColumn[]>(() => [
   },
   {prop: 'dateData', label: 'Ngày', width: 120},
   {prop: 'timeData', label: 'Giờ', width: 120},
-  {prop: 'areaName', label: 'Khu vực', minWidth: 200},
+  {prop: 'areaName', label: 'Khu vực', minWidth: 250},
   {prop: 'machineName', label: 'Thiết bị', width: 120},
   {prop: 'machineComponentName', label: 'Bộ phận', width: 120},
   {prop: 'monitorPointCode', label: 'Điểm nhiệt',  width: 120},
