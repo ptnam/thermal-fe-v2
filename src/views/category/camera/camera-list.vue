@@ -258,11 +258,11 @@ const isMobile = computed(() => appStore.isMobile)
           @success="() => visibleUpload = false"
       ></base-upload>
     </base-dialog>
-    <drawer-form v-model="dialogVisible" :append-to-body="true" :size="isMobile ? '100%': '70%'" :show-close="true">
+    <drawer-form v-model="dialogVisible" header-class="!m-0" :append-to-body="true" :size="isMobile ? '100%': '70%'" :show-close="false">
       <camera-form-tab
-          v-model:formModel="formModel"
-          @success="saveSuccess"
-          v-loading="detailLoading"
+        v-model:formModel="formModel"
+        @success="saveSuccess"
+        v-loading="detailLoading"
       ></camera-form-tab>
     </drawer-form>
     <drawer-form :show-close="true" :size="isMobile ? '100%': '50%'" v-model="presetDialogVisible">

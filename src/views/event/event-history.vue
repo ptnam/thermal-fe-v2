@@ -92,10 +92,11 @@ const formatDataList = (rows: any[]) => {
       align: 'center',
       children: [
         { prop: `dicThermalDataResults.${key}.compareValue`, label: '°C', align: 'center' },
-        { prop: `dicThermalDataResults.${key}.deltaValue`, label: 'Chênh lệch', align: 'center' },
+        { prop: `dicThermalDataResults.${key}.deltaValue`, label: 'Chênh lệch', align: 'center', minWidth: '120px' },
         {
           prop: `dicThermalDataResults.${key}.compareComponent`,
           label: 'Đ.tượng SS',
+          minWidth: '120px',
           align: 'center',
           hidden: ['Enviroment', 'Threshold'].includes(value?.compareTypeObject?.code),
         },
@@ -103,7 +104,7 @@ const formatDataList = (rows: any[]) => {
           prop: `dicThermalDataResults.${key}.compareResultObject.name`,
           label: 'Trạng thái',
           align: 'center',
-          width: 90,
+          width: 120,
           slots: {
             default: ({row}) => {
               const code = row?.dicThermalDataResults?.[key]?.compareResultObject?.code ?? ''

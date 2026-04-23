@@ -35,6 +35,8 @@ export function useResizeHandler() {
     if (isMobile) {
       store.toggleDevice('mobile')
       store.closeSideBar(true);
+    } else {
+      store.toggleDevice('desktop')
     }
   })
 

@@ -12,6 +12,7 @@ import DeleteCircleButton from '@/components/Button/DeleteCircleButton.vue'
 import SearchButton from "@/components/Button/SearchButton.vue";
 import DrawerForm from "@/components/Form/DrawerForm.vue";
 import AreaCard from '@/views/category/area/components/AreaCard.vue'
+import { useAppStore } from '@/store/modules/app'
 
 const { t } = useLang()
 const renderActionColumn = (scope: any) => {
@@ -71,6 +72,8 @@ const saveSuccess = () => {
   elTableRef?.value?.refresh()
   dialogVisible.value = false
 }
+const appStore = useAppStore();
+const isMobile = computed(() => appStore.isMobile)
 </script>
 
 <template>
@@ -110,7 +113,7 @@ const saveSuccess = () => {
   <drawer-form
       v-model="dialogVisible"
       :destroy-on-close="true"
-      style="min-width: 300px"
+      :size="isMobile? '100%': '50%'"
   >
     <area-form
       v-model:formModel="formModel"

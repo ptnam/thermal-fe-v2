@@ -1,20 +1,25 @@
 <template>
-  <el-tabs v-model="activeName" >
-    <el-tab-pane label="Thông số camera" name="first">
-      <camera-form
-        v-model:formModel="formModel"
-        :is-editing="isEditing"
-        @success="saveSuccess"
-      ></camera-form>
-    </el-tab-pane>
-    <el-tab-pane v-if="isEditing" label="Điều khiển cam" name="second">
-      <set-viewing-angle
-        :form-model="formModel"
-        :isEditing="isEditing"
-        class="mt-4"
-      ></set-viewing-angle>
-    </el-tab-pane>
-  </el-tabs>
+  <div class="drawer">
+    <div class="mt-8" >
+      <el-tabs v-model="activeName" >
+        <el-tab-pane label="Thông số camera" name="first">
+          <camera-form
+            v-model:formModel="formModel"
+            :is-editing="isEditing"
+            @success="saveSuccess"
+            classDrawer="flex fixed flex-col h-[90%]"
+          ></camera-form>
+        </el-tab-pane>
+        <el-tab-pane v-if="isEditing" label="Điều khiển cam" name="second">
+          <set-viewing-angle
+            :form-model="formModel"
+            :isEditing="isEditing"
+            class="mt-4"
+          ></set-viewing-angle>
+        </el-tab-pane>
+      </el-tabs>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -35,3 +40,7 @@ const saveSuccess = () => {
   emits('success')
 }
 </script>
+<style scoped>
+
+
+</style>

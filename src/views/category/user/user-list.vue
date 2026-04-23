@@ -47,7 +47,7 @@ const columns = computed<TableColumn[]>(() => [
       }}>{row.displayStatus}</span>)
     },
   },
-  {prop: 'createdAt', width: 160, label: t('fields.created_at')},
+  {prop: 'createdAt', width: 260, label: t('fields.created_at')},
   {
     label: t('fields.action'),
     width: '110px',

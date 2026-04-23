@@ -7,7 +7,7 @@
     require-asterisk-position="right"
     v-bind="props.formProps"
   >
-    <div class="drawer drawer-md">
+    <div class="drawer drawer-md" :class="classDrawer">
       <div class="drawer-header">
         <h3>{{ title}}</h3>
         <button v-show="visibleCloseDrawer" type="button" class="close-drawer" @click="triggerCancel">×</button>
@@ -17,7 +17,7 @@
       </div>
       <div class="drawer-footer">
         <slot name="button">
-          <div class="mt-4 w-full text-center flex justify-between">
+          <div class="mt-4 w-full text-center flex justify-end">
             <cancel-button @click="triggerCancel"></cancel-button>
             <save-button :loading="loading" @click="submitForm"></save-button>
           </div>
@@ -50,6 +50,7 @@ const props = defineProps<{
   transformFormData?: Function
   isEditing?: boolean
   visibleCloseDrawer?: boolean
+  classDrawer?: String
 }>()
 
 const emits = defineEmits(['success'])

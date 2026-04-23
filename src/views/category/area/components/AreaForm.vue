@@ -57,12 +57,12 @@
         />
       </el-form-item>
       <el-form-item label="Tọa độ" :error="formErrors.Latitude ?? formErrors.Longitude">
-        <div class="flex">
+        <div class="flex w-full">
           <LatLngPicker ref="mapPicker" :map-config="formModel" @input="setCoordinate"/>
-          <div v-show="formModel.latitude && formModel.longitude" class="ml-4">
-            <p class="m-0">
-              <span class="font-bold">Kinh độ:</span> {{ formModel.longitude }},
-              <span class="font-bold">Vĩ độ:</span> {{ formModel.latitude }}
+          <div v-show="formModel.latitude && formModel.longitude" class="ml-4 w-full">
+            <p class="w-full flex gap-2">
+              <el-input class="w-full" v-model="formModel.longitude" readonly></el-input>
+              <el-input class="w-full" v-model="formModel.latitude" readonly></el-input>
             </p>
           </div>
         </div>

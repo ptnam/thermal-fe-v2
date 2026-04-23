@@ -196,6 +196,6 @@ const changeStatus = () => {
 .alert-info-container {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 6px;
 }
 </style>

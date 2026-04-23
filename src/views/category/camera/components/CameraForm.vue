@@ -182,3 +182,5 @@ const setCoordinate = (coordinate: any) => {
   updateFormModel(coordinate)
 }
 </script>
+<style scoped>
+</style>
