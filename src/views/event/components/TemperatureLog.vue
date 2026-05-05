@@ -114,11 +114,10 @@
                     <path d="M23 4v6h-6"></path>
                     <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
                   </svg>
-                  <span class="px-2">Đặt lại</span>
+                  <span class="px-2 whitespace-nowrap">Đặt lại</span>
                 </el-button>
                 <el-button
                     :loading="saveSettingLoading"
-                    :icon="Setting"
                     @click="()=> saveSetting(searchParams)"
                     class="btn-save-drawer"
                     style="flex: 1.2; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); color: var(--primary); padding: 10px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; justify-content: center; transition: 0.2s;">
@@ -127,9 +126,9 @@
                     <polyline points="17 21 17 13 7 13 7 21"></polyline>
                     <polyline points="7 3 7 8 15 8"></polyline>
                   </svg>
-                  <span class="px-2">Lưu</span>
+                  <span class="px-2 whitespace-nowrap">Lưu</span>
                 </el-button>
-                <button class="btn-apply-drawer" @click="() => {
+                <button class="btn-apply-drawer whitespace-nowrap" @click="() => {
                   search();
                   dialogVisible = false
                 }" style="flex: 1.5;">
@@ -137,7 +136,7 @@
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                   </svg>
-                  Áp dụng
+                  <span class="whitespace-nowrap">Áp dụng</span>
                 </button>
               </div>
             </div>

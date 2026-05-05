@@ -7,12 +7,13 @@
           v-model:page-size="pageSize"
           size="default"
           :background="true"
-          layout="sizes, prev, pager, next, ->, jumper"
+          :layout="isMobile ? 'sizes, prev, pager,jumper, next': 'sizes, prev, pager, next, ->, jumper'"
           :total="total"
-      />
+      >
+      </el-pagination>
       <el-button
           class="btn-page"
-          v-show="paginationSetting"
+          v-show="paginationSetting && !isMobile"
           color="#F0F2F5"
           @click="showDialogSetting"
       >
@@ -47,13 +48,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import SaveButton from '@/components/Button/SaveButton.vue'
 import CancelButton from '@/components/Button/CancelButton.vue'
 import { usePaginationStore } from '@/store/modules/paginationStore'
+import { useAppStore } from '@/store/modules/app'
 
 const currentPage = defineModel<number>('currentPage', { required: true })
 const pageSize = defineModel<number>('pageSize', { required: true })
+
+const appStore = useAppStore();
+const isMobile = computed(() => appStore.isMobile)
 
 // One-way prop
 const props = defineProps({

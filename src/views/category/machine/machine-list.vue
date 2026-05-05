@@ -169,7 +169,7 @@ const isMobile = computed(() => appStore.isMobile)
         <export-button class="!m-0" @click="() => exportFile(searchParams)" :loading="isLoadingExport"/>
         <el-button class="!m-0 !h-[40px]" @click="() => exportEICFile(searchParams)" :loading="isLoadingExport">Export IEC
         </el-button>
-        <el-button class="!m-0 !h-[40px]" @click="showImport">Import IEC</el-button>
+        <el-button class="!m-0 !h-[40px] w-full md:w-fit" @click="showImport">Import IEC</el-button>
       </div>
     </template>
   </list-template>
