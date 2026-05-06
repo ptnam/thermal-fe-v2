@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="tab-header-styled">Thông số góc quay</div>
-    <el-tabs type="border-card">
+    <el-tabs type="border-card" class="!mt-0">
       <el-tab-pane label="Presets">
         <preset-table :data="presets"></preset-table>
       </el-tab-pane>

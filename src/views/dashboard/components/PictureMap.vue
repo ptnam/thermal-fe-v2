@@ -80,7 +80,6 @@ const onMapLoad = () => {
 
 // Method to expose to parent
 const flyToPoint = () => {
-  debugger
   mapRef.value?.leafletObject?.flyTo(
       [props.latitude, props.longitude],
       props.zoom

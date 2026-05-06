@@ -1,7 +1,14 @@
 <template>
   <div class="container main-container">
     <div class="camera-setting">
-
+    <data-fetcher :request-fn="() => getCameraDetailApi(cameraId)">
+      <template v-slot:default="{data}">
+        <div class="flex items-center gap-2 mb-4 ">
+          <back-button></back-button>
+          <span>{{data?.name}}</span>
+        </div>
+      </template>
+    </data-fetcher>
       <el-tabs v-model="activeName" type="border-card" @tabChange="tabChange">
         <el-tab-pane label="Quản lý tour" name="1">
           <setting-tour></setting-tour>
@@ -107,7 +114,7 @@ import StreamControl from "@/components/Video/StreamControl.vue";
 import {useRoute} from "vue-router";
 import {ElMessage, FormInstance, FormRules} from "element-plus";
 import {rule} from "@/utils/validate";
-import {addPreset} from "@/api/camera";
+import {addPreset, getCameraDetailApi } from "@/api/camera";
 import {BaseTable} from "@/components/Table";
 import {vDraggable} from "@/components/Table/v-draggable";
 import EditCircleButton from "@/components/Button/EditCircleButton.vue";
