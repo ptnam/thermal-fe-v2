@@ -73,19 +73,24 @@
             v-bind="$attrs"
           />
         </div>
-        <BasePagination
-            v-if="showPagination"
-            class="mt-4"
-            :total="tableState.total.value"
-            v-model:page-size="tableState.pageSize.value"
-            v-model:current-page="tableState.currentPage.value"
-            v-model:rowIndex="tableState.rowIndex.value"
-            v-model:lastRowIndex="tableState.lastRowIndex.value"
-            :keyList="keyList"
-            :pagination-setting="paginationSetting"
-            :columns="columns"
-            @saveSuccess="updatePaginationSetting"
-        />
+        <slot name="pagination">
+          <BasePagination
+              v-if="showPagination"
+              class="mt-4"
+              :total="tableState.total.value"
+              v-model:page-size="tableState.pageSize.value"
+              v-model:current-page="tableState.currentPage.value"
+              v-model:rowIndex="tableState.rowIndex.value"
+              v-model:lastRowIndex="tableState.lastRowIndex.value"
+              :keyList="keyList"
+              :pagination-setting="paginationSetting"
+              :columns="columns"
+              @saveSuccess="updatePaginationSetting"
+          />
+        </slot>
+        <slot name="bottom">>
+
+        </slot>
       </div>
     </div>
   </div>
