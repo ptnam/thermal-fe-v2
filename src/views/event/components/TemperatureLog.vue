@@ -104,6 +104,16 @@
                     />
                   </el-form-item>
                 </filter-group>
+                <filter-group title="Ẩn hiện nhiệt độ">
+                  <div class="px-4">
+                    <el-form-item>
+                      <el-radio-group v-model="searchParams.showLabel">
+                        <el-radio :value="true">Hiện</el-radio>
+                        <el-radio :label="false">Ẩn</el-radio>
+                      </el-radio-group>
+                    </el-form-item>
+                  </div>
+                </filter-group>
               </div>
               <div class="drawer-footer" style="gap: 10px;">
                 <el-button class="btn-reset-drawer"
@@ -128,10 +138,7 @@
                   </svg>
                   <span class="px-2 whitespace-nowrap">Lưu</span>
                 </el-button>
-                <button class="btn-apply-drawer whitespace-nowrap" @click="() => {
-                  search();
-                  dialogVisible = false
-                }" style="flex: 1.5;">
+                <button class="btn-apply-drawer whitespace-nowrap" @click="appySetting" style="flex: 1.5;">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -185,12 +192,27 @@ const TIME = 3
 const PHASE = 4
 const PREDICT = 5
 
+const searchParams = ref({
+  showLabel: false,
+  areaIds: [],
+  machineIds: [],
+  machineComponentIds: [],
+  monitorPointId: null,
+  monitorPointType: null,
+  reportDate: new Date().toISOString().split('T')[0],
+  startDate: dayjs().subtract(2, 'day').format('YYYY-MM-DD 00:00:00'),
+  endDate: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+})
+
 const chartOptions: ApexOptions = {
   chart: {
     height: 450,
     type: 'area',
     toolbar: {show: false},
     animations: {enabled: true, speed: 800}
+  },
+  dataLabels: {
+    enabled: searchParams.value.showLabel ?? false,
   },
   colors: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444'],
   stroke: {curve: 'smooth', width: 3},
@@ -247,16 +269,6 @@ const searchTypeOptions = [
 
 const monitorPoint = ref();
 const dialogVisible = ref(false)
-const searchParams = ref({
-  areaIds: [],
-  machineIds: [],
-  machineComponentIds: [],
-  monitorPointId: null,
-  monitorPointType: null,
-  reportDate: new Date().toISOString().split('T')[0],
-  startDate: dayjs().subtract(2, 'day').format('YYYY-MM-DD 00:00:00'),
-  endDate: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-})
 
 const chartRef = ref<ApexCharts | null>(null)
 // const machineRef = ref<InstanceType<typeof VirtualizedSelectFromUrl>>()
@@ -319,6 +331,16 @@ const search = () => {
     })
     chartRef.value?.updateSeries(res.data.chartData);
   })
+}
+
+const appySetting = () => {
+  search();
+  chartRef.value?.updateOptions({
+    dataLabels: {
+      enabled: searchParams.value.showLabel ?? false,
+    },
+  })
+  dialogVisible.value = false
 }
 
 //
