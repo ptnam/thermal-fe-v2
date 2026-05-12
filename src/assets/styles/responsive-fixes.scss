@@ -53,6 +53,10 @@
       display: none !important;
     }
 
+    .notif-dropdown{
+      transform: translateX(30%) !important;
+    }
+
     #tableView {
       display: none !important;
     }
@@ -1398,14 +1402,15 @@
     .pagination-group .el-pagination__goto {
       display: none;
     }
-    .pagination-group .el-pagination__editor {
-      display: none;
-    }
+    //.pagination-group .el-pagination__editor {
+    //  display: none;
+    //}
     .pagination-group .el-pager {
       width: 100%;
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
+      justify-content: center;
     }
 
     /* Jump to page input */

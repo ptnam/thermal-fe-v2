@@ -1,7 +1,7 @@
 <template>
   <FormWrapper
     :form-model="formModel"
-    :form-props="{ labelWidth: '180px', rules: formRules }"
+    :form-props="{ labelWidth: '180px', rules: formRules,  labelPosition: isMobile? 'top': 'left' }"
     :request-fn="isEditing ? editNotificationChannelApi : addNotificationChannelApi"
     :isEditing="isEditing"
     @success="handleSuccess"
@@ -64,6 +64,7 @@ import { addNotificationChannelApi, editNotificationChannelApi } from '@/api/not
 import { STATUS_ACTIVE } from '@/constants'
 import { getAllUserListApi } from '@/api/user'
 import ObjectSelectFromUrl from '@/components/Selection/ObjectSelectFromUrl.vue'
+import { useAppStore } from '@/store/modules/app'
 
 const props = defineProps({
   formModel: {
@@ -75,6 +76,8 @@ const props = defineProps({
 const isEditing = computed(() => {
   return isFormEditing(props.formModel)
 })
+const appStore = useAppStore();
+const isMobile = computed(() => appStore.isMobile)
 const formRules = computed<FormRules>(() => {
   const rules: FormRules = {
     name: [rule('required', true, 'name')],

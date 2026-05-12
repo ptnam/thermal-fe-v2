@@ -8,10 +8,10 @@
       :visibleCloseDrawer="false"
   >
     <template v-slot="{ formErrors }">
-      <div class="modal-split-layout flex gap-2">
-        <div class="modal-left-col" style="    min-width: 566px;max-width: 688px;">
+      <div class="modal-split-layout flex flex-col md:flex-row gap-2">
+        <div class="modal-left-col">
           <el-row :gutter="30">
-            <el-col :span="12">
+            <el-col :span="isMobile ? 24: 12">
               <el-form-item label="Mã cảm biến" prop="code" :error="formErrors.Code">
                 <el-input v-model="formModel.code"/>
               </el-form-item>
@@ -70,7 +70,7 @@
                 <input-number v-model="formModel.iecObjectAddress"></input-number>
               </el-form-item>
             </el-col>
-            <el-col :span="12">
+            <el-col :span="isMobile ? 24: 12">
               <el-form-item label="Tên cảm biến" prop="name" :error="formErrors.Name">
                 <el-input v-model="formModel.name"/>
               </el-form-item>
@@ -223,6 +223,7 @@ import TreeSelectRemote from '@/components/Tree/TreeSelectRemote.vue'
 import {MAP_TYPE_MAP, MAP_TYPE_PICTURE, STATUS_ACTIVE} from "@/constants";
 import LatLngPicker from "@/components/Map/LatLngPicker.vue";
 import LatLngImagePicker from "@/components/Map/LatLngImagePicker.vue";
+import { useAppStore } from '@/store/modules/app'
 
 const props = defineProps({
   formModel: {
@@ -231,6 +232,9 @@ const props = defineProps({
   },
 })
 const emits = defineEmits(['update:formModel', 'success'])
+
+const appStore = useAppStore();
+const isMobile = computed(() => appStore.isMobile)
 
 const isEditing = computed(() => {
   return isFormEditing(props.formModel)
@@ -276,7 +280,6 @@ const handleAreaIdClick = (area: any) => {
 <style scoped>
 
 .modal-split-layout {
-  display: grid;
   grid-template-columns: 682px 1fr;
   align-items: start;
 }

@@ -30,7 +30,7 @@
     </div>
 
     <template #footer>
-      <div class="flex justify-end space-x-2">
+      <div class="flex justify-between md:justify-start space-x-2">
         <cancel-button @click="emits('cancel')"></cancel-button>
         <el-button
             type="primary"

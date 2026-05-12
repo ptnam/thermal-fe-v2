@@ -104,6 +104,16 @@
                     />
                   </el-form-item>
                 </filter-group>
+                <filter-group title="Ẩn hiện nhiệt độ">
+                  <div class="px-4">
+                    <el-form-item>
+                      <el-radio-group v-model="searchParams.showLabel">
+                        <el-radio :value="true">Hiện</el-radio>
+                        <el-radio :label="false">Ẩn</el-radio>
+                      </el-radio-group>
+                    </el-form-item>
+                  </div>
+                </filter-group>
               </div>
               <div class="drawer-footer" style="gap: 10px;">
                 <el-button class="btn-reset-drawer"
@@ -114,11 +124,10 @@
                     <path d="M23 4v6h-6"></path>
                     <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
                   </svg>
-                  <span class="px-2">Đặt lại</span>
+                  <span class="px-2 whitespace-nowrap">Đặt lại</span>
                 </el-button>
                 <el-button
                     :loading="saveSettingLoading"
-                    :icon="Setting"
                     @click="()=> saveSetting(searchParams)"
                     class="btn-save-drawer"
                     style="flex: 1.2; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); color: var(--primary); padding: 10px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; justify-content: center; transition: 0.2s;">
@@ -127,17 +136,14 @@
                     <polyline points="17 21 17 13 7 13 7 21"></polyline>
                     <polyline points="7 3 7 8 15 8"></polyline>
                   </svg>
-                  <span class="px-2">Lưu</span>
+                  <span class="px-2 whitespace-nowrap">Lưu</span>
                 </el-button>
-                <button class="btn-apply-drawer" @click="() => {
-                  search();
-                  dialogVisible = false
-                }" style="flex: 1.5;">
+                <button class="btn-apply-drawer whitespace-nowrap" @click="appySetting" style="flex: 1.5;">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                   </svg>
-                  Áp dụng
+                  <span class="whitespace-nowrap">Áp dụng</span>
                 </button>
               </div>
             </div>
@@ -186,12 +192,27 @@ const TIME = 3
 const PHASE = 4
 const PREDICT = 5
 
+const searchParams = ref({
+  showLabel: false,
+  areaIds: [],
+  machineIds: [],
+  machineComponentIds: [],
+  monitorPointId: null,
+  monitorPointType: null,
+  reportDate: new Date().toISOString().split('T')[0],
+  startDate: dayjs().subtract(2, 'day').format('YYYY-MM-DD 00:00:00'),
+  endDate: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+})
+
 const chartOptions: ApexOptions = {
   chart: {
     height: 450,
     type: 'area',
     toolbar: {show: false},
     animations: {enabled: true, speed: 800}
+  },
+  dataLabels: {
+    enabled: searchParams.value.showLabel ?? false,
   },
   colors: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444'],
   stroke: {curve: 'smooth', width: 3},
@@ -248,16 +269,6 @@ const searchTypeOptions = [
 
 const monitorPoint = ref();
 const dialogVisible = ref(false)
-const searchParams = ref({
-  areaIds: [],
-  machineIds: [],
-  machineComponentIds: [],
-  monitorPointId: null,
-  monitorPointType: null,
-  reportDate: new Date().toISOString().split('T')[0],
-  startDate: dayjs().subtract(2, 'day').format('YYYY-MM-DD 00:00:00'),
-  endDate: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-})
 
 const chartRef = ref<ApexCharts | null>(null)
 // const machineRef = ref<InstanceType<typeof VirtualizedSelectFromUrl>>()
@@ -320,6 +331,16 @@ const search = () => {
     })
     chartRef.value?.updateSeries(res.data.chartData);
   })
+}
+
+const appySetting = () => {
+  search();
+  chartRef.value?.updateOptions({
+    dataLabels: {
+      enabled: searchParams.value.showLabel ?? false,
+    },
+  })
+  dialogVisible.value = false
 }
 
 //

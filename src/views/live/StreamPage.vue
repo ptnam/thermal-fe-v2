@@ -34,7 +34,7 @@
               Thiết lập
             </button>
             <el-button :icon="FullScreen" @click="requestFullScreen" title="Toàn màn hình"></el-button>
-            <div class="max-w-[120px] md:w-fit overflow-x-auto lg:max-w-none">
+            <div class="flex w-[50%] md:w-fit overflow-x-auto lg:max-w-none">
               <el-pagination
                 v-show="totalItems"
                 @current-change="handlePageChange"

@@ -10,18 +10,19 @@
         :limit="1"
     >
       <template #trigger>
-        <el-button type="primary">Chọn file</el-button>
+        <el-button class="h-[32px] w-[120px]" type="primary">Chọn file</el-button>
       </template>
-
+    </el-upload>
+    <div class="text-center">
       <el-button
-          type="success"
-          class="ml-2"
-          :loading="loading"
-          @click="handleUpload"
+        type="success"
+        class="mt-4 h-[32px] w-[120px]"
+        :loading="loading"
+        @click="handleUpload"
       >
         Upload
       </el-button>
-    </el-upload>
+    </div>
   </div>
 </template>
 

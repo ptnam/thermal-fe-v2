@@ -54,9 +54,13 @@ const route = useRoute()
 
 const machineTypeValue = ref(parseInt(route.params.machineTypeId as string))
 const machineNameValue = ref("")
+const mainPart = ref("")
+const childPart = ref("")
 onMounted(() => {
   getDetailMachineTypeApi(machineTypeValue.value).then((res: any) => {
     machineNameValue.value = res.data?.name
+    mainPart.value = res.data?.mainPart
+    childPart.value = res.data?.childPart
   })
 })
 const openDialogAdd = () => {
@@ -130,6 +134,11 @@ const isMobile = computed(() => appStore.isMobile)
             phận
           </button>
         </div>
+      </div>
+    </template>
+    <template v-slot:bottom>
+      <div style="padding: 16px 24px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text-sub);">
+        Tổng cộng: <span style="font-weight: 600; color: var(--text-main);">{{ mainPart }}</span> bộ phận chính, <span style="font-weight: 600; color: var(--text-main);">{{ childPart }}</span> bộ phận con
       </div>
     </template>
   </list-template>

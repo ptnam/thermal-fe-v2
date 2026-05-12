@@ -17,7 +17,7 @@
       </div>
       <div class="drawer-footer">
         <slot name="button">
-          <div class="mt-4 w-full text-center flex justify-end">
+          <div class="mt-4 w-full text-center flex justify-between md:justify-start">
             <cancel-button @click="triggerCancel"></cancel-button>
             <save-button :loading="loading" @click="submitForm"></save-button>
           </div>
@@ -101,8 +101,6 @@ defineExpose({
 .drawer-footer {
   padding: 24px;
   border-top: 1px solid var(--border);
-  display: flex;
-  justify-content: flex-end;
   gap: 12px;
   background: var(--bg-card);
 }

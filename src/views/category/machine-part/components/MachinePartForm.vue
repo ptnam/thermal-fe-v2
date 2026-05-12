@@ -46,12 +46,12 @@
         </el-form-item>
       </template>
       <template v-slot:button>
-        <div class="mt-4 w-full flex justify-between">
-          <el-button type="warning" @click="openTemperatureThreshold">Thiết lập ngưỡng nhiệt</el-button>
-          <div>
-            <cancel-button @click="() => formRef.triggerCancel()"></cancel-button>
-            <save-button :loading="formRef?.loading" @click="() => formRef.submitForm()"></save-button>
+        <div class="flex justify-between md:justify-start md:flex-row  gap-1">
+          <div class="flex md:flex-row gap-1">
+            <cancel-button class="w-full md:w-fit whitespace-nowrap" @click="() => formRef.triggerCancel()" :icon="null"></cancel-button>
+            <el-button class="w-full md:w-fit whitespace-nowrap" type="warning" @click="openTemperatureThreshold">Thiết lập ngưỡng nhiệt</el-button>
           </div>
+          <save-button class="w-full md:w-fit whitespace-nowrap" :loading="formRef?.loading" @click="() => formRef.submitForm()" :icon="null"></save-button>
         </div>
       </template>
 

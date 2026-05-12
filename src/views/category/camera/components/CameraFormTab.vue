@@ -1,6 +1,6 @@
 <template>
   <div class="drawer">
-    <div class="mt-8" >
+    <div class="md:mt-8" >
       <el-tabs v-model="activeName" >
         <el-tab-pane label="Thông số camera" name="first">
           <camera-form
