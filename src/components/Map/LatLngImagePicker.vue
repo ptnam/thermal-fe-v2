@@ -4,7 +4,7 @@
       longitudeLabel="Tọa độ X"
       latitudeLabel="Tọa độ Y"
       buttonText="Chọn tọa độ trên ảnh"
-      :map-config="mapConfig"
+      :map-config="{ ...mapConfig, zoom: 0 }"
       :crs="crs"
       :mapType="MAP_TYPE_PICTURE"
       :update-center="false"

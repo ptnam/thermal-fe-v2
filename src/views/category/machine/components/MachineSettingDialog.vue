@@ -215,13 +215,15 @@
       </el-tabs>
     </div>
     <template #footer>
-      <div class="flex flex-col justify-between md:flex-row justify-between gap-2">
-        <cancel-button class="w-full md:w-fit whitespace-nowrap" @click="emits('cancel')"></cancel-button>
-        <el-button class="!m-0 w-full md:w-fit whitespace-nowrap" v-show="modelComponents.length" type="warning"
-                   @click="() => openTemperatureThreshold(editableTabsValue)">
-          Thiết lập ngưỡng nhiệt
-        </el-button>
-        <save-button class="!m-0 w-full md:w-fit whitespace-nowrap" @click="() => saveForm(true)"></save-button>
+      <div class="flex justify-between md:justify-start md:flex-row gap-1">
+        <div class="flex md:flex-row gap-1">
+          <cancel-button :icon="null" class="w-full md:w-fit whitespace-nowrap" @click="emits('cancel')"></cancel-button>
+          <el-button
+            class="!m-0 w-full p-0 md:w-fit whitespace-nowrap" v-show="modelComponents.length" type="warning" @click="() => openTemperatureThreshold(editableTabsValue)">
+            Thiết lập ngưỡng nhiệt
+          </el-button>
+        </div>
+        <save-button class="!m-0 w-full md:w-fit whitespace-nowrap" @click="() => saveForm(true)" :icon="null"></save-button>
       </div>
     </template>
   </el-drawer>

@@ -15,6 +15,7 @@ import InfiniteSelect from '@/components/Selection/InfiniteSelect.vue'
 import {joinFieldValues} from '@/utils/stringUtils'
 import SearchButton from "@/components/Button/SearchButton.vue";
 import ChannelCard from "@/views/notification/components/ChannelCard.vue";
+import { useAppStore } from '@/store/modules/app'
 
 const {t} = useLang()
 
@@ -77,6 +78,9 @@ const saveSuccess = () => {
   elTableRef?.value?.refresh()
   dialogVisible.value = false
 }
+
+const appStore = useAppStore();
+const isMobile = computed(() => appStore.isMobile)
 </script>
 
 <template>
@@ -131,7 +135,7 @@ const saveSuccess = () => {
       </div>
     </template>
   </list-template>
-  <base-dialog v-model="dialogVisible" :destroy-on-close="true" style="min-width: 500px">
+  <base-dialog v-model="dialogVisible" :destroy-on-close="true" :width="isMobile? '100%': '50%'">
     <NotificationChannelForm
         :formModel="formModel"
         @success="saveSuccess"

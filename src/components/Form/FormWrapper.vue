@@ -101,8 +101,6 @@ defineExpose({
 .drawer-footer {
   padding: 24px;
   border-top: 1px solid var(--border);
-  display: flex;
-  justify-content: flex-end;
   gap: 12px;
   background: var(--bg-card);
 }
