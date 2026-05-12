@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Hướng dẫn sử dụng hệ thống</title>
+
+  <style>
+    :root {
+      --app-bg: #eef3f8;
+      --surface: #ffffff;
+      --header-bg: #1d2a3d;
+      --header-border: #33445c;
+      --menu-bg: #1d2a3d;
+      --menu-panel: #22324a;
+      --menu-panel-hover: #2b3d57;
+      --menu-active: #2a65b7;
+      --menu-text: #f3f7fd;
+      --accent: #5f9dff;
+      --content-heading: #1b5fae;
+      --border: #d8e0ea;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: var(--app-bg);
+      color: #172033;
+    }
+
+    header.page-header {
+      background: var(--header-bg);
+      color: var(--menu-text);
+      padding: 15px 30px;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid var(--header-border);
+      box-shadow: 0 2px 10px rgba(11, 18, 32, 0.18);
+    }
+
+    .container {
+      display: flex;
+      min-height: calc(100vh - 60px);
+    }
+
+    .menu {
+      width: 250px;
+      background: var(--menu-bg);
+      border-right: 1px solid var(--header-border);
+      padding: 20px;
+      position: sticky;
+      top: 60px;
+      height: calc(100vh - 60px);
+      overflow-y: auto;
+    }
+
+    .menu button {
+      width: 100%;
+      padding: 13px 14px;
+      margin-bottom: 8px;
+      border: none;
+      background: transparent;
+      color: var(--menu-text);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      border-radius: 4px;
+      text-align: left;
+      border-bottom: 1px solid var(--header-border);
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .menu button:hover {
+      background: var(--menu-panel-hover);
+      color: #ffffff;
+    }
+
+    .menu button.active {
+      background: var(--menu-active);
+      color: #ffffff;
+      border-bottom-color: transparent;
+    }
+
+    .content {
+      flex: 1;
+      padding: 30px;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page h2 {
+      color: var(--content-heading);
+      margin-top: 0;
+    }
+
+    .box {
+      background: var(--surface);
+      padding: 20px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+      box-shadow: 0 8px 22px rgba(16, 36, 63, 0.06);
+    }
+
+    .sub-menu {
+      margin: -2px 0 12px 0;
+      padding-left: 0;
+      border-left: 0;
+      border: 1px solid var(--header-border);
+      border-radius: 4px;
+      overflow: hidden;
+      background: var(--menu-panel);
+    }
+
+    .sub-menu button {
+      padding: 12px 18px;
+      margin-bottom: 0;
+      background: var(--menu-panel);
+      color: var(--menu-text);
+      font-size: 14px;
+      font-weight: 700;
+      border-radius: 0;
+      border-bottom: 1px solid var(--header-border);
+    }
+
+    .sub-menu button:last-child {
+      border-bottom: 0;
+    }
+
+    .sub-menu button:hover {
+      background: var(--menu-panel-hover);
+      color: #ffffff;
+    }
+
+    .sub-menu button.active {
+      background: var(--menu-active);
+      color: #ffffff;
+    }
+
+    .h3-sub-menu {
+      display: none;
+      margin: -6px 0 10px;
+      padding: 6px 0 6px 12px;
+      border-left: 2px solid var(--accent);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .sub-menu .h3-sub-menu {
+      margin: 0;
+      padding: 4px 0 8px 16px;
+      border-left: 0;
+      background: rgba(95, 157, 255, 0.08);
+    }
+
+    .h3-sub-menu button,
+    .sub-menu .h3-sub-menu button {
+      position: relative;
+      padding: 8px 12px 8px 18px;
+      margin-bottom: 0;
+      background: transparent;
+      color: #c9daf3;
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1.3;
+      border-bottom: 0;
+      border-radius: 3px;
+    }
+
+    .h3-sub-menu button::before {
+      content: "";
+      position: absolute;
+      left: 7px;
+      top: 50%;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--accent);
+      transform: translateY(-50%);
+    }
+
+    .h3-sub-menu button:hover {
+      background: rgba(95, 157, 255, 0.16);
+      color: #ffffff;
+    }
+
+    .h3-sub-menu button.active {
+      background: rgba(95, 157, 255, 0.26);
+      color: #ffffff;
+    }
+
+    .menu-section-title {
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      margin: 14px 0 8px;
+      padding: 0 14px;
+      text-transform: uppercase;
+    }
+
+    .page h3 {
+      scroll-margin-top: 70px;
+    }
+
+    .image-note {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 12px;
+    }
+
+    .image-note img {
+      display: block;
+      width: 170px;
+      max-width: 35%;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    .image-note.image-note-large img {
+      width: 320px;
+      max-width: 45%;
+    }
+
+    .image-note.image-note-card {
+      align-items: stretch;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      background: #f8fbff;
+    }
+
+    .image-note.image-note-card img {
+      width: 180px;
+      max-width: 32%;
+      border: 0;
+      border-right: 1px solid var(--border);
+      border-radius: 0;
+      object-fit: cover;
+    }
+
+    .image-note-content {
+      display: flex;
+      align-items: center;
+      flex: 1;
+      padding: 14px 16px;
+    }
+
+    .image-note-content p {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.55;
+    }
+
+    .feature-note {
+      margin: 14px 0;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: #f8fbff;
+    }
+
+    .feature-note p {
+      margin: 0 0 10px;
+    }
+
+    .feature-note p:last-child {
+      margin-bottom: 0;
+    }
+
+    .control-icon {
+      height: 35px;
+      vertical-align: middle;
+      margin: 0 4px;
+    }
+
+    .control-image {
+      max-height: 42px;
+      max-width: 100%;
+      vertical-align: middle;
+      margin: 0 8px;
+      border-radius: 3px;
+    }
+
+    .setup-button-demo {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 28px;
+      padding: 0 12px;
+      margin: 0 4px;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1;
+      vertical-align: middle;
+      background: #14233d;
+      border-radius: 3px;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+    }
+
+    .setup-button-demo::before {
+      content: "\2699";
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1;
+    }
+
+    .image-note-text {
+      flex: 1;
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.55;
+      text-align: left;
+    }
+
+    @media (max-width: 700px) {
+      .image-note {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .image-note img {
+        width: 100%;
+        max-width: 100%;
+      }
+
+      .image-note.image-note-card img {
+        width: 100%;
+        max-width: 100%;
+        border-right: 0;
+        border-bottom: 1px solid var(--border);
+      }
+    }
+
+    .header-icon {
+      width: 35px;
+      height: 35px;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="page-header">
+    <img src="img-user-con/logo.png" alt="Hướng dẫn sử dụng" class="header-icon">
+    <span>IFS - AI</span>
+  </header>
+
+  <div class="container">
+    <div class="menu">
+      <button onclick="showPage('home', this)">TRANG CHỦ</button>
+
+      <button onclick="showPage('live-monitor', this)">GIÁM SÁT TRỰC TIẾP</button>
+
+      <button onclick="showGroup('measure', this, 'ai-alert')">THEO DÕI ĐIỂM ĐO</button>
+      <div id="sub-measure" class="sub-menu" style="display:none;">
+        <button onclick="showPage('ai-alert', this)">Cảnh báo AI</button>
+        <button onclick="showPage('temp-threshold', this)">Nhiệt độ vượt
+          ngưỡng</button>
+        <button onclick="showPage('temp-log', this)">Nhật ký nhiệt độ</button>
+        <button onclick="showPage('analytics-summary', this)">Tổng hợp phân tích</button>
+      </div>
+
+    </div>
+
+    <div class="content">
+      <div id="home" class="page" style="display:block">
+        <h2>TRANG CHỦ</h2>
+        <div class="box">
+          <h3>Màn hình trang chủ</h3>
+          <p>Trang chủ cung cấp cái nhìn tổng quan về hệ thống giám sát, hiển thị trực quan các khu
+            vực đã lắp đặt camera như biển và trạm biến áp trên bản đồ. Tại đây, người dùng có thể nhanh chóng theo dõi
+            các thông số quan trọng như: tổng số camera, số điểm giám sát và số lượng cảnh báo mới nhất. Các con số hiển
+            thị cạnh tên khu vực/trạm biểu thị số lượng cảnh báo hiện có tại địa điểm đó. </p>
+          <p>Lưu ý:</p>
+          <ul>
+            -Thông tin về nhiệt độ môi trường hiện đang trong quá trình phát triển.
+            <br>
+            - Người dùng có thể đổi màu nền web bằng cách nhấn vào nút <img src="img-user-con/Light.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> ở góc trên bên phải.
+          </ul>
+          </ul>
+          <img src="img-user-con/trangchu.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div class="box">
+          <h3>Sơ đồ 1 sợi </h3>
+          <p>Người dùng có thể xem sơ đồ 1 sợi bằng cách nhấp vào tên các trạm như SĐ1S_Liên Trì hoặc Trạm 110kV Nam
+            Phú Quốc. Khi di chuột vào từng điểm đo trên sơ đồ,các thông số nhiệt độ min, max và trung bình sẽ được hiển
+            thị. Đặc biệt, hệ thống sẽ tự động đổi màu các điểm đo sang vàng hoặc đỏ nếu có cảnh báo, giúp bạn
+            dễ dàng nhận diện tình trạng trạm một cách trực
+            quan.</p>
+          <p>Lưu ý:
+            Trạm nào chưa có sơ đồ 1 sợi thì khi ấn sẽ không hiện ra sơ đồ.</p>
+          <img src="img-user-con/map.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Nếu muốn xem chi tiết, người dùng chỉ cần nhấn vào biểu tượng <img src="img-user-con/thermometer.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> trên sơ đồ. Trang web sẽ hiển thị bảng thông
+            số chi tiết giúp theo
+            dõi kỹ hơn về tình trạng các thiết bị, so sánh nhiệt độ của thiết bị đó với pha min,
+            nhiệt độ môi trường và pha min của toàn trạm.</p>
+          <img src="img-user-con/detail.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div class="box">
+          <h3>Sơ đồ mặt bằng </h3>
+          Sau khi mở sơ đồ 1 sợi, người dùng có thể nhấp vào nút "Sơ đồ mặt bằng" ngay bên cạnh để chuyển sang giao diện
+          mô phỏng 3D toàn cảnh của trạm. Hệ thống sẽ hiển thị mô hình 3D toàn trạm, cho phép tương tác trực tiếp: lăn
+          chuột để phóng to/thu nhỏ và nhấn giữ kéo chuột để điều hướng, xem xét mọi vị trí trong trạm một cách dễ dàng.
+          <img src="img-user-con/3d.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+      </div>
+
+      <div id="live-monitor" class="page">
+        <h2>GIÁM SÁT TRỰC TIẾP</h2>
+        <div class="box">
+          <h3>Màn hình giám sát trực tiếp</h3>
+          <p>Trang này cho phép theo dõi luồng video trực tiếp từ tất cả các camera trong hệ thống, bao gồm cả
+            camera thường và camera nhiệt. Phía bên trái là danh sách khu vực được phân tầng rõ ràng (như
+            Biển đảo, Công ty, Khu vực miền Trung...). </p>
+          <img src="img-user-con/camera.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Người dùng có thể xem riêng 1 camera bằng cách nhấp vào tên camera có biểu tượng <img src="img-user-con/icon.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> đứng trước tên tương ứng trong danh sách.</p>
+          <img src="img-user-con/camera1.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Nếu muốn xem tất cả các camera ở 1 khu vực nào đó thì nhấp tên khu vực, có biểu tượng là <img
+              src="img-user-con/location.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;"> đứng trước tên tương
+            ứng trên danh sách.</p>
+          <img src="img-user-con/location1.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div class="box">
+          <h3>Phóng to toàn màn hình</h3>
+          <p>Người dùng có thể nhấn vào biểu tượng phóng to ở góc bên cạnh chữ thiết lập <img src="img-user-con/fullscreen.png"
+              alt="" style="height:35px; vertical-align:middle; margin:0 4px;"> để xem tất cả camera trên màn hình ở chế
+            độ fullscreen.
+            Khi ở chế độ toàn màn hình, nhấn phím Esc để thoát và quay lại màn hình giám sát.</p>
+          <img src="img-user-con/fullscreen1.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div class="box">
+          <h3>Thiết lập hiển thị</h3>
+          <p>
+            Người dùng nhấn vào nút
+            <span class="setup-button-demo">THIẾT LẬP</span>
+            để mở giao diện cấu hình hiển thị camera. Tại đây, có thể chọn số lượng camera hiển thị trên màn hình,
+            thay đổi thứ tự sắp xếp và ghim các camera quan trọng để tiện theo dõi.
+          </p>
+          <img src="img-user-con/thietlap.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>
+            Để ghim camera, người dùng chọn checkbox bên cạnh tên camera trong danh sách khu vực. Camera được chọn sẽ
+            được thêm vào danh sách ghim.
+          </p>
+          <div style="text-align:center;">
+            <img src="img-user-con/pin.png" alt="" style="width:30%; max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          </div>
+          <p>
+            Để thay đổi bố cục hiển thị, người dùng chọn một trong các ô bên dưới. Các tùy chọn lần lượt tương ứng với
+            chế độ hiển thị 1, 2, 4 hoặc 9 camera.
+            <img src="img-user-con/bocuc.png" alt="" style="height:55px; vertical-align:middle; margin:0 4px;">
+          </p>
+          <p>
+            Khi cần thay đổi thứ tự các camera đã ghim, người dùng giữ chuột vào dòng camera muốn di chuyển trong danh
+            sách ghim, sau đó kéo thả đến vị trí mong muốn.
+          </p>
+          <div style="text-align:center;">
+            <img src="img-user-con/list.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          </div>
+          <p> Khi thiết lập xong thì nhấn vào nút <img src="img-user-con/luu.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> để lưu các thay đổi hoặc nút <img src="img-user-con/huy.png"
+              alt="" style="height:35px; vertical-align:middle; margin:0 4px;"> để hủy bỏ
+            các thay đổi.</p>
+        </div>
+        <div class="box">
+          <h3>Các chức năng của camera</h3>
+          <p>Để sử dụng các chức năng của camera, người dùng có thể di chuột vào khung video của camera đó, các biểu
+            tượng chức năng sẽ hiện ra ở góc dưới bên phải của khung video.</p>
+          <p>Lưu ý : Một số chức năng đang phát triển nên khi nhấn vào sẽ không hoạt động.</p>
+          <img src="img-user-con/function.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Để điều khiển PTZ, người dùng nhấn vào biểu tượng
+            <img src="img-user-con/full.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;">
+            trên khung camera. Hệ thống sẽ mở giao diện điều khiển riêng, cho phép sử dụng các chức năng ptz của camera
+            đã
+            chọn.
+          </p>
+          <img src="img-user-con/ptz.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <div class="image-note">
+            <img src="img-user-con/ptz1.png" alt="">
+            <p class="image-note-text">Chức năng này cho phép người dùng điều khiển camera xoay 360 độ để thay đổi góc
+              quan sát. Người dùng chỉ cần di chuyển chuột đến hướng muốn quan sát và nhấn vào khu vực đó để camera tự
+              động xoay theo hướng tương ứng. Nút reset sẽ đưa camera về vị trí ban đầu đã được cấu hình sẵn.</p>
+          </div>
+          <img src="img-user-con/ptz.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+
+          <div class="image-note image-note-large">
+            <img src="img-user-con/speed.png" alt="">
+            <p class="image-note-text">Thanh tốc độ dùng để điều chỉnh mức độ di chuyển của camera PTZ. Người dùng có
+              thể giảm tốc độ khi cần quan sát chi tiết hoặc tăng tốc độ khi muốn xoay camera nhanh hơn trong quá trình
+              điều khiển thủ công, tuần tra hoặc preset.</p>
+          </div>
+
+          <div class="feature-note">
+            <p><strong>Phóng to/thu nhỏ hình ảnh:</strong> nhấn
+              <img src="img-user-con/zoom-in.png" alt="" class="control-icon"> để phóng to hoặc
+              <img src="img-user-con/zoom-out.png" alt="" class="control-icon"> để thu nhỏ khung hình theo nhu cầu quan sát.
+            </p>
+          </div>
+
+          <div class="feature-note">
+            <p><strong>Vẽ điểm/vùng đo nhiệt:</strong> nhấn
+              <img src="img-user-con/draw area point.png" alt="" class="control-image"> rồi chấm các điểm trực tiếp trên khung video
+              để tạo vùng đo.
+            </p>
+            <p>Sau khi vẽ xong, nhấn <img src="img-user-con/measure.png" alt="" class="control-image"> để hệ thống đo nhiệt độ trong
+              vùng đã chọn. Khi đo nhiệt độ xong rồi thì ở dưới nút đo sẽ hiển thị 3 kết quả là nhiệt độ cao nhất, nhiệt
+              độ thấp nhất và nhiệt độ trung bình. Nếu vùng vẽ chưa hợp lệ, hệ thống thông báo "không phải hình đa giác
+              lồi, vui lòng vẽ lại!".
+            </p>
+            <p>Để hủy thao tác hiện tại và vẽ vùng mới, nhấn
+              <img src="img-user-con/exit.png" alt="" class="control-image"> rồi thực hiện lại từ đầu.
+            </p>
+            <p> Lưu ý: Những camera nào không hỗ trợ chức năng này thì khi vẽ vùng xong sẽ không đo được.</p>
+          </div>
+          <img src="img-user-con/thermal.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+      </div>
+
+      <div id="ai-alert" class="page">
+        <h2>Cảnh báo AI</h2>
+        <div class="box">
+          <h3>Danh sách cảnh báo AI</h3>
+          <p>Trang này là trung tâm lưu trữ các sự kiện đã được thiết lập cho hệ thống AI nhận diện.
+            Người dùng có thể nhanh chóng tra cứu lịch sử thông qua bộ lọc thông minh theo thời gian, khu vực, tên
+            camera hoặc loại cảnh báo cụ thể (như phát hiện tàu thuyền, người, khói, xe máy,...).</p>
+          <p>
+            Mọi cảnh báo đều được hiển thị chi tiết dưới dạng danh sách, bao gồm hình ảnh chụp từ hiện trường, thời gian
+            chính xác và vị trí xảy ra sự kiện. Ngoài ra, giao diện còn hỗ trợ linh hoạt các chế độ hiển thị (dạng lưới
+            hoặc danh sách) cùng tính năng phân trang.</p>
+          <img src="img-user-con/AI.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Để chuyển sang danh sách dạng lưới thì chỉ cần nhấn vào nút grid <img src="img-user-con/grid.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"></p>
+          <img src="img-user-con/list1.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Muốn phóng to hình ảnh cảnh báo, người dùng nhấn vào ảnh tương ứng ở cột Hình ảnh trong danh sách còn khi ở
+            trạng thái lưới thì chỉ cần ảnh tương ứng ở trong ô .</p>
+          <img src="img-user-con/picture.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Người dùng nếu muốn chỉnh danh sách cột thì chỉ cần nhấn vào nút <img src="img-user-con/setting.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> rồi chọn cột nào muốn ẩn đi hoặc hiện trên danh
+            sách rồi ấn lưu để xác nhận hoặc hủy nếu muốn thoát.</p>
+          <img src="img-user-con/column.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Nếu người dùng muốn chỉnh số dòng trên 1 trang như là 20, 30, 100 dòng thì chỉ cần nhấn nút <img
+              src="img-user-con/page.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;"> rồi chọn số dòng muốn
+            hiển thị trên mỗi trang.</p>
+          <img src="img-user-con/pages.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div class="box">
+          <h3>Tìm kiếm</h3>
+          <p>Người dùng chọn khoảng thời gian cần tra cứu tại ô "Thời gian từ" và "Thời gian đến". Sau
+            đó chọn thêm khu vực, camera và loại cảnh báo từ danh sách thả xuống nếu cần, rồi nhấn nút
+            <img src="img-user-con/search.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;">
+          </p>
+          <div style="text-align:center;">
+            <img src="img-user-con/daytime.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          </div>
+
+        </div>
+      </div>
+
+      <div id="temp-threshold" class="page">
+        <h2>Nhiệt độ vượt ngưỡng</h2>
+        <div class="box">
+          <h3>Danh sách Nhiệt độ vượt ngưỡng</h3>
+          <p>Trang quản lý "Nhiệt độ vượt ngưỡng" tập trung lưu trữ mọi dữ liệu cảnh báo khi hệ thống phát hiện sự cố
+            quá nhiệt. Thông qua bảng thống kê chi tiết, người dùng có thể theo dõi hình ảnh nhiệt thực tế với các chỉ
+            số quan trọng như độ chênh lệch so với pha min hoặc pha min toàn trạm. Bộ lọc tại đây hỗ trợ truy xuất
+            nhanh lịch sử theo thời gian và thiết bị, kết hợp cùng tính năng "Xuất file" giúp tối ưu hóa công tác báo
+            cáo. Đặc biệt, việc theo dõi trạng thái và thời gian xử lý tại mỗi dòng bản ghi đảm bảo mọi sự cố đều được
+            kiểm soát chặt chẽ, không bị bỏ sót..</p>
+          <img src="img-user-con/nhietdo.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Để chuyển sang danh sách dạng lưới thì chỉ cần nhấn vào nút grid <img src="img-user-con/grid.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"></p>
+          <img src="img-user-con/grid1.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Muốn phóng to hình ảnh cảnh báo, người dùng nhấn vào ảnh tương ứng ở cột Hình ảnh trong danh sách.</p>
+          <img src="img-user-con/picture1.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Người dùng nếu muốn chỉnh danh sách cột thì chỉ cần nhấn vào nút <img src="img-user-con/setting.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> rồi chọn cột nào muốn ẩn đi hoặc hiện trên danh
+            sách rồi ấn lưu để xác nhận hoặc hủy nếu muốn thoát.</p>
+          <img src="img-user-con/column1.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Nếu người dùng muốn chỉnh số dòng trên 1 trang như là 20, 30, 100 dòng thì chỉ cần nhấn nút <img
+              src="img-user-con/page.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;"> rồi chọn số dòng muốn
+            hiển thị trên mỗi trang.</p>
+          <img src="img-user-con/pages1.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div class="box">
+          <h3>Xử lý cảnh báo</h3>
+          <P>Khi đã xử lý xong sự cố, người dùng có thể xác nhận lại trạng thái bằng cách nhấn vào nút tích <img
+              src="img-user-con/tick.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;">.</P>
+          <p>Ta có thể xem chi tiết cảnh báo đó bằng cách nhấn nút <img src="img-user-con/eye.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;">, ở đây ta có thể nhập các thông tin ở ô nhân
+            viên xử lý, ghi chú cảnh báo và chọn trạng thái cho cảnh báo này. Khi nhập xong thì chọn nút <img
+              src="img-user-con/save.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;"> để lưu lại. </p>
+          <img src="img-user-con/save1.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p> Chúng ta còn có thể xem chi tiết cảnh báo bằng cách nhấn vào nút <img src="img-user-con/bell.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;">, ở dưới nút sẽ xuất hiện danh sách các cảnh báo
+            mới nhất. Ấn vào dòng bất kỳ sẽ hiển thị giao diện mới về chi tiết cảnh báo đó. Ở đây ta cũng có thể nhập
+            các thông tin ở ô nhân viên xử lý, ghi chú cảnh báo và chọn trạng thái cho cảnh báo này. Khi nhập xong thì
+            cuộn xuống dưới cùng rồi chọn nút <img src="img-user-con/save.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> để lưu lại.</p>
+          <img src="img-user-con/Detailthermal.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div class="box">
+          <h3> Tìm kiếm và xuất file</h3>
+          <p>Người dùng chọn khoảng thời gian cần tra cứu tại ô "Thời gian từ" và "Thời gian đến". Sau
+            đó chọn thêm khu vực, thiết bị từ danh sách thả xuống nếu cần, rồi nhấn nút
+            <img src="img-user-con/search.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;">
+          </p>
+          <img src="img-user-con/daytime1.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Để xuất file thì nhấn vào nút <img src="img-user-con/export.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> hệ
+            thống sẽ xuất ra file excel danh sách các cảnh báo vượt ngưỡng theo bộ lọc đã chọn.</p>
+        </div>
+
+      </div>
+      <div id="temp-log" class="page">
+        <h2>Nhật ký nhiệt độ</h2>
+        <div class="box">
+          <h3>Nhật ký nhiệt độ</h3>
+          <p>Trang Nhật ký nhiệt độ cung cấp toàn bộ lịch sử đo đạc của hệ thống.
+            Trang này thực hiện các đối chiếu giữa nhiệt độ thực tế với các thông số môi
+            trường, pha min và pha min toàn trạm nhằm phát hiện sớm các biến động bất thường qua đánh giá trạng thái.
+            Thông qua việc kết hợp bộ lọc tìm kiếm nâng cao và công cụ xuất dữ liệu, người dùng dễ dàng trích xuất báo
+            cáo phục vụ công tác phân tích, đánh giá hiệu quả vận hành định kỳ..</p>
+          <img src="img-user-con/diary.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Để chuyển sang danh sách dạng lưới thì chỉ cần nhấn vào nút grid <img src="img-user-con/grid.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"></p>
+          <img src="img-user-con/grid2.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Người dùng nếu muốn chỉnh danh sách cột thì chỉ cần nhấn vào nút <img src="img-user-con/setting.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> rồi chọn cột nào muốn ẩn đi hoặc hiện trên danh
+            sách rồi ấn lưu để xác nhận hoặc hủy nếu muốn thoát.</p>
+          <img src="img-user-con/column2.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Nếu người dùng muốn chỉnh số dòng trên 1 trang như là 20, 30, 100 dòng thì chỉ cần nhấn nút <img
+              src="img-user-con/page.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;"> rồi chọn số dòng muốn
+            hiển thị trên mỗi trang.</p>
+          <img src="img-user-con/pages2.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div class="box">
+          <h3>Tìm kiếm và xuất file</h3>
+          <p>Người dùng chọn khoảng thời gian cần tra cứu tại ô "Thời gian từ" và "Thời gian đến".
+            Sau đó có thể chọn thêm khu vực, kiểu so sánh và đánh giá từ danh sách thả xuống. Hai ô
+            "Từ" và "Đến" dùng để nhập khoảng chênh lệch nhiệt độ cần lọc, các ô này chỉ cho phép nhập số và chỉ
+            lọc được sau khi đã chọn kiểu so sánh. Khi hoàn tất bộ lọc, nhấn nút
+            <img src="img-user-con/search.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;">
+          </p>
+          <div style="text-align:center;">
+            <img src="img-user-con/daytime2.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          </div>
+          <p>Để xuất file thì nhấn vào nút <img src="img-user-con/export.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> hệ
+            thống sẽ xuất ra file excel danh sách nhật ký nhiệt độ theo bộ lọc đã chọn.</p>
+        </div>
+      </div>
+
+      <div id="analytics-summary" class="page">
+        <h2>Tổng hợp phân tích</h2>
+        <div class="box">
+          <h3>Nhật ký nhiệt độ theo điểm đo</h3>
+          <p>Trang Nhật ký nhiệt độ theo điểm đo tích hợp biểu đồ miền (Area Chart) nhiều lớp giúp trực quan hóa dữ liệu
+            nhiệt độ của các pha và môi trường theo thời gian. Điểm ưu việt của biểu đồ này nằm ở tính năng tương tác
+            trực tiếp: khi người dùng di chuột đến bất kỳ thời điểm nào trên biểu đồ, hệ thống sẽ hiển thị bảng thông
+            tin chi tiết về giá trị nhiệt độ tại đúng thời điểm đó. Cơ chế này hỗ trợ việc đối soát thông số
+            chính xác giữa các đối tượng đo, phục vụ công tác giám sát và phát hiện nhanh các biến động bất thường.</p>
+          <img src="img-user-con/area.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div class="box">
+          <h3>Bộ lọc</h3>
+          <p>Để lọc dữ liệu theo nhiệt độ, người dùng nhấn vào ô "Trung bình" bên cạnh bộ lọc. Danh
+            sách tùy chọn sẽ hiển thị các kiểu nhiệt độ cần xem, gồm nhiệt độ max, min và trung bình.</p>
+          <img src="img-user-con/average.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Người dùng có thể lọc chi tiết hơn bằng cách nhấn nút <img src="img-user-con/fil.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> để mở bảng lọc theo khu vực,
+            thiết bị, bộ phận và thời gian.</p>
+          <p>
+          <p>Trước tiên, chọn khu vực cần lọc. Danh sách thiết bị sẽ tự động cập nhật theo khu vực đã chọn.
+            Sau khi chọn thiết bị, danh sách bộ phận sẽ cập nhật theo thiết bị tương ứng. Tiếp tục chọn bộ phận
+            để hệ thống hiển thị các điểm giám sát liên quan. Người dùng cũng có thể bật hoặc tắt hiển thị
+            nhiệt độ trên biểu đồ. Cuối cùng, chọn khoảng thời gian cần lọc.
+            .</p>
+          <img src="img-user-con/filter.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Sau khi đã chọn đầy đủ điều kiện, nhấn nút <img src="img-user-con/save2.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> rồi chọn <img src="img-user-con/apply.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> để áp dụng bộ lọc. Nếu muốn đặt lại về trạng
+            thái ban đầu, nhấn nút <img src="img-user-con/reset.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;">
+          </p>
+        </div>
+        <div class="box">
+          <h3>Thống kê số lượng cảnh báo</h3>
+          <p> Để chuyển sang trang này, người dùng cần nhấn vào nút "Thống kê số lượng cảnh báo" bên cạnh chữ "Nhật
+            ký nhiệt độ theo điểm đo" trên thanh điều
+            hướng. Trang Thống kê số lượng cảnh báo sử dụng biểu đồ cột (Column Chart) nhằm tổng hợp tần suất
+            xuất hiện các sự cố theo từng ngày. Tính năng này hỗ trợ người dùng theo dõi trực quan sự biến động về
+            số lượng cảnh báo thông qua bộ lọc khu vực và khoảng thời gian tùy chỉnh. Đặc biệt, khi tương tác bằng
+            cách di chuột vào từng cột, hệ thống sẽ hiển thị chính xác tổng số cảnh báo của ngày đó qua bảng chú
+            giải nhanh (tooltip).</p>
+          <img src="img-user-con/warning.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div class="box">
+          <h3>Tìm kiếm và download</h3>
+          <p>Người dùng chọn khoảng thời gian cần tra cứu tại ô "Thời gian từ" và "Thời gian đến".
+            Sau đó có thể chọn thêm khu vực. Khi hoàn tất bộ lọc, nhấn nút
+            <img src="img-user-con/search.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;">
+          </p>
+          <div style="text-align:center;">
+            <img src="img-user-con/daytime3.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          </div>
+          <p>Người dùng có thể xuất dữ liệu biểu đồ ra file excel để phục vụ công tác báo cáo và phân tích sâu hơn.
+            Để thực hiện, nhấn vào nút <img src="img-user-con/download.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> hệ thống sẽ xuất ra file excel theo bộ lọc
+            đã chọn.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function getPageIdFromButton(btn) {
+      if (!btn) return null;
+      if (btn.dataset && btn.dataset.pageTarget) return btn.dataset.pageTarget;
+
+      const onclick = btn.getAttribute('onclick') || '';
+      const match = onclick.match(/showPage\('([^']+)'/);
+      return match ? match[1] : null;
+    }
+
+    function getPageButton(pageId) {
+      return document.querySelector(`.menu button[onclick*="showPage('${pageId}'"]`);
+    }
+
+    function getH3Menu(pageId) {
+      return document.querySelector(`.h3-sub-menu[data-page-id="${pageId}"]`);
+    }
+
+    function hideH3Menus(exceptMenu) {
+      document.querySelectorAll('.h3-sub-menu').forEach(menu => {
+        if (menu !== exceptMenu) menu.style.display = 'none';
+      });
+    }
+
+    function saveScrollPosition() {
+      localStorage.setItem('currentScrollY', String(window.scrollY));
+    }
+
+    function restoreScrollPosition() {
+      const savedScrollY = Number(localStorage.getItem('currentScrollY') || 0);
+      window.scrollTo({ top: savedScrollY, behavior: 'auto' });
+    }
+
+    function setActiveButton(btn, pageId) {
+      document.querySelectorAll('.menu button').forEach(b => b.classList.remove('active'));
+      if (!btn && pageId) btn = getPageButton(pageId);
+      if (!btn) return;
+
+      btn.classList.add('active');
+
+      const subMenu = btn.closest('.sub-menu');
+      if (subMenu) {
+        subMenu.style.display = 'block';
+        const parentButton = subMenu.previousElementSibling;
+        if (parentButton && parentButton.tagName === 'BUTTON') {
+          parentButton.classList.add('active');
+        }
+      }
+
+      const currentPageId = pageId || getPageIdFromButton(btn);
+      const pageButton = getPageButton(currentPageId);
+      if (pageButton) pageButton.classList.add('active');
+
+      const h3Menu = getH3Menu(currentPageId);
+      hideH3Menus(h3Menu);
+      if (h3Menu && h3Menu.children.length) h3Menu.style.display = 'block';
+    }
+
+    function hideSubMenus(exceptSubMenu) {
+      document.querySelectorAll('.sub-menu').forEach(sm => {
+        if (sm !== exceptSubMenu) sm.style.display = 'none';
+      });
+    }
+
+    function showPage(pageId, btn, sectionId, keepScroll) {
+      localStorage.setItem('currentPage', pageId);
+      document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+
+      const page = document.getElementById(pageId);
+      if (page) page.style.display = 'block';
+
+      const currentSubMenu = btn ? btn.closest('.sub-menu') : null;
+      hideSubMenus(currentSubMenu);
+      setActiveButton(btn, pageId);
+
+      if (sectionId) {
+        const section = document.getElementById(sectionId);
+        if (section) {
+          section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      } else if (!keepScroll) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    function showGroup(groupId, btn, defaultPageId) {
+      const subMenu = document.getElementById('sub-' + groupId);
+      const isOpen = subMenu && subMenu.style.display === 'block';
+
+      hideSubMenus(subMenu);
+      if (subMenu) subMenu.style.display = isOpen ? 'none' : 'block';
+
+      if (defaultPageId && !isOpen) {
+        const firstChild = subMenu ? subMenu.querySelector('button') : null;
+        showPage(defaultPageId, firstChild || btn);
+      } else {
+        setActiveButton(btn);
+      }
+    }
+
+    function buildH3Menus() {
+      document.querySelectorAll('.page').forEach(page => {
+        const pageButton = getPageButton(page.id);
+        if (!pageButton || getH3Menu(page.id)) return;
+
+        const h3Menu = document.createElement('div');
+        h3Menu.className = 'h3-sub-menu';
+        h3Menu.dataset.pageId = page.id;
+
+        page.querySelectorAll('h3').forEach((heading, index) => {
+          if (!heading.id) heading.id = `${page.id}-h3-${index + 1}`;
+
+          const sectionButton = document.createElement('button');
+          sectionButton.type = 'button';
+          sectionButton.textContent = heading.textContent.trim();
+          sectionButton.dataset.pageTarget = page.id;
+          sectionButton.dataset.sectionTarget = heading.id;
+          sectionButton.addEventListener('click', function () {
+            showPage(page.id, this, heading.id);
+          });
+
+          h3Menu.appendChild(sectionButton);
+        });
+
+        if (h3Menu.children.length) {
+          pageButton.insertAdjacentElement('afterend', h3Menu);
+        }
+      });
+    }
+
+    window.onload = function () {
+      buildH3Menus();
+      const savedPage = localStorage.getItem('currentPage') || 'home';
+      const btn = document.querySelector(`.menu button[onclick*="${savedPage}"]`);
+      if (btn) showPage(savedPage, btn, null, true);
+      else showPage('home', document.querySelector(`.menu button[onclick*="home"]`), null, true);
+
+      requestAnimationFrame(restoreScrollPosition);
+    };
+
+    window.addEventListener('scroll', saveScrollPosition, { passive: true });
+    window.addEventListener('beforeunload', saveScrollPosition);
+  </script>
+</body>
+
+</html>

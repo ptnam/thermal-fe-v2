@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import type { App } from 'vue'
 import Layout from '@/layout/index.vue'
-import { downloadFileFromUrl } from '@/utils/fileUtil'
+// import { downloadFileFromUrl } from '@/utils/fileUtil'
 
 const constantRoutes: AppRouteRecordRaw[] = [
   {
@@ -186,12 +186,12 @@ const constantRoutes: AppRouteRecordRaw[] = [
         path: 'manual',
         name: 'user_manual',
         meta: { icon: 'chart', permission: ['manual'] },
-        beforeEnter: (_to, _from, next) => {
-          const fileUrl = '/report/CGI%20Manual.pdf'
-          downloadFileFromUrl(fileUrl, 'Hướng dẫn sử dụng.pdf')
-          window.close()
-          next(false)
-        }
+        // beforeEnter: (_to, _from, next) => {
+        //   const fileUrl = '/report/CGI%20Manual.pdf'
+        //   downloadFileFromUrl(fileUrl, 'Hướng dẫn sử dụng.pdf')
+        //   window.close()
+        //   next(false)
+        // }
       }
     ]
   },

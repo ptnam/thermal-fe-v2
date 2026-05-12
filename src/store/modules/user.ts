@@ -30,6 +30,9 @@ export const useUserStore = defineStore('user', {
     }
   },
   getters: {
+    isAdmin(): boolean {
+      return this?.userInfo?.roleNames === 'Admin';
+    },
     getAccessToken(): string {
       return this.accessToken
     },

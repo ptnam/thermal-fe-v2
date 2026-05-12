@@ -1,0 +1,1456 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Hướng dẫn sử dụng hệ thống</title>
+
+  <style>
+    :root {
+      --app-bg: #eef3f8;
+      --surface: #ffffff;
+      --header-bg: #1d2a3d;
+      --header-border: #33445c;
+      --menu-bg: #1d2a3d;
+      --menu-panel: #22324a;
+      --menu-panel-hover: #2b3d57;
+      --menu-active: #2a65b7;
+      --menu-text: #f3f7fd;
+      --accent: #5f9dff;
+      --content-heading: #1b5fae;
+      --border: #d8e0ea;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: var(--app-bg);
+      color: #172033;
+    }
+
+    header.page-header {
+      background: var(--header-bg);
+      color: var(--menu-text);
+      padding: 15px 30px;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid var(--header-border);
+      box-shadow: 0 2px 10px rgba(11, 18, 32, 0.18);
+    }
+
+    .container {
+      display: flex;
+      min-height: calc(100vh - 60px);
+    }
+
+    .menu {
+      width: 250px;
+      background: var(--menu-bg);
+      border-right: 1px solid var(--header-border);
+      padding: 20px;
+      position: sticky;
+      top: 60px;
+      height: calc(100vh - 60px);
+      overflow-y: auto;
+    }
+
+    .menu button {
+      width: 100%;
+      padding: 13px 14px;
+      margin-bottom: 8px;
+      border: none;
+      background: transparent;
+      color: var(--menu-text);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      border-radius: 4px;
+      text-align: left;
+      border-bottom: 1px solid var(--header-border);
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .menu button:hover {
+      background: var(--menu-panel-hover);
+      color: #ffffff;
+    }
+
+    .menu button.active {
+      background: var(--menu-active);
+      color: #ffffff;
+      border-bottom-color: transparent;
+    }
+
+    .content {
+      flex: 1;
+      padding: 30px;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page h2 {
+      color: var(--content-heading);
+      margin-top: 0;
+    }
+
+    .box {
+      background: var(--surface);
+      padding: 20px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+      box-shadow: 0 8px 22px rgba(16, 36, 63, 0.06);
+    }
+
+    .sub-menu {
+      margin: -2px 0 12px 0;
+      padding-left: 0;
+      border-left: 0;
+      border: 1px solid var(--header-border);
+      border-radius: 4px;
+      overflow: hidden;
+      background: var(--menu-panel);
+    }
+
+    .sub-menu button {
+      padding: 12px 18px;
+      margin-bottom: 0;
+      background: var(--menu-panel);
+      color: var(--menu-text);
+      font-size: 14px;
+      font-weight: 700;
+      border-radius: 0;
+      border-bottom: 1px solid var(--header-border);
+    }
+
+    .sub-menu button:last-child {
+      border-bottom: 0;
+    }
+
+    .sub-menu button:hover {
+      background: var(--menu-panel-hover);
+      color: #ffffff;
+    }
+
+    .sub-menu button.active {
+      background: var(--menu-active);
+      color: #ffffff;
+    }
+
+    .h3-sub-menu {
+      display: none;
+      margin: -6px 0 10px;
+      padding: 6px 0 6px 12px;
+      border-left: 2px solid var(--accent);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .sub-menu .h3-sub-menu {
+      margin: 0;
+      padding: 4px 0 8px 16px;
+      border-left: 0;
+      background: rgba(95, 157, 255, 0.08);
+    }
+
+    .h3-sub-menu button,
+    .sub-menu .h3-sub-menu button {
+      position: relative;
+      padding: 8px 12px 8px 18px;
+      margin-bottom: 0;
+      background: transparent;
+      color: #c9daf3;
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1.3;
+      border-bottom: 0;
+      border-radius: 3px;
+    }
+
+    .h3-sub-menu button::before {
+      content: "";
+      position: absolute;
+      left: 7px;
+      top: 50%;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--accent);
+      transform: translateY(-50%);
+    }
+
+    .h3-sub-menu button:hover {
+      background: rgba(95, 157, 255, 0.16);
+      color: #ffffff;
+    }
+
+    .h3-sub-menu button.active {
+      background: rgba(95, 157, 255, 0.26);
+      color: #ffffff;
+    }
+
+    .menu-section-title {
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      margin: 14px 0 8px;
+      padding: 0 14px;
+      text-transform: uppercase;
+    }
+
+    .page h3 {
+      scroll-margin-top: 70px;
+    }
+
+    .image-note {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 12px;
+    }
+
+    .image-note img {
+      display: block;
+      width: 170px;
+      max-width: 35%;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    .image-note.image-note-large img {
+      width: 320px;
+      max-width: 45%;
+    }
+
+    .image-note.image-note-card {
+      align-items: stretch;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      background: #f8fbff;
+    }
+
+    .image-note.image-note-card img {
+      width: 180px;
+      max-width: 32%;
+      border: 0;
+      border-right: 1px solid var(--border);
+      border-radius: 0;
+      object-fit: cover;
+    }
+
+    .image-note-content {
+      display: flex;
+      align-items: center;
+      flex: 1;
+      padding: 14px 16px;
+    }
+
+    .image-note-content p {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.55;
+    }
+
+    .feature-note {
+      margin: 14px 0;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: #f8fbff;
+    }
+
+    .feature-note p {
+      margin: 0 0 10px;
+    }
+
+    .feature-note p:last-child {
+      margin-bottom: 0;
+    }
+
+    .control-icon {
+      height: 35px;
+      vertical-align: middle;
+      margin: 0 4px;
+    }
+
+    .control-image {
+      max-height: 42px;
+      max-width: 100%;
+      vertical-align: middle;
+      margin: 0 8px;
+      border-radius: 3px;
+    }
+
+    .setup-button-demo {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 28px;
+      padding: 0 12px;
+      margin: 0 4px;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1;
+      vertical-align: middle;
+      background: #14233d;
+      border-radius: 3px;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+    }
+
+    .setup-button-demo::before {
+      content: "\2699";
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1;
+    }
+
+    .image-note-text {
+      flex: 1;
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.55;
+      text-align: left;
+    }
+
+    @media (max-width: 700px) {
+      .image-note {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .image-note img {
+        width: 100%;
+        max-width: 100%;
+      }
+
+      .image-note.image-note-card img {
+        width: 100%;
+        max-width: 100%;
+        border-right: 0;
+        border-bottom: 1px solid var(--border);
+      }
+    }
+
+    .header-icon {
+      width: 35px;
+      height: 35px;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="page-header">
+    <img src="img-admin-con/logo.png" alt="Hướng dẫn sử dụng" class="header-icon">
+    <span>IFS - AI</span>
+  </header>
+
+  <div class="container">
+    <div class="menu">
+      <button onclick="showPage('home', this)">TRANG CHỦ</button>
+
+      <button onclick="showPage('live-monitor', this)">GIÁM SÁT TRỰC TIẾP</button>
+
+      <button onclick="showGroup('measure', this, 'ai-alert')">THEO DÕI ĐIỂM ĐO</button>
+      <div id="sub-measure" class="sub-menu" style="display:none;">
+        <button onclick="showPage('ai-alert', this)">Cảnh báo AI</button>
+        <button onclick="showPage('temp-threshold', this)">Nhiệt độ vượt
+          ngưỡng</button>
+        <button onclick="showPage('temp-log', this)">Nhật ký nhiệt độ</button>
+        <button onclick="showPage('analytics-summary', this)">Tổng hợp phân tích</button>
+      </div>
+
+      <button onclick="showGroup('system', this, 'area')">QUẢN TRỊ HỆ THỐNG</button>
+      <div id="sub-system" class="sub-menu" style="display:none;">
+        <div class="menu-section-title">Hạ tầng & Thiết bị</div>
+        <button onclick="showPage('area', this)">Khu vực</button>
+        <button onclick="showPage('camera', this)">Camera</button>
+        <button onclick="showPage('sensor', this)">Cảm biến</button>
+        <button onclick="showPage('device-type', this)">Loại Thiết bị</button>
+        <button onclick="showPage('device', this)">Thiết bị</button>
+
+        <div class="menu-section-title">Thiết lập Cảnh báo</div>
+        <button onclick="showPage('alert-channel', this)">Kênh Cảnh báo</button>
+        <button onclick="showPage('alert-set', this)">Bộ cảnh báo</button>
+
+        <div class="menu-section-title">Quản lý Người dùng</div>
+        <button onclick="showPage('user-management', this)">Người dùng</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div id="home" class="page" style="display:block">
+        <h2>TRANG CHỦ</h2>
+        <div class="box">
+          <h3>Màn hình trang chủ</h3>
+          <p>Trang chủ cung cấp cái nhìn tổng quan về hệ thống giám sát, hiển thị trực quan các khu
+            vực đã lắp đặt camera như biển và trạm biến áp trên bản đồ. Tại đây, người dùng có thể nhanh chóng theo dõi
+            các thông số quan trọng như: tổng số camera, số điểm giám sát và số lượng cảnh báo mới nhất. Các con số hiển
+            thị cạnh tên khu vực/trạm biểu thị số lượng cảnh báo hiện có tại địa điểm đó. </p>
+          <p>Lưu ý:</p>
+          <ul>
+            -Thông tin về nhiệt độ môi trường hiện đang trong quá trình phát triển.
+            <br>
+            - Người dùng có thể đổi màu nền web bằng cách nhấn vào nút <img src="img-admin-con/Light.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> ở góc trên bên phải.
+          </ul>
+          </ul>
+          <img src="img-admin-con/trangchu.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div class="box">
+          <h3>Sơ đồ 1 sợi </h3>
+          <p>Người dùng có thể xem sơ đồ 1 sợi bằng cách nhấp vào tên các trạm như SĐ1S_Liên Trì hoặc Trạm 110kV Nam
+            Phú Quốc. Khi di chuột vào từng điểm đo trên sơ đồ,các thông số nhiệt độ min, max và trung bình sẽ được hiển
+            thị. Đặc biệt, hệ thống sẽ tự động đổi màu các điểm đo sang vàng hoặc đỏ nếu có cảnh báo, giúp bạn
+            dễ dàng nhận diện tình trạng trạm một cách trực
+            quan.</p>
+          <p>Lưu ý:
+            Trạm nào chưa có sơ đồ 1 sợi thì khi ấn sẽ không hiện ra sơ đồ.</p>
+          <img src="img-admin-con/map.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Nếu muốn xem chi tiết, người dùng chỉ cần nhấn vào biểu tượng <img src="img-admin-con/thermometer.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> trên sơ đồ. Trang web sẽ hiển thị bảng thông
+            số chi tiết giúp theo
+            dõi kỹ hơn về tình trạng các thiết bị, so sánh nhiệt độ của thiết bị đó với pha min,
+            nhiệt độ môi trường và pha min của toàn trạm.</p>
+          <img src="img-admin-con/detail.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div class="box">
+          <h3>Sơ đồ mặt bằng </h3>
+          Sau khi mở sơ đồ 1 sợi, người dùng có thể nhấp vào nút "Sơ đồ mặt bằng" ngay bên cạnh để chuyển sang giao diện
+          mô phỏng 3D toàn cảnh của trạm. Hệ thống sẽ hiển thị mô hình 3D toàn trạm, cho phép tương tác trực tiếp: lăn
+          chuột để phóng to/thu nhỏ và nhấn giữ kéo chuột để điều hướng, xem xét mọi vị trí trong trạm một cách dễ dàng.
+          <p>Lưu ý: Trạm nào chưa có sơ đồ mặt bằng thì khi ấn tên trạm sẽ không hiện chức năng này.</p>
+          <img src="img-admin-con/3d.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+      </div>
+
+      <div id="live-monitor" class="page">
+        <h2>GIÁM SÁT TRỰC TIẾP</h2>
+        <div class="box">
+          <h3>Màn hình giám sát trực tiếp</h3>
+          <p>Trang này cho phép theo dõi luồng video trực tiếp từ tất cả các camera trong hệ thống, bao gồm cả
+            camera thường và camera nhiệt. Phía bên trái là danh sách khu vực được phân tầng rõ ràng (như
+            Biển đảo, Công ty, Khu vực miền Trung...). </p>
+          <img src="img-admin-con/camera.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Người dùng có thể xem riêng 1 camera bằng cách nhấp vào tên camera có biểu tượng <img src="img-admin-con/icon.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> đứng trước tên tương ứng trong danh sách.</p>
+          <img src="img-admin-con/camera1.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Nếu muốn xem tất cả các camera ở 1 khu vực nào đó thì nhấp tên khu vực, có biểu tượng là <img
+              src="img-admin-con/location.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;"> đứng trước tên tương
+            ứng trên danh sách.</p>
+          <img src="img-admin-con/location1.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div class="box">
+          <h3>Phóng to toàn màn hình</h3>
+          <p>Người dùng có thể nhấn vào biểu tượng phóng to ở góc bên cạnh chữ thiết lập <img src="img-admin-con/fullscreen.png"
+              alt="" style="height:35px; vertical-align:middle; margin:0 4px;"> để xem tất cả camera trên màn hình ở chế
+            độ fullscreen.
+            Khi ở chế độ toàn màn hình, nhấn phím Esc để thoát và quay lại màn hình giám sát.</p>
+          <img src="img-admin-con/fullscreen1.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div class="box">
+          <h3>Thiết lập hiển thị</h3>
+          <p>
+            Người dùng nhấn vào nút
+            <span class="setup-button-demo">THIẾT LẬP</span>
+            để mở giao diện cấu hình hiển thị camera. Tại đây, có thể chọn số lượng camera hiển thị trên màn hình,
+            thay đổi thứ tự sắp xếp và ghim các camera quan trọng để tiện theo dõi.
+          </p>
+          <img src="img-admin-con/thietlap.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>
+            Để ghim camera, người dùng chọn checkbox bên cạnh tên camera trong danh sách khu vực. Camera được chọn sẽ
+            được thêm vào danh sách ghim.
+          </p>
+          <div style="text-align:center;">
+            <img src="img-admin-con/pin.png" alt="" style="width:30%; max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          </div>
+          <p>
+            Để thay đổi bố cục hiển thị, người dùng chọn một trong các ô bên dưới. Các tùy chọn lần lượt tương ứng với
+            chế độ hiển thị 1, 2, 4 hoặc 9 camera.
+            <img src="img-admin-con/bocuc.png" alt="" style="height:55px; vertical-align:middle; margin:0 4px;">
+          </p>
+          <p>
+            Khi cần thay đổi thứ tự các camera đã ghim, người dùng giữ chuột vào dòng camera muốn di chuyển trong danh
+            sách ghim, sau đó kéo thả đến vị trí mong muốn.
+          </p>
+          <div style="text-align:center;">
+            <img src="img-admin-con/list.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          </div>
+          <p> Khi thiết lập xong thì nhấn vào nút <img src="img-admin-con/luu.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> để lưu các thay đổi hoặc nút <img src="img-admin-con/huy.png"
+              alt="" style="height:35px; vertical-align:middle; margin:0 4px;"> để hủy bỏ
+            các thay đổi.</p>
+        </div>
+        <div class="box">
+          <h3>Các chức năng của camera</h3>
+          <p>Để sử dụng các chức năng của camera, người dùng có thể di chuột vào khung video của camera đó, các biểu
+            tượng chức năng sẽ hiện ra ở góc dưới bên phải của khung video.</p>
+          <p>Lưu ý : Một số chức năng đang phát triển nên khi nhấn vào sẽ không hoạt động.</p>
+          <img src="img-admin-con/function.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Để điều khiển PTZ, người dùng nhấn vào biểu tượng
+            <img src="img-admin-con/full.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;">
+            trên khung camera. Hệ thống sẽ mở giao diện điều khiển riêng, cho phép sử dụng các chức năng ptz của camera
+            đã
+            chọn.
+          </p>
+          <img src="img-admin-con/ptz.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <div class="image-note">
+            <img src="img-admin-con/ptz1.png" alt="">
+            <p class="image-note-text">Chức năng này cho phép người dùng điều khiển camera xoay 360 độ để thay đổi góc
+              quan sát. Người dùng chỉ cần di chuyển chuột đến hướng muốn quan sát và nhấn vào khu vực đó để camera tự
+              động xoay theo hướng tương ứng. Nút reset sẽ đưa camera về vị trí ban đầu đã được cấu hình sẵn.</p>
+          </div>
+          <img src="img-admin-con/ptz.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+
+          <div class="image-note image-note-large">
+            <img src="img-admin-con/speed.png" alt="">
+            <p class="image-note-text">Thanh tốc độ dùng để điều chỉnh mức độ di chuyển của camera PTZ. Người dùng có
+              thể giảm tốc độ khi cần quan sát chi tiết hoặc tăng tốc độ khi muốn xoay camera nhanh hơn trong quá trình
+              điều khiển thủ công, tuần tra hoặc preset.</p>
+          </div>
+
+          <div class="feature-note">
+            <p><strong>Phóng to/thu nhỏ hình ảnh:</strong> nhấn
+              <img src="img-admin-con/zoom-in.png" alt="" class="control-icon"> để phóng to hoặc
+              <img src="img-admin-con/zoom-out.png" alt="" class="control-icon"> để thu nhỏ khung hình theo nhu cầu quan sát.
+            </p>
+          </div>
+
+          <div class="feature-note">
+            <p><strong>Vẽ điểm/vùng đo nhiệt:</strong> nhấn
+              <img src="img-admin-con/draw area point.png" alt="" class="control-image"> rồi chấm các điểm trực tiếp trên khung video
+              để tạo vùng đo.
+            </p>
+            <p>Sau khi vẽ xong, nhấn <img src="img-admin-con/measure.png" alt="" class="control-image"> để hệ thống đo nhiệt độ trong
+              vùng đã chọn. Khi đo nhiệt độ xong rồi thì ở dưới nút đo sẽ hiển thị 3 kết quả là nhiệt độ cao nhất, nhiệt
+              độ thấp nhất và nhiệt độ trung bình. Nếu vùng vẽ chưa hợp lệ, hệ thống thông báo "không phải hình đa giác
+              lồi, vui lòng vẽ lại!".
+            </p>
+            <p>Để hủy thao tác hiện tại và vẽ vùng mới, nhấn
+              <img src="img-admin-con/exit.png" alt="" class="control-image"> rồi thực hiện lại từ đầu.
+            </p>
+            <p> Lưu ý: Những camera nào không hỗ trợ chức năng này thì khi vẽ vùng xong sẽ không đo được.</p>
+          </div>
+          <img src="img-admin-con/thermal.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+      </div>
+
+      <div id="ai-alert" class="page">
+        <h2>Cảnh báo AI</h2>
+        <div class="box">
+          <h3>Danh sách cảnh báo AI</h3>
+          <p>Trang này là trung tâm lưu trữ các sự kiện đã được thiết lập cho hệ thống AI nhận diện.
+            Người dùng có thể nhanh chóng tra cứu lịch sử thông qua bộ lọc thông minh theo thời gian, khu vực, tên
+            camera hoặc loại cảnh báo cụ thể (như phát hiện tàu thuyền, người, khói, xe máy,...).</p>
+          <p>
+            Mọi cảnh báo đều được hiển thị chi tiết dưới dạng danh sách, bao gồm hình ảnh chụp từ hiện trường, thời gian
+            chính xác và vị trí xảy ra sự kiện. Ngoài ra, giao diện còn hỗ trợ linh hoạt các chế độ hiển thị (dạng lưới
+            hoặc danh sách) cùng tính năng phân trang.</p>
+          <img src="img-admin-con/AI.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Để chuyển sang danh sách dạng lưới thì chỉ cần nhấn vào nút grid <img src="img-admin-con/grid.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"></p>
+          <img src="img-admin-con/list1.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Muốn phóng to hình ảnh cảnh báo, người dùng nhấn vào ảnh tương ứng ở cột Hình ảnh trong danh sách còn khi ở
+            trạng thái lưới thì chỉ cần ảnh tương ứng ở trong ô .</p>
+          <img src="img-admin-con/picture.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Người dùng nếu muốn chỉnh danh sách cột thì chỉ cần nhấn vào nút <img src="img-admin-con/setting.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> rồi chọn cột nào muốn ẩn đi hoặc hiện trên danh
+            sách rồi ấn lưu để xác nhận hoặc hủy nếu muốn thoát.</p>
+          <img src="img-admin-con/column.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Nếu người dùng muốn chỉnh số dòng trên 1 trang như là 20, 30, 100 dòng thì chỉ cần nhấn nút <img
+              src="img-admin-con/page.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;"> rồi chọn số dòng muốn
+            hiển thị trên mỗi trang.</p>
+          <img src="img-admin-con/pages.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div class="box">
+          <h3>Tìm kiếm</h3>
+          <p>Người dùng chọn khoảng thời gian cần tra cứu tại ô "Thời gian từ" và "Thời gian đến". Sau
+            đó chọn thêm khu vực, camera và loại cảnh báo từ danh sách thả xuống nếu cần, rồi nhấn nút
+            <img src="img-admin-con/search.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;">
+          </p>
+          <div style="text-align:center;">
+            <img src="img-admin-con/daytime.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          </div>
+
+        </div>
+      </div>
+
+      <div id="temp-threshold" class="page">
+        <h2>Nhiệt độ vượt ngưỡng</h2>
+        <div class="box">
+          <h3>Danh sách Nhiệt độ vượt ngưỡng</h3>
+          <p>Trang quản lý "Nhiệt độ vượt ngưỡng" tập trung lưu trữ mọi dữ liệu cảnh báo khi hệ thống phát hiện sự cố
+            quá nhiệt. Thông qua bảng thống kê chi tiết, người dùng có thể theo dõi hình ảnh nhiệt thực tế với các chỉ
+            số quan trọng như độ chênh lệch so với pha min hoặc pha min toàn trạm. Bộ lọc tại đây hỗ trợ truy xuất
+            nhanh lịch sử theo thời gian và thiết bị, kết hợp cùng tính năng "Xuất file" giúp tối ưu hóa công tác báo
+            cáo. Đặc biệt, việc theo dõi trạng thái và thời gian xử lý tại mỗi dòng bản ghi đảm bảo mọi sự cố đều được
+            kiểm soát chặt chẽ, không bị bỏ sót..</p>
+          <img src="img-admin-con/nhietdo.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Để chuyển sang danh sách dạng lưới thì chỉ cần nhấn vào nút grid <img src="img-admin-con/grid.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"></p>
+          <img src="img-admin-con/grid1.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Muốn phóng to hình ảnh cảnh báo, người dùng nhấn vào ảnh tương ứng ở cột Hình ảnh trong danh sách.</p>
+          <img src="img-admin-con/picture1.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Người dùng nếu muốn chỉnh danh sách cột thì chỉ cần nhấn vào nút <img src="img-admin-con/setting.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> rồi chọn cột nào muốn ẩn đi hoặc hiện trên danh
+            sách rồi ấn lưu để xác nhận hoặc hủy nếu muốn thoát.</p>
+          <img src="img-admin-con/column1.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Nếu người dùng muốn chỉnh số dòng trên 1 trang như là 20, 30, 100 dòng thì chỉ cần nhấn nút <img
+              src="img-admin-con/page.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;"> rồi chọn số dòng muốn
+            hiển thị trên mỗi trang.</p>
+          <img src="img-admin-con/pages1.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div class="box">
+          <h3>Xử lý cảnh báo</h3>
+          <P>Khi đã xử lý xong sự cố, người dùng có thể xác nhận lại trạng thái bằng cách nhấn vào nút tích <img
+              src="img-admin-con/tick.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;">.</P>
+          <p>Ta có thể xem chi tiết cảnh báo đó bằng cách nhấn nút <img src="img-admin-con/bell.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;">, ở đây ta có thể nhập các thông tin ở ô nhân
+            viên xử lý, ghi chú cảnh báo và chọn trạng thái cho cảnh báo này. Khi nhập xong thì chọn nút <img
+              src="img-admin-con/save.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;"> để lưu lại. </p>
+          <img src="img-admin-con/save1.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p> Chúng ta còn có thể xem chi tiết cảnh báo bằng cách nhấn vào nút <img src="img-admin-con/bell.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;">, ở dưới nút sẽ xuất hiện danh sách các cảnh báo
+            mới nhất. Ấn vào dòng bất kỳ sẽ hiển thị giao diện mới về chi tiết cảnh báo đó. Ở đây ta cũng có thể nhập
+            các thông tin ở ô nhân viên xử lý, ghi chú cảnh báo và chọn trạng thái cho cảnh báo này. Khi nhập xong thì
+            cuộn xuống dưới cùng rồi chọn nút <img src="img-admin-con/save.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> để lưu lại.</p>
+          <img src="img-admin-con/Detailthermal.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div class="box">
+          <h3> Tìm kiếm và xuất file</h3>
+          <p>Người dùng chọn khoảng thời gian cần tra cứu tại ô "Thời gian từ" và "Thời gian đến". Sau
+            đó chọn thêm khu vực, thiết bị từ danh sách thả xuống nếu cần, rồi nhấn nút
+            <img src="img-admin-con/search.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;">
+          </p>
+          <img src="img-admin-con/daytime1.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Để xuất file thì nhấn vào nút <img src="img-admin-con/export.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> hệ
+            thống sẽ xuất ra file excel danh sách các cảnh báo vượt ngưỡng theo bộ lọc đã chọn.</p>
+        </div>
+
+      </div>
+      <div id="temp-log" class="page">
+        <h2>Nhật ký nhiệt độ</h2>
+        <div class="box">
+          <h3>Nhật ký nhiệt độ</h3>
+          <p>Trang Nhật ký nhiệt độ cung cấp toàn bộ lịch sử đo đạc của hệ thống.
+            Trang này thực hiện các đối chiếu giữa nhiệt độ thực tế với các thông số môi
+            trường, pha min và pha min toàn trạm nhằm phát hiện sớm các biến động bất thường qua đánh giá trạng thái.
+            Thông qua việc kết hợp bộ lọc tìm kiếm nâng cao và công cụ xuất dữ liệu, người dùng dễ dàng trích xuất báo
+            cáo phục vụ công tác phân tích, đánh giá hiệu quả vận hành định kỳ..</p>
+          <img src="img-admin-con/diary.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Để chuyển sang danh sách dạng lưới thì chỉ cần nhấn vào nút grid <img src="img-admin-con/grid.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"></p>
+          <img src="img-admin-con/grid2.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Người dùng nếu muốn chỉnh danh sách cột thì chỉ cần nhấn vào nút <img src="img-admin-con/setting.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> rồi chọn cột nào muốn ẩn đi hoặc hiện trên danh
+            sách rồi ấn lưu để xác nhận hoặc hủy nếu muốn thoát.</p>
+          <img src="img-admin-con/column2.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Nếu người dùng muốn chỉnh số dòng trên 1 trang như là 20, 30, 100 dòng thì chỉ cần nhấn nút <img
+              src="img-admin-con/page.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;"> rồi chọn số dòng muốn
+            hiển thị trên mỗi trang.</p>
+          <img src="img-admin-con/pages2.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div class="box">
+          <h3>Tìm kiếm và xuất file</h3>
+          <p>Người dùng chọn khoảng thời gian cần tra cứu tại ô "Thời gian từ" và "Thời gian đến".
+            Sau đó có thể chọn thêm khu vực, kiểu so sánh và đánh giá từ danh sách thả xuống. Hai ô
+            "Từ" và "Đến" dùng để nhập khoảng chênh lệch nhiệt độ cần lọc, các ô này chỉ cho phép nhập số và chỉ
+            lọc được sau khi đã chọn kiểu so sánh. Khi hoàn tất bộ lọc, nhấn nút
+            <img src="img-admin-con/search.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;">
+          </p>
+          <div style="text-align:center;">
+            <img src="img-admin-con/daytime2.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          </div>
+          <p>Để xuất file thì nhấn vào nút <img src="img-admin-con/export.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> hệ
+            thống sẽ xuất ra file excel danh sách nhật ký nhiệt độ theo bộ lọc đã chọn.</p>
+        </div>
+      </div>
+
+      <div id="analytics-summary" class="page">
+        <h2>Tổng hợp phân tích</h2>
+        <div class="box">
+          <h3>Nhật ký nhiệt độ theo điểm đo</h3>
+          <p>Trang Nhật ký nhiệt độ theo điểm đo tích hợp biểu đồ miền (Area Chart) nhiều lớp giúp trực quan hóa dữ liệu
+            nhiệt độ của các pha và môi trường theo thời gian. Điểm ưu việt của biểu đồ này nằm ở tính năng tương tác
+            trực tiếp: khi người dùng di chuột đến bất kỳ thời điểm nào trên biểu đồ, hệ thống sẽ hiển thị bảng thông
+            tin chi tiết về giá trị nhiệt độ tại đúng thời điểm đó. Cơ chế này hỗ trợ việc đối soát thông số
+            chính xác giữa các đối tượng đo, phục vụ công tác giám sát và phát hiện nhanh các biến động bất thường.</p>
+          <img src="img-admin-con/area.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div class="box">
+          <h3>Bộ lọc</h3>
+          <p>Để lọc dữ liệu theo nhiệt độ, người dùng nhấn vào ô "Trung bình" bên cạnh bộ lọc. Danh
+            sách tùy chọn sẽ hiển thị các kiểu nhiệt độ cần xem, gồm nhiệt độ max, min và trung bình.</p>
+          <img src="img-admin-con/average.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Người dùng có thể lọc chi tiết hơn bằng cách nhấn nút <img src="img-admin-con/fil.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> để mở bảng lọc theo khu vực,
+            thiết bị, bộ phận và thời gian.</p>
+          <p>Trước tiên, chọn khu vực cần lọc. Danh sách thiết bị sẽ tự động cập nhật theo khu vực đã chọn.
+            Sau khi chọn thiết bị, danh sách bộ phận sẽ cập nhật theo thiết bị tương ứng. Tiếp tục chọn bộ phận
+            để hệ thống hiển thị các điểm giám sát liên quan. Người dùng cũng có thể bật hoặc tắt hiển thị
+            nhiệt độ trên biểu đồ. Cuối cùng, chọn khoảng thời gian cần lọc.
+            .</p>
+          <img src="img-admin-con/filter.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Sau khi đã chọn đầy đủ điều kiện, nhấn nút <img src="img-admin-con/save2.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> rồi chọn <img src="img-admin-con/apply.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> để áp dụng bộ lọc. Nếu muốn đặt lại về trạng
+            thái ban đầu, nhấn nút <img src="img-admin-con/reset.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;">
+          </p>
+        </div>
+        <div class="box">
+          <h3>Thống kê số lượng cảnh báo</h3>
+          <p> Để chuyển sang trang này, người dùng cần nhấn vào nút "Thống kê số lượng cảnh báo" bên cạnh chữ "Nhật
+            ký nhiệt độ theo điểm đo" trên thanh điều
+            hướng. Trang Thống kê số lượng cảnh báo sử dụng biểu đồ cột (Column Chart) nhằm tổng hợp tần suất
+            xuất hiện các sự cố theo từng ngày. Tính năng này hỗ trợ người dùng theo dõi trực quan sự biến động về
+            số lượng cảnh báo thông qua bộ lọc khu vực và khoảng thời gian tùy chỉnh. Đặc biệt, khi tương tác bằng
+            cách di chuột vào từng cột, hệ thống sẽ hiển thị chính xác tổng số cảnh báo của ngày đó qua bảng chú
+            giải nhanh (tooltip).</p>
+          <img src="img-admin-con/warning.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div class="box">
+          <h3>Tìm kiếm và download</h3>
+          <p>Người dùng chọn khoảng thời gian cần tra cứu tại ô "Thời gian từ" và "Thời gian đến".
+            Sau đó có thể chọn thêm khu vực. Khi hoàn tất bộ lọc, nhấn nút
+            <img src="img-admin-con/search.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;">
+          </p>
+          <div style="text-align:center;">
+            <img src="img-admin-con/daytime3.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          </div>
+          <p>Người dùng có thể xuất dữ liệu biểu đồ ra file excel để phục vụ công tác báo cáo và phân tích sâu hơn.
+            Để thực hiện, nhấn vào nút <img src="img-admin-con/download.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> hệ thống sẽ xuất ra file excel theo bộ lọc
+            đã chọn.</p>
+        </div>
+      </div>
+      <div id="area" class="page">
+        <h2>Khu vực</h2>
+        <div class="box">
+          <h3>Danh sách khu vực</h3>
+          <p>Trang Danh sách khu vực là nơi giúp người dùng quản lý tất cả các địa điểm giám sát trong hệ thống. Tại
+            giao diện này, có thể dễ dàng tìm kiếm một khu vực bất kỳ dựa trên tên gọi hoặc trạng thái hoạt động của nó.
+            Nếu muốn bổ sung địa điểm mới, chỉ cần sử dụng nút +Thêm. Ngoài ra, cột hành động ở cuối mỗi dòng cho phép
+            linh hoạt chỉnh sửa thông tin hoặc xóa bỏ các khu vực không còn sử dụng.</p>
+          <img src="img-admin-con/area1.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Để chuyển sang danh sách dạng lưới thì chỉ cần nhấn vào nút grid <img src="img-admin-con/grid.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"></p>
+          <img src="img-admin-con/grid3.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Người dùng cần chỉnh danh sách cột thì chỉ cần nhấn vào nút <img src="img-admin-con/setting.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> rồi chọn cột nào muốn ẩn đi hoặc hiện trên danh
+            sách rồi ấn lưu để xác nhận hoặc hủy nếu muốn thoát.</p>
+          <img src="img-admin-con/column3.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Nếu người dùng muốn chỉnh số dòng trên 1 trang như là 20, 30, 100 dòng thì chỉ cần nhấn nút <img
+              src="img-admin-con/page.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;"> rồi chọn số dòng muốn
+            hiển thị trên mỗi trang.</p>
+          <img src="img-admin-con/pages3.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div class="box">
+          <h3>Thêm khu vực</h3>
+          <p>Để thêm khu vực mới, người dùng nhấn vào nút <img src="img-admin-con/them.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;">. Hệ thống sẽ mở giao diện nhập liệu, yêu cầu
+            điền các thông tin cơ bản như Tỉnh, Mã khu vực, Tên khu vực, Loại bản đồ, Khu vực cha, Tọa độ, Ghi chú,
+            Giá trị đánh giá, Nhiệt độ môi trường, Trạng thái.</p>
+          <p>Lưu ý: Các trường có dấu * đỏ là bắt buộc phải nhập.</p>
+
+          <img src="img-admin-con/addarea.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <P>Để thêm tọa độ cho khu vực, người dùng nhấn nút <img src="img-admin-con/add-coordinate.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> để mở bản đồ. Sau đó, chọn vị trí bằng cách
+            nhấn trực tiếp trên bản đồ hoặc nhập kinh độ, vĩ độ ở góc dưới bên trái. Người dùng có thể nhập mức zoom
+            hoặc lăn chuột để phóng to, thu nhỏ bản đồ. Khi chọn xong, nhấn nút lưu. Sau khi hoàn tất, nhấn nút lưu để
+            xác nhận thêm mới khu vực hoặc nút hủy để thoát mà không lưu.</P>
+          <img src="img-admin-con/map1.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div class="box">
+          <h3>Chỉnh sửa và xóa </h3>
+          <p>Để chỉnh sửa thông tin khu vực, người dùng nhấn vào nút <img src="img-admin-con/edit.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> trong cột hành động của dòng cần chỉnh sửa.
+            Hệ thống sẽ mở giao diện nhập liệu với các thông tin đã có tương tự giao diện khi thêm, người dùng
+            có thể cập nhật lại các trường cần thiết và nhấn nút lưu để xác nhận hoặc nút hủy để thoát mà không lưu.
+          </p><img src="img-admin-con/afteradd.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Để xóa khu vực, người dùng nhấn vào nút <img src="img-admin-con/delete.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> trong cột hành động của dòng cần xóa. Hệ
+            thống sẽ yêu cầu xác nhận trước khi thực hiện xóa bỏ hoàn toàn khu vực đó khỏi hệ thống. Nếu đồng ý nhấn
+            nút xóa không thì ấn hủy. </p>
+        </div>
+        <div class="box">
+          <h3> Tìm kiếm</h3>
+          <p>Để tìm kiếm khu vực, người dùng nhập tên khu vực, trạng thái rồi ấn nút <img src="img-admin-con/search.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;">. Hệ thống sẽ tự động lọc và hiển thị các khu
+            vực có thông tin khớp với từ khóa đã nhập.</p>
+        </div>
+      </div>
+
+      <div id="camera" class="page">
+        <h2>Camera</h2>
+        <div class="box">
+          <h3>Danh sách camera</h3>
+          <p>Trang Danh sách camera là nơi giúp bạn quản lý toàn bộ hệ thống thiết bị ghi hình tại các trạm. Tại đây,
+            việc tìm kiếm camera trở nên đơn giản nhờ các bộ lọc theo tên, chức năng (camera nhiệt, camera giám sát
+            tổng quát) hoặc khu vực cụ thể. Danh sách hiển thị đầy đủ trạng thái hoạt động cùng các công cụ hỗ trợ
+            nhanh trong cột hành động, cho phép bạn chỉnh sửa cấu hình, xem thử hình ảnh hoặc xóa thiết bị khi cần
+            thiết. Ngoài ra, tính năng Import IEC và Export giúp bạn dễ dàng đồng bộ dữ liệu hệ thống, đảm bảo công
+            tác quản lý vận hành luôn chính xác và hiệu quả.</p>
+          <img src="img-admin-con/listcam.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Để chuyển sang danh sách dạng lưới thì chỉ cần nhấn vào nút grid <img src="img-admin-con/grid.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"></p>
+          <img src="img-admin-con/grid4.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <P>Người dùng có thể chuyển sang chế độ giám sát trực tiếp camera khi nhấn vào tên camera <img
+              src="img-admin-con/name.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;">.</P>
+          <p>Người dùng cần chỉnh danh sách cột thì chỉ cần nhấn vào nút <img src="img-admin-con/setting.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> rồi chọn cột nào muốn ẩn đi hoặc hiện trên danh
+            sách rồi ấn lưu để xác nhận hoặc hủy nếu muốn thoát.</p>
+          <img src="img-admin-con/column4.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Nếu người dùng muốn chỉnh số dòng trên 1 trang như là 20, 30, 100 dòng thì chỉ cần nhấn nút <img
+              src="img-admin-con/page.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;"> rồi chọn số dòng muốn
+            hiển thị trên mỗi trang.</p>
+          <img src="img-admin-con/pages4.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div class="box">
+          <h3>Thêm camera</h3>
+          <p>Để thêm camera mới, người dùng nhấn vào nút <img src="img-admin-con/them.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;">. Hệ thống sẽ mở giao diện nhập liệu, yêu cầu
+            điền các thông tin cơ bản như Mã camera, Chức năng camera, Khu vực, Tần suất kiểm tra (giây), Camera tích
+            hợp, Username, password, Tên camera, Loại camera, Đường dẫn camera, Địa chỉ IP (LAN), Địa chỉ IP (WAN), Hãng
+            camera, Trạng thái, Địa chỉ IEC.</p>
+          <p>Lưu ý: Các trường có dấu * đỏ là bắt buộc phải nhập.</p>
+
+          <img src="img-admin-con/addcam.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <P>Khi hoàn tất, nhấn nút lưu để xác nhận thêm mới camera hoặc nút hủy để thoát mà không lưu.</P>
+
+        </div>
+        <div class="box">
+          <h3>Chỉnh sửa và xóa</h3>
+          <p>Người dùng có thể chỉnh sửa thông tin camera bằng cách nhấn vào nút <img src="img-admin-con/edit.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> trong cột hành động của dòng cần chỉnh sửa.
+            Hệ thống sẽ mở giao diện nhập liệu với các thông tin đã có tương tự giao diện khi thêm, người dùng
+            có thể cập nhật lại các trường cần thiết và nhấn nút lưu để xác nhận hoặc nút hủy để thoát mà không lưu.
+            <img src="img-admin-con/editcam.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          </p>
+          <p>Ngoài ra camera còn có những chức năng khác như là Đồng bộ góc quay, Xem danh sách góc quay,
+            Chỉnh góc quay, cài đặt góc quay, cài đặt AI.(Thứ tự theo từ trái sang phải)</p>
+          <div style="text-align:center;">
+            <img src="img-admin-con/settingcam.png" alt=""
+              style="width:35%; max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          </div>
+          <p>Lưu ý: Với những camera không hỗ trợ một số chức năng, các ô chức năng tương ứng sẽ không hiển thị.</p>
+          <p>Để điều chỉnh góc quay, người dùng nhấn nút <img src="img-admin-con/adjust.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> tại cột hành động của camera tương ứng.
+            Hệ thống sẽ mở giao diện điều chỉnh, cho phép vẽ vùng đo và xem ảnh từ camera.</p>
+          <img src="img-admin-con/adjustcam.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Để cài đặt góc quay cho camera, người dùng nhấn nút <img src="img-admin-con/gocquay.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> tại cột hành động của camera cần thao tác.
+            Hệ thống sẽ chuyển đến giao diện quản lý góc quay.</p>
+          <img src="img-admin-con/tour.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Tại trang Quản lý góc quay, nhấn nút <img src="img-admin-con/them.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> để thêm mới góc quay.</p>
+          <img src="img-admin-con/goc.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Hệ thống sẽ tự động chuyển sang trang Live. Tại đây, người dùng có thể điều khiển PTZ và vẽ vùng đo cho
+            góc quay mới. Sau khi hoàn tất, nhấn nút lưu vùng đo để xác nhận hoặc xóa vùng đo nếu cần vẽ lại.</p>
+          <img src="img-admin-con/live.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Cuối cùng, quay lại trang Quản lý tour và nhấn nút <img src="img-admin-con/them.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;">để thêm tour mới. Nhập các thông tin cần thiết
+            như tên tour, góc quay đã tạo và thời gian dừng. Sau khi nhập xong, nhấn nút lưu để xác nhận hoặc nút hủy để
+            thoát mà không lưu.</p>
+          <img src="img-admin-con/addtour.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Để xem danh sách các tour đã tạo, người dùng nhấn vào nút <img src="img-admin-con/adjust.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> tại cột hành động của camera tương ứng. Hệ
+            thống sẽ hiển thị giao diện cho phép xem lại tất cả các góc quay đã tạo cho camera đó.</p>
+          <img src="img-admin-con/listtour.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p> Để xóa camera, nhấn vào nút <img src="img-admin-con/delete.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;">. Hệ
+            thống sẽ yêu cầu xác nhận trước khi thực hiện xóa bỏ hoàn toàn cảm biến đó khỏi hệ thống. Nếu đồng ý nhấn
+            nút xóa không thì ấn hủy. </p>
+        </div>
+        <div class="box">
+          <h3> Tìm kiếm và Export</h3>
+          <p>Để tìm kiếm camera, người dùng nhập tên Mã/tên camera, Chức năng và Khu vực từ danh sách thả xuống nếu
+            cần rồi ấn nút <img src="img-admin-con/search.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;">.
+            Hệ thống sẽ tự động lọc và hiển thị các camera có thông tin khớp với từ khóa đã nhập.</p>
+          <p>Để xuất dữ liệu camera, người dùng nhấn vào nút <img src="img-admin-con/export1.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;">.</p>
+        </div>
+      </div>
+
+      <div id="sensor" class="page">
+        <h2>Cảm biến</h2>
+        <div class="box">
+          <h3>Danh sách cảm biến</h3>
+          <p>Trang Danh sách cảm biến nhiệt là trung tâm quản lý các thiết bị đo lường nhiệt độ trong hệ thống. Tại đây,
+            bạn có thể dễ dàng kiểm soát trạng thái hoạt động của từng cảm biến thông qua bộ lọc thông minh theo mã, khu
+            vực hoặc loại cảm biến. Tính năng này hỗ trợ người dùng thêm mới thiết bị nhanh chóng bằng nút + Thêm, hoặc
+            thực hiện chỉnh sửa và xóa bỏ dữ liệu tại cột hành động. Ngoài ra, các nút Import IEC và Export được tích
+            hợp nhằm tối ưu hóa việc quản lý dữ liệu lớn, đảm bảo sự đồng bộ và chính xác cho công tác theo dõi nhiệt độ
+            môi trường cũng như thiết bị tại các trạm.</p>
+          <img src="img-admin-con/listsensor.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Để chuyển sang danh sách dạng lưới thì chỉ cần nhấn vào nút grid <img src="img-admin-con/grid.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"></p>
+          <img src="img-admin-con/grid5.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Người dùng cần chỉnh danh sách cột thì chỉ cần nhấn vào nút <img src="img-admin-con/setting.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> rồi chọn cột nào muốn ẩn đi hoặc hiện trên danh
+            sách rồi ấn lưu để xác nhận hoặc hủy nếu muốn thoát.</p>
+          <img src="img-admin-con/column5.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Nếu người dùng muốn chỉnh số dòng trên 1 trang như là 20, 30, 100 dòng thì chỉ cần nhấn nút <img
+              src="img-admin-con/page.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;"> rồi chọn số dòng muốn
+            hiển thị trên mỗi trang.</p>
+          <img src="img-admin-con/pages5.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div class="box">
+          <h3>Thêm cảm biến</h3>
+          <p>Để thêm cảm biến mới, người dùng nhấn vào nút <img src="img-admin-con/them.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;">. Hệ thống sẽ mở giao diện nhập liệu, yêu cầu
+            điền các thông tin cơ bản như Mã cảm biến,Khu vực, Bật/ tắt, Trạng thái, Địa chỉ IP (LAN), Địa chỉ IP (WAN),
+            Chu kỳ lấy dữ liệu, Độ dài dữ liệu,Địa chỉ IEC, Tên cảm biến, Nguồn nhiệt, Loại cảm biến, Port, Vị trí dữ
+            liệu, Slave ID,Protocol.</p>
+          <p>Lưu ý: Các trường có dấu * đỏ là bắt buộc phải nhập.</p>
+          <img src="img-admin-con/addsensor.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <P>Nếu muốn thêm điểm giám sát thì chỉ cần nhấn vào nút <img src="img-admin-con/them.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> ở bên bảng danh sách điểm giám sát rồi điền
+            thông tin vô các ô Mã,Tên, Trạng thái. Người dùng có thể xóa điểm giám sát đã thêm bằng cách nhấn vào nút
+            <img src="img-admin-con/remove.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;"> ở dòng tương ứng.
+          </P>
+          <p>Để thêm tọa độ, người dùng nhấn vào nút <img src="img-admin-con/toado.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> để mở bản đồ. Sau đó, chọn vị trí bằng cách
+            nhấn trực tiếp trên bản đồ hoặc nhập kinh độ, vĩ độ ở góc dưới bên trái. Người dùng có thể nhập mức zoom
+            hoặc lăn chuột để phóng to, thu nhỏ bản đồ. Khi chọn xong, nhấn nút lưu. Khi hoàn tất, nhấn nút lưu để xác
+            nhận thêm mới cảm biến hoặc nút hủy để thoát mà không lưu.</p>
+          <img src="img-admin-con/bieudo.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div class="box">
+          <h3>Chỉnh sửa và xóa</h3>
+          <p>Để chỉnh sửa thông tin cảm biến, người dùng nhấn vào nút <img src="img-admin-con/edit.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> trong cột hành động của dòng cần chỉnh sửa.
+            Hệ thống sẽ mở giao diện nhập liệu với các thông tin đã có tương tự giao diện khi thêm, người dùng
+            có thể cập nhật lại các trường cần thiết và nhấn nút lưu để xác nhận hoặc nút hủy để thoát mà không lưu.
+            <img src="img-admin-con/editsensor.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          </p>
+          <p>Để xóa cảm biến, người dùng nhấn vào nút <img src="img-admin-con/delete.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> trong cột hành động của dòng cần xóa. Hệ
+            thống sẽ yêu cầu xác nhận trước khi thực hiện xóa bỏ hoàn toàn cảm biến đó khỏi hệ thống. Nếu đồng ý nhấn
+            nút xóa không thì ấn hủy. </p>
+        </div>
+        <div class="box">
+          <h3> Tìm kiếm và Export</h3>
+          <p>Để tìm kiếm cảm biến, người dùng nhập tên Mã/tên cảm biến, Khu vực Loại cảm biến, Trạng thái từ danh sách
+            thả xuống nếu cần rồi ấn nút <img src="img-admin-con/search.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;">. Hệ thống sẽ tự động lọc và hiển thị các cảm
+            biến có thông tin khớp với từ khóa đã nhập.</p>
+          <p>Để xuất dữ liệu cảm biến, người dùng nhấn vào nút <img src="img-admin-con/export1.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;">.</p>
+        </div>
+      </div>
+
+      <div id="device-type" class="page">
+        <h2>Loại Thiết bị</h2>
+        <div class="box">
+          <h3>Danh sách loại thiết bị</h3>
+          <p>Trang Danh sách loại thiết bị là nơi quản lý các danh mục thiết bị trong hệ thống như
+            Máy biến áp, Chống sét, Dao cách ly hay Máy cắt. Tại giao diện này, người dùng có thể nhanh chóng tra cứu
+            thông tin dựa trên tên hoặc mã loại thiết bị. Điểm đặc biệt là nút +Bộ phận giúp người dùng đi sâu vào quản
+            lý các
+            chi tiết cấu thành bên trong của từng loại máy móc. Bên cạnh đó, các tính năng thêm mới, chỉnh sửa hoặc xóa
+            bỏ bản ghi được sắp xếp trực quan, hỗ trợ tối đa việc chuẩn hóa dữ liệu đầu vào cho toàn bộ hệ thống giám
+            sát.</p>
+          <img src="img-admin-con/devicetype.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Để chuyển sang danh sách dạng lưới thì chỉ cần nhấn vào nút grid <img src="img-admin-con/grid.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"></p>
+          <img src="img-admin-con/grid6.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Người dùng cần chỉnh danh sách cột thì chỉ cần nhấn vào nút <img src="img-admin-con/setting.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> rồi chọn cột nào muốn ẩn đi hoặc hiện trên danh
+            sách rồi ấn lưu để xác nhận hoặc hủy nếu muốn thoát.</p>
+          <img src="img-admin-con/column6.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Nếu người dùng muốn chỉnh số dòng trên 1 trang như là 20, 30, 100 dòng thì chỉ cần nhấn nút <img
+              src="img-admin-con/page.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;"> rồi chọn số dòng muốn
+            hiển thị trên mỗi trang.</p>
+          <img src="img-admin-con/pages6.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div class="box">
+          <h3>Thêm loại thiết bị</h3>
+          <p>Để thêm loại thiết bị mới, người dùng nhấn vào nút <img src="img-admin-con/them.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;">. Hệ thống sẽ mở giao diện nhập liệu, yêu cầu
+            điền các thông tin cơ bản như, Mã loại thiết bị, Ghi chú.</p>
+          <img src="img-admin-con/adddevicetype.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <P>Khi hoàn tất, nhấn nút lưu để xác nhận thêm mới loại thiết bị hoặc nút hủy để thoát mà không lưu.</P>
+        </div>
+        <div class="box">
+          <h3>Chỉnh sửa và xóa</h3>
+          <p>Để chỉnh sửa thông tin loại thiết bị, người dùng nhấn vào nút <img src="img-admin-con/edit.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> trong cột hành động của dòng cần chỉnh sửa.
+            Hệ thống sẽ mở giao diện nhập liệu với các thông tin đã có tương tự giao diện khi thêm, người dùng
+            có thể cập nhật lại các trường cần thiết và nhấn nút lưu để xác nhận hoặc nút hủy để thoát mà không lưu.
+            <img src="img-admin-con/editdevicetype.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          </p>
+          <p>Để xóa loại thiết bị, người dùng nhấn vào nút <img src="img-admin-con/delete.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> trong cột hành động của dòng cần xóa. Hệ
+            thống sẽ yêu cầu xác nhận trước khi thực hiện xóa bỏ hoàn toàn loại thiết bị đó khỏi hệ thống. Nếu đồng ý
+            nhấn
+            nút xóa không thì ấn hủy. </p>
+        </div>
+        <div class="box">
+          <h3>Thêm Bộ phận</h3>
+          <p>Để thêm bộ phận cho loại thiết bị, người dùng nhấn vào nút <img src="img-admin-con/bophan.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> ở cột hành động của dòng tương ứng. Hệ thống sẽ
+            mở giao diện Danh sách bộ phận, cho phép người dùng thêm mới, chỉnh sửa hoặc xóa bỏ các bộ phận cấu thành
+            bên trong loại thiết bị đó.</p>
+          <img src="img-admin-con/addbophan.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Tiếp theo, nhấn nút <img src="img-admin-con/addpart.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;">
+            để mở giao diện thêm mới bộ phận. Sau đó,
+            nhập thông tin vào các ô Tên bộ phận, Mã bộ phận, Bộ phận cha và Trạng thái.</p>
+          <img src="img-admin-con/addpart2.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Bước cuối cùng, nhấn nút <img src="img-admin-con/setup.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;">
+            để mở giao diện thiết lập ngưỡng cảnh báo.
+            Tại đây, người dùng nhấn nút bộ lọc để hiển thị danh sách loại ngưỡng, ví dụ như so với môi trường hoặc so
+            với ngưỡng nhiệt, rồi chọn loại ngưỡng cần thiết lập. Sau khi chọn, hệ thống sẽ hiển thị các trường cấu hình
+            tương ứng để nhập giá trị nhiệt độ theo từng mức đánh giá. Lưu ý nhập giá trị cảnh báo nguy hiểm tại ô
+            "Đến". Có thể dùng dấu trừ bên trái để giảm hoặc dấu cộng bên phải để tăng giá trị <img src="img-admin-con/plus.png"
+              alt="" style="height:35px; vertical-align:middle; margin:0 4px;">. Sau khi nhập xong, nhấn nút lưu cấu
+            hình để xác nhận hoặc nhấn hủy để thoát mà không lưu. Khi hoàn tất thiết lập bộ phận, nhấn lưu để thêm mới
+            bộ phận hoặc nhấn hủy để thoát.
+          </p>
+          <img src="img-admin-con/setup3.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div class="box">
+          <h3>Chỉnh sửa và xóa bộ phận</h3>
+          <p>Để chỉnh sửa thông tin bộ phận, người dùng nhấn vào nút <img src="img-admin-con/edit.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> trong cột hành động của dòng cần chỉnh sửa.
+            Hệ thống sẽ mở giao diện nhập liệu với các thông tin đã có tương tự giao diện khi thêm, người dùng
+            có thể cập nhật lại các trường cần thiết và nhấn nút lưu để xác nhận hoặc nút hủy để thoát mà không lưu.
+            <img src="img-admin-con/editbophan.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          </p>
+          <p>Để xóa bộ phận, người dùng nhấn vào nút <img src="img-admin-con/delete.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> trong cột hành động của dòng cần xóa. Hệ
+            thống sẽ yêu cầu xác nhận trước khi thực hiện xóa bỏ hoàn toàn bộ phận đó khỏi hệ thống. Nếu đồng ý nhấn
+            nút xóa không thì ấn hủy. </p>
+        </div>
+        <div class="box">
+          <h3>Tìm kiếm loại thiết bị</h3>
+          <p>Để tìm kiếm loại thiết bị, người dùng nhập tên Tên loại thiết bị rồi
+            ấn nút <img src="img-admin-con/search.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;">. Hệ thống
+            sẽ tự động lọc và hiển thị các
+            loại thiết bị có thông tin khớp với từ khóa đã nhập.</p>
+        </div>
+      </div>
+
+      <div id="device" class="page">
+        <h2>Thiết bị</h2>
+        <div class="box">
+          <h3>Danh sách thiết bị</h3>
+          <p>Trang Danh sách thiết bị đóng vai trò là cơ sở dữ liệu tổng quát cho thiết bị vận hành trong hệ
+            thống. Tại đây, người dùng dễ dàng kiểm soát thông tin chi tiết của từng thiết bị như máy biến áp, máy cắt
+            hay dao cách ly gắn liền với từng khu vực cụ thể. Hệ thống hỗ trợ bộ lọc đa năng giúp rút ngắn thời gian tìm
+            kiếm, cùng các công cụ Export IEC/Import IEC và Xuất file nhằm tối ưu hóa việc quản lý và sao lưu dữ liệu
+            quy mô lớn. Ngoài khả năng thêm mới, người quản trị có thể trực tiếp hiệu chỉnh hoặc cập nhật trạng thái
+            hoạt động của thiết bị ngay tại cột hành động, đảm bảo tính đồng bộ cho công tác giám sát.</p>
+          <img src="img-admin-con/listdevice.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Để chuyển sang danh sách dạng lưới thì chỉ cần nhấn vào nút grid <img src="img-admin-con/grid.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"></p>
+          <img src="img-admin-con/grid7.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Người dùng cần chỉnh danh sách cột thì chỉ cần nhấn vào nút <img src="img-admin-con/setting.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> rồi chọn cột nào muốn ẩn đi hoặc hiện trên danh
+            sách rồi ấn lưu để xác nhận hoặc hủy nếu muốn thoát.</p>
+          <img src="img-admin-con/column7.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Nếu người dùng muốn chỉnh số dòng trên 1 trang như là 20, 30, 100 dòng thì chỉ cần nhấn nút <img
+              src="img-admin-con/page.png " alt="" style="height:35px; vertical-align:middle; margin:0 4px;"> rồi chọn số dòng muốn
+            hiển thị trên mỗi trang.</p>
+          <img src="img-admin-con/pages7.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div class="box">
+          <h3>Thêm thiết bị</h3>
+          <p>Để thêm thiết bị mới, người dùng nhấn vào nút <img src="img-admin-con/them.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;">. Hệ thống sẽ mở giao diện thông tin chung để
+            nhập các thông tin cơ bản gồm Mã thiết bị, Tên thiết bị, Loại thiết bị, Khu vực, Trạng thái, Tọa độ và Chu
+            kỳ lấy data (phút).</p>
+          <p>Lưu ý: Các trường có dấu * đỏ là bắt buộc phải nhập.</p>
+          <img src="img-admin-con/adddevice.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Để chọn tọa độ, người dùng nhấn vào ô <img src="img-admin-con/toado.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> để mở bản đồ. Sau đó, chọn vị trí bằng cách
+            nhấn trực tiếp trên bản đồ hoặc nhập kinh độ, vĩ độ ở góc dưới bên trái. Người dùng có thể nhập mức zoom
+            hoặc lăn chuột để phóng to, thu nhỏ bản đồ. Khi chọn xong, nhấn nút lưu. Đối với chọn tên khu vực thì sẽ
+            hiện nút"Chọn tọa độ trên bản đồ" còn đối với chọn tên trạm thì sẽ hiện nút"Chọn tọa độ trên ảnh".</p>
+          <img src="img-admin-con/map5.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <P>Sau khi chọn loại thiết bị, hệ thống sẽ hiển thị danh sách bộ phận tương ứng bên dưới. Để thêm điểm giám
+            sát cho một bộ phận, nhấn nút <img src="img-admin-con/addpoint.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;">. Trong giao diện điểm giám sát, tiếp tục nhấn
+            nút <img src="img-admin-con/plus1.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;"> ở phía trên để
+            mở form thêm mới. Người dùng nhập các thông tin gồm Tên, Tọa độ, Bộ phận cha, Địa chỉ IEC, Camera, Sensor,
+            Điểm giám sát của camera được chọn và Điểm giám sát của sensor được chọn. Cách chọn tọa độ thực hiện tương
+            tự như phần trên.</P>
+          <p>Bước cuối cùng, nhấn nút <img src="img-admin-con/setup.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;">
+            để mở giao diện thiết lập ngưỡng cảnh báo.
+            Tại đây có hai mục: Khai báo chung từ loại thiết bị và Khai báo riêng. Ở mục Khai báo chung từ loại thiết
+            bị, các giá trị cảnh báo tại ô "Đến" đã được điền sẵn; người dùng có thể chỉnh sửa nếu cần. Có thể dùng dấu
+            trừ bên trái để giảm hoặc dấu cộng bên phải để tăng
+            giá trị <img src="img-admin-con/plus.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;">. Sau khi nhập
+            xong, nhấn nút lưu cấu
+            hình để xác nhận hoặc nhấn hủy để thoát mà không lưu.
+          </p>
+          <img src="img-admin-con/setup4.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Ở mục Khai báo riêng, người dùng có thể thiết lập ngưỡng cảnh báo riêng cho thiết bị. Tại đây,
+            nhấn nút bộ lọc để hiển thị danh sách loại ngưỡng, ví dụ như so với môi trường hoặc so
+            với ngưỡng nhiệt, rồi chọn loại ngưỡng cần thiết lập. Sau khi chọn, hệ thống sẽ hiển thị các trường cấu hình
+            tương ứng để nhập giá trị nhiệt độ theo từng mức đánh giá. Lưu ý nhập giá trị cảnh báo nguy hiểm tại ô
+            "Đến". Có thể dùng dấu trừ bên trái để giảm hoặc dấu cộng bên phải để tăng giá trị <img src="img-admin-con/plus.png"
+              alt="" style="height:35px; vertical-align:middle; margin:0 4px;">. Sau khi nhập xong, nhấn nút lưu cấu
+            hình để xác nhận hoặc nhấn hủy để thoát mà không lưu.
+          </p>
+          <img src="img-admin-con/setup2.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Sau khi hoàn tất thiết lập, nhấn nút lưu để xác nhận thêm mới thiết bị hoặc nhấn hủy để thoát mà không
+            lưu.</p>
+        </div>
+        <div class="box">
+          <h3>Chỉnh sửa và xóa</h3>
+          <p>Để chỉnh sửa thông tin thiết bị, người dùng nhấn vào nút <img src="img-admin-con/edit.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> trong cột hành động của dòng cần chỉnh sửa.
+            Hệ thống sẽ mở giao diện nhập liệu với các thông tin đã có tương tự giao diện khi thêm, người dùng
+            có thể cập nhật lại các trường cần thiết và nhấn nút lưu để xác nhận hoặc nút hủy để thoát mà không lưu.
+            <img src="img-admin-con/editdevice.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          </p>
+          <p>Để xóa thiết bị, người dùng nhấn vào nút <img src="img-admin-con/delete.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> trong cột hành động của dòng cần xóa. Hệ
+            thống sẽ yêu cầu xác nhận trước khi thực hiện xóa bỏ hoàn toàn thiết bị đó khỏi hệ thống. Nếu đồng ý nhấn
+            nút xóa không thì ấn hủy. </p>
+        </div>
+        <div class="box">
+          <h3>Tìm kiếm và Export</h3>
+          <p>Để tìm kiếm thiết bị, người dùng nhập tên Tên thiết bị, Loại thiết bị, Khu vực từ danh sách
+            thả xuống nếu cần rồi ấn nút <img src="img-admin-con/search.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;">. Hệ thống sẽ tự động lọc và hiển thị các
+            thiết bị có thông tin khớp với từ khóa đã nhập.</p>
+          <p>Để xuất dữ liệu, người dùng nhấn vào nút <img src="img-admin-con/export.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> hoặc <img src="img-admin-con/export1.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;">. Hệ thống sẽ tạo file dữ liệu và cho phép người
+            dùng tải về.</p>
+        </div>
+      </div>
+
+      <div id="alert-channel" class="page">
+        <h2>Kênh Cảnh báo</h2>
+        <div class="box">
+          <h3>Danh sách cảnh báo</h3>
+          <p>Trang Danh sách cảnh báo là nơi thiết lập và quản lý các kênh tiếp nhận thông tin sự cố từ hệ thống. Tại
+            đây, người dùng có thể cấu hình linh hoạt các phương thức gửi thông báo như Email, Telegram hay Push
+            Notification cho từng nhóm đối tượng cụ thể. Thông qua các bộ lọc về tên kênh và người nhận, dễ dàng
+            kiểm soát trạng thái hoạt động của các luồng tin nhắn báo động.</p>
+          <img src="img-admin-con/listalert.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Để chuyển sang danh sách dạng lưới thì chỉ cần nhấn vào nút grid <img src="img-admin-con/grid.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"></p>
+          <img src="img-admin-con/grid8.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Người dùng cần chỉnh danh sách cột thì chỉ cần nhấn vào nút <img src="img-admin-con/setting.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> rồi chọn cột nào muốn ẩn đi hoặc hiện trên danh
+            sách rồi ấn lưu để xác nhận hoặc hủy nếu muốn thoát.</p>
+          <img src="img-admin-con/column8.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Nếu người dùng muốn chỉnh số dòng trên 1 trang như là 20, 30, 100 dòng thì chỉ cần nhấn nút <img
+              src="img-admin-con/page.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;"> rồi chọn số dòng muốn
+            hiển thị
+            trên mỗi trang.</p>
+          <img src="img-admin-con/pages8.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div class="box">
+          <h3>Thêm kênh cảnh báo</h3>
+          <p>Để thêm kênh cảnh báo mới, người dùng nhấn vào nút <img src="img-admin-con/them.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;">. Hệ thống sẽ mở giao diện nhập liệu, yêu cầu
+            điền các thông tin cơ bản như Tên kênh cảnh báo, Mã cảnh báo, Nơi nhận cảnh báo, Người dùng, Ghi chú.</p>
+          <p>
+            Lưu ý: Các trường có dấu * đỏ là bắt buộc phải nhập.</p>
+          <img src="img-admin-con/addalert.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <P>Khi hoàn tất, nhấn nút lưu để xác nhận thêm mới kênh cảnh báo hoặc nút hủy để thoát mà không lưu.</P>
+        </div>
+        <div class="box">
+          <h3>Chỉnh sửa và xóa</h3>
+          <p>Để chỉnh sửa thông tin kênh cảnh báo, người dùng nhấn vào nút <img src="img-admin-con/edit.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> trong cột hành động của dòng cần chỉnh sửa.
+            Hệ thống sẽ mở giao diện nhập liệu với các thông tin đã có tương tự giao diện khi thêm, người dùng
+            có thể cập nhật lại các trường cần thiết và nhấn nút lưu để xác nhận hoặc nút hủy để thoát mà không lưu.
+            <img src="img-admin-con/editalert.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          </p>
+          <p>Để xóa kênh cảnh báo, người dùng nhấn vào nút <img src="img-admin-con/delete.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> trong cột hành động của dòng cần xóa. Hệ
+            thống sẽ yêu cầu xác nhận trước khi thực hiện xóa bỏ hoàn toàn kênh cảnh báo đó khỏi hệ thống. Nếu đồng
+            ý nhấn nút xóa không thì ấn hủy. </p>
+        </div>
+        <div class="box">
+          <h3>Tìm kiếm </h3>
+          <p>Để tìm kiếm , người dùng nhập tên Tên kênh cảnh báo, Nơi nhận cảnh báo, Email, Người dùng từ danh sách
+            thả xuống nếu cần rồi ấn nút <img src="img-admin-con/search.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;">. Hệ thống sẽ tự động lọc và hiển thị các
+            kênh cảnh báo có thông tin khớp với từ khóa đã nhập.</p>
+        </div>
+      </div>
+
+      <div id="alert-set" class="page">
+        <h2>Bộ cảnh báo</h2>
+        <div class="box">
+          <h3>Danh sách cảnh báo hệ thống</h3>
+          <p>Trang Danh sách cảnh báo hệ thống đóng vai trò là bộ lọc quy tắc, giúp xác định cách thức phản hồi khi phát
+            hiện các sự kiện bất thường. Tại đây, bạn có thể thiết lập mối liên kết giữa các sự kiện (như quá nhiệt,
+            phát hiện người hoặc ô tô) với các kênh nhận tin tương ứng. Thông qua giao diện quản lý tập trung, người
+            dùng dễ dàng kiểm soát trạng thái sử dụng của từng bộ cảnh báo tại các khu vực khác nhau. Tính năng thêm mới
+            và các công cụ tùy chỉnh tại cột hành động hỗ trợ linh hoạt việc thay đổi kịch bản giám sát, nhằm đảm bảo
+            mọi tình huống rủi ro đều được thông báo đến đúng bộ phận phụ trách.</p>
+          <img src="img-admin-con/listalert.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Để chuyển sang danh sách dạng lưới thì chỉ cần nhấn vào nút grid <img src="img-admin-con/grid.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"></p>
+          <img src="img-admin-con/grid9.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Người dùng cần chỉnh danh sách cột thì chỉ cần nhấn vào nút <img src="img-admin-con/setting.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> rồi chọn cột nào muốn ẩn đi hoặc hiện trên danh
+            sách rồi ấn lưu để xác nhận hoặc hủy nếu muốn thoát.</p>
+          <img src="img-admin-con/column9.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Nếu người dùng muốn chỉnh số dòng trên 1 trang như là 20, 30, 100 dòng thì chỉ cần nhấn nút <img
+              src="img-admin-con/page.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;"> rồi chọn số dòng muốn
+            hiển thị trên mỗi trang.</p>
+          <img src="img-admin-con/pages9.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div class="box">
+          <h3>Thêm bộ cảnh báo</h3>
+          <p>Để thêm bộ cảnh báo mới, người dùng nhấn vào nút <img src="img-admin-con/them.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;">. Hệ thống sẽ mở giao diện nhập liệu, yêu cầu
+            điền các thông tin cơ bản như Bộ cảnh báo, Mã cảnh báo, Kênh cảnh báo, Sự kiện, Thời gian cảnh báo, Khu
+            vực,Trạng thái.</p>
+          <p>
+            Lưu ý: Các trường có dấu * đỏ là bắt buộc phải nhập.</p>
+          <img src="img-admin-con/addalertset.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <P>Khi hoàn tất, nhấn nút lưu để xác nhận thêm mới bộ cảnh báo hoặc nút hủy để thoát mà không lưu.</P>
+        </div>
+        <div class="box">
+          <h3>Chỉnh sửa và xóa</h3>
+          <p>Để chỉnh sửa thông tin bộ cảnh báo, người dùng nhấn vào nút <img src="img-admin-con/edit.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> trong cột hành động của dòng cần chỉnh sửa.
+            Hệ thống sẽ mở giao diện nhập liệu với các thông tin đã có tương tự giao diện khi thêm, người dùng
+            có thể cập nhật lại các trường cần thiết và nhấn nút lưu để xác nhận hoặc nút hủy để thoát mà không lưu.
+            <img src="img-admin-con/editalertset.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          </p>
+          <p>Để xóa bộ cảnh báo, người dùng nhấn vào nút <img src="img-admin-con/delete.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> trong cột hành động của dòng cần xóa. Hệ
+            thống sẽ yêu cầu xác nhận trước khi thực hiện xóa bỏ hoàn toàn bộ cảnh báo đó khỏi hệ thống. Nếu đồng ý
+            nhấn nút xóa không thì ấn hủy. </p>
+        </div>
+        <div class="box">
+          <h3>Tìm kiếm </h3>
+          <p>Để tìm kiếm , người dùng nhập tên Bộ cảnh báo, Kênh cảnh báo, Sự kiện, Khu vực từ danh sách
+            thả xuống nếu cần rồi ấn nút <img src="img-admin-con/search.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;">. Hệ thống sẽ tự động lọc và hiển thị các
+            bộ cảnh báo có thông tin khớp với từ khóa đã nhập.</p>
+        </div>
+      </div>
+
+      <div id="user-management" class="page">
+        <h2>Người dùng</h2>
+        <div class="box">
+          <h3>Danh sách người dùng</h3>
+          <p>Trang Danh sách người dùng là trung tâm quản lý tài khoản và phân quyền truy cập cho đội ngũ vận hành hệ
+            thống. Tại đây, bạn có thể dễ dàng kiểm soát thông tin cá nhân như họ tên, email, số điện thoại và Telegram
+            ID gắn liền với từng khu vực quản lý cụ thể. Hệ thống hỗ trợ bộ lọc thông minh giúp tra cứu nhanh nhân viên
+            dựa trên trạng thái hoạt động hoặc thông tin liên lạc. Thông qua nút Thêm và các công cụ chỉnh sửa tại cột
+            hành động, người quản trị linh hoạt trong việc cấp mới hoặc cập nhật quyền hạn, nhằm đảm bảo tính bảo mật
+            cho toàn bộ trạm giám sát.</p>
+
+          <img src="img-admin-con/listuser.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Để chuyển sang danh sách dạng lưới thì chỉ cần nhấn vào nút grid <img src="img-admin-con/grid.png" alt=""
+              style="height:35px  ; vertical-align:middle; margin:0 4px;"></p>
+          <img src="img-admin-con/grid10.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Người dùng cần chỉnh danh sách cột thì chỉ cần nhấn vào nút <img src="img-admin-con/setting.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> rồi chọn cột nào muốn ẩn đi hoặc hiện trên danh
+            sách rồi ấn lưu để xác nhận hoặc hủy nếu muốn thoát.</p>
+          <img src="img-admin-con/column10.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Nếu người dùng muốn chỉnh số dòng trên 1 trang như là 20, 30, 100 dòng thì chỉ cần nhấn nút <img
+              src="img-admin-con/page.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;"> rồi chọn số dòng muốn
+            hiển thị trên mỗi trang.</p>
+          <img src="img-admin-con/pages10.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div class="box">
+          <h3>Thêm người dùng</h3>
+          <p>Để thêm người dùng mới, người dùng nhấn vào nút <img src="img-admin-con/them.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;">. Hệ thống sẽ mở giao diện nhập liệu, yêu cầu
+            điền các thông tin cơ bản như Tên đăng nhập,Tên, Email, Số điện thoại, Telegram User, Mật khẩu, Khu vực, Họ
+            và tên đệm, Trạng thái, Quyền.</p>
+          <p>
+            Lưu ý: Các trường có dấu * đỏ là bắt buộc phải nhập.</p>
+          <img src="img-admin-con/adduser.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <P>Khi hoàn tất, nhấn nút lưu để xác nhận thêm mới người dùng hoặc nút hủy để thoát mà không lưu.</P>
+        </div>
+        <div class="box">
+          <h3>Chỉnh sửa và xóa</h3>
+          <p>Để chỉnh sửa thông tin người dùng, người dùng nhấn vào nút <img src="img-admin-con/edit.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> trong cột hành động của dòng cần chỉnh sửa.
+            Hệ thống sẽ mở giao diện nhập liệu với các thông tin đã có tương tự giao diện khi thêm, người dùng
+            có thể cập nhật lại các trường cần thiết và nhấn nút lưu để xác nhận hoặc nút hủy để thoát mà không lưu.
+            <img src="img-admin-con/edituser.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          </p>
+          <p>Để xóa người dùng, người dùng nhấn vào nút <img src="img-admin-con/delete.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> trong cột hành động của dòng cần xóa. Hệ
+            thống sẽ yêu cầu xác nhận trước khi thực hiện xóa bỏ hoàn toàn người dùng đó khỏi hệ thống. Nếu đồng ý nhấn
+            nút xóa không thì ấn hủy. </p>
+        </div>
+        <div class="box">
+          <h3>Tìm kiếm </h3>
+          <p>Để tìm kiếm , người dùng nhập tên Trạng thái, Tên, Email, Số điện thoại, Telegram từ
+            danh sách thả xuống nếu cần rồi ấn nút <img src="img-admin-con/search.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;">. Hệ thống sẽ tự động lọc và hiển thị các
+            người dùng có thông tin khớp với từ khóa đã nhập.</p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function getPageIdFromButton(btn) {
+        if (!btn) return null;
+        if (btn.dataset && btn.dataset.pageTarget) return btn.dataset.pageTarget;
+
+        const onclick = btn.getAttribute('onclick') || '';
+        const match = onclick.match(/showPage\('([^']+)'/);
+        return match ? match[1] : null;
+      }
+
+      function getPageButton(pageId) {
+        return document.querySelector(`.menu button[onclick*="showPage('${pageId}'"]`);
+      }
+
+      function getH3Menu(pageId) {
+        return document.querySelector(`.h3-sub-menu[data-page-id="${pageId}"]`);
+      }
+
+      function hideH3Menus(exceptMenu) {
+        document.querySelectorAll('.h3-sub-menu').forEach(menu => {
+          if (menu !== exceptMenu) menu.style.display = 'none';
+        });
+      }
+
+      function saveScrollPosition() {
+        localStorage.setItem('currentScrollY', String(window.scrollY));
+      }
+
+      function restoreScrollPosition() {
+        const savedScrollY = Number(localStorage.getItem('currentScrollY') || 0);
+        window.scrollTo({ top: savedScrollY, behavior: 'auto' });
+      }
+
+      function setActiveButton(btn, pageId) {
+        document.querySelectorAll('.menu button').forEach(b => b.classList.remove('active'));
+        if (!btn && pageId) btn = getPageButton(pageId);
+        if (!btn) return;
+
+        btn.classList.add('active');
+
+        const subMenu = btn.closest('.sub-menu');
+        if (subMenu) {
+          subMenu.style.display = 'block';
+          const parentButton = subMenu.previousElementSibling;
+          if (parentButton && parentButton.tagName === 'BUTTON') {
+            parentButton.classList.add('active');
+          }
+        }
+
+        const currentPageId = pageId || getPageIdFromButton(btn);
+        const pageButton = getPageButton(currentPageId);
+        if (pageButton) pageButton.classList.add('active');
+
+        const h3Menu = getH3Menu(currentPageId);
+        hideH3Menus(h3Menu);
+        if (h3Menu && h3Menu.children.length) h3Menu.style.display = 'block';
+      }
+
+      function hideSubMenus(exceptSubMenu) {
+        document.querySelectorAll('.sub-menu').forEach(sm => {
+          if (sm !== exceptSubMenu) sm.style.display = 'none';
+        });
+      }
+
+      function showPage(pageId, btn, sectionId, keepScroll) {
+        localStorage.setItem('currentPage', pageId);
+        document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+
+        const page = document.getElementById(pageId);
+        if (page) page.style.display = 'block';
+
+        const currentSubMenu = btn ? btn.closest('.sub-menu') : null;
+        hideSubMenus(currentSubMenu);
+        setActiveButton(btn, pageId);
+
+        if (sectionId) {
+          const section = document.getElementById(sectionId);
+          if (section) {
+            section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        } else if (!keepScroll) {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }
+
+      function showGroup(groupId, btn, defaultPageId) {
+        const subMenu = document.getElementById('sub-' + groupId);
+        const isOpen = subMenu && subMenu.style.display === 'block';
+
+        hideSubMenus(subMenu);
+        if (subMenu) subMenu.style.display = isOpen ? 'none' : 'block';
+
+        if (defaultPageId && !isOpen) {
+          const firstChild = subMenu ? subMenu.querySelector('button') : null;
+          showPage(defaultPageId, firstChild || btn);
+        } else {
+          setActiveButton(btn);
+        }
+      }
+
+      function buildH3Menus() {
+        document.querySelectorAll('.page').forEach(page => {
+          const pageButton = getPageButton(page.id);
+          if (!pageButton || getH3Menu(page.id)) return;
+
+          const h3Menu = document.createElement('div');
+          h3Menu.className = 'h3-sub-menu';
+          h3Menu.dataset.pageId = page.id;
+
+          page.querySelectorAll('h3').forEach((heading, index) => {
+            if (!heading.id) heading.id = `${page.id}-h3-${index + 1}`;
+
+            const sectionButton = document.createElement('button');
+            sectionButton.type = 'button';
+            sectionButton.textContent = heading.textContent.trim();
+            sectionButton.dataset.pageTarget = page.id;
+            sectionButton.dataset.sectionTarget = heading.id;
+            sectionButton.addEventListener('click', function () {
+              showPage(page.id, this, heading.id);
+            });
+
+            h3Menu.appendChild(sectionButton);
+          });
+
+          if (h3Menu.children.length) {
+            pageButton.insertAdjacentElement('afterend', h3Menu);
+          }
+        });
+      }
+
+      window.onload = function () {
+        buildH3Menus();
+        const savedPage = localStorage.getItem('currentPage') || 'home';
+        const btn = document.querySelector(`.menu button[onclick*="${savedPage}"]`);
+        if (btn) showPage(savedPage, btn, null, true);
+        else showPage('home', document.querySelector(`.menu button[onclick*="home"]`), null, true);
+
+        requestAnimationFrame(restoreScrollPosition);
+      };
+
+      window.addEventListener('scroll', saveScrollPosition, { passive: true });
+      window.addEventListener('beforeunload', saveScrollPosition);
+    </script>
+</body>
+
+</html>
