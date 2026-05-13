@@ -88,7 +88,7 @@
               @saveSuccess="updatePaginationSetting"
           />
         </slot>
-        <slot name="bottom">>
+        <slot name="bottom">
 
         </slot>
       </div>

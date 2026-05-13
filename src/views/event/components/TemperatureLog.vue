@@ -61,48 +61,51 @@
                     col-value="id"
                 />
                 <filter-group title="KHOẢNG THỜI GIAN">
-                  <el-form-item label="">
-                    <el-select
+                  <div class="px-4">
+                    <el-form-item label="">
+                      <el-select
                         v-model="searchType"
                         filterable
                         value-key="id"
                         :default-first-option="true"
                         clearable
-                    >
-                      <el-option
+                      >
+                        <el-option
                           v-for="item in searchTypeOptions"
                           :key="item.value"
                           :label="item.label"
                           :value="item.value"
-                      />
-                    </el-select>
-                  </el-form-item>
-                  <el-form-item v-if="searchType === HOUR">
-                    <el-date-picker
+                        />
+                      </el-select>
+                    </el-form-item>
+
+                    <el-form-item v-if="searchType === HOUR">
+                      <el-date-picker
                         v-model="searchParams.reportDate"
                         type="date"
                         placeholder="Pick a day"
                         value-format="YYYY-MM-DD"
-                    />
-                  </el-form-item>
-                  <el-form-item v-if="searchType === DAY">
-                    <el-date-picker
+                      />
+                    </el-form-item>
+                    <el-form-item v-if="searchType === DAY">
+                      <el-date-picker
                         v-model="dateRange"
                         type="daterange"
                         start-placeholder="Ngày bắt đầu"
                         end-placeholder="Ngày kết thúc"
                         value-format="YYYY-MM-DD"
-                    />
-                  </el-form-item>
-                  <el-form-item v-if="searchType === TIME || searchType === PHASE">
-                    <el-date-picker
+                      />
+                    </el-form-item>
+                    <el-form-item v-if="searchType === TIME || searchType === PHASE">
+                      <el-date-picker
                         v-model="dateRange"
                         type="datetimerange"
                         start-placeholder="Ngày bắt đầu"
                         end-placeholder="Ngày kết thúc"
                         value-format="YYYY-MM-DD HH:mm:ss"
-                    />
-                  </el-form-item>
+                      />
+                    </el-form-item>
+                  </div>
                 </filter-group>
                 <filter-group title="Ẩn hiện nhiệt độ">
                   <div class="px-4">
