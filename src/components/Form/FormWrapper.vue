@@ -9,10 +9,17 @@
   >
     <div class="drawer drawer-md" :class="classDrawer">
       <div class="drawer-header">
-        <h3>{{ title}}</h3>
-        <button v-show="visibleCloseDrawer" type="button" class="close-drawer" @click="triggerCancel">×</button>
+        <h3>{{ title }}</h3>
+        <button
+          v-show="visibleCloseDrawer"
+          type="button"
+          class="close-drawer"
+          @click="triggerCancel"
+        >
+          ×
+        </button>
       </div>
-      <div class="drawer-body mt-2">
+      <div class="drawer-body mt-2" :class="classDrawerBody">
         <slot :formErrors="formErrors" />
       </div>
       <div class="drawer-footer">
@@ -51,6 +58,7 @@ const props = defineProps<{
   isEditing?: boolean
   visibleCloseDrawer?: boolean
   classDrawer?: String
+  classDrawerBody?: String
 }>()
 
 const emits = defineEmits(['success'])
@@ -82,11 +90,10 @@ defineExpose({
   clearErrors,
   setErrors,
   submitForm,
-  triggerCancel
+  triggerCancel,
 })
 </script>
 <style>
-
 .close-drawer:hover {
   color: var(--danger);
   transform: scale(1.1);
@@ -104,5 +111,4 @@ defineExpose({
   gap: 12px;
   background: var(--bg-card);
 }
-
 </style>
