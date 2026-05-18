@@ -676,7 +676,7 @@ body {
   position: absolute;
   bottom: 20px;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateY(-50%);
   background: rgba(15, 23, 42, 0.85);
   border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 8px 12px;
@@ -766,27 +766,27 @@ body {
 }
 
 .ptz-up {
-  top: 5px;
-  left: 50%;
-  transform: translateX(-50%);
+  top: -5px;
+  left: 35%;
+  transform: translateY(50%);
 }
 
 .ptz-down {
-  bottom: 5px;
-  left: 50%;
-  transform: translateX(-50%);
+  bottom: -7px;
+  left: 35%;
+  transform: translateY(-50%);
 }
 
 .ptz-left {
-  left: 5px;
-  top: 50%;
-  transform: translateY(-50%);
+  left: -5px;
+  top: 35%;
+  transform: translateX(50%);
 }
 
 .ptz-right {
-  right: 5px;
-  top: 50%;
-  transform: translateY(-50%);
+  right: -5px;
+  top: 35%;
+  transform: translateX(-50%);
 }
 
 .ptz-center {
@@ -926,10 +926,12 @@ body {
   color: var(--danger);
 }
 
-/* SVG */
-svg {
-  /* fill: currentColor; */
+.ptz-btn{
+  svg {
+    fill: currentColor;
+  }
 }
+
 
 /* Custom Range Slider */
 .custom-slider {

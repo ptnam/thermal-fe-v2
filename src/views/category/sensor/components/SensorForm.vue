@@ -139,8 +139,8 @@
           </el-row>
         </div>
         <div class="modal-right-col">
-          <div class="card-header">
-            <span class="font-bold">Danh sách điểm giám sát</span>
+          <div class="card-header flex items-center justify-between">
+            <span class="font-bold">Danh sách điểm <br class="block md:hidden"/>giám sát</span>
             <add-button @click="addSensorMonitorPoint"></add-button>
           </div>
           <table class="points-table-modal table-auto border-collapse w-full">
