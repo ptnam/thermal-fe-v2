@@ -178,7 +178,7 @@ import {
   dailyThermalDataApi,
   hourlyThermalDataApi, predictThermalDataApi, timeThermalDataApi,
 } from "@/api/thermal-data";
-import {Setting} from '@element-plus/icons-vue'
+// import {Setting} from '@element-plus/icons-vue'
 import {ElMessage} from 'element-plus'
 import dayjs from 'dayjs'
 import {allMonitorPointsByMachineComponentApi} from "@/api/monitor-point";
@@ -330,6 +330,9 @@ const search = () => {
     chartRef.value?.updateOptions({
       xaxis: {
         categories: res.data.categories,
+        labels: {style: {colors: '#94A3B8', fontSize: '12px'}},
+        axisBorder: {show: false},
+        axisTicks: {show: false}
       }
     })
     chartRef.value?.updateSeries(res.data.chartData);

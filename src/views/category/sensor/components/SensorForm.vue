@@ -2,7 +2,7 @@
   <FormWrapper
     :form-model="formModel"
     :form-props="{
-      labelWidth: '120px',
+      labelWidth: '140px',
       rules: formRules,
       labelPosition: isMobile ? 'top' : 'left',
     }"
