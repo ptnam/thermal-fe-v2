@@ -24,7 +24,7 @@
       </div>
       <div class="drawer-footer">
         <slot name="button">
-          <div class="mt-4 w-full text-center flex justify-between md:justify-start">
+          <div class="mt-4 w-full text-center flex justify-between md:justify-end">
             <cancel-button @click="triggerCancel"></cancel-button>
             <save-button :loading="loading" @click="submitForm"></save-button>
           </div>
