@@ -215,7 +215,7 @@
       </el-tabs>
     </div>
     <template #footer>
-      <div class="flex justify-between md:justify-start md:flex-row gap-1">
+      <div class="flex justify-between md:flex-row gap-1">
         <div class="flex md:flex-row gap-1">
           <cancel-button :icon="null" class="w-full md:w-fit whitespace-nowrap" @click="emits('cancel')"></cancel-button>
           <el-button
