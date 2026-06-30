@@ -22,6 +22,23 @@
     :fillColor="store.isDark ? '#090909' : '#aad3df'"
   >
   </l-polygon>
+  <!-- Polygon che text "South China Sea" từ tile OSM -->
+  <l-polygon
+    :lat-lngs="[[15.9191, 114.4116], [15.496, 114.4336], [14.9236, 114.4116], [14.3708, 114.4556], [14.1579, 114.917], [14.2005, 115.4663], [15.0721, 115.73], [15.4537, 115.6421], [15.8134, 115.5762], [15.9613, 115.0708], [15.9613, 114.6973]]"
+    :fillColor="store.isDark ? '#262626' : '#aad3df'"
+    :fillOpacity="1"
+    :color="store.isDark ? '#262626' : '#aad3df'"
+    :weight="0"
+  />
+
+  <l-marker :visible="zoom >= 3" :lat-lng="[13.5, 113.5]">
+    <l-icon :icon-size="[150, 40]" :icon-anchor="[75, 20]" className="bg-transparent">
+      <div class="text-[#5a8a9f] text-center text-sm italic">
+        Biển Đông
+      </div>
+    </l-icon>
+  </l-marker>
+
   <l-marker :visible="zoom >= 4" :lat-lng="[16.5, 113]">
     <l-icon :icon-size="[150, 30]" :icon-anchor="[75, 15]" className="bg-transparent">
       <div class="text-[#777877]">
