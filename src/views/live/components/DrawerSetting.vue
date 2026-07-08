@@ -104,7 +104,7 @@ const applySettings = () => {
               show-checkbox
               :request-fn="() => getAllTreeAreaApi({ cameras: true })"
               :check-strictly="true"
-              :default-checked-keys="selectedIds"
+              :default-checked-ids="selectedIds"
               @check-change="treeCheckChange"
           >
             <template #default="{ node }">
