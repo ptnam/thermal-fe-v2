@@ -54,13 +54,13 @@ const columns = computed<TableColumn[]>(() => [
   {prop: 'area.name', label: 'Khu vực'},
   {prop: 'cameraTypeObject.name', label: 'Chức năng camera'},
   {
-    prop: 'deviceStatusObject.name',
+    prop: 'statusObject.name',
     label: 'Trạng thái',
     width: '150px',
     slots: {
       default: ({row}) => (<span style={{
-        color: row.deviceStatusObject.code === 'On' ? 'var(--success)' : 'var(--danger)'
-      }}>{row?.deviceStatusObject?.name}</span>)
+        color: row.statusObject.code === 'Active' ? 'var(--success)' : 'var(--danger)'
+      }}>{row?.statusObject?.name}</span>)
     },
   },
   {

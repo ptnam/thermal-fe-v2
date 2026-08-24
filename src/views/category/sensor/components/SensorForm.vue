@@ -15,7 +15,7 @@
   >
     <template v-slot="{ formErrors }">
       <div class="modal-split-layout flex flex-col md:flex-row gap-2">
-        <div class="modal-left-col">
+        <div class="modal-left-col flex-1">
           <el-row :gutter="30">
             <el-col :span="isMobile ? 24 : 12">
               <el-form-item label="Mã cảm biến" prop="code" :error="formErrors.Code">
@@ -138,9 +138,9 @@
             </el-col>
           </el-row>
         </div>
-        <div class="modal-right-col">
-          <div class="card-header">
-            <span class="font-bold">Danh sách điểm giám sát</span>
+        <div class="modal-right-col flex-1">
+          <div class="card-header flex items-center justify-between">
+            <span class="font-bold">Danh sách điểm <br class="block md:hidden"/>giám sát</span>
             <add-button @click="addSensorMonitorPoint"></add-button>
           </div>
           <table class="points-table-modal table-auto border-collapse w-full">

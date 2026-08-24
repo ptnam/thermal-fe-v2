@@ -46,12 +46,12 @@
         </el-form-item>
       </template>
       <template v-slot:button>
-        <div class="flex justify-between md:justify-start md:flex-row  gap-1">
-          <div class="flex md:flex-row gap-1">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-3">
+          <el-button class="w-full md:w-fit whitespace-nowrap" :class="appStore.isMobile ? '!w-full !max-w-full': ''" type="warning" @click="openTemperatureThreshold">Thiết lập ngưỡng nhiệt</el-button>
+          <div class="!w-full flex justify-right items-center md:flex-row gap-1" :class="appStore.isMobile ? ' justify-between ': ''">
             <cancel-button class="w-full md:w-fit whitespace-nowrap" @click="() => formRef.triggerCancel()" :icon="null"></cancel-button>
-            <el-button class="w-full md:w-fit whitespace-nowrap" type="warning" @click="openTemperatureThreshold">Thiết lập ngưỡng nhiệt</el-button>
+            <save-button class="w-full md:w-fit whitespace-nowrap" :loading="formRef?.loading" @click="() => formRef.submitForm()" :icon="null"></save-button>
           </div>
-          <save-button class="w-full md:w-fit whitespace-nowrap" :loading="formRef?.loading" @click="() => formRef.submitForm()" :icon="null"></save-button>
         </div>
       </template>
 

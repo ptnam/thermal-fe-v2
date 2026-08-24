@@ -211,8 +211,8 @@ const chartOptions: ApexOptions = {
   chart: {
     height: 450,
     type: 'area',
-    toolbar: {show: false},
-    animations: {enabled: true, speed: 800}
+    toolbar: {show: true},
+    animations: { enabled: true, easing: 'easeinout', speed: 800 }
   },
   dataLabels: {
     enabled: searchParams.value.showLabel ?? false,
@@ -239,6 +239,7 @@ const chartOptions: ApexOptions = {
     horizontalAlign: 'center',
     offsetY: 8,
     labels: {colors: '#94A3B8'},
+    markers: { radius: 12 }
   },
   tooltip: {x: {show: true}, theme: 'dark'},
 }
