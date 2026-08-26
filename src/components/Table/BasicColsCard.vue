@@ -4,7 +4,7 @@
     <div class="sc-info">
       <div class="sc-info-item" v-for="col in columns" :key="col.prop">
         <strong>{{ col.label ?? col.prop }}:</strong>
-        <span>{{ row[col.prop] }}</span>
+        <span>{{ col.prop ? row[col.prop] : '' }}</span>
       </div>
     </div>
   </div>

@@ -73,9 +73,7 @@
 import FormWrapper from '@/components/Form/FormWrapper.vue'
 import SelectFromConfig from '@/components/Selection/SelectFromConfig.vue'
 import {computed, ref} from 'vue'
-import {rule} from '@/utils/validate'
 import {isFormEditing} from '@/utils/is'
-import {FormRules} from 'element-plus'
 import {addMachinePartApi, editMachinePartApi, getAllMachinePartApi} from '@/api/machine-part'
 import TreeSelectRemote from '@/components/Tree/TreeSelectRemote.vue'
 import CancelButton from "@/components/Button/CancelButton.vue";

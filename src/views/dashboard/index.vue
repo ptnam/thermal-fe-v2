@@ -165,11 +165,9 @@ import {
   thermalByComponentApi,
 } from '@/api/thermal-data'
 import _ from 'lodash'
-import AreaTreeDashBoard from "@/views/dashboard/components/AreaTreeDashBoard.vue";
 import BaseDialog from "@/components/Dialog/BaseDialog.vue";
 import ThermalData from "@/views/dashboard/components/ThermalData.vue";
 import SensorDiagram from './components/SensorDiagram.vue'
-import CameraDiagram from './components/CameraDiagram.vue'
 import {getAllCamerasApi} from '@/api/camera'
 import {summariseInfoApi} from "@/api/common";
 import AreaTreeDashBoardV2 from "@/views/dashboard/components/AreaTreeDashBoardV2.vue";
@@ -201,6 +199,7 @@ const areaItem = ref({
   photoPath: '',
   name: '',
   emapPhotoPath: '',
+  emapPosition: null as any,
 })
 
 const mapTypeDiagram = ref('photoPath')
@@ -230,10 +229,6 @@ const handleNodeClick = (item: any) => {
   loadCameraFromArea(item)
 }
 
-
-const showBimMap = () => {
-  mapTypeDiagram.value = 'emapFile'
-}
 const loadCameraFromArea = (area: any) => {
   if (!area) {
     return
@@ -310,13 +305,6 @@ const showMarkerInfo = (marker: any) => {
 
 const selectedCamera = ref<any>(null)
 const visibleCameraDetail = ref(false)
-
-const showCameraInfo = (marker: any) => {
-  selectedCamera.value = marker;
-  nextTick(() => {
-    visibleCameraDetail.value = true;
-  })
-}
 
 </script>
 <style scoped>

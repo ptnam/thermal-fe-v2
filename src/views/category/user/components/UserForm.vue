@@ -12,7 +12,7 @@
           <el-input v-model="formModel.username"  placeholder="Nhập tên đăng nhập..."/>
         </el-form-item>
         <el-form-item label="Mật khẩu" prop="password" :error="formErrors.Password">
-          <el-input v-model="formModel.password" type="password" placeholder="••••••" :autocomplete="false"/>
+          <el-input v-model="formModel.password" type="password" placeholder="••••••" autocomplete="off"/>
         </el-form-item>
       </div>
       <div class="flex flex-col md:flex-row gap-2">

@@ -439,17 +439,6 @@ async function loadModel(src: string) {
   })
 }
 
-function applyFromForm() {
-  applyTransformToModel()
-  applyCameraAndTarget()
-  status.value = 'đã áp dụng cấu hình từ form'
-}
-
-function captureCurrentView() {
-  syncFormFromCurrentView()
-  status.value = 'đã lấy góc nhìn hiện tại vào form'
-}
-
 async function reloadModel() {
   if (!form.src) return
   await loadModel(form.src)

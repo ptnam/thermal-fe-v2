@@ -57,6 +57,7 @@ export function useImageBounds() {
     return {
         imageCenter,
         bounds,
+        isError,
         updateBound: updateBound,
     }
 }

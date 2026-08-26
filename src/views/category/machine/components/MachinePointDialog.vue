@@ -50,9 +50,7 @@
 
 <script setup lang="ts">
 import {ref} from 'vue'
-import SaveButton from '@/components/Button/SaveButton.vue'
 import CancelButton from '@/components/Button/CancelButton.vue'
-import ObjectSelectFromConfig from "@/components/Selection/ObjectSelectFromConfig.vue"
 import {cloneObject} from "@/utils/objectUtils";
 import {defaultLevels} from "@/views/category/machine/components/levels";
 import ThresholdTab from "@/views/category/machine/components/ThresholdTab.vue";

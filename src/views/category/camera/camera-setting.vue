@@ -280,8 +280,8 @@ const savePreset = () => {
       const rect = video.getBoundingClientRect()
 
       const data = {...formModel.value}
-      data["videoWidth"] = parseInt(rect.width)
-      data["videoHeight"] = parseInt(rect.height)
+      data["videoWidth"] = Math.round(rect.width)
+      data["videoHeight"] = Math.round(rect.height)
       addPreset(data).then(() => {
         clearPoints()
         visibleDialogPreset.value = false

@@ -28,9 +28,7 @@
 import FormWrapper from '@/components/Form/FormWrapper.vue'
 import SelectFromConfig from '@/components/Selection/SelectFromConfig.vue'
 import { computed } from 'vue'
-import { rule } from '@/utils/validate'
 import { isFormEditing } from '@/utils/is'
-import { FormRules } from 'element-plus'
 import { addMachineTypeApi, editMachineTypeApi } from '@/api/machine-type'
 import { useAppStore } from '@/store/modules/app'
 const appStore = useAppStore();

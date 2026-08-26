@@ -72,6 +72,7 @@ const formModel = ref({
 
 const openDialogAdd = () => {
   formModel.value = {
+    id: null,
     username: '',
     firstName: '',
     lastMiddleName: '',

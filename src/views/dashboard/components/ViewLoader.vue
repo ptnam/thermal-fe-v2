@@ -5,25 +5,10 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, reactive, ref } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
-
-type Vec3 = {
-  x: number
-  y: number
-  z: number
-}
-
-type ViewerPreset = {
-  src: string
-  modelPosition: Vec3
-  modelRotation: Vec3
-  modelScale: Vec3
-  cameraPosition: Vec3
-  target: Vec3
-}
 
 const props = withDefaults(
     defineProps<{
@@ -38,19 +23,7 @@ const props = withDefaults(
     },
 )
 
-function defaultPreset(): ViewerPreset {
-  return {
-    src: props.src,
-    modelPosition: { x: 0, y: 0, z: 0 },
-    modelRotation: { x: 0, y: 0, z: 0 },
-    modelScale: { x: 1.5, y: 1.5, z: 1.5 },
-    cameraPosition: { x: 4, y: 3, z: 6 },
-    target: { x: 0, y: 0, z: 0 },
-  }
-}
-
 const containerRef = ref<HTMLDivElement | null>(null)
-const form = reactive<ViewerPreset>(defaultPreset())
 
 let scene: THREE.Scene | null = null
 let camera: THREE.PerspectiveCamera | null = null

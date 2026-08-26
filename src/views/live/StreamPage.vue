@@ -189,7 +189,7 @@ function updateGridLayout() {
   cellHeight.value = Math.max(nextCellHeight, 0)
 }
 
-watch(pageSizeCol, function(value) {
+watch(pageSizeCol, function() {
   nextTick(() => {
     updateGridLayout()
   })

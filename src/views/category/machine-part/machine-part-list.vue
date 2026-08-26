@@ -3,7 +3,6 @@ import ListTemplate from '@/components/PageTemplate/List/ListTemplate.vue'
 import {TableColumn} from '@/components/Table'
 import {useLang} from '@/hooks/web/useI18n'
 import {computed, onMounted, ref} from 'vue'
-import BaseDialog from '@/components/Dialog/BaseDialog.vue'
 import {STATUS_ACTIVE} from '@/constants'
 import DeleteCircleButton from '@/components/Button/DeleteCircleButton.vue'
 import EditCircleButton from '@/components/Button/EditCircleButton.vue'
@@ -48,7 +47,7 @@ const columns = computed<TableColumn[]>(() => [
 const dialogVisible = ref(false)
 const elTableRef = ref<InstanceType<typeof ListTemplate>>()
 
-const formModel = ref({})
+const formModel = ref<any>({})
 
 const route = useRoute()
 

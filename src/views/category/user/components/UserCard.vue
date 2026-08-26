@@ -48,7 +48,7 @@
 import {TableColumn} from "@/components/Table/TableCard.vue";
 import {joinFieldValues} from "@/utils/stringUtils";
 
-type RowData = Record<string, unknown>
+type RowData = any
 defineProps<{
   row: RowData
   columns: TableColumn[]

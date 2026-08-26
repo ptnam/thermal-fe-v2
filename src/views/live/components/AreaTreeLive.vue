@@ -48,6 +48,7 @@ import TreeNode from './TreeNode.vue'
 const props = defineProps({
   requestFn: {
     type: Function,
+    required: true,
   },
   outerClass: {
     type: String,

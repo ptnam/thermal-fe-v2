@@ -54,7 +54,6 @@
 
             <el-form-item
               label="Bộ phận cha"
-              label-position="left"
               label-width="100px"
               labelPosition="top"
             >

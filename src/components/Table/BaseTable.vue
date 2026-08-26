@@ -11,7 +11,7 @@ export default defineComponent({
       default: () => [],
     },
     data: {
-      type: Array,
+      type: Array as () => any[],
       required: true,
     },
     loading: {
@@ -21,7 +21,7 @@ export default defineComponent({
   },
   emits: ['register'],
   setup(props, {emit, attrs, expose}) {
-    const elTableRef = ref<InstanceType<typeof ElTable>>()
+    const elTableRef = ref<any>()
 
     onMounted(() => {
       const tableRef = unref(elTableRef)

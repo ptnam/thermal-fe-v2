@@ -110,7 +110,7 @@ import TreeSelectRemote from '@/components/Tree/TreeSelectRemote.vue'
 import LatLngPicker from '@/components/Map/LatLngPicker.vue'
 import ImageUploader from '@/components/Input/ImageUploader.vue'
 import {MAP_TYPE_PICTURE} from '@/constants'
-import {buildFormData, removeAllObjectInObject} from '@/utils/objectUtils'
+import {buildFormData} from '@/utils/objectUtils'
 import { useAppStore } from '@/store/modules/app'
 
 
@@ -164,8 +164,12 @@ function handleSavePreview(payload: {
 const transformFormData = (data: any) => {
   data.emapPosition = "";
   const formData = buildFormData(data);
-  formData.append('emapFile', pendingGlbFile.value)
-  formData.append('photoFile', photoFile.value)
+  if (pendingGlbFile.value) {
+    formData.append('emapFile', pendingGlbFile.value)
+  }
+  if (photoFile.value) {
+    formData.append('photoFile', photoFile.value)
+  }
   return formData;
 }
 

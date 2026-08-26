@@ -74,7 +74,6 @@ import {ApexOptions} from "apexcharts";
 import {getAllTreeAreaApi} from "@/api/area";
 import TreeSelectRemote from "@/components/Tree/TreeSelectRemote.vue";
 import useRequest from "@/hooks/web/useRequest";
-import {exportSensorsIECApi} from "@/api/sensor";
 import {downloadFile} from "@/utils/response";
 
 const chartOptions = ref<ApexOptions>({

@@ -1,7 +1,7 @@
 <template>
   <div class="node-popup">
     <div class="node-popup-header">
-      <el-text size="large">{{ marker.deviceTypeName }}: {{ marker.name }}</el-text>
+      <el-text size="large">{{ marker?.deviceTypeName }}: {{ marker?.name }}</el-text>
     </div>
     <div class="node-popup-body">
       <div id="popupContentArea">

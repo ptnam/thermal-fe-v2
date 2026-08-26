@@ -40,14 +40,13 @@ const props = defineProps({
   title: {type: String, required: false},
 })
 
-const options = ref<object[]>([])
 const loading = ref(false)
 
 const emit = defineEmits(["update:modelValue", "change"])
 
 const model = computed({
   get: () => {
-    return Array.isArray(props.modelValue) ? props.modelValue : []
+    return (Array.isArray(props.modelValue) ? props.modelValue : []) as (string | number)[]
   },
   set: (val) => {
     emit("update:modelValue", val)

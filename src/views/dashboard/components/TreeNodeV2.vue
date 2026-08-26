@@ -20,12 +20,6 @@ const toggle = () => {
   props.node.expanded = !props.node.expanded
 }
 
-const onClick = () => {
-  if (props.node.children) {
-    toggle()
-  }
-}
-
 const clickItem = () => {
 
   emit('node-click', props.node)

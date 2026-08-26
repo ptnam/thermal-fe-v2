@@ -43,7 +43,7 @@
 
 import {TableColumn} from "@/components/Table/TableCard.vue";
 
-type RowData = Record<string, unknown>
+type RowData = any
 defineProps<{
   row: RowData
   columns: TableColumn[]

@@ -25,7 +25,7 @@
 import { type Component } from 'vue'
 
 export interface TableColumn {
-  prop: string
+  prop?: string
   label?: string
   field?: string
   [key: string]: unknown

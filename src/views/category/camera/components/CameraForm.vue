@@ -128,11 +128,10 @@ import {FormRules} from 'element-plus'
 import {getAllTreeAreaApi} from '@/api/area'
 import {addCameraApi, editCameraApi, getAllCamerasApi} from '@/api/camera'
 import InputNumber from '@/components/Input/InputNumber.vue'
-import {CAMERA_NORMAL_TYPE, CAMERA_THERMAL_TYPE, MAP_TYPE_PICTURE} from '@/constants'
+import {CAMERA_NORMAL_TYPE, CAMERA_THERMAL_TYPE} from '@/constants'
 import VirtualizedSelectFromUrl from "@/components/Selection/VirtualizedSelectFromUrl.vue";
 import {removeAllObjectInObject} from "@/utils/objectUtils";
 import TreeSelectRemote from "@/components/Tree/TreeSelectRemote.vue";
-import LatLngImagePicker from "@/components/Map/LatLngImagePicker.vue";
 import { useAppStore } from '@/store/modules/app'
 
 const props = defineProps({
@@ -174,12 +173,6 @@ const transformFormData = (formData: any) => {
 const emit = defineEmits(['update:formModel', 'success'])
 const handleSuccess = (data: any) => {
   emit('success', data)
-}
-const updateFormModel = (node: any) => {
-  emit('update:formModel', {...props.formModel, ...node})
-}
-const setCoordinate = (coordinate: any) => {
-  updateFormModel(coordinate)
 }
 </script>
 <style scoped>

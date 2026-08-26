@@ -27,9 +27,9 @@
 </template>
 
 <script setup lang="ts">
-import type { TableColumn } from './TableCard.vue'
+import type { TableColumn } from '@/components/Table/TableCard.vue'
 
-type RowData = Record<string, unknown>
+type RowData = any
 defineProps<{
   row: RowData
   columns: TableColumn[]
@@ -37,6 +37,6 @@ defineProps<{
   loading: boolean
 }>()
 
-const emits = defineEmits("edit", "delete")
+const emits = defineEmits(['edit', 'delete'])
 
 </script>

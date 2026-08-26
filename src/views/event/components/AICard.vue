@@ -26,7 +26,7 @@
 import {TableColumn} from "@/components/Table/TableCard.vue";
 import { ElImage } from 'element-plus'
 
-type RowData = Record<string, unknown>
+type RowData = any
 defineProps<{
   row: RowData
   columns: TableColumn[]

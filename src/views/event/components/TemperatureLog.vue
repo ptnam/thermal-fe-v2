@@ -212,7 +212,7 @@ const chartOptions: ApexOptions = {
     height: 450,
     type: 'area',
     toolbar: {show: true},
-    animations: { enabled: true, easing: 'easeinout', speed: 800 }
+    animations: { enabled: true, easing: 'easeinout', speed: 800 } as any
   },
   dataLabels: {
     enabled: searchParams.value.showLabel ?? false,
@@ -239,7 +239,7 @@ const chartOptions: ApexOptions = {
     horizontalAlign: 'center',
     offsetY: 8,
     labels: {colors: '#94A3B8'},
-    markers: { radius: 12 }
+    markers: { radius: 12 } as any
   },
   tooltip: {x: {show: true}, theme: 'dark'},
 }
@@ -303,8 +303,8 @@ const countValidFields = (obj: any) => {
   }).length
 }
 
-const machineComponentInputRef = ref(null);
-const machineInputRef = ref(null);
+const machineComponentInputRef = ref<any>(null);
+const machineInputRef = ref<any>(null);
 const changeMachineIds = () => {
   machineComponentInputRef?.value?.fetch();
   searchParams.value = {

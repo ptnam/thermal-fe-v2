@@ -43,7 +43,6 @@
 
 <script setup lang="ts">
 import {ref} from 'vue'
-import SaveButton from '@/components/Button/SaveButton.vue'
 import CancelButton from '@/components/Button/CancelButton.vue'
 import {cloneObject} from "@/utils/objectUtils";
 import {defaultLevels} from "@/views/category/machine/components/levels";

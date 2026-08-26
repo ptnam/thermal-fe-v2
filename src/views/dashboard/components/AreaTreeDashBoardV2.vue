@@ -13,7 +13,7 @@ interface AreaNode {
 }
 
 const props = withDefaults(defineProps<{
-  requestFn: () => () => Promise<IResponse<[]>>
+  requestFn: () => Promise<IResponse<[]>>
   treeClass?: string
 }>(), {
   treeClass: 'tree-card'

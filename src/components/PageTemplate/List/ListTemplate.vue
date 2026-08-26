@@ -100,7 +100,7 @@ import BaseTable from '@/components/Table/BaseTable.vue'
 import {useTable} from '@/hooks/web/useTable'
 import type {UseTableConfig} from '@/hooks/web/useTable'
 import SearchForm from '@/components/PageTemplate/List/SearchForm.vue'
-import {onBeforeUnmount, onMounted, PropType, ref, useAttrs, watch} from 'vue'
+import {onBeforeUnmount, onMounted, PropType, ref, watch} from 'vue'
 import BasePagination from '@/components/Pagination/BasePagination.vue'
 import {TableColumn} from '@/components/Table'
 import {usePaginationStore} from '@/store/modules/paginationStore'
@@ -125,6 +125,7 @@ const props = defineProps({
     required: false,
   },
   cardProps: {
+    type: Object as PropType<Record<string, unknown>>,
     required: false,
   },
   title: {
@@ -152,7 +153,6 @@ const props = defineProps({
     default: true,
   },
 })
-const attrs = useAttrs()
 
 const paginationStore = usePaginationStore()
 const {tableRegister, searchParams, tableState, tableMethods} = useTable(props.useTableConfig)
