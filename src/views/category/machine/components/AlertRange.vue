@@ -9,6 +9,10 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  unit: {
+    type: String,
+    default: '°C'
+  },
 })
 
 const toModel = defineModel('toModel', {required: true})
@@ -38,7 +42,7 @@ const decrease = () => {
     <div class="level-range-row">
       <span class="rng-label">TỪ</span>
       <div class="rng-val-box" style="justify-content: center;">
-        <span class="rng-unit">{{ fromModel }}°C</span>
+        <span class="rng-unit">{{ fromModel }}{{ unit }}</span>
       </div>
       <span class="rng-arrow">→</span>
       <span class="rng-label">ĐẾN</span>
@@ -51,7 +55,7 @@ const decrease = () => {
         </button>
         <div style="flex: 1; display: flex; align-items: center; justify-content: center;">
           <input-number :readonly="readonly" type="text" v-model="toModel"></input-number>
-          °C
+          {{ unit }}
         </div>
         <button
             type="button"

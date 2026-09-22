@@ -53,7 +53,7 @@ const getNotices = () => {
 }
 
 const redirect = (item: any) => {
-  router.push({name: 'event_history_detail', query: {id:item.id, dataTime:item.dataTime}})
+  router.push({name: item.isPd ? 'pd_notification_detail' : 'event_history_detail', query: {id:item.id, dataTime:item.dataTime}})
 }
 const toggleNotifDropdown = () => {
   visibleDropdown.value = !visibleDropdown.value;

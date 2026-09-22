@@ -23,7 +23,7 @@ declare global {
     | 'multipart/form-data'
     | 'text/plain'
 
-  declare type AxiosMethod = 'get' | 'post' | 'delete' | 'put'
+  declare type AxiosMethod = 'get' | 'post' | 'delete' | 'put' | 'patch'
 
   declare type AxiosResponseType = 'arraybuffer' | 'blob' | 'document' | 'json' | 'text' | 'stream'
 
@@ -34,6 +34,7 @@ declare global {
     method?: AxiosMethod
     headers?: RawAxiosRequestHeaders
     responseType?: AxiosResponseType
+    paramsSerializer?: (params: any) => string
   }
 
   declare interface IResponse<T = never> {

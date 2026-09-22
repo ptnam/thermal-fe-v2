@@ -37,6 +37,10 @@ export default {
         vision_event_history_detail: 'Cảnh báo AI',
         notification_system: 'Nhiệt độ vượt ngưỡng',
         event_history: 'Nhật ký nhiệt độ',
+        pd_notification_system: 'Phóng điện vượt ngưỡng',
+        pd_notification_detail: 'Phóng điện vượt ngưỡng',
+        pd_history: 'Nhật ký phóng điện',
+        pd_summary: 'Tổng hợp phóng điện',
         home: 'Tổng hợp dữ liệu',
         report: 'Báo cáo / Hướng dẫn',
         user_manual: 'Hướng dẫn sử dụng',
@@ -53,6 +57,7 @@ export default {
         device_sensor: 'Cảm biến',
         point_list: 'Điểm giám sát',
         machine_station: 'Thiết bị',
+        formula_settings: 'Cài đặt công thức PD',
         event_history_detail: 'Nhiệt độ vượt ngưỡng',
         live_detail: "Live camera",
         camera_setting: "Cài đặt góc quay"

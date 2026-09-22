@@ -131,10 +131,13 @@ const today = new Date();
 const sevenDaysAgo = new Date();
 sevenDaysAgo.setDate(today.getDate() - 6);
 
+// Chỉ thống kê cảnh báo nhiệt độ - listNotificationApi/notificationsCountApi trả cả PD nếu không lọc.
+const THERMAL_WARNING_EVENT_CODE = 'OVERTHERMAL'
 const searchParams = ref({
   areaId: null,
   startDate: formatDate(sevenDaysAgo),
   endDate: formatDate(today),
+  warningEventCode: THERMAL_WARNING_EVENT_CODE,
 })
 
 const loading = ref(false)

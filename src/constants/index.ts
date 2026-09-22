@@ -8,10 +8,13 @@ export const STATUS_ACTIVE = 'Active'
 export const STATUS_INACTIVE = 'Inactive'
 export const CAMERA_NORMAL_TYPE = 'Normal'
 export const CAMERA_THERMAL_TYPE = 'Thermal'
+export const CAMERA_PD_TYPE = 'Pd'
+export const CAMERA_BATCAM_BRAND = 'BatCamFx2'
 
 export const CAMERA_TYPE_COLOR = {
     Normal: 'blue',
-    Thermal: 'red'
+    Thermal: 'red',
+    Pd: 'purple'
 }
 export const MAP_TYPE_PICTURE = 'Picture'
 export const MAP_TYPE_MAP = 'Map'

@@ -31,11 +31,15 @@ const props = defineProps({
   },
   colValue: {type: String, required: false, default: 'id'},
   colLabel: {type: String, required: false, default: 'name'},
+  allOptionLabel: {type: String, required: false},
 })
 const options = ref<any[]>([])
 const fetch = async () => {
   const res = await props.requestFn()
-  options.value = configStore.convertOptions(res.data, props.colValue, props.colLabel)
+  const converted = configStore.convertOptions(res.data, props.colValue, props.colLabel)
+  options.value = props.allOptionLabel
+    ? [{[props.colValue]: null, [props.colLabel]: props.allOptionLabel}, ...converted]
+    : converted
   optionMap.value = new Map(
       res.data.map((i: any) => [i[props.colValue], i])
   )
@@ -43,9 +47,14 @@ const fetch = async () => {
 }
 
 const handleChange = (val: any) => {
+  if (val === null || val === undefined) {
+    emit('selected', null)
+    emit('change', null)
+    return
+  }
   const selected = optionMap.value.get(val)
   emit('selected', selected)
-  emit('change', selected[props.colValue])
+  emit('change', selected?.[props.colValue])
 }
 
 onMounted(async () => {

@@ -182,7 +182,7 @@
             <div class="form-item-v">
               <el-form-item
                 v-show="item?.machineComponentThresholdList?.length"
-                label="Ngưỡng nhiệt"
+                label="Ngưỡng cảnh báo"
                 prop="machinePartThresholdList"
                 label-width="120px"
                 labelPosition="top"
@@ -219,7 +219,7 @@
           <cancel-button :icon="null" class="w-full md:w-fit whitespace-nowrap" @click="emits('cancel')"></cancel-button>
           <el-button
             class="!m-0 w-full p-0 md:w-fit whitespace-nowrap" v-show="modelComponents.length" type="warning" @click="() => openTemperatureThreshold(editableTabsValue)">
-            Thiết lập ngưỡng nhiệt
+            Thiết lập ngưỡng cảnh báo
           </el-button>
         </div>
         <save-button class="!m-0 w-full md:w-fit whitespace-nowrap" @click="() => saveForm(true)" :icon="null"></save-button>
@@ -231,6 +231,7 @@
       v-model="dialogMachinePointVisible"
       v-model:threshold-list="machineMonitorPoint"
       v-model:machinePartThresholdList="machinePartThresholdList"
+      :component-id="modelComponents[componentIndexValue]?.id"
       @save="saveMachinePoint"
       @cancel="dialogMachinePointVisible = false"
       :append-to-body="true"

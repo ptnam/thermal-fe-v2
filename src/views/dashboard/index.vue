@@ -102,7 +102,8 @@
                       <SensorDiagram v-if="mapTypeDiagram === 'photoPath'" :live-markers="liveMarkers"
                                      :area-range-point-list="areaRangePointList"
                                      :live-temperature-map="liveTemperatureMap"
-                                     @handleNodeClick="handleNodeClick" @showMarkerInfo="showMarkerInfo">
+                                     @handleNodeClick="handleNodeClick" @showMarkerInfo="showMarkerInfo"
+                                     @showPdMachineInfo="showPdMachineInfo">
                       </SensorDiagram>
 <!--                      <CameraDiagram v-else-if="mapTypeDiagram === 'emapPhotoPath'" :live-markers="cameraMarker"-->
 <!--                                     @showMarkerInfo="showCameraInfo">-->
@@ -143,6 +144,16 @@
         <web-player :streamKey="selectedCamera.id" :cam="selectedCamera"></web-player>
       </div>
     </el-dialog>
+    <base-dialog v-model="visiblePdDetail" :close-on-click-modal="true" class="!w-[90%] !lg:w-1/2">
+      <div class="mt-4" v-loading="loadingPdDetail">
+        <PdMachineDetail
+            :machine="selectedPdMachine"
+            :components="pdMachineComponents"
+            :loading="loadingPdDetail"
+            :stale="isPdReadingStale(liveTemperatureMap[selectedPdMachine?.key]?.dataTime)"
+        />
+      </div>
+    </base-dialog>
   </div>
 </template>
 
@@ -168,6 +179,8 @@ import _ from 'lodash'
 import BaseDialog from "@/components/Dialog/BaseDialog.vue";
 import ThermalData from "@/views/dashboard/components/ThermalData.vue";
 import SensorDiagram from './components/SensorDiagram.vue'
+import PdMachineDetail from './components/PdMachineDetail.vue'
+import {pdByMachineApi} from '@/api/pd-data'
 import {getAllCamerasApi} from '@/api/camera'
 import {summariseInfoApi} from "@/api/common";
 import AreaTreeDashBoardV2 from "@/views/dashboard/components/AreaTreeDashBoardV2.vue";
@@ -179,6 +192,16 @@ onMounted(() => {
   startSignalR()
   onSignalREvent('newThermalData', function (thermalData: any) {
     liveTemperatureMap.value = {...liveTemperatureMap.value, ...thermalData}
+    liveMarkers.value = liveMarkers.value.map(function (item, index) {
+      return {
+        ...item,
+        updateAt: `${Date.now()}_${index}_${Math.floor(1000 + Math.random() * 9000)}`,
+      }
+    })
+  })
+  // Key PD dạng "<machineId>_Pd" - dùng chung liveTemperatureMap/liveMarkers với nhiệt độ.
+  onSignalREvent('newPdData', function (pdData: any) {
+    liveTemperatureMap.value = {...liveTemperatureMap.value, ...pdData}
     liveMarkers.value = liveMarkers.value.map(function (item, index) {
       return {
         ...item,
@@ -306,6 +329,31 @@ const showMarkerInfo = (marker: any) => {
 const selectedCamera = ref<any>(null)
 const visibleCameraDetail = ref(false)
 
+// Quá PD_STALE_MS kể từ lần đọc gần nhất coi như hết phóng điện - dùng chung logic với SensorDiagram.vue.
+const PD_STALE_MS = 15 * 60 * 1000
+const isPdReadingStale = (dataTime: any) => {
+  if (!dataTime) return true
+  const readAt = new Date(dataTime).getTime()
+  if (Number.isNaN(readAt)) return true
+  return Date.now() - readAt > PD_STALE_MS
+}
+
+const selectedPdMachine = ref<any>(null)
+const pdMachineComponents = ref<any[]>([])
+const loadingPdDetail = ref(false)
+const visiblePdDetail = ref(false)
+const showPdMachineInfo = (marker: any) => {
+  selectedPdMachine.value = marker
+  visiblePdDetail.value = true
+  loadingPdDetail.value = true
+  pdByMachineApi(marker.machineId)
+    .then((res) => {
+      pdMachineComponents.value = res.data ?? []
+    })
+    .finally(() => {
+      loadingPdDetail.value = false
+    })
+}
 </script>
 <style scoped>
 .region-temp-list {

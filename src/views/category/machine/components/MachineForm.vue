@@ -52,6 +52,35 @@
                 </el-form-item>
               </el-col>
             </el-row>
+            <!-- Vị trí marker tia sét trên bản đồ/sơ đồ - độc lập với "Tọa độ" nhiệt ở trên (Machine.PdLatitude/PdLongitude). -->
+            <el-row :gutter="10">
+              <el-col :span="isMobile ? 24 : 12"></el-col>
+              <el-col :span="isMobile ? 24 : 12">
+                <el-form-item
+                    v-if="formModel?.area && formModel.areaId"
+                    label="Tọa độ PD"
+                    label-width="100px"
+                >
+                  <LatLngPicker
+                      v-if="formModel?.area?.mapType === MAP_TYPE_MAP"
+                      button-text="Chọn tọa độ PD trên bản đồ"
+                      :map-config="pdMapConfig"
+                      @input="setPdCoordinate"
+                  />
+                  <lat-lng-image-picker
+                      v-if="formModel?.area?.mapType === MAP_TYPE_PICTURE"
+                      button-text="Chọn tọa độ PD trên ảnh"
+                      :image-path="formModel?.area?.photoPath"
+                      :map-config="pdMapConfig"
+                      @input="setPdCoordinate"
+                  />
+                  <p v-if="formModel.pdLongitude && formModel.pdLatitude" class="m-0 whitespace-nowrap">
+                    <span class="font-bold">Kinh độ:</span> {{ formModel.pdLongitude }},
+                    <span class="font-bold">Vĩ độ:</span> {{ formModel.pdLatitude }}
+                  </p>
+                </el-form-item>
+              </el-col>
+            </el-row>
             <el-row :gutter="10">
               <el-col :span="isMobile ? 24 : 12">
                 <el-form-item label="Mã thiết bị" prop="code" :error="formErrors.Code">
@@ -312,5 +341,20 @@ const updateFormModel = (node: any) => {
 }
 const setCoordinate = (coordinate: any) => {
   updateFormModel(coordinate)
+}
+
+// pdLatitude/pdLongitude/pdZoom của formModel remap qua latitude/longitude/zoom cho LatLngPicker dùng
+// chung, và remap ngược khi lưu - xem Machine.PdLatitude/PdLongitude (BE).
+const pdMapConfig = computed(() => ({
+  latitude: formModel.value?.pdLatitude,
+  longitude: formModel.value?.pdLongitude,
+  zoom: formModel.value?.pdZoom,
+}))
+const setPdCoordinate = (coordinate: any) => {
+  const node: any = {}
+  if ('latitude' in coordinate) node.pdLatitude = coordinate.latitude
+  if ('longitude' in coordinate) node.pdLongitude = coordinate.longitude
+  if ('zoom' in coordinate) node.pdZoom = coordinate.zoom
+  updateFormModel(node)
 }
 </script>

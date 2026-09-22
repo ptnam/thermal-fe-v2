@@ -3,7 +3,7 @@
       ref="latLngPickerRef"
       longitudeLabel="Tọa độ X"
       latitudeLabel="Tọa độ Y"
-      buttonText="Chọn tọa độ trên ảnh"
+      :buttonText="buttonText"
       :map-config="{ ...mapConfig, zoom: 0 }"
       :crs="crs"
       :mapType="MAP_TYPE_PICTURE"
@@ -32,6 +32,10 @@ const props = defineProps({
       longitude: 0,
       zoom: 0,
     },
+  },
+  buttonText: {
+    type: String,
+    default: 'Chọn tọa độ trên ảnh',
   },
 })
 const latLngPickerRef = ref()

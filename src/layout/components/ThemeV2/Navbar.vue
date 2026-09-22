@@ -176,6 +176,11 @@ function isPrefixActive(prefix) {
           >
           <router-link class="menu-link" to="/event/event-history">Nhật ký nhiệt độ</router-link>
           <router-link class="menu-link" to="/event/home">Tổng hợp phân tích</router-link>
+          <router-link class="menu-link" to="/event/pd-notification-system"
+            >Phóng điện vượt ngưỡng</router-link
+          >
+          <router-link class="menu-link" to="/event/pd-history">Nhật ký phóng điện</router-link>
+          <router-link class="menu-link" to="/event/pd-summary">Tổng hợp phóng điện</router-link>
         </div>
       </div>
 
@@ -217,6 +222,14 @@ function isPrefixActive(prefix) {
                 <line x1="12" y1="20" x2="12.01" y2="20"></line>
               </svg>
               Bộ cảnh báo
+            </router-link>
+
+            <router-link class="menu-link menu-item-with-bg" to="/category/settings">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 17l6-11h4l6 11"></path>
+                <path d="M8 12h8"></path>
+              </svg>
+              Công thức PD
             </router-link>
           </div>
           <div class="mega-col">

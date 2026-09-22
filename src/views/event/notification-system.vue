@@ -36,6 +36,9 @@ import { useAppStore } from '@/store/modules/app'
 
 const {confirmModal} = useConfirmModal()
 
+// listNotificationApi trả cả cảnh báo PD nếu không lọc - khoá cứng warningEventCode như pd-notification-system.vue.
+const THERMAL_WARNING_EVENT_CODE = 'OVERTHERMAL'
+
 const changeStatus = (row: any) => {
   confirmModal('Cập nhật trạng thái', 'Bạn có chắc muốn cập nhật trạng thái đã xử lý?', () => {
     updateNotificationStatusApi(row.id, {
@@ -195,6 +198,7 @@ const exportFile = (searchParams: any) => {
         fetchDataApi: listNotificationApi,
         searchDefaults: {
           fromTime: dayjs().subtract(7, 'day').format('YYYY-MM-DD 00:00:00'),
+          warningEventCode: THERMAL_WARNING_EVENT_CODE,
         },
       }"
       :show-btn-add="false"

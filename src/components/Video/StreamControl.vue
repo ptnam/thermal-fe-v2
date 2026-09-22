@@ -7,6 +7,8 @@ import useRequest from "@/hooks/web/useRequest";
 import {CAMERA_COMMANDS} from "@/constants/camera";
 import {PolygonDrawer} from "@/utils/PolygonDrawer";
 import {thermalDataByAreaApi} from "@/api/thermal-data";
+import {getBatcamRoisApi} from "@/api/batcam-config";
+import {CAMERA_PD_TYPE} from "@/constants";
 import { useClock } from '@/hooks/web/useClock'
 
 const props = defineProps({
@@ -35,10 +37,36 @@ videoStream.addEventListener('stream-onopen', () => {
   if(props.startDraw) {
     startDrawing();
   }
+  const video = videoStream.video as HTMLVideoElement | undefined
+  if (video?.videoWidth && video?.videoHeight) {
+    roiNaturalWidth.value = video.videoWidth
+    roiNaturalHeight.value = video.videoHeight
+  }
 })
 videoStream.addEventListener('stream-error', () => {
   videoLoading.value = false
 })
+
+// ---- Overlay ROI của camera giám sát phóng điện (chỉ đọc) ----
+interface RoiOverlayItem {
+  roiIndex: number
+  cx: number
+  cy: number
+  nw: number
+  nh: number
+  name: string | null
+  machineComponentName: string | null
+}
+const rois = ref<RoiOverlayItem[]>([])
+const roiNaturalWidth = ref(1920)
+const roiNaturalHeight = ref(1080)
+const roiLabel = (roi: RoiOverlayItem) => roi.name || roi.machineComponentName || `ROI ${roi.roiIndex + 1}`
+function loadRois() {
+  getBatcamRoisApi(Number(props.streamKey)).then((res) => {
+    // Chỉ vẽ ROI đã bật và đã gán bộ phận (ROI chưa gán không có nhãn để hiển thị).
+    rois.value = (res.data ?? []).filter((r: any) => r.enabled && r.machineComponentId)
+  })
+}
 const isPlaying = ref(false)
 const isDrawing = ref(false)
 const loading = ref(false)
@@ -82,6 +110,7 @@ onMounted(() => {
 
   getCameraDetailApi(props.streamKey).then(res => {
     cam.value = res.data
+    if (cam.value.cameraType === CAMERA_PD_TYPE) loadRois()
   });
 });
 
@@ -243,6 +272,31 @@ defineExpose({
             class="absolute"
         >
         </canvas>
+        <!-- Overlay ROI giám sát phóng điện (chỉ đọc) - xem CameraBatcamConfigPanel.vue (nơi vẽ/lưu ROI). -->
+        <svg
+            v-if="rois.length"
+            class="absolute inset-0 w-full h-full roi-overlay"
+            :viewBox="`0 0 ${roiNaturalWidth} ${roiNaturalHeight}`"
+            preserveAspectRatio="xMidYMid meet"
+        >
+          <rect
+              v-for="roi in rois"
+              :key="roi.roiIndex"
+              :x="(roi.cx - roi.nw / 2) * roiNaturalWidth"
+              :y="(roi.cy - roi.nh / 2) * roiNaturalHeight"
+              :width="roi.nw * roiNaturalWidth"
+              :height="roi.nh * roiNaturalHeight"
+              class="roi-shape"
+              :class="`roi-shape--${roi.roiIndex % 3}`"
+          />
+          <text
+              v-for="roi in rois"
+              :key="`roi-label-${roi.roiIndex}`"
+              :x="roi.cx * roiNaturalWidth"
+              :y="(roi.cy - roi.nh / 2) * roiNaturalHeight - 6"
+              class="roi-label"
+          >{{ roiLabel(roi) }}</text>
+        </svg>
       </div>
     </div>
     <div class="sidebar">
@@ -599,6 +653,35 @@ body {
   position: absolute;
   top: 0;
   left: 0;
+}
+
+/* Overlay ROI - màu cố định (không theo theme trang), đè lên video giống mọi overlay video khác. */
+.roi-overlay {
+  top: 0;
+  left: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+.roi-shape {
+  fill: rgba(64, 158, 255, 0.15);
+  stroke: #409eff;
+  stroke-width: 3;
+}
+.roi-shape--1 {
+  fill: rgba(103, 194, 58, 0.15);
+  stroke: #67c23a;
+}
+.roi-shape--2 {
+  fill: rgba(230, 162, 60, 0.15);
+  stroke: #e6a23c;
+}
+.roi-label {
+  fill: #fff;
+  font-size: 20px;
+  text-anchor: middle;
+  paint-order: stroke;
+  stroke: #000;
+  stroke-width: 4px;
 }
 
 /* HUD Overlay (Lớp phủ thông tin) */

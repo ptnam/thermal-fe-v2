@@ -1,11 +1,25 @@
 import request from '@/plugins/axios'
 
+function serializeFlatParams(params: Record<string, any>): string {
+  const usp = new URLSearchParams()
+  Object.entries(params ?? {}).forEach(([key, value]) => {
+    if (value === undefined || value === null) return
+    if (Array.isArray(value)) {
+      value.forEach((v) => usp.append(key, String(v)))
+    } else {
+      usp.append(key, String(value))
+    }
+  })
+  return usp.toString()
+}
+
 export const getAllMachineApi = (searchParams: object): Promise<IResponse<[]>> => {
   return request.get({url: '/api/Machines/All', params: searchParams})
 }
 
+// machinesByAreas (POST, cần Producer Token) chỉ dùng nội bộ giữa services - allByAreas mới là API cho FE.
 export const getMachinesByAreasApi = (searchParams: object): Promise<IResponse<[]>> => {
-  return request.get({url: '/api/machines/machinesByAreas', params: searchParams})
+  return request.get({url: '/api/machines/allByAreas', params: searchParams, paramsSerializer: serializeFlatParams})
 }
 export const getMachineListApi = (searchParams: object): Promise<IResponse<[]>> => {
   return request.get({url: '/api/Machines/list', params: searchParams})
@@ -40,7 +54,7 @@ export const getComponentMachineApi = (searchParams: object): Promise<IResponse>
 }
 
 export const getMultiComponentsMachineApi = (searchParams: object): Promise<IResponse> => {
-  return request.get({url: 'api/Machines/multiComponents', params: searchParams})
+  return request.get({url: 'api/Machines/multiComponents', params: searchParams, paramsSerializer: serializeFlatParams})
 }
 
 export const machinesAndComponentByAreaApi = (searchParams: object): Promise<IResponse> => {

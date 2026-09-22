@@ -16,6 +16,26 @@ export const notificationsCountApi = (searchParams: object): Promise<IResponse<[
     return request.get({url: 'api/Notifications/count', params: searchParams})
 }
 
+export const notificationCountByAreaApi = (searchParams: object): Promise<IResponse<any>> => {
+    return request.get({url: 'api/Notifications/countByArea', params: searchParams})
+}
+
+export const notificationResolutionStatsApi = (searchParams: object): Promise<IResponse<any>> => {
+    return request.get({url: 'api/Notifications/resolutionStats', params: searchParams})
+}
+
+export const notificationLevelDistributionApi = (searchParams: object): Promise<IResponse<any>> => {
+    return request.get({url: 'api/Notifications/levelDistribution', params: searchParams})
+}
+
+export const exportPdCountApi = (searchParams: object): Promise<IResponse<[]>> => {
+  return request.get({
+    url: '/api/Notifications/exportPdCount',
+    params: searchParams,
+    responseType: 'blob'
+  })
+}
+
 export const exportCountApi = (searchParams: object): Promise<IResponse<[]>> => {
   return request.get({
     url: '/api/Notifications/exportCount',

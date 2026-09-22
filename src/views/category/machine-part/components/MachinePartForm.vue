@@ -30,7 +30,7 @@
         </el-form-item>
         <el-form-item
             v-show="formModel?.machinePartThresholdList?.length"
-            label="Ngưỡng nhiệt"
+            label="Ngưỡng cảnh báo"
             prop="machinePartThresholdList"
             :error="formErrors.machinePartThresholdList">
           <div class="flex flex-wrap gap-1">
@@ -47,7 +47,7 @@
       </template>
       <template v-slot:button>
         <div class="flex flex-col md:flex-row justify-between items-center gap-3">
-          <el-button class="w-full md:w-fit whitespace-nowrap" :class="appStore.isMobile ? '!w-full !max-w-full': ''" type="warning" @click="openTemperatureThreshold">Thiết lập ngưỡng nhiệt</el-button>
+          <el-button class="w-full md:w-fit whitespace-nowrap" :class="appStore.isMobile ? '!w-full !max-w-full': ''" type="warning" @click="openTemperatureThreshold">Thiết lập ngưỡng cảnh báo</el-button>
           <div class="!w-full flex justify-right items-center md:flex-row gap-1" :class="appStore.isMobile ? ' justify-between ': ''">
             <cancel-button class="w-full md:w-fit whitespace-nowrap" @click="() => formRef.triggerCancel()" :icon="null"></cancel-button>
             <save-button class="w-full md:w-fit whitespace-nowrap" :loading="formRef?.loading" @click="() => formRef.submitForm()" :icon="null"></save-button>
@@ -59,6 +59,7 @@
     <MachinePartPointDialog
         v-model="dialogMachinePointVisible"
         v-model:thresholdList="machinePartThresholdList"
+        :part-id="formModel.id"
         @cancel="dialogMachinePointVisible = false"
         @save="saveMachinePoint"
         align-center

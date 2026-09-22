@@ -31,6 +31,10 @@ export default {
     event: 'Follow measuring point',
     notification_system: 'Warning over temperature threshold',
     event_history: 'Temperature history',
+    pd_notification_system: 'Partial discharge over threshold',
+    pd_notification_detail: 'Partial discharge over threshold',
+    pd_history: 'PD log',
+    pd_summary: 'PD summary',
     home: 'Home',
     report: 'Report',
     user_manual: 'User manual',
@@ -47,6 +51,7 @@ export default {
     device_sensor: 'Temperature sensor',
     point_list: 'Surveillance point',
     machine_station: 'Device',
+    formula_settings: 'PD formula settings',
   },
   error: {
     noPermission: `Sorry, you don't have permission to access this page.`,

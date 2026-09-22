@@ -369,6 +369,9 @@
           ngưỡng</button>
         <button onclick="showPage('temp-log', this)">Nhật ký nhiệt độ</button>
         <button onclick="showPage('analytics-summary', this)">Tổng hợp phân tích</button>
+        <button onclick="showPage('pd-notification', this)">Phóng điện vượt ngưỡng</button>
+        <button onclick="showPage('pd-history', this)">Nhật ký phóng điện</button>
+        <button onclick="showPage('pd-summary', this)">Tổng hợp phóng điện</button>
       </div>
 
       <button onclick="showGroup('system', this, 'area')">QUẢN TRỊ HỆ THỐNG</button>
@@ -376,6 +379,7 @@
         <div class="menu-section-title">Hạ tầng & Thiết bị</div>
         <button onclick="showPage('area', this)">Khu vực</button>
         <button onclick="showPage('camera', this)">Camera</button>
+        <button onclick="showPage('pd-config', this)">Cấu hình giám sát phóng điện</button>
         <button onclick="showPage('sensor', this)">Cảm biến</button>
         <button onclick="showPage('device-type', this)">Loại Thiết bị</button>
         <button onclick="showPage('device', this)">Thiết bị</button>
@@ -424,6 +428,16 @@
             dõi kỹ hơn về tình trạng các thiết bị, so sánh nhiệt độ của thiết bị đó với pha min,
             nhiệt độ môi trường và pha min của toàn trạm.</p>
           <img src="img-admin-con/detail.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Với các thiết bị có giám sát phóng điện, trên sơ đồ còn xuất hiện biểu tượng tia sét ⚡. Màu biểu tượng
+            tia sét sẽ thể hiện mức đánh giá xấu nhất trong các bộ phận của thiết bị đang giám sát; nếu quá 15 phút
+            không có lần đo mới, biểu tượng tia sét sẽ tự động chuyển về màu xanh.</p>
+          <img src="img-admin-con/pd-icon.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Di chuột vào biểu tượng tia sét, hệ thống hiển thị thông số các bộ phận cùng cường độ phóng điện (dB) đo
+            được.</p>
+          <img src="img-admin-con/pd-tooltip.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Bấm vào biểu thượng tia sét sẽ mở bảng thông số chi tiết của từng bộ phận: cường độ đo được, mức đánh
+            giá, ΔPD%/kỳ, Camera quan sát được, Vùng trên camera và thời điểm đo gần nhất.</p>
+          <img src="img-admin-con/pd-detail.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
         </div>
         <div class="box">
           <h3>Sơ đồ mặt bằng </h3>
@@ -738,6 +752,91 @@
             đã chọn.</p>
         </div>
       </div>
+
+      <div id="pd-notification" class="page">
+        <h2>Phóng điện vượt ngưỡng</h2>
+        <div class="box">
+          <h3>Danh sách phóng điện vượt ngưỡng</h3>
+          <p>Trang này lưu trữ toàn bộ cảnh báo được sinh ra khi cường độ phóng điện (dB) hoặc tốc độ tăng ΔPD%/kỳ
+            của một bộ phận vượt ngưỡng đã cấu hình. Danh sách hiển thị Khu vực, Camera, Vùng trên camera, Thiết bị,
+            Bộ phận, Cường độ PĐ, Kiểu cảnh báo, Đánh giá và Trạng thái xử lý.</p>
+          <img src="img-admin-con/pd-notification-list.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Để chuyển sang danh sách dạng lưới thì chỉ cần nhấn vào nút grid <img src="img-admin-con/grid.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;">.</p>
+          <img src="img-admin-con/pd-notification-grid.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Người dùng nếu muốn chỉnh danh sách cột thì chỉ cần nhấn vào nút <img src="img-admin-con/setting.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> rồi chọn cột nào muốn ẩn đi hoặc hiện trên danh
+            sách rồi ấn lưu để xác nhận hoặc hủy nếu muốn thoát.</p>
+          <img src="img-admin-con/pd-notification-column.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div class="box">
+          <h3>Xem chi tiết và xử lý cảnh báo</h3>
+          <p>Nhấn vào nút <img src="img-admin-con/eye.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;">
+            ở đầu mỗi dòng để mở trang chi tiết cảnh báo: ảnh chụp/video sự kiện, vị trí & thiết bị, cường độ đo được,
+            ngưỡng cường độ PD (dB) đang áp dụng cho bộ phận và biểu đồ xu hướng cường độ của những lần đo gần nhất.
+            Tại đây cũng có thể cập nhật trạng thái xử lý hoặc tải video sự kiện.</p>
+          <img src="img-admin-con/pd-notification-detail.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Ngoài ra có thể nhấn nút <img src="img-admin-con/bell.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;">
+            ở góc trên bên phải để xem nhanh các cảnh báo phóng điện mới nhất mà không cần rời trang.</p>
+        </div>
+        <div class="box">
+          <h3>Tìm kiếm</h3>
+          <p>Chọn khoảng thời gian tại ô "Thời gian từ"/"Thời gian đến", có thể lọc thêm theo Khu vực, Thiết bị, Kiểu
+            cảnh báo rồi nhấn nút <img src="img-admin-con/search.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;">.
+            Nhấn nút <img src="img-admin-con/export.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;">
+            để xuất danh sách ra file excel theo bộ lọc đã chọn.</p>
+          <img src="img-admin-con/pd-notification-search.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+      </div>
+
+      <div id="pd-history" class="page">
+        <h2>Nhật ký phóng điện</h2>
+        <div class="box">
+          <h3>Nhật ký phóng điện</h3>
+          <p>Trang Nhật ký phóng điện lưu lại toàn bộ lần đọc dữ liệu PD, kể cả những lần chưa vượt ngưỡng để cảnh báo.
+            Mỗi dòng gồm Camera, Vùng trên camera, Thiết bị, Bộ phận, Kiểu cảnh báo, Công thức áp dụng, Cường độ PĐ,
+            Mức tham chiếu, Chênh lệch và Đánh giá - giúp đối chiếu lại toàn bộ diễn biến của một bộ phận theo thời
+            gian.</p>
+          <img src="img-admin-con/pd-history-list.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div class="box">
+          <h3>Tìm kiếm và xuất file</h3>
+          <p>Chọn "Thời gian từ"/"Thời gian đến", lọc thêm theo Khu vực, Thiết bị, Bộ phận, khoảng ΔPD% (Từ/Đến) hoặc
+            Đánh giá rồi nhấn nút <img src="img-admin-con/search.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;">.
+            Có thể chuyển qua lại giữa hiển thị dạng danh sách hoặc dạng lưới bằng 2 nút ở góc phải bảng, và nhấn
+            <img src="img-admin-con/export.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;"> để
+            xuất file excel theo bộ lọc đã chọn.</p>
+          <img src="img-admin-con/pd-history-search.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+      </div>
+
+      <div id="pd-summary" class="page">
+        <h2>Tổng hợp phóng điện</h2>
+        <div class="box">
+          <h3>Thống kê phóng điện vượt ngưỡng</h3>
+          <p>Chọn "Khu vực" và khoảng "Từ ngày"/"Đến ngày" rồi nhấn <img src="img-admin-con/search.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> để lọc dữ liệu; nhấn nút
+            <img src="img-admin-con/download.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;">
+            để tải dữ liệu thống kê ra file excel.</p>
+          <img src="img-admin-con/pd-summary-filter.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Trang hiển thị biểu đồ số lượng cảnh báo theo khu vực, biểu đồ tròn phân bố tình trạng cảnh báo (Tốt/
+            Khá/Trung bình/Xấu) và bảng "Top bộ phận có mức PD đo được cao nhất" để nhanh chóng xác định các bộ phận
+            cần chú ý.</p>
+          <img src="img-admin-con/pd-summary-chart.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Phía dưới còn có các chỉ số tỷ lệ xử lý cảnh báo (Tổng số, Chưa xử lý, Đã xử lý, Thời gian xử lý trung
+            bình) cùng biểu đồ số lượng cảnh báo theo từng ngày trong khoảng thời gian đã chọn.</p>
+          <img src="img-admin-con/pd-summary-overview.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div class="box">
+          <h3>Nhật ký phóng điện theo điểm đo</h3>
+          <p>Chuyển sang tab "Nhật ký phóng điện theo điểm đo" để xem biểu đồ miền (Area Chart) nhiều lớp thể hiện
+            cường độ PD (dB) của từng bộ phận theo thời gian. Di chuột vào bất kỳ thời điểm nào trên biểu đồ, hệ thống
+            sẽ hiển thị bảng giá trị dB của tất cả các bộ phận tại đúng thời điểm đó, hỗ trợ đối chiếu nhanh giữa các
+            bộ phận trong cùng khu vực.</p>
+          <img src="img-admin-con/pd-summary-log.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+      </div>
+
       <div id="area" class="page">
         <h2>Khu vực</h2>
         <div class="box">
@@ -831,7 +930,12 @@
 
           <img src="img-admin-con/addcam.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
           <P>Khi hoàn tất, nhấn nút lưu để xác nhận thêm mới camera hoặc nút hủy để thoát mà không lưu.</P>
-
+          <p>Để khai báo camera giám sát phóng điện, chọn "Chức năng camera" = <strong>Camera giám sát phóng
+              điện</strong> (hãng BatCamFx2). Điền Địa chỉ IP (LAN)/(WAN) là địa chỉ REST API của thiết bị (không phải
+            cổng RTSP), Username/Password theo tài khoản API của thiết bị và "Tần suất kiểm tra (giây)" là chu kỳ hệ
+            thống lấy dữ liệu phóng điện. Chỉ camera loại này mới xuất hiện tab "Cấu hình giám sát phóng điện" (xem
+            mục Cấu hình giám sát phóng điện) khi sửa lại camera đã lưu.</p>
+          <img src="img-admin-con/pd-config-camera.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
         </div>
         <div class="box">
           <h3>Chỉnh sửa và xóa</h3>
@@ -883,6 +987,55 @@
             Hệ thống sẽ tự động lọc và hiển thị các camera có thông tin khớp với từ khóa đã nhập.</p>
           <p>Để xuất dữ liệu camera, người dùng nhấn vào nút <img src="img-admin-con/export1.png" alt=""
               style="height:35px; vertical-align:middle; margin:0 4px;">.</p>
+        </div>
+      </div>
+
+      <div id="pd-config" class="page">
+        <h2>Cấu hình giám sát phóng điện</h2>
+        <div class="box">
+          <h3>Cấu hình ROI (vùng quan tâm)</h3>
+          <p>Với camera đã khai báo "Chức năng camera" = Camera giám sát phóng điện, sửa lại camera đó và chuyển
+            sang tab <strong>"Cấu hình giám sát phóng điện"</strong>. Tab hiển thị video trực tiếp của camera và danh
+            sách 3 vùng ROI lấy trực tiếp từ thiết bị (ROI 1/ROI 2/ROI 3). Với mỗi ROI: bấm nút vẽ để bật chế độ vẽ,
+            kéo chuột trên video để khoanh vùng (kéo lại để vẽ lại), đặt tên hiển thị, chọn Thiết bị + Bộ phận cần
+            gán, rồi bật/tắt. Mỗi bộ phận chỉ nên gán cho 1 ROI.</p>
+          <img src="img-admin-con/pd-config-roi.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Lưu ý: ROI chỉ được lưu vào hệ thống khi thiết bị xác nhận đồng bộ thành công; nếu thiết bị lỗi/mất kết
+            nối, hệ thống sẽ báo lỗi và không lưu cấu hình.</p>
+        </div>
+        <div class="box">
+          <h3>Cấu hình PD AI và chùm tia</h3>
+          <p>Trong cùng màn hình, kéo xuống phần "Cấu hình PD AI" để bật/tắt tính năng đánh giá phóng điện bằng AI và
+            điều chỉnh Số frame (windowSize), Ngưỡng score, Tỉ lệ kích hoạt, Cooldown (giây). Phần "Cấu hình chùm tia"
+            bên cạnh cho phép chỉnh Dải tần số, Khoảng cách và các hệ số hiệu chỉnh X-Cal/Y-Cal của cảm biến chùm
+            tia.</p>
+          <img src="img-admin-con/pd-config-ai-beam.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Sau khi chỉnh xong cả 3 phần (ROI, PD AI, chùm tia), nhấn nút "Lưu cấu hình giám sát phóng điện" ở góc
+            dưới - hệ thống sẽ lưu tuần tự ROI → AI → chùm tia xuống thiết bị.</p>
+        </div>
+        <div class="box">
+          <h3>Thiết lập ngưỡng cảnh báo PD</h3>
+          <p>Ngưỡng cảnh báo PD được cấu hình tại giao diện "Thiết lập ngưỡng cảnh báo" của bộ phận (mục Thiết bị)
+            hoặc của loại bộ phận (mục Loại Thiết bị), ở tab <strong>"Ngưỡng phóng điện (PD)"</strong>. Trước tiên
+            chọn "Loại ngưỡng PD nhận cảnh báo": so với tốc độ tăng ΔPD%/kỳ hoặc so với ngưỡng cường độ PD (dB).</p>
+          <p>Nếu chọn kiểu ΔPD%/kỳ, nhập giá trị "Đến" cho từng mức (Tốt/Chú ý/Cảnh báo/Nguy hiểm) - có thể dùng dấu
+            trừ/cộng để chỉnh nhanh. Riêng bộ phận cụ thể (sub-tab "Khai báo riêng") có độ ưu tiên cao hơn cấu hình
+            chung theo loại bộ phận.</p>
+          <img src="img-admin-con/pd-config-threshold-value.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Nếu chọn kiểu ΔPD%/kỳ, phần "Công thức tốc độ tăng ΔPD% theo kỳ" cho phép gán một công thức đã soạn sẵn
+            cho bộ phận, kèm thời điểm bắt đầu áp dụng (có thể đặt trong tương lai). Soạn/sửa công thức thực hiện ở
+            mục "Công thức cảnh báo PD" bên dưới.</p>
+          <img src="img-admin-con/pd-config-threshold-assign.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Sau khi nhập xong, nhấn "Lưu cấu hình" để xác nhận hoặc "Hủy" để thoát mà không lưu.</p>
+        </div>
+        <div class="box">
+          <h3>Công thức cảnh báo PD</h3>
+          <p>Vào <strong>Quản trị hệ thống → Công thức cảnh báo PD</strong> để soạn/sửa các biểu thức tính ΔPD%/kỳ
+            (cú pháp NCalc) và quản lý Biến số dùng trong công thức. Danh sách hiển thị Tên công thức, Biểu thức, Mô
+            tả, Phạm vi sử dụng (số bộ phận/loại bộ phận đang gán) và Trạng thái.</p>
+          <img src="img-admin-con/pd-config-formula.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Lưu ý: công thức đã được gán cho bộ phận/loại bộ phận và đã có kết quả tính thực tế sẽ bị khóa Sửa/Xóa,
+            chỉ còn đổi được Trạng thái (Bật/Tắt).</p>
         </div>
       </div>
 
@@ -1084,6 +1237,11 @@
             hoặc lăn chuột để phóng to, thu nhỏ bản đồ. Khi chọn xong, nhấn nút lưu. Đối với chọn tên khu vực thì sẽ
             hiện nút"Chọn tọa độ trên bản đồ" còn đối với chọn tên trạm thì sẽ hiện nút"Chọn tọa độ trên ảnh".</p>
           <img src="img-admin-con/map5.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Nếu thiết bị có giám sát phóng điện, cần chọn thêm <strong>Tọa độ PD</strong> (nút "Chọn tọa độ PD trên
+            ảnh") - đây là tọa độ độc lập với tọa độ nhiệt, quyết định vị trí hiển thị icon tia sét trên sơ đồ. Thiết
+            bị chưa chọn Tọa độ PD thì dữ liệu phóng điện vẫn được ghi nhận bình thường nhưng sẽ không có icon trên sơ
+            đồ.</p>
+          <img src="img-admin-con/pd-config-coordinate.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
           <P>Sau khi chọn loại thiết bị, hệ thống sẽ hiển thị danh sách bộ phận tương ứng bên dưới. Để thêm điểm giám
             sát cho một bộ phận, nhấn nút <img src="img-admin-con/addpoint.png" alt=""
               style="height:35px; vertical-align:middle; margin:0 4px;">. Trong giao diện điểm giám sát, tiếp tục nhấn
@@ -1111,6 +1269,9 @@
             hình để xác nhận hoặc nhấn hủy để thoát mà không lưu.
           </p>
           <img src="img-admin-con/setup2.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Với bộ phận có giám sát phóng điện, giao diện thiết lập ngưỡng cảnh báo có thêm tab
+            <strong>"Ngưỡng phóng điện (PD)"</strong> bên cạnh tab "Ngưỡng nhiệt độ". Xem chi tiết cách cấu hình ngưỡng
+            và công thức PD tại mục <strong>Cấu hình giám sát phóng điện</strong>.</p>
           <p>Sau khi hoàn tất thiết lập, nhấn nút lưu để xác nhận thêm mới thiết bị hoặc nhấn hủy để thoát mà không
             lưu.</p>
         </div>
