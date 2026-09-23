@@ -62,6 +62,7 @@
             <l-tile-layer
                 :url="tile.url"
                 :attribution="tile.attribution"
+                :class-name="appStore.isDark ? 'map-tile-dark' : ''"
             />
           </slot>
           <l-marker
@@ -123,18 +124,10 @@ const props = defineProps({
 const emit = defineEmits(['input'])
 
 const appStore = useAppStore();
-const tile = computed(() => {
-  if (appStore.isDark) {
-    return {
-      url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-      attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
-    }
-  }
-  return {
-    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    attribution: '&copy; OpenStreetMap contributors',
-  }
-})
+const tile = computed(() => ({
+  url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+  attribution: '&copy; OpenStreetMap contributors',
+}))
 const mapRef = ref(null)
 const modalShow = ref(false)
 const coordinateShow = ref(true)

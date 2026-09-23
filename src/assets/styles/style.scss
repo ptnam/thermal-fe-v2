@@ -2488,3 +2488,7 @@ body {
   }
 
 }
+
+.map-tile-dark {
+  filter: grayscale(1) invert(1) brightness(0.9) contrast(1.1);
+}
