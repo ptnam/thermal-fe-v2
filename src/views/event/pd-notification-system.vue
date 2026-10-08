@@ -1,4 +1,6 @@
 <script setup lang="tsx">
+import { enumLabel } from '@/utils/enumLabel'
+import { useLang } from '@/hooks/web/useI18n'
 import ListTemplate from '@/components/PageTemplate/List/ListTemplate.vue'
 import {TableColumn} from '@/components/Table'
 import {computed, nextTick, ref} from 'vue'
@@ -28,6 +30,8 @@ import PdNotificationSystemCard from '@/views/event/components/PdNotificationSys
 import {onMounted, onUnmounted} from 'vue'
 import {useAppStore} from '@/store/modules/app'
 
+const { t } = useLang()
+
 // Khoá cứng warningEventCode = PD_EXCEEDED - tái dùng nguyên API/quyền của notification-system.vue.
 const PD_WARNING_EVENT_CODE = 'PD_EXCEEDED'
 
@@ -38,12 +42,12 @@ const typeStatus = {
   Pending: 'danger',
 }
 const changeStatus = (row: any) => {
-  confirmModal('Cập nhật trạng thái', 'Bạn có chắc muốn cập nhật trạng thái đã xử lý?', () => {
+  confirmModal(t('alert.updateStatus'), t('alert.updateStatusConfirm'), () => {
     updateNotificationStatusApi(row.id, {
       status: row.statusObject.code === 'Pending' ? 2 : 1,
       dataTime: row.dataTime,
     }).then(() => {
-      ElMessage({message: 'Lưu thành công!', type: 'success'})
+      ElMessage({message: t('common.saveSuccess'), type: 'success'})
       elTableRef?.value?.refresh()
     })
   })
@@ -52,7 +56,7 @@ const changeStatus = (row: any) => {
 // compareTypeObject luôn = "PdGrowthRate" (BE ghi cố định, xem PdDataService.BuildNotification) -
 // tiêu chí thật quyết định kết quả nằm ở evaluationThresholdType (7=ΔPD%/kỳ, 8=ngưỡng dB).
 function pdCriteriaLabel(row: any) {
-  return row.evaluationThresholdType === 8 ? 'So với ngưỡng cường độ PD' : 'So với tốc độ tăng ΔPD% theo kỳ'
+  return row.evaluationThresholdType === 8 ? t('pd.criteriaDb') : t('pd.criteriaGrowth')
 }
 
 // Mở drawer bên phải như notification-system.vue (nhiệt độ) - đồng nhất UI giữa 2 màn, khác forest-fe
@@ -76,7 +80,7 @@ function openDetail(row: any) {
 }
 function updateStatusSuccess() {
   detailVisible.value = false
-  ElMessage({message: 'Lưu thành công!', type: 'success'})
+  ElMessage({message: t('common.saveSuccess'), type: 'success'})
   elTableRef?.value?.refresh()
 }
 
@@ -94,7 +98,7 @@ const columns = computed<TableColumn[]>(() => [
   },
   {
     width: '120px',
-    label: 'Hình ảnh',
+    label: t('alert.image'),
     align: 'center',
     slots: {
       default: ({row}) => (
@@ -110,31 +114,32 @@ const columns = computed<TableColumn[]>(() => [
       ),
     },
   },
-  {prop: 'dateData', label: 'Ngày', width: 120},
-  {prop: 'timeData', label: 'Giờ', width: 120},
-  {prop: 'areaName', label: 'Khu vực', minWidth: 200},
+  {prop: 'dateData', label: t('alert.date'), width: 120},
+  {prop: 'timeData', label: t('alert.hour'), width: 120},
+  {prop: 'areaName', label: t('fields.area'), minWidth: 200},
   {prop: 'cameraCode', label: 'Camera', width: 120},
-  {prop: 'zoneName', label: 'Vùng trên camera', width: 150},
-  {prop: 'machineName', label: 'Thiết bị', width: 120},
-  {prop: 'machineComponentName', label: 'Bộ phận', width: 140},
+  {prop: 'zoneName', label: t('dashboard.cameraZone'), width: 150},
+  {prop: 'machineName', label: t('alert.equipment'), width: 120},
+  {prop: 'machineComponentName', label: t('alert.component'), width: 140},
   {
     prop: 'componentValue',
-    label: 'Cường độ PĐ',
+    label: t('pd.intensity'),
     width: 130,
     slots: {
       default: ({row}) => <span>{row.componentValue} dB</span>,
     },
   },
   {
-    label: 'Kiểu cảnh báo',
+    label: t('alert.alertMode'),
     width: 240,
     slots: {
       default: ({row}) => <span>{pdCriteriaLabel(row)}</span>,
     },
   },
-  {prop: 'compareResultObject.name', label: 'Đánh giá', width: 110},
-  {prop: 'statusObject.name', label: 'Trạng thái', width: 120},
-  {prop: 'resolveTime', label: 'Thời gian xử lý', width: 140},
+  {prop: 'compareResultObject.name', label: t('alert.evaluation'), width: 110},
+  {prop: 'statusObject.name', label: t('fields.status'), width: 120,
+    formatter: (row: any) => enumLabel('notificationStatusList', row.statusObject?.code, row.statusObject?.name)},
+  {prop: 'resolveTime', label: t('alert.resolveTime'), width: 140},
 ])
 
 const machineRef = ref<InstanceType<typeof VirtualizedSelectFromUrl>>()
@@ -164,7 +169,7 @@ const exportFile = (searchParams: any) => {
   isExportLoading.value = true
   requestExport(notificationExportApi, searchParams).then((res) => {
     invokeSignalR('RegisterJob', res.jobId)
-    ElMessage.success('File sẽ tự động download sau khi đã xuất xong')
+    ElMessage.success(t('alert.exportStarted'))
   })
 }
 </script>
@@ -172,7 +177,7 @@ const exportFile = (searchParams: any) => {
 <template>
   <list-template
       ref="elTableRef"
-      title="Danh sách Phóng điện vượt ngưỡng"
+      :title="t('pd.notificationTitle')"
       key-list="pd-notification-system"
       :columns="columns"
       :search-props="{ visibleSearchButton: false, inline: false, className:'' }"
@@ -189,29 +194,29 @@ const exportFile = (searchParams: any) => {
     <template slot="search" v-slot="{ searchParams }">
       <div class="filter-row">
         <div class="filter-item">
-          <div class="filter-label">Thời gian từ</div>
+          <div class="filter-label">{{ t('alert.timeFrom') }}</div>
           <el-date-picker
               v-model="searchParams.fromTime"
               type="datetime"
-              placeholder="Thời gian bắt đầu"
+              :placeholder="t('alert.startTime')"
               format="YYYY/MM/DD hh:mm:ss A"
               value-format="YYYY-MM-DD HH:mm:ss"
               class="!w-[-webkit-fill-available] filter-input"
           />
         </div>
         <div class="filter-item">
-          <div class="filter-label">Thời gian đến</div>
+          <div class="filter-label">{{ t('alert.timeTo') }}</div>
           <el-date-picker
               v-model="searchParams.toTime"
               type="datetime"
-              placeholder="Thời gian kết thúc"
+              :placeholder="t('alert.endTime')"
               format="YYYY/MM/DD hh:mm:ss A"
               value-format="YYYY-MM-DD HH:mm:ss"
               class="!w-[-webkit-fill-available] filter-input"
           />
         </div>
         <div class="filter-item">
-          <div class="filter-label">Khu vực</div>
+          <div class="filter-label">{{ t('fields.area') }}</div>
           <tree-select-remote
               class="filter-input"
               v-model="searchParams.areaId"
@@ -222,7 +227,7 @@ const exportFile = (searchParams: any) => {
           />
         </div>
         <div class="filter-item">
-          <div class="filter-label">Thiết bị</div>
+          <div class="filter-label">{{ t('alert.equipment') }}</div>
           <virtualized-select-from-url
               ref="machineRef"
               v-model="searchParams.machineId"
@@ -234,10 +239,10 @@ const exportFile = (searchParams: any) => {
           />
         </div>
         <div class="filter-item">
-          <div class="filter-label">Kiểu cảnh báo</div>
-          <el-select v-model="searchParams.evaluationThresholdType" clearable placeholder="Tất cả" class="filter-input">
-            <el-option :value="7" label="So với tốc độ tăng ΔPD% theo kỳ" />
-            <el-option :value="8" label="So với ngưỡng cường độ PD" />
+          <div class="filter-label">{{ t('alert.alertMode') }}</div>
+          <el-select v-model="searchParams.evaluationThresholdType" clearable :placeholder="t('pd.all')" class="filter-input">
+            <el-option :value="7" :label="t('pd.criteriaGrowth')" />
+            <el-option :value="8" :label="t('pd.criteriaDb')" />
           </el-select>
         </div>
         <search-button @click="elTableRef?.refresh()"/>

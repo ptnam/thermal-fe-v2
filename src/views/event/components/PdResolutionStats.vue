@@ -1,29 +1,29 @@
 <template>
   <PdWidgetCard v-loading="loading">
-    <template #title>Tỷ lệ xử lý cảnh báo</template>
+    <template #title>{{ t('pd.resolution.title') }}</template>
 
     <div class="stats-grid">
       <div class="stat-box">
-        <div class="stat-box__label">Tổng số cảnh báo</div>
+        <div class="stat-box__label">{{ t('pd.resolution.total') }}</div>
         <div class="stat-box__value">{{ total }}</div>
       </div>
       <div class="stat-box stat-box--danger">
-        <div class="stat-box__label">Chưa xử lý</div>
+        <div class="stat-box__label">{{ t('pd.resolution.pending') }}</div>
         <div class="stat-box__value">{{ stats.pendingCount }}</div>
       </div>
       <div class="stat-box stat-box--success">
-        <div class="stat-box__label">Đã xử lý</div>
+        <div class="stat-box__label">{{ t('pd.resolution.resolved') }}</div>
         <div class="stat-box__value">{{ stats.resolvedCount }}</div>
       </div>
       <div class="stat-box">
-        <div class="stat-box__label">Thời gian xử lý trung bình</div>
+        <div class="stat-box__label">{{ t('pd.resolution.avgTime') }}</div>
         <div class="stat-box__value">{{ formattedAvgTime }}</div>
       </div>
     </div>
 
     <div class="progress-row">
       <div class="progress-row__label">
-        Tỷ lệ đã xử lý
+        {{ t('pd.resolution.resolvedRate') }}
         <strong>{{ resolvedPercent }}%</strong>
       </div>
       <div class="progress-bar">
@@ -34,9 +34,12 @@
 </template>
 
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 import PdWidgetCard from './PdWidgetCard.vue'
 import { notificationResolutionStatsApi } from '@/api/notification'
 import { computed, watch, ref } from 'vue'
+
+const { t } = useLang()
 
 // Widget "Tỷ lệ xử lý cảnh báo" (tab Thống kê Phóng điện vượt ngưỡng) - đo hiệu quả xử lý (không chỉ đo thiết
 // bị như 2 widget kia): bao nhiêu % cảnh báo đã xử lý, xử lý mất trung bình bao lâu.
@@ -57,10 +60,10 @@ const resolvedPercent = computed(() => (total.value > 0 ? Math.round((stats.valu
 const formattedAvgTime = computed(() => {
   const minutes = stats.value.avgResolutionMinutes
   if (minutes == null) return '—'
-  if (minutes < 60) return `${minutes} phút`
+  if (minutes < 60) return t('pd.resolution.minutes', { n: minutes })
   const hours = Math.floor(minutes / 60)
   const remain = Math.round(minutes % 60)
-  return `${hours} giờ${remain ? ` ${remain} phút` : ''}`
+  return t('pd.resolution.hours', { n: hours }) + (remain ? ' ' + t('pd.resolution.minutes', { n: remain }) : '')
 })
 
 async function load() {

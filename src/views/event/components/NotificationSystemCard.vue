@@ -11,13 +11,13 @@
           <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
           <line x1="12" y1="18" x2="12.01" y2="18"></line>
         </svg>
-        Thiết bị: <strong>{{row.machineName}}</strong>
+        {{ t('alert.equipment') }}: <strong>{{row.machineName}}</strong>
       </div>
       <div class="sc-info-item">
         <svg style="width:14px; height:14px; margin-right:4px; vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"></path>
         </svg>
-        Nhiệt độ: <strong style="color:var(--danger); font-size:16px">{{row.componentValue}}°C</strong>
+        {{ t('alert.temperature') }}: <strong style="color:var(--danger); font-size:16px">{{row.componentValue}}°C</strong>
       </div>
       <div class="sc-info-item">
         <svg style="width:14px; height:14px; margin-right:4px; vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -26,7 +26,7 @@
           <line x1="12" y1="9" x2="12" y2="13"></line>
           <line x1="12" y1="17" x2="12.01" y2="17"></line>
         </svg>
-        Ngưỡng: {{row.compareMaxTemperature}}°C (Chênh lệch: {{ row.deltaValue}})
+        {{ t('alert.threshold') }}: {{row.compareMaxTemperature}}°C ({{ t('alert.delta') }}: {{ row.deltaValue}})
       </div>
       <div  class="sc-info-item" style="margin-top: 10px; font-size: 11px; color: var(--text-sub); border-top: 1px solid var(--border); padding-top: 8px;">
         <svg style="width:12px; height:12px; margin-right:4px; vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -40,8 +40,11 @@
 </template>
 
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 
 import {TableColumn} from "@/components/Table/TableCard.vue";
+
+const { t } = useLang()
 
 type RowData = any
 defineProps<{

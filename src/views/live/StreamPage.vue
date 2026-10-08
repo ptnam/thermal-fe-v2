@@ -31,9 +31,9 @@
                     d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
                 </path>
               </svg>
-              Thiết lập
+              {{ t('live.setup') }}
             </button>
-            <el-button :icon="FullScreen" @click="requestFullScreen" title="Toàn màn hình"></el-button>
+            <el-button :icon="FullScreen" @click="requestFullScreen" :title="t('video.fullscreen')"></el-button>
             <div class="flex w-[50%] md:w-fit overflow-x-auto lg:max-w-none">
               <el-pagination
                 v-show="totalItems"
@@ -46,7 +46,7 @@
               </el-pagination>
             </div>
           </div>
-          <div v-show="environmentTemperature !== null" class="env-temp">Nhiệt độ môi trường:
+          <div v-show="environmentTemperature !== null" class="env-temp">{{ t('area.ambientTemperature') }}:
             {{ environmentTemperature?.temperature ?? "" }}
           </div>
         </div>
@@ -84,6 +84,7 @@
 </template>
 
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { getCameraSettingApi } from '@/api/camera-setting'
 import { isCam } from '@/utils/cameraUtils'
@@ -94,6 +95,8 @@ import DrawerSetting from '@/views/live/components/DrawerSetting.vue'
 import { ElDrawer, ElMessage } from 'element-plus'
 import AreaTreeLive from '@/views/live/components/AreaTreeLive.vue'
 import { FullScreen } from '@element-plus/icons-vue'
+
+const { t } = useLang()
 
 const fullList = ref<any[]>([])
 
@@ -215,7 +218,7 @@ const applySettings = () => {
   drawerVisible.value = false
   treeLiveRef?.value?.fetch()
   ElMessage({
-    message: 'Lưu thành công!',
+    message: t('common.saveSuccess'),
     type: 'success',
   })
 }

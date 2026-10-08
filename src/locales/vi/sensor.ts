@@ -1,0 +1,20 @@
+// Cảm biến nhiệt
+export default {
+  listTitle: 'Danh sách cảm biến nhiệt',
+  code: 'Mã cảm biến',
+  name: 'Tên cảm biến',
+  type: 'Loại cảm biến',
+  searchLabel: 'Mã/tên cảm biến',
+  searchPlaceholder: 'Nhập mã hoặc tên...',
+  onOff: 'Bật/ tắt',
+  ipLan: 'Địa chỉ IP (LAN)',
+  ipWan: 'Địa chỉ IP (WAN)',
+  pollingInterval: 'Chu kỳ lấy dữ liệu',
+  dataLength: 'Độ dài dữ liệu',
+  iecAddress: 'Địa chỉ IEC',
+  heatSource: 'Nguồn nhiệt',
+  dataSlot: 'Vị trí dữ liệu',
+  monitorPoints: 'Danh sách điểm giám sát',
+  pointCode: 'Mã điểm đo',
+  pointName: 'Tên điểm đo',
+}

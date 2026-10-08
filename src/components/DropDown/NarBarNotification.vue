@@ -16,7 +16,7 @@
             class="notif-item"
             @click="() => redirect(item)"
         >
-          <div class="notif-title">{{ item?.warningEventName }}</div>
+          <div class="notif-title">{{ enumLabel('warningEventList', item.isPd ? 'PD_EXCEEDED' : undefined, item.warningEventName) }}</div>
           <div class="notif-main-row">
             <div class="notif-source">{{ item.areaName }}</div>
             <div class="notif-time">{{ item.dateData }}</div>
@@ -29,7 +29,7 @@
       </div>
       <div class="notif-footer">
         <router-link class="btn-view-all"
-                     to="/event/notification-system">Xem tất cả
+                     to="/event/notification-system">{{ t('common.viewAll') }}
         </router-link>
       </div>
     </div>
@@ -37,9 +37,13 @@
 </template>
 
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 import {onMounted, ref} from 'vue'
 import {lastestBriefApi} from '@/api/notification'
 import { useRouter } from 'vue-router'
+import { enumLabel } from '@/utils/enumLabel'
+
+const { t } = useLang()
 const router = useRouter();
 
 const newsList = ref<any[]>([])

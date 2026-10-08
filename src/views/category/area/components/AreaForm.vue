@@ -8,19 +8,19 @@
       :transform-form-data="transformFormData"
   >
     <template v-slot="{ formErrors }">
-      <el-form-item label="Tỉnh" prop="provinceId" :error="formErrors.ProvinceId">
+      <el-form-item :label="t('area.province')" prop="provinceId" :error="formErrors.ProvinceId">
         <select-from-config
             v-model="formModel.provinceId"
             key-config="provinceList"
         />
       </el-form-item>
-      <el-form-item label="Mã khu vực" prop="code" :error="formErrors.Code">
+      <el-form-item :label="t('area.code')" prop="code" :error="formErrors.Code">
         <el-input v-model="formModel.code"/>
       </el-form-item>
-      <el-form-item label="Tên khu vực" prop="name" :error="formErrors.Name">
+      <el-form-item :label="t('area.name')" prop="name" :error="formErrors.Name">
         <el-input v-model="formModel.name"/>
       </el-form-item>
-      <el-form-item label="Loại bản đồ" prop="mapType" :error="formErrors.MapType">
+      <el-form-item :label="t('area.mapType')" prop="mapType" :error="formErrors.MapType">
         <select-from-config
             v-model="formModel.mapType"
             key-config="mapTypeList"
@@ -30,12 +30,12 @@
       </el-form-item>
       <template v-if="formModel.mapType === MAP_TYPE_PICTURE">
         <Suspense>
-          <el-form-item prop="photoFile" label="Sơ đồ một sợi" :error="formErrors.photoFile">
+          <el-form-item prop="photoFile" :label="t('area.singleLineDiagram')" :error="formErrors.photoFile">
             <ImageUploader v-model="formModel.photoPath" @onfile="changePhotoFile"/>
           </el-form-item>
         </Suspense>
         <Suspense>
-          <el-form-item prop="emapPhotoPath" label="Sơ đồ mặt bằng" :error="formErrors.emapPhotoPath">
+          <el-form-item prop="emapPhotoPath" :label="t('area.sitePlan')" :error="formErrors.emapPhotoPath">
             <GlbUploadButton
                 :file-path="formModel.emapPhotoPath"
                 :model-position="formModel?.emapPosition?.modelPosition"
@@ -49,14 +49,14 @@
           </el-form-item>
         </Suspense>
       </template>
-      <el-form-item label="Khu vực cha" prop="parentId" :error="formErrors.ParentId">
+      <el-form-item :label="t('area.parent')" prop="parentId" :error="formErrors.ParentId">
         <tree-select-remote
             v-model="formModel.parentId"
             :request-fn="getAllTreeAreaApi"
             clearable
         />
       </el-form-item>
-      <el-form-item label="Tọa độ" :error="formErrors.Latitude ?? formErrors.Longitude">
+      <el-form-item :label="t('map.coordinates')" :error="formErrors.Latitude ?? formErrors.Longitude">
         <div class="flex w-full">
           <LatLngPicker ref="mapPicker" :map-config="formModel" @input="setCoordinate"/>
           <div v-show="formModel.latitude && formModel.longitude" class="ml-4 w-full">
@@ -68,17 +68,17 @@
         </div>
       </el-form-item>
 
-      <el-form-item label="Ghi chú" prop="note" :error="formErrors.Note">
+      <el-form-item :label="t('fields.note')" prop="note" :error="formErrors.Note">
         <el-input v-model="formModel.note"/>
       </el-form-item>
-      <el-form-item label="Giá trị đánh giá" prop="comparationDataMode" :error="formErrors.ComparationDataMode">
+      <el-form-item :label="t('area.comparisonMode')" prop="comparationDataMode" :error="formErrors.ComparationDataMode">
         <select-from-config
             v-model="formModel.comparationDataMode"
             key-config="comparationDataModeList"
             col-value="code"
         ></select-from-config>
       </el-form-item>
-      <el-form-item label="Nhiệt độ môi trường" prop="environmentTemperature"
+      <el-form-item :label="t('area.ambientTemperature')" prop="environmentTemperature"
                     :error="formErrors.EnvironmentTemperature">
         <el-input-number
             v-model="formModel.environmentTemperature"
@@ -87,7 +87,7 @@
             :max="100"
         ></el-input-number>
       </el-form-item>
-      <el-form-item label="Trạng thái" prop="status" :error="formErrors.Status">
+      <el-form-item :label="t('fields.status')" prop="status" :error="formErrors.Status">
         <select-from-config
             key-config="userStatusList"
             v-model="formModel.status"
@@ -99,6 +99,7 @@
 </template>
 
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 import FormWrapper from '@/components/Form/FormWrapper.vue'
 import SelectFromConfig from '@/components/Selection/SelectFromConfig.vue'
 import {computed, nextTick, ref, watch} from 'vue'
@@ -112,6 +113,8 @@ import ImageUploader from '@/components/Input/ImageUploader.vue'
 import {MAP_TYPE_PICTURE} from '@/constants'
 import {buildFormData} from '@/utils/objectUtils'
 import { useAppStore } from '@/store/modules/app'
+
+const { t } = useLang()
 
 
 const props = defineProps({
@@ -199,8 +202,8 @@ const isEditing = computed(() => {
 })
 const userRules = computed<FormRules>(() => {
   const rules: FormRules = {
-    code: [rule('required', true, 'Mã khu vực'), rule('min', 3, 'Mã khu vực')],
-    name: [rule('required', true, 'Tên khu vực')],
+    code: [rule('required', true), rule('min', 3)],
+    name: [rule('required', true)],
     status: [rule('required', true, 'status')],
   }
 

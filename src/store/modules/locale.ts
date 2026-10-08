@@ -27,22 +27,22 @@ interface LocaleState {
   localeMap: LocaleDropdownType[]
 }
 
+// Tên ngôn ngữ ghi bằng chính ngôn ngữ đó, không dịch
+const LOCALE_MAP: LocaleDropdownType[] = [
+  { lang: 'vi', name: 'Tiếng Việt' },
+  { lang: 'en', name: 'English' },
+]
+
+const resolveLang = (lang: unknown): LocaleType =>
+  LOCALE_MAP.find((item) => item.lang === lang)?.lang ?? 'vi'
+
 export const useLocaleStore = defineStore('locales', {
   state: (): LocaleState => {
     return {
       currentLocale: {
-        lang: getStorage('lang') || 'vi',
+        lang: resolveLang(getStorage('lang')),
       },
-      localeMap: [
-        {
-          lang: 'vi',
-          name: '🇻🇳 Việt Nam'
-        },
-        {
-          lang: 'en',
-          name: '🇺🇸 English'
-        },
-      ],
+      localeMap: LOCALE_MAP,
     }
   },
   getters: {

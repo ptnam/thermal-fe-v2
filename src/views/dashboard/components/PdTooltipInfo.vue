@@ -1,21 +1,24 @@
 <template>
   <div class="pd-tooltip">
-    <p class="pd-tooltip__title">Thiết bị: {{ machine?.name }}</p>
+    <p class="pd-tooltip__title">{{ t('dashboard.equipment') }}: {{ machine?.name }}</p>
 
-    <p v-if="loading && !components.length" class="pd-tooltip__empty">Đang tải dữ liệu...</p>
-    <p v-else-if="stale" class="pd-tooltip__empty">Không có dữ liệu gần đây</p>
+    <p v-if="loading && !components.length" class="pd-tooltip__empty">{{ t('dashboard.loading') }}</p>
+    <p v-else-if="stale" class="pd-tooltip__empty">{{ t('dashboard.noRecentData') }}</p>
     <template v-else-if="components.length">
       <div v-for="item in components" :key="item.machineComponentId" class="pd-tooltip__row">
         <span>{{ item.machineComponentName }}</span>
         <span v-if="item.lastLevelDb != null" class="font-bold">{{ item.lastLevelDb }} dB</span>
-        <span v-else class="pd-tooltip__empty">Chưa có dữ liệu</span>
+        <span v-else class="pd-tooltip__empty">{{ t('dashboard.noData') }}</span>
       </div>
     </template>
-    <p v-else class="pd-tooltip__empty">Chưa có bộ phận nào được giám sát PD</p>
+    <p v-else class="pd-tooltip__empty">{{ t('dashboard.noPdComponents') }}</p>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
+
+const { t } = useLang()
 // Tooltip hover marker PD: tên bộ phận + dB; chi tiết đầy đủ ở PdMachineDetail.vue.
 defineProps<{
   machine: { name?: string } | null

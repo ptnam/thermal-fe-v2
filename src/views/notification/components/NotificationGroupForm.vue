@@ -7,14 +7,14 @@
       @success="handleSuccess"
   >
     <template v-slot="{ formErrors }">
-      <el-form-item label="Bộ cảnh báo" prop="name" :error="formErrors.Name">
+      <el-form-item :label="t('alertSetting.group.name')" prop="name" :error="formErrors.Name">
         <el-input v-model="formModel.name" clearable/>
       </el-form-item>
-      <el-form-item label="Mã cảnh báo" prop="code" :error="formErrors.Code">
+      <el-form-item :label="t('alertSetting.channel.code')" prop="code" :error="formErrors.Code">
         <el-input v-model="formModel.code" clearable/>
       </el-form-item>
       <el-form-item
-          label="Kênh cảnh báo"
+          :label="t('alertSetting.group.channel')"
           prop="notificationChannels"
           :error="formErrors.NotificationChannels"
       >
@@ -25,7 +25,7 @@
             value-key="id"
         />
       </el-form-item>
-      <el-form-item label="Sự kiện" prop="events" :error="formErrors.Events">
+      <el-form-item :label="t('alertSetting.group.events')" prop="events" :error="formErrors.Events">
         <object-select-from-url
             :request-fn="getAllWarningEventApi"
             v-model="formModel.events"
@@ -34,7 +34,7 @@
         />
       </el-form-item>
       <el-form-item
-          label="Thời gian cảnh báo"
+          :label="t('alertSetting.group.alertTime')"
           prop="fromTime"
           :error="formErrors.FromTime ?? formErrors.ToTime"
       >
@@ -42,13 +42,13 @@
             v-model="warningTimeValue"
             is-range
             range-separator="-"
-            start-placeholder="Thời gian bắt đầu"
-            end-placeholder="Thời gian kết thúc"
+            :start-placeholder="t('alert.startTime')"
+            :end-placeholder="t('alert.endTime')"
             format="HH:mm"
             value-format="HH:mm:ss"
         />
       </el-form-item>
-      <el-form-item label="Khu vực" prop="areaId" :error="formErrors.AreaId">
+      <el-form-item :label="t('fields.area')" prop="areaId" :error="formErrors.AreaId">
         <tree-select-remote
             v-model="formModel.areaId"
             :request-fn="getAllTreeAreaApi"
@@ -57,7 +57,7 @@
             @change="handleChangeArea"
         />
       </el-form-item>
-      <el-form-item label="Trạng thái" prop="status" :error="formErrors.Status">
+      <el-form-item :label="t('fields.status')" prop="status" :error="formErrors.Status">
         <select-from-config
             key-config="userStatusList"
             v-model="formModel.status"
@@ -69,6 +69,7 @@
 </template>
 
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 import FormWrapper from '@/components/Form/FormWrapper.vue'
 import {computed, nextTick, ref} from 'vue'
 import {rule} from '@/utils/validate'
@@ -82,6 +83,8 @@ import SelectFromConfig from '@/components/Selection/SelectFromConfig.vue'
 import {getAllWarningEventApi} from '@/api/warning-event'
 import TreeSelectRemote from "@/components/Tree/TreeSelectRemote.vue";
 import { useAppStore } from '@/store/modules/app'
+
+const { t } = useLang()
 
 const props = defineProps({
   formModel: {

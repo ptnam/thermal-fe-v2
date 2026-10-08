@@ -1,6 +1,6 @@
 <template>
   <el-upload class="mb-5" :show-file-list="false" :before-upload="handlePreview" accept="image/*">
-    <el-button type="primary">Tải lên hỉnh ảnh</el-button>
+    <el-button type="primary">{{ t('upload.uploadImage') }}</el-button>
   </el-upload>
 
   <div v-if="previewData" class="relative inline-block m-4">
@@ -16,8 +16,11 @@
 </template>
 
 <script setup>
+import { useLang } from '@/hooks/web/useI18n'
 import {ref, watch} from 'vue'
 import {Close} from '@element-plus/icons-vue'
+
+const { t } = useLang()
 
 const props = defineProps({
   modelValue: String,

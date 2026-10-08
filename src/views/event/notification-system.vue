@@ -1,4 +1,6 @@
 <script setup lang="tsx">
+import { enumLabel } from '@/utils/enumLabel'
+import { useLang } from '@/hooks/web/useI18n'
 import ListTemplate from '@/components/PageTemplate/List/ListTemplate.vue'
 import {TableColumn} from '@/components/Table'
 import {computed, nextTick, onMounted, onUnmounted, ref} from 'vue'
@@ -34,19 +36,21 @@ import {ElImage} from 'element-plus'
 import NotificationSystemCard from '@/views/event/components/NotificationSystemCard.vue'
 import { useAppStore } from '@/store/modules/app'
 
+const { t } = useLang()
+
 const {confirmModal} = useConfirmModal()
 
 // listNotificationApi trả cả cảnh báo PD nếu không lọc - khoá cứng warningEventCode như pd-notification-system.vue.
 const THERMAL_WARNING_EVENT_CODE = 'OVERTHERMAL'
 
 const changeStatus = (row: any) => {
-  confirmModal('Cập nhật trạng thái', 'Bạn có chắc muốn cập nhật trạng thái đã xử lý?', () => {
+  confirmModal(t('alert.updateStatus'), t('alert.updateStatusConfirm'), () => {
     updateNotificationStatusApi(row.id, {
       status: row.statusObject.code === 'Pending' ? 2 : 1,
       dataTime: row.dataTime,
     }).then(() => {
       ElMessage({
-        message: 'Lưu thành công!',
+        message: t('common.saveSuccess'),
         type: 'success',
       })
       elTableRef?.value?.refresh()
@@ -76,7 +80,7 @@ const columns = computed<TableColumn[]>(() => [
   },
   {
     width: '120px',
-    label: 'Hình ảnh',
+    label: t('alert.image'),
     align: 'center',
     slots: {
       default: ({row}) => (
@@ -101,28 +105,29 @@ const columns = computed<TableColumn[]>(() => [
       ),
     },
   },
-  {prop: 'dateData', label: 'Ngày', width: 120},
-  {prop: 'timeData', label: 'Giờ', width: 120},
-  {prop: 'areaName', label: 'Khu vực', minWidth: 250},
-  {prop: 'machineName', label: 'Thiết bị', width: 120},
-  {prop: 'machineComponentName', label: 'Bộ phận', width: 120},
-  {prop: 'monitorPointCode', label: 'Điểm nhiệt',  width: 120},
+  {prop: 'dateData', label: t('alert.date'), width: 120},
+  {prop: 'timeData', label: t('alert.hour'), width: 120},
+  {prop: 'areaName', label: t('fields.area'), minWidth: 250},
+  {prop: 'machineName', label: t('alert.equipment'), width: 120},
+  {prop: 'machineComponentName', label: t('alert.component'), width: 120},
+  {prop: 'monitorPointCode', label: t('alert.thermalPoint'),  width: 120},
   {
     prop: 'componentValue',
-    label: 'Nhiệt độ',
+    label: t('alert.temperature'),
     width: 120,
     slots: {
       default: ({row}) => (<span style={{color: 'var(--danger)'}}>{row.componentValue}</span>)
     },
   },
-  {prop: 'compareTypeObject.name', label: 'Kiểu cảnh báo', width: 200},
-  {prop: 'warningEventName', label: 'Loại cảnh báo', width: 120},
-  {prop: 'compareComponent', label: 'Đối tượng so sánh', width: 160},
-  {prop: 'compareValue', label: 'Nhiệt độ so sánh', width: 160},
-  {prop: 'deltaValue', label: 'Chênh lệch', width: 120},
-  {prop: 'compareResultObject.name', label: 'Đánh giá', width: 100},
-  {prop: 'statusObject.name', label: 'Trạng thái', width: 120},
-  {prop: 'resolveTime', label: 'Thời gian xử lý', width: 140},
+  {prop: 'compareTypeObject.name', label: t('alert.alertMode'), width: 200},
+  {prop: 'warningEventName', label: t('alert.alertType'), width: 120},
+  {prop: 'compareComponent', label: t('alert.compareObject'), width: 160},
+  {prop: 'compareValue', label: t('alert.compareTemperature'), width: 160},
+  {prop: 'deltaValue', label: t('alert.delta'), width: 120},
+  {prop: 'compareResultObject.name', label: t('alert.evaluation'), width: 100},
+  {prop: 'statusObject.name', label: t('fields.status'), width: 120,
+    formatter: (row: any) => enumLabel('notificationStatusList', row.statusObject?.code, row.statusObject?.name)},
+  {prop: 'resolveTime', label: t('alert.resolveTime'), width: 140},
 ])
 
 const machineRef = ref<InstanceType<typeof VirtualizedSelectFromUrl>>()
@@ -155,7 +160,7 @@ const openDetail = (row: any) => {
 const updateStatusSuccess = () => {
   detailVisible.value = false;
   ElMessage({
-    message: 'Lưu thành công!',
+    message: t('common.saveSuccess'),
     type: 'success',
   })
   elTableRef?.value?.refresh()
@@ -182,7 +187,7 @@ const exportFile = (searchParams: any) => {
   isExportLoading.value = true
   requestExport(notificationExportApi, searchParams).then((res) => {
     invokeSignalR('RegisterJob', res.jobId)
-    ElMessage.success('File sẽ tự động download sau khi đã xuất xong')
+    ElMessage.success(t('alert.exportStarted'))
   })
 }
 </script>
@@ -190,7 +195,7 @@ const exportFile = (searchParams: any) => {
 <template>
   <list-template
       ref="elTableRef"
-      title="Danh sách Nhiệt độ vượt ngưỡng"
+      :title="t('alert.overTempTitle')"
       key-list="notification-system"
       :columns="columns"
       :search-props="{ visibleSearchButton: false, inline: false, className:'' }"
@@ -207,29 +212,29 @@ const exportFile = (searchParams: any) => {
     <template slot="search" v-slot="{ searchParams }">
       <div class="filter-row">
         <div class="filter-item">
-          <div class="filter-label">Thời gian từ</div>
+          <div class="filter-label">{{ t('alert.timeFrom') }}</div>
           <el-date-picker
               v-model="searchParams.fromTime"
               type="datetime"
-              placeholder="Thời gian bắt đầu"
+              :placeholder="t('alert.startTime')"
               format="YYYY/MM/DD hh:mm:ss A"
               value-format="YYYY-MM-DD HH:mm:ss"
               class="!w-[-webkit-fill-available] filter-input"
           />
         </div>
         <div class="filter-item">
-          <div class="filter-label">Thời gian đến</div>
+          <div class="filter-label">{{ t('alert.timeTo') }}</div>
           <el-date-picker
               v-model="searchParams.toTime"
               type="datetime"
-              placeholder="Thời gian kết thúc"
+              :placeholder="t('alert.endTime')"
               format="YYYY/MM/DD hh:mm:ss A"
               value-format="YYYY-MM-DD HH:mm:ss"
               class="!w-[-webkit-fill-available] filter-input"
           />
         </div>
         <div class="filter-item">
-          <div class="filter-label">Khu vực</div>
+          <div class="filter-label">{{ t('fields.area') }}</div>
           <tree-select-remote
               class="filter-input"
               v-model="searchParams.areaId"
@@ -240,7 +245,7 @@ const exportFile = (searchParams: any) => {
           />
         </div>
         <div class="filter-item">
-          <div class="filter-label">Thiết bị</div>
+          <div class="filter-label">{{ t('alert.equipment') }}</div>
           <virtualized-select-from-url
               ref="machineRef"
               v-model="searchParams.machineId"

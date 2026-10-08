@@ -41,7 +41,7 @@
               @click="drawer?.removeAllPoint()"
           >
           </el-button>
-          <el-tooltip content="Lưu tọa độ vùng">
+          <el-tooltip :content="t('video.saveZone')">
             <el-button
                 v-if="isDrawing && pointCount"
                 color="#16457F"
@@ -66,6 +66,7 @@
 </template>
 
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 import {ref, onMounted, nextTick} from 'vue'
 import {
   CloseBold,
@@ -75,6 +76,8 @@ import {
 import {getStreamApi, visionPresetApi} from '@/api/camera'
 import {PolygonDrawer} from '@/utils/PolygonDrawer'
 import {ElMessage} from "element-plus";
+
+const { t } = useLang()
 
 const props = defineProps({
   streamKey: {type: [String, Number], required: true},
@@ -198,7 +201,7 @@ function startDrawing() {
                 if (pointCount.value >= 3 && !drawer?.isConvex()) {
                   drawer?.showFullScreenAlert(
                       videoRef,
-                      'không phải hình đa giác lồi, vui lòng vẽ lại!',
+                      t('video.notConvex'),
                   )
                 }
               })
@@ -272,7 +275,7 @@ const saveVisionPresets = () => {
     toggleFullScreen()
     nextTick(() => {
       ElMessage({
-        message: 'Lưu thành công!',
+        message: t('common.saveSuccess'),
         type: 'success',
       })
     })

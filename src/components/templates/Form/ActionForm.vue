@@ -24,6 +24,7 @@
 </template>
 
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 import { ref, computed, unref } from "vue";
 import type { FormInstance } from "element-plus";
 import { ElMessage } from "element-plus";
@@ -31,6 +32,8 @@ import type { ActionFormProps } from "@/components/templates/Form/types.ts";
 import { useSimpleFormRequest } from "@/hooks/web/useSimpleFormRequest";
 import CancelButton from "@/components/Button/CancelButton.vue";
 import SaveButton from "@/components/Button/SaveButton.vue";
+
+const { t } = useLang()
 
 type TModel = Record<string, never>;
 
@@ -44,7 +47,7 @@ const mergedFormProps = computed(() => ({
   requireAsteriskPosition: "right",
   visibleButtonSlot: true,
   labelWidth: "auto",
-  messageSuccess: "Lưu thành công!",
+  messageSuccess: t('common.saveSuccess'),
   ...props.formProps,
 }));
 

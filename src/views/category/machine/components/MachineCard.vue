@@ -10,7 +10,7 @@
     <div class="sc-name">{{ row.name }}</div>
     <div class="sc-info">
       <div class="sc-info-item">📍 {{ row?.area?.name }}</div>
-      <div class="sc-info-item">📦 Loại: {{row?.machineType?.name}}</div>
+      <div class="sc-info-item">📦 {{ t('fields.type') }}: {{row?.machineType?.name}}</div>
     </div>
     <div class="sc-info">
       <div class="sc-info-item">📅 {{ row.createdAt }}</div>
@@ -23,8 +23,11 @@
 </template>
 
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 
 import {TableColumn} from "@/components/Table/TableCard.vue";
+
+const { t } = useLang()
 
 type RowData = any
 defineProps<{

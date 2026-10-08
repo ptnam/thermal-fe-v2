@@ -1,36 +1,36 @@
 <template>
   <div class="pd-assignment">
     <div class="pd-assignment__label-row">
-      <span class="pd-assignment__label">Công thức tốc độ tăng ΔPD% theo kỳ</span>
-      <span class="pd-assignment-card__hint">Soạn/sửa công thức ở màn Cài đặt (Quản trị hệ thống)</span>
+      <span class="pd-assignment__label">{{ t('formula.assignment.title') }}</span>
+      <span class="pd-assignment-card__hint">{{ t('formula.assignment.editHint') }}</span>
     </div>
 
     <p v-if="!targetId" class="pd-assignment-card__empty">
-      Lưu {{ targetLabel }} trước khi gán công thức riêng.
+      {{ t('formula.assignment.saveTargetFirst', { target: targetLabel }) }}
     </p>
 
     <template v-else>
-      <p class="pd-assignment-card__label">Gán công thức mới</p>
+      <p class="pd-assignment-card__label">{{ t('formula.assignment.assignNew') }}</p>
       <div class="pd-assignment-new">
-        <el-select v-model="newFormulaId" placeholder="Chọn công thức" filterable class="pd-assignment-new__select">
+        <el-select v-model="newFormulaId" :placeholder="t('formula.assignment.selectFormula')" filterable class="pd-assignment-new__select">
           <el-option v-for="f in activeFormulas" :key="f.id" :label="f.name" :value="f.id" />
         </el-select>
         <el-date-picker
           v-model="newEffectiveFrom"
           type="datetime"
-          placeholder="Thời gian bắt đầu áp dụng"
+          :placeholder="t('formula.assignment.effectiveFrom')"
           format="YYYY-MM-DD HH:mm"
           value-format="YYYY-MM-DD HH:mm:ss"
           :disabled-date="disabledDate"
           class="pd-assignment-new__date"
         />
-        <el-button :loading="saving" :disabled="!newFormulaId || !newEffectiveFrom" @click="onAssign">Gán</el-button>
+        <el-button :loading="saving" :disabled="!newFormulaId || !newEffectiveFrom" @click="onAssign">{{ t('formula.assignment.assign') }}</el-button>
       </div>
-      <p v-if="showPastSelectionError" class="pd-assignment-card__hint pd-assignment-card__hint--error">Thời gian bắt đầu áp dụng không được ở quá khứ.</p>
-      <p class="pd-assignment-card__hint pd-assignment-card__hint--gap">Thời gian bắt đầu áp dụng có thể ở tương lai - công thức chỉ có hiệu lực từ đúng thời điểm đó, không ảnh hưởng dữ liệu đã ghi nhận trước đó.</p>
+      <p v-if="showPastSelectionError" class="pd-assignment-card__hint pd-assignment-card__hint--error">{{ t('formula.assignment.pastNotAllowed') }}</p>
+      <p class="pd-assignment-card__hint pd-assignment-card__hint--gap">{{ t('formula.assignment.futureHint') }}</p>
 
       <p v-if="!appliedRows.length && !historyLoading" class="pd-assignment-card__hint pd-assignment-card__hint--gap">
-        Hiện chưa có công thức riêng nào có hiệu lực - đang dùng công thức theo loại bộ phận/mặc định.
+        {{ t('formula.assignment.noActive') }}
       </p>
 
       <div class="pd-assignment-columns">
@@ -40,18 +40,18 @@
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" /><polyline points="12 7 12 12 15.5 14" /></svg>
               </span>
               <div>
-                <div class="pd-assignment-panel__title">Lịch sử áp dụng <span class="pd-assignment-panel__count">({{ appliedRows.length }})</span></div>
-                <div class="pd-assignment-panel__subtitle">Các lần công thức đã được áp dụng trong hệ thống.</div>
+                <div class="pd-assignment-panel__title">{{ t('formula.assignment.history') }} <span class="pd-assignment-panel__count">({{ appliedRows.length }})</span></div>
+                <div class="pd-assignment-panel__subtitle">{{ t('formula.assignment.historyDesc') }}</div>
               </div>
             </div>
             <div v-loading="historyLoading" class="pd-assignment-table-wrap">
-              <p v-if="!appliedRows.length && !historyLoading" class="pd-assignment-card__empty">Chưa có công thức nào được áp dụng.</p>
+              <p v-if="!appliedRows.length && !historyLoading" class="pd-assignment-card__empty">{{ t('formula.assignment.historyEmpty') }}</p>
               <table v-else class="pd-assignment-table">
                 <thead>
                   <tr>
-                    <th>Thời gian áp dụng</th>
-                    <th>Công thức</th>
-                    <th>Trạng thái</th>
+                    <th>{{ t('formula.assignment.appliedAt') }}</th>
+                    <th>{{ t('formula.assignment.formula') }}</th>
+                    <th>{{ t('fields.status') }}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -63,8 +63,8 @@
                       </td>
                       <td class="pd-assignment-table__name">{{ row.formulaName }}</td>
                       <td>
-                        <span v-if="row.isCurrentlyActive" class="pd-assignment-status pd-assignment-status--active">Đang áp dụng</span>
-                        <span v-else class="pd-assignment-status pd-assignment-status--stopped">Đã dừng</span>
+                        <span v-if="row.isCurrentlyActive" class="pd-assignment-status pd-assignment-status--active">{{ t('formula.assignment.active') }}</span>
+                        <span v-else class="pd-assignment-status pd-assignment-status--stopped">{{ t('formula.assignment.stopped') }}</span>
                       </td>
                     </tr>
                     <tr v-if="expandedRowId === row.id && row.formulaExpression" class="pd-assignment-table__detail-row">
@@ -79,7 +79,7 @@
                 </tbody>
               </table>
             </div>
-            <div class="pd-assignment-panel__footer">Tổng cộng: {{ appliedRows.length }} bản ghi</div>
+            <div class="pd-assignment-panel__footer">{{ t('formula.assignment.total', { count: appliedRows.length }) }}</div>
           </div>
 
           <div class="pd-assignment-panel">
@@ -88,18 +88,18 @@
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
               </span>
               <div>
-                <div class="pd-assignment-panel__title">Dự kiến sẽ áp dụng <span class="pd-assignment-panel__count">({{ upcomingRows.length }})</span></div>
-                <div class="pd-assignment-panel__subtitle">Các lần áp dụng theo lịch trong tương lai.</div>
+                <div class="pd-assignment-panel__title">{{ t('formula.assignment.upcoming') }} <span class="pd-assignment-panel__count">({{ upcomingRows.length }})</span></div>
+                <div class="pd-assignment-panel__subtitle">{{ t('formula.assignment.upcomingDesc') }}</div>
               </div>
             </div>
             <div v-loading="historyLoading" class="pd-assignment-table-wrap">
-              <p v-if="!upcomingRows.length && !historyLoading" class="pd-assignment-card__empty">Không có công thức nào đang chờ áp dụng.</p>
+              <p v-if="!upcomingRows.length && !historyLoading" class="pd-assignment-card__empty">{{ t('formula.assignment.upcomingEmpty') }}</p>
               <table v-else class="pd-assignment-table">
                 <thead>
                   <tr>
-                    <th>Thời gian áp dụng</th>
-                    <th>Công thức</th>
-                    <th>Trạng thái</th>
+                    <th>{{ t('formula.assignment.appliedAt') }}</th>
+                    <th>{{ t('formula.assignment.formula') }}</th>
+                    <th>{{ t('fields.status') }}</th>
                     <th class="pd-assignment-table__action-col"></th>
                   </tr>
                 </thead>
@@ -112,10 +112,10 @@
                       </td>
                       <td class="pd-assignment-table__name">{{ row.formulaName }}</td>
                       <td>
-                        <span v-if="row.isFutureWinner" class="pd-assignment-status pd-assignment-status--future">Sẽ áp dụng</span>
-                        <span v-else class="pd-assignment-status pd-assignment-status--stopped">Đã bị ghi đè</span>
+                        <span v-if="row.isFutureWinner" class="pd-assignment-status pd-assignment-status--future">{{ t('formula.assignment.willApply') }}</span>
+                        <span v-else class="pd-assignment-status pd-assignment-status--stopped">{{ t('formula.assignment.overridden') }}</span>
                       </td>
-                      <td class="pd-assignment-table__action-col"><button type="button" class="pd-assignment-table__cancel" title="Hủy việc áp dụng công thức này" @click.stop="onCancel(row.id)">Hủy</button></td>
+                      <td class="pd-assignment-table__action-col"><button type="button" class="pd-assignment-table__cancel" :title="t('formula.assignment.cancelTitle')" @click.stop="onCancel(row.id)">{{ t('common.cancel') }}</button></td>
                     </tr>
                     <tr v-if="expandedRowId === row.id && row.formulaExpression" class="pd-assignment-table__detail-row">
                       <td colspan="4">
@@ -129,7 +129,7 @@
                 </tbody>
               </table>
             </div>
-            <div class="pd-assignment-panel__footer">Tổng cộng: {{ upcomingRows.length }} bản ghi</div>
+            <div class="pd-assignment-panel__footer">{{ t('formula.assignment.total', { count: upcomingRows.length }) }}</div>
           </div>
       </div>
     </template>
@@ -137,10 +137,13 @@
 </template>
 
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 import { computed, onMounted, ref, watch } from 'vue'
 import dayjs from 'dayjs'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { addFormulaAssignmentApi, deleteFormulaAssignmentApi, listFormulaAssignmentsApi, listFormulasApi, listFormulaVariablesApi } from '@/api/formula'
+
+const { t } = useLang()
 
 // ThresholdType.PdGrowthRate (7) - hiện picker này chỉ dùng cho công thức ΔPD%/tháng, xem Enums.cs (BE).
 const PD_GROWTH_RATE_THRESHOLD_TYPE = 7
@@ -153,7 +156,7 @@ const props = defineProps<{
   targetId?: number
 }>()
 
-const targetLabel = computed(() => (props.targetType === 2 ? 'loại bộ phận' : 'bộ phận'))
+const targetLabel = computed(() => (props.targetType === 2 ? t('formula.assignment.targetPartType') : t('formula.assignment.targetPart')))
 function formatDateTime(v: string) {
   return dayjs(v).format('DD/MM/YYYY HH:mm')
 }
@@ -265,7 +268,7 @@ async function onAssign() {
       formulaId: newFormulaId.value,
       effectiveFrom: newEffectiveFrom.value,
     })
-    ElMessage.success('Đã gán công thức')
+    ElMessage.success(t('formula.assignment.assigned'))
     newFormulaId.value = undefined
     newEffectiveFrom.value = defaultEffectiveFrom()
     await loadHistory()
@@ -276,16 +279,16 @@ async function onAssign() {
 
 async function onCancel(id: number) {
   try {
-    await ElMessageBox.confirm('Hủy việc áp dụng công thức này? Chỉ áp dụng được cho công thức chưa tới thời điểm hiệu lực.', 'Xác nhận hủy', {
+    await ElMessageBox.confirm(t('formula.assignment.cancelConfirm'), t('formula.assignment.cancelConfirmTitle'), {
       type: 'warning',
-      confirmButtonText: 'Hủy áp dụng',
-      cancelButtonText: 'Đóng',
+      confirmButtonText: t('formula.assignment.cancelApply'),
+      cancelButtonText: t('common.close'),
     })
   } catch {
     return
   }
   await deleteFormulaAssignmentApi(id)
-  ElMessage.success('Đã hủy việc áp dụng')
+  ElMessage.success(t('formula.assignment.canceled'))
   await loadHistory()
 }
 

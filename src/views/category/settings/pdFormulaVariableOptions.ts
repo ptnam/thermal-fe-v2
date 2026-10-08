@@ -3,17 +3,32 @@
 // đây phải đổi cả bên BE, không tự suy ra được. Dùng chung cho FormulaVariableForm.vue (dropdown) và
 // formula-settings.vue (hiển thị tóm tắt nguồn dữ liệu ở bảng "Biến số").
 
+import { i18n } from '@/plugins/vueI18n'
+
 interface OptionItem {
+  key: string
   label: string
   value: number
 }
+
+const V = 'formula.variable.'
+const tr = (key: string, n: string | number = 'N') => i18n.global.t(V + key, { n })
+
+// label là getter để nhãn đổi theo ngôn ngữ mỗi lần render; {n} mặc định hiển thị "N"
+const opt = (key: string, value: number): OptionItem => ({
+  key,
+  value,
+  get label() {
+    return tr(key)
+  },
+})
 
 // Cột nguồn không còn chọn được ở form (mọi biến tự tính mới đều mặc định dB) - giữ lại danh sách này
 // chỉ để hiển thị đúng nhãn cho dữ liệu cũ/chỉnh tay trong DB có thể khác mặc định.
 export const LEVEL_DB_SOURCE_COLUMN = 1
 export const SOURCE_COLUMN_OPTIONS: OptionItem[] = [
-  { label: 'Cường độ PD (dB)', value: LEVEL_DB_SOURCE_COLUMN },
-  { label: 'Tốc độ tăng ΔPD% theo kỳ', value: 2 },
+  opt('source.levelDb', LEVEL_DB_SOURCE_COLUMN),
+  opt('source.growthRate', 2),
 ]
 
 // 0 KHÔNG phải giá trị enum bên BE (AggregateFunction bên đó là smallint? - 0 không nằm trong dải
@@ -23,13 +38,13 @@ export const NONE_AGGREGATE_FUNCTION = 0
 // có Khoảng thời gian (khác mọi hàm tổng hợp còn lại).
 export const CURRENT_AGGREGATE_FUNCTION = 7
 export const AGGREGATE_FUNCTION_OPTIONS: OptionItem[] = [
-  { label: 'Giá trị đầu tiên', value: 1 },
-  { label: 'Giá trị cuối cùng', value: 2 },
-  { label: 'Giá trị nhỏ nhất', value: 3 },
-  { label: 'Giá trị lớn nhất', value: 4 },
-  { label: 'Trung bình', value: 5 },
-  { label: 'Số lần đọc', value: 6 },
-  { label: 'Giá trị hiện tại', value: CURRENT_AGGREGATE_FUNCTION },
+  opt('aggregate.first', 1),
+  opt('aggregate.last', 2),
+  opt('aggregate.min', 3),
+  opt('aggregate.max', 4),
+  opt('aggregate.avg', 5),
+  opt('aggregate.count', 6),
+  opt('aggregate.current', CURRENT_AGGREGATE_FUNCTION),
 ]
 
 export const SCOPE_LAST_N_HOURS = 6
@@ -40,26 +55,27 @@ export const SCOPE_LAST_N_READINGS = 10
 export const SCOPE_FIXED_DATE = 11
 
 export const SCOPE_TYPE_OPTIONS: OptionItem[] = [
-  { label: 'Từ lúc phát hiện đầu tiên', value: 1 },
-  { label: 'Hôm nay', value: 2 },
-  { label: 'Tuần này', value: 3 },
-  { label: 'Tháng này', value: 4 },
-  { label: 'Năm này', value: 5 },
-  { label: 'N giờ gần nhất', value: SCOPE_LAST_N_HOURS },
-  { label: 'N ngày gần nhất', value: SCOPE_LAST_N_DAYS },
-  { label: 'N tuần gần nhất', value: SCOPE_LAST_N_WEEKS },
-  { label: 'N tháng gần nhất', value: SCOPE_LAST_N_MONTHS },
-  { label: 'N lần đọc gần nhất', value: SCOPE_LAST_N_READINGS },
-  { label: 'Từ 1 ngày cụ thể', value: SCOPE_FIXED_DATE },
+  opt('scope.sinceFirst', 1),
+  opt('scope.today', 2),
+  opt('scope.thisWeek', 3),
+  opt('scope.thisMonth', 4),
+  opt('scope.thisYear', 5),
+  opt('scope.lastNHours', SCOPE_LAST_N_HOURS),
+  opt('scope.lastNDays', SCOPE_LAST_N_DAYS),
+  opt('scope.lastNWeeks', SCOPE_LAST_N_WEEKS),
+  opt('scope.lastNMonths', SCOPE_LAST_N_MONTHS),
+  opt('scope.lastNReadings', SCOPE_LAST_N_READINGS),
+  opt('scope.fromDate', SCOPE_FIXED_DATE),
 ]
 
 export const SCOPE_N_LABELS: Record<number, string> = {
-  [SCOPE_LAST_N_HOURS]: 'Số giờ (N)',
-  [SCOPE_LAST_N_DAYS]: 'Số ngày (N)',
-  [SCOPE_LAST_N_WEEKS]: 'Số tuần (N)',
-  [SCOPE_LAST_N_MONTHS]: 'Số tháng (N)',
-  [SCOPE_LAST_N_READINGS]: 'Số lần đọc (N)',
+  get [SCOPE_LAST_N_HOURS]() { return tr('nLabel.hours') },
+  get [SCOPE_LAST_N_DAYS]() { return tr('nLabel.days') },
+  get [SCOPE_LAST_N_WEEKS]() { return tr('nLabel.weeks') },
+  get [SCOPE_LAST_N_MONTHS]() { return tr('nLabel.months') },
+  get [SCOPE_LAST_N_READINGS]() { return tr('nLabel.readings') },
 }
+export const nLabelFallback = () => tr('nLabel.generic')
 
 export const SCOPE_TYPES_NEEDING_N = [SCOPE_LAST_N_HOURS, SCOPE_LAST_N_DAYS, SCOPE_LAST_N_WEEKS, SCOPE_LAST_N_MONTHS, SCOPE_LAST_N_READINGS]
 
@@ -74,29 +90,30 @@ export const SCOPE_END_LAST_N_WEEKS = 5
 export const SCOPE_END_LAST_N_MONTHS = 6
 
 export const SCOPE_END_TYPE_OPTIONS: OptionItem[] = [
-  { label: 'Hiện tại', value: SCOPE_END_NOW },
-  { label: 'N giờ gần nhất', value: SCOPE_END_LAST_N_HOURS },
-  { label: 'N ngày gần nhất', value: SCOPE_END_LAST_N_DAYS },
-  { label: 'N tuần gần nhất', value: SCOPE_END_LAST_N_WEEKS },
-  { label: 'N tháng gần nhất', value: SCOPE_END_LAST_N_MONTHS },
-  { label: 'Đến 1 ngày cụ thể', value: SCOPE_END_FIXED_DATE },
+  opt('scopeEnd.now', SCOPE_END_NOW),
+  opt('scopeEnd.hoursAgo', SCOPE_END_LAST_N_HOURS),
+  opt('scopeEnd.daysAgo', SCOPE_END_LAST_N_DAYS),
+  opt('scopeEnd.weeksAgo', SCOPE_END_LAST_N_WEEKS),
+  opt('scopeEnd.monthsAgo', SCOPE_END_LAST_N_MONTHS),
+  opt('scopeEnd.toDate', SCOPE_END_FIXED_DATE),
 ]
 
 export const SCOPE_END_N_LABELS: Record<number, string> = {
-  [SCOPE_END_LAST_N_HOURS]: 'Số giờ (N)',
-  [SCOPE_END_LAST_N_DAYS]: 'Số ngày (N)',
-  [SCOPE_END_LAST_N_WEEKS]: 'Số tuần (N)',
-  [SCOPE_END_LAST_N_MONTHS]: 'Số tháng (N)',
+  get [SCOPE_END_LAST_N_HOURS]() { return tr('nLabel.hours') },
+  get [SCOPE_END_LAST_N_DAYS]() { return tr('nLabel.days') },
+  get [SCOPE_END_LAST_N_WEEKS]() { return tr('nLabel.weeks') },
+  get [SCOPE_END_LAST_N_MONTHS]() { return tr('nLabel.months') },
 }
 
 export const SCOPE_END_TYPES_NEEDING_N = [SCOPE_END_LAST_N_HOURS, SCOPE_END_LAST_N_DAYS, SCOPE_END_LAST_N_WEEKS, SCOPE_END_LAST_N_MONTHS]
 
-function findLabel(options: OptionItem[], value: number | null | undefined): string | undefined {
-  return options.find((o) => o.value === value)?.label
+function findLabel(options: OptionItem[], value: number | null | undefined, n?: number | null): string | undefined {
+  const option = options.find((o) => o.value === value)
+  return option && tr(option.key, n ?? 'N')
 }
 
 export function aggregateFunctionLabel(row: { aggregateFunction?: number | null }): string {
-  if (row.aggregateFunction == null) return 'Biến cứng (code)'
+  if (row.aggregateFunction == null) return tr('aggregate.hardcoded')
   return findLabel(AGGREGATE_FUNCTION_OPTIONS, row.aggregateFunction) ?? '?'
 }
 
@@ -112,19 +129,15 @@ export function scopeRangeLabel(row: {
 }): string {
   if (row.aggregateFunction == null || row.aggregateFunction === CURRENT_AGGREGATE_FUNCTION) return '—'
 
-  let scopeLabel = findLabel(SCOPE_TYPE_OPTIONS, row.scopeType) ?? '?'
-  if (row.scopeType != null && SCOPE_TYPES_NEEDING_N.includes(row.scopeType) && row.scopeN) {
-    scopeLabel = scopeLabel.replace('N', String(row.scopeN))
-  } else if (row.scopeType === SCOPE_FIXED_DATE && row.scopeFixedDate) {
-    scopeLabel = `Từ ${row.scopeFixedDate}`
+  let scopeLabel = findLabel(SCOPE_TYPE_OPTIONS, row.scopeType, row.scopeN) ?? '?'
+  if (row.scopeType === SCOPE_FIXED_DATE && row.scopeFixedDate) {
+    scopeLabel = i18n.global.t(V + 'scope.fromDateValue', { date: row.scopeFixedDate })
   }
 
   if (row.scopeEndType != null && row.scopeEndType !== SCOPE_END_NOW) {
-    let endLabel = findLabel(SCOPE_END_TYPE_OPTIONS, row.scopeEndType) ?? '?'
-    if (SCOPE_END_TYPES_NEEDING_N.includes(row.scopeEndType) && row.scopeEndN) {
-      endLabel = endLabel.replace('N', String(row.scopeEndN))
-    } else if (row.scopeEndType === SCOPE_END_FIXED_DATE && row.scopeEndFixedDate) {
-      endLabel = `Đến ${row.scopeEndFixedDate}`
+    let endLabel = findLabel(SCOPE_END_TYPE_OPTIONS, row.scopeEndType, row.scopeEndN) ?? '?'
+    if (row.scopeEndType === SCOPE_END_FIXED_DATE && row.scopeEndFixedDate) {
+      endLabel = i18n.global.t(V + 'scopeEnd.toDateValue', { date: row.scopeEndFixedDate })
     }
     scopeLabel = `${scopeLabel} → ${endLabel}`
   }
@@ -154,19 +167,15 @@ export function summarizeVariableSource(row: {
     return parts.join(' · ')
   }
 
-  let scopeLabel = findLabel(SCOPE_TYPE_OPTIONS, row.scopeType) ?? '?'
-  if (row.scopeType != null && SCOPE_TYPES_NEEDING_N.includes(row.scopeType) && row.scopeN) {
-    scopeLabel = scopeLabel.replace('N', String(row.scopeN))
-  } else if (row.scopeType === SCOPE_FIXED_DATE && row.scopeFixedDate) {
-    scopeLabel = `Từ ${row.scopeFixedDate}`
+  let scopeLabel = findLabel(SCOPE_TYPE_OPTIONS, row.scopeType, row.scopeN) ?? '?'
+  if (row.scopeType === SCOPE_FIXED_DATE && row.scopeFixedDate) {
+    scopeLabel = i18n.global.t(V + 'scope.fromDateValue', { date: row.scopeFixedDate })
   }
 
   if (row.scopeEndType != null && row.scopeEndType !== SCOPE_END_NOW) {
-    let endLabel = findLabel(SCOPE_END_TYPE_OPTIONS, row.scopeEndType) ?? '?'
-    if (SCOPE_END_TYPES_NEEDING_N.includes(row.scopeEndType) && row.scopeEndN) {
-      endLabel = endLabel.replace('N', String(row.scopeEndN))
-    } else if (row.scopeEndType === SCOPE_END_FIXED_DATE && row.scopeEndFixedDate) {
-      endLabel = `Đến ${row.scopeEndFixedDate}`
+    let endLabel = findLabel(SCOPE_END_TYPE_OPTIONS, row.scopeEndType, row.scopeEndN) ?? '?'
+    if (row.scopeEndType === SCOPE_END_FIXED_DATE && row.scopeEndFixedDate) {
+      endLabel = i18n.global.t(V + 'scopeEnd.toDateValue', { date: row.scopeEndFixedDate })
     }
     scopeLabel = `${scopeLabel} → ${endLabel}`
   }

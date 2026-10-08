@@ -7,6 +7,10 @@ import {loginApi} from '@/api/login'
 import {UserLoginType} from '@/api/login/types'
 import {FormInstance} from 'element-plus'
 import {requestAndSendFcmToken} from "@/plugins/firebase/firebase";
+import {useLang} from '@/hooks/web/useI18n'
+import LocaleDropdown from '@/components/LocaleDropdown/LocaleDropdown.vue'
+
+const {t} = useLang()
 
 const router = useRouter()
 const route = useRoute()
@@ -46,6 +50,9 @@ const handleLogin = () => {
 <template>
   <div class="body-login">
     <div class="login-card">
+      <div class="absolute top-3 right-3">
+        <locale-dropdown />
+      </div>
       <div class="logo-area">
         <div class="logo-icon">
           <svg width="32" height="32" viewBox="0 0 24 24">
@@ -53,7 +60,7 @@ const handleLogin = () => {
           </svg>
         </div>
         <div class="app-name">IFS - AI</div>
-        <div class="app-desc">Phần mềm Camera Thông minh</div>
+        <div class="app-desc">{{ t('login.appDesc') }}</div>
       </div>
 
       <el-form
@@ -66,7 +73,7 @@ const handleLogin = () => {
       >
 
         <div class="form-group">
-          <label class="label">Tài khoản</label>
+          <label class="label">{{ t('login.username') }}</label>
           <div class="input-wrapper">
             <svg class="input-icon" viewBox="0 0 24 24">
               <path
@@ -84,7 +91,7 @@ const handleLogin = () => {
         </div>
 
         <div class="form-group">
-          <label class="label">Mật khẩu</label>
+          <label class="label">{{ t('login.password') }}</label>
           <div class="input-wrapper">
             <svg class="input-icon" viewBox="0 0 24 24">
               <path
@@ -97,14 +104,14 @@ const handleLogin = () => {
 
         <div class="form-options">
 
-          <a href="#" class="forgot-pass">Quên mật khẩu?</a>
+          <a href="#" class="forgot-pass">{{ t('login.forgotPassword') }}</a>
         </div>
 
         <el-button
             :loading="loading"
             @click="handleLogin"
             class="btn-submit">
-          ĐĂNG NHẬP HỆ THỐNG
+          {{ t('login.submit') }}
         </el-button>
       </el-form>
 

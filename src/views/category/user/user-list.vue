@@ -1,4 +1,5 @@
 <script setup lang="tsx">
+import { enumLabel } from '@/utils/enumLabel'
 import ListTemplate from '@/components/PageTemplate/List/ListTemplate.vue'
 import {TableColumn} from '@/components/Table'
 import {useLang} from '@/hooks/web/useI18n'
@@ -26,11 +27,11 @@ const renderActionColumn = (scope: any) => {
   )
 }
 const columns = computed<TableColumn[]>(() => [
-  {prop: 'fullName', label: t('user_list.fullName')},
+  {prop: 'fullName', label: t('user.fullName')},
   {prop: 'email', label: t('fields.email')},
   {prop: 'phone', label: t('fields.phone')},
   {
-    label: 'Khu vực',
+    label: t('fields.area'),
     slots: {
       default: (scope: any) => (
           <span>{joinFieldValues(scope.row.areas, 'name')}</span>
@@ -44,7 +45,7 @@ const columns = computed<TableColumn[]>(() => [
     slots: {
       default: ({row}) => (<span   style={{
         color: row.status === 'Active' ? 'var(--success)' : 'var(--danger)'
-      }}>{row.displayStatus}</span>)
+      }}>{enumLabel('userStatusList', row.status, row.displayStatus)}</span>)
     },
   },
   {prop: 'createdAt', width: 260, label: t('fields.created_at')},
@@ -102,7 +103,7 @@ const isMobile = computed(() => appStore.isMobile)
 
 <template>
   <list-template
-      :title="t('user_list.title')"
+      :title="t('user.title')"
       ref="elTableRef"
       key-list="user-list"
       :columns="columns"
@@ -118,7 +119,7 @@ const isMobile = computed(() => appStore.isMobile)
     <template slot="search" v-slot="{ searchParams }">
       <div class="filter-row">
         <div class="filter-item">
-          <div class="filter-label">Trạng thái</div>
+          <div class="filter-label">{{ t('fields.status') }}</div>
           <select-from-config
               class="filter-input"
               key-config="userStatusList"
@@ -127,23 +128,23 @@ const isMobile = computed(() => appStore.isMobile)
           ></select-from-config>
         </div>
         <div class="filter-item">
-          <div class="filter-label">Tên</div>
-          <el-input v-model="searchParams.name" clearable placeholder="Nhập tên người dùng..."/>
+          <div class="filter-label">{{ t('fields.name') }}</div>
+          <el-input v-model="searchParams.name" clearable :placeholder="t('user.namePlaceholder')"/>
         </div>
         <div class="filter-item">
           <div class="filter-label">Email</div>
-          <el-input v-model="searchParams.email" clearable placeholder="Nhập email..."/>
+          <el-input v-model="searchParams.email" clearable :placeholder="t('user.emailPlaceholder')"/>
         </div>
         <div class="filter-item">
           <div class="filter-label">Telegram</div>
-          <el-input v-model="searchParams.telegramUsername" clearable placeholder="Nhập Telegram ID..."/>
+          <el-input v-model="searchParams.telegramUsername" clearable :placeholder="t('user.telegramPlaceholder')"/>
         </div>
         <search-button @click="elTableRef?.refresh()"/>
         <api-button
             :api="syncTelegramChatIdApi"
             class="btn-search" style="background: transparent; border: 1px solid var(--border); color: var(--text-main)"
         >
-          ⟳ Đồng bộ Telegram
+          ⟳ {{ t('user.syncTelegram') }}
         </api-button>
       </div>
     </template>
@@ -152,7 +153,7 @@ const isMobile = computed(() => appStore.isMobile)
   <ActionForm v-model="dialogVisible" :size="isMobile? '100%': '50%'">
     <user-form
         v-model:formModel="formModel"
-        :title="formModel.id ? 'Cập nhật người dùng': 'Thêm người dùng mới'"
+        :title="formModel.id ? t('user.edit') : t('user.add')"
         @success="saveSuccess"
     ></user-form>
   </ActionForm>

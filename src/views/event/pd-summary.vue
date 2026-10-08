@@ -1,36 +1,36 @@
 <template>
   <PageContainer>
     <el-tabs v-model="activeTab">
-      <el-tab-pane label="Thống kê phóng điện vượt ngưỡng" name="threshold-stats">
+      <el-tab-pane :label="t('pd.tabThresholdStats')" name="threshold-stats">
         <div class="stats-tab">
           <div class="filter-section-modern">
             <div class="filter-row-inline">
               <div class="filter-group-inline">
-                <label>Khu vực</label>
+                <label>{{ t('fields.area') }}</label>
                 <TreeSelectRemote
                     v-model="draftAreaId"
                     :request-fn="getAllTreeAreaApi"
                     filterable
                     clearable
-                    placeholder="Chọn"
+                    :placeholder="t('pd.select')"
                 />
               </div>
               <div class="filter-group-inline">
-                <label>Từ ngày</label>
+                <label>{{ t('alert.fromDate') }}</label>
                 <el-date-picker
                     v-model="draftStartDate"
                     type="date"
-                    placeholder="Ngày bắt đầu"
+                    :placeholder="t('alert.startDate')"
                     value-format="YYYY-MM-DD"
                     class="select-single-modern !w-full"
                 />
               </div>
               <div class="filter-group-inline">
-                <label>Đến ngày</label>
+                <label>{{ t('alert.toDate') }}</label>
                 <el-date-picker
                     v-model="draftEndDate"
                     type="date"
-                    placeholder="Ngày kết thúc"
+                    :placeholder="t('alert.endDate')"
                     value-format="YYYY-MM-DD"
                     class="select-single-modern !w-full"
                 />
@@ -40,7 +40,7 @@
                   <circle cx="11" cy="11" r="8"></circle>
                   <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
-                TÌM KIẾM
+                {{ t('common.search') }}
               </button>
               <el-button :loading="isLoadingExport" class="btn-export" @click="exportFile">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -61,7 +61,7 @@
           <PdTopComponents />
         </div>
       </el-tab-pane>
-      <el-tab-pane label="Nhật ký phóng điện theo điểm đo" name="level-log">
+      <el-tab-pane :label="t('pd.tabLevelLog')" name="level-log">
         <PdLevelLog />
       </el-tab-pane>
     </el-tabs>
@@ -69,6 +69,7 @@
 </template>
 
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 import PageContainer from '@/components/Container/PageContainer.vue'
 import PdLevelLog from '@/views/event/components/PdLevelLog.vue'
 import PdThresholdStats from '@/views/event/components/PdThresholdStats.vue'
@@ -82,6 +83,8 @@ import { exportPdCountApi } from '@/api/notification'
 import { downloadFile } from '@/utils/response'
 import useRequest from '@/hooks/web/useRequest'
 import { ref } from 'vue'
+
+const { t } = useLang()
 
 // Bộ lọc Khu vực + Khoảng thời gian DÙNG CHUNG cho cả tab "Thống kê phóng điện vượt ngưỡng" - trước đây mỗi
 // widget tự có 1 bộ lọc riêng (khác giá trị nhau, dễ gây nhầm lẫn khi so sánh). PdTopComponents là

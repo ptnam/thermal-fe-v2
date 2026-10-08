@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h2 class="font-bold">Thay đổi thứ tự hiển thị của camera</h2>
-    <h6>Kéo và thả dòng cần thay đổi tới nơi mới</h6>
+    <h2 class="font-bold">{{ t('live.reorderTitle') }}</h2>
+    <h6>{{ t('live.reorderHint') }}</h6>
     <base-table class="mt-4" :data="tableData" :columns="columns" v-draggable="dragOptions"/>
     <div class="mt-4 flex gap-2 justify-center">
       <cancel-button @click="emits('closeDialog')"></cancel-button>
@@ -10,13 +10,17 @@
   </div>
 </template>
 <script setup lang="ts">
+import { enumLabel } from '@/utils/enumLabel'
+import { useLang } from '@/hooks/web/useI18n'
 import {BaseTable} from "@/components/Table";
 import {vDraggable} from "@/components/Table/v-draggable";
 import SaveButton from "@/components/Button/SaveButton.vue";
 import CancelButton from "@/components/Button/CancelButton.vue";
 import {updateCameraSettingApi} from "@/api/camera-setting";
 import {CAMERA_COMMANDS} from "@/constants";
-import {ref} from "vue";
+import {ref, computed } from "vue";
+
+const { t } = useLang()
 
 const emits = defineEmits(['closeDialog', 'updateCamSetting'])
 
@@ -47,12 +51,13 @@ const dragOptions = [
   },
 ];
 
-const columns = [
+const columns = computed(() => [
   {prop: 'id', label: "ID"},
-  {prop: 'code', label: "Mã camera"},
-  {prop: 'name', label: "Tên camera"},
-  {prop: 'deviceStatusObject.name', label: 'Trạng thái', width: '150px'},
-];
+  {prop: 'code', label: t('camera.code')},
+  {prop: 'name', label: t('camera.name')},
+  {prop: 'deviceStatusObject.name', label: t('fields.status'), width: '150px',
+    formatter: (row: any) => enumLabel('deviceStatusList', row.deviceStatusObject?.code, row.deviceStatusObject?.name)},
+]);
 
 const save = () => {
   saveLoading.value = true

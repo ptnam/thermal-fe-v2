@@ -9,7 +9,7 @@
       <template v-slot="{ formErrors }">
         <div>
           <div class="flex flex-col md:flex-row mx-4 items-center">
-            <el-form-item label="Tốc độ quay" prop="speed" :error="formErrors.speed">
+            <el-form-item :label="t('video.rotationSpeed')" prop="speed" :error="formErrors.speed">
               <el-slider
                   :min="0"
                   :step="3"
@@ -32,14 +32,14 @@
                     :icon="ZoomIn"
                     color="#64B35A"
                     @click="() => requestCommand(CAMERA_COMMANDS.ZoomIn)"
-                    title="Phóng to"
+                    :title="t('video.zoomIn')"
                 ></el-button>
                 <el-button
                     circle
                     :icon="ZoomOut"
                     color="#E6513B"
                     @click="() => requestCommand(CAMERA_COMMANDS.ZoomOut)"
-                    title="Thu nhỏ"
+                    :title="t('video.zoomOut')"
                 ></el-button>
               </div>
               <div class="flex flex-row">
@@ -48,14 +48,14 @@
                     circle
                     :icon="SwitchButton"
                     @click="() => requestCommand(CAMERA_COMMANDS.Restart)"
-                    title="Khởi động lại"
+                    :title="t('video.restart')"
                 ></el-button>
                 <el-button
                     color="#1D5DA8"
                     circle
                     :icon="Setting"
                     @click="() => requestCommand(CAMERA_COMMANDS.Calibration)"
-                    title="Điều chỉnh (calibration) tự động"
+                    :title="t('video.autoCalibration')"
                 ></el-button>
               </div>
             </div>
@@ -68,6 +68,7 @@
   </div>
 </template>
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 import FormWrapper from '@/components/Form/FormWrapper.vue'
 import {sendCommandCameraApi, setViewingAngleApi} from '@/api/camera'
 import GameControllerPad from '@/components/Button/GameControllerPad.vue'
@@ -75,6 +76,8 @@ import {SwitchButton, ZoomIn, ZoomOut, Setting} from '@element-plus/icons-vue'
 import useRequest from "@/hooks/web/useRequest";
 import {ref} from "vue";
 import {CAMERA_COMMANDS} from "@/constants/camera";
+
+const { t } = useLang()
 
 const props = defineProps({
   formModel: {

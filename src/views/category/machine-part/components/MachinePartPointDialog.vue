@@ -12,16 +12,16 @@
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2.5">
             <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"></path>
           </svg>
-          <h3 class="text-[14px] md:text-[18px] text-[#3b82f6] uppercase">THIẾT LẬP NGƯỠNG CẢNH BÁO</h3>
+          <h3 class="text-[14px] md:text-[18px] text-[#3b82f6] uppercase">{{ t('machinePart.setupThreshold') }}</h3>
         </div>
       </div>
     </template>
     <!-- Tách 2 tab domain Nhiệt độ / Phóng điện (PD) - đây là nơi cấu hình "Khai báo chung từ loại thiết
          bị" hiện ra ở MachinePointDialog.vue (Khai báo riêng theo bộ phận). -->
     <el-tabs v-model="domainTab" type="card">
-      <el-tab-pane name="thermal" label="Ngưỡng nhiệt độ">
+      <el-tab-pane name="thermal" :label="t('machinePart.thermalThreshold')">
         <div class="p-4 ml-2 min-h-[400px]">
-          <el-form-item label="Loại ngưỡng cảnh báo" label-position="top">
+          <el-form-item :label="t('machinePart.thresholdType')" label-position="top">
             <ThresholdFilter
                 v-model="thermalSelectedTypes"
                 :options="thermalThresholdTypeOptions"
@@ -31,10 +31,10 @@
           <threshold-tab :threshold-list="thermalThresholdList"/>
         </div>
       </el-tab-pane>
-      <el-tab-pane name="pd" label="Ngưỡng phóng điện (PD)">
+      <el-tab-pane name="pd" :label="t('machinePart.pdThreshold')">
         <div class="p-4 ml-2 min-h-[400px]">
           <!-- Single-select - PD chỉ chọn 1 trong 2 kiểu (ΔPD%/tháng HOẶC ngưỡng dB tuyệt đối). -->
-          <el-form-item label="Loại ngưỡng PD nhận cảnh báo" label-position="top">
+          <el-form-item :label="t('machinePart.pdThresholdType')" label-position="top">
             <el-select v-model="pdSelectedType" value-key="id" clearable class="!w-full">
               <el-option v-for="item in pdThresholdTypeOptions" :key="item.id" :label="item.name" :value="item"/>
             </el-select>
@@ -55,13 +55,14 @@
         <el-button
             type="primary"
             @click="emits('save', thresholdList)"
-        >Lưu cấu hình</el-button>
+        >{{ t('machinePart.saveConfig') }}</el-button>
       </div>
     </template>
   </el-drawer>
 </template>
 
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 import {computed, ref} from 'vue'
 import CancelButton from '@/components/Button/CancelButton.vue'
 import {cloneObject} from "@/utils/objectUtils";
@@ -70,6 +71,8 @@ import ThresholdTab from "@/views/category/machine/components/ThresholdTab.vue";
 import {useConfigStore} from "@/store/modules/configStore";
 import ThresholdFilter from "@/views/category/machine-part/components/ThresholdFilter.vue";
 import PdFormulaAssignmentPicker from '@/views/category/machine/components/PdFormulaAssignmentPicker.vue'
+
+const { t } = useLang()
 
 // ThresholdType.PdGrowthRate (7) / PdLevelDb (8) - xem Enums.cs (BE).
 const PD_THRESHOLD_TYPE_IDS = [7, 8]
@@ -80,14 +83,14 @@ const allThresholdTypeOptions = computed(() => configStore.getConfig('thresholdT
 const thermalThresholdTypeOptions = computed(() =>
     allThresholdTypeOptions.value.filter((item: any) => !PD_THRESHOLD_TYPE_IDS.includes(item.id)),
 )
-const PD_THRESHOLD_TYPE_LABELS: Record<number, string> = {
-  [PD_GROWTH_RATE_ID]: 'So với tốc độ tăng ΔPD% theo kỳ',
-  [PD_LEVEL_DB_ID]: 'So với ngưỡng cường độ PD (dB)',
+const PD_THRESHOLD_TYPE_KEYS: Record<number, string> = {
+  [PD_GROWTH_RATE_ID]: 'machinePart.pdGrowthRate',
+  [PD_LEVEL_DB_ID]: 'machinePart.pdLevelDb',
 }
 const pdThresholdTypeOptions = computed(() =>
     allThresholdTypeOptions.value
         .filter((item: any) => PD_THRESHOLD_TYPE_IDS.includes(item.id))
-        .map((item: any) => ({ ...item, name: PD_THRESHOLD_TYPE_LABELS[item.id] ?? item.name }))
+        .map((item: any) => ({ ...item, name: PD_THRESHOLD_TYPE_KEYS[item.id] ? t(PD_THRESHOLD_TYPE_KEYS[item.id]) : item.name }))
         .sort((a: any, b: any) => (a.id === PD_LEVEL_DB_ID ? -1 : b.id === PD_LEVEL_DB_ID ? 1 : 0)),
 )
 const domainTab = ref<'thermal' | 'pd'>('thermal')

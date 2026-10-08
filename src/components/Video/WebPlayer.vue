@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 import {ref, onMounted} from 'vue'
 import {getStreamApi} from '@/api/camera'
 import { useRouter } from 'vue-router';
+
+const { t } = useLang()
 
 const router = useRouter();
 
@@ -66,44 +69,44 @@ function screenshot() {
     </div>
     <div ref="videoRef" class="cam-img"></div>
     <div class="cam-footer">
-      <button class="cam-action-btn" title="Thiết lập vùng AI">
+      <button class="cam-action-btn" :title="t('video.aiZone')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
           <path d="M18 13l-1.5-7.5L4 2l3.5 12.5L15 16l3-3z"></path>
         </svg>
       </button>
-      <button class="cam-action-btn" title="Thêm điểm đo">
+      <button class="cam-action-btn" :title="t('video.addPoint')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <rect x="3" y="3" width="18" height="18" rx="2"></rect>
           <line x1="12" y1="8" x2="12" y2="16"></line>
           <line x1="8" y1="12" x2="16" y2="12"></line>
         </svg>
       </button>
-      <button class="cam-action-btn" title="Chụp ảnh" @click="screenshot">
+      <button class="cam-action-btn" :title="t('video.screenshot')" @click="screenshot">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
           <circle cx="12" cy="13" r="4"></circle>
         </svg>
       </button>
-      <button class="cam-action-btn" title="Ghi hình">
+      <button class="cam-action-btn" :title="t('video.record')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="10"></circle>
           <rect x="9" y="9" width="6" height="6"></rect>
         </svg>
       </button>
-      <button class="cam-action-btn" title="Tuần tra/Preset">
+      <button class="cam-action-btn" :title="t('video.patrolPreset')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"></path>
           <polyline points="21 3 21 8 16 8"></polyline>
         </svg>
       </button>
-      <button class="cam-action-btn" title="Tắt cảnh báo">
+      <button class="cam-action-btn" :title="t('video.muteAlert')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="10"></circle>
           <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
         </svg>
       </button>
-      <button class="cam-action-btn" title="Toàn màn hình" @click="redirectFullScreen">
+      <button class="cam-action-btn" :title="t('video.fullscreen')" @click="redirectFullScreen">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <polyline points="15 3 21 3 21 9"></polyline>
           <polyline points="9 21 3 21 3 15"></polyline>

@@ -12,7 +12,7 @@
             </div>
             <div style="font-size:11px; color:var(--text-main); margin-bottom:10px; background:var(--bg-card); padding:6px 10px; border-radius:6px; border: 1px solid var(--border)">
                 <div v-if="marker?.deviceType ==='Sensor'">
-                  <span style="opacity:0.6">Nhiệt độ::</span> <b style="color:var(--warning)">{{ item.temperature }}°C</b>
+                  <span style="opacity:0.6">{{ t('dashboard.temperature') }}:</span> <b style="color:var(--warning)">{{ item.temperature }}°C</b>
                 </div>
                 <div v-else>
                   <span style="opacity:0.6">Min:</span> <b style="color:var(--success)">{{ item.minTemperature }}°C</b> |
@@ -27,6 +27,9 @@
   </div>
 </template>
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
+
+const { t } = useLang()
 defineProps({
   marker: {
     type: [Object, null],

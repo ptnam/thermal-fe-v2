@@ -1,9 +1,11 @@
 import type {AxiosResponse, InternalAxiosRequestConfig} from 'axios'
 import {ElMessage} from 'element-plus'
 import {useUserStoreWithOut} from '@/store/modules/user'
+import {useLocaleStoreWithOut} from '@/store/modules/locale'
 
 const defaultRequestInterceptors = (config: InternalAxiosRequestConfig) => {
     config.headers.set('accept', '*/*')
+    config.headers.set('Accept-Language', useLocaleStoreWithOut().getCurrentLocale.lang)
     return config
 }
 

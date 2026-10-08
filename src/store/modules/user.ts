@@ -5,6 +5,7 @@ import { ElMessageBox } from 'element-plus'
 import router from '@/router'
 import { logoutApi, myProfileApi, refreshTokenApi } from '@/api/login'
 import { getFirebaseToken } from '@/plugins/firebase/firebase'
+import { useLang } from '@/hooks/web/useI18n'
 
 let refreshTimer: number | null = null
 
@@ -84,9 +85,10 @@ export const useUserStore = defineStore('user', {
       this.loadScheduleRefresh()
     },
     logoutConfirm() {
-      ElMessageBox.confirm('Bạn có chắc chắn muốn đăng xuất không?', '', {
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Hủy',
+      const { t } = useLang()
+      ElMessageBox.confirm(t('common.logoutConfirm'), '', {
+        confirmButtonText: t('common.ok'),
+        cancelButtonText: t('common.cancel'),
         type: 'warning',
       }).then(async () => {
         const token = await getFirebaseToken();

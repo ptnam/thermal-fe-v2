@@ -1,18 +1,21 @@
 <template>
   <PdWidgetCard v-loading="loading">
-    <template #title>Phân bố tình trạng cảnh báo</template>
+    <template #title>{{ t('pd.levelDistribution') }}</template>
 
     <VueApexChart v-if="series.length" type="donut" height="380" :options="chartOptions" :series="series" />
-    <div v-else class="empty empty--fill">Chưa có cảnh báo nào trong khoảng thời gian này</div>
+    <div v-else class="empty empty--fill">{{ t('pd.noAlertsInRange') }}</div>
   </PdWidgetCard>
 </template>
 
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 import PdWidgetCard from './PdWidgetCard.vue'
 import { notificationLevelDistributionApi } from '@/api/notification'
 import { useChartTheme } from './useChartTheme'
 import { computed, watch, ref } from 'vue'
 import VueApexChart from 'vue3-apexcharts'
+
+const { t } = useLang()
 
 // Widget "Phân bố tình trạng cảnh báo" (tab Thống kê Phóng điện vượt ngưỡng) - trước đây là snapshot số bộ
 // phận đang ở mỗi mức đánh giá hiện tại (PdComponentBaseline); nay đổi sang % CẢNH BÁO PD (Notification.
@@ -21,10 +24,10 @@ import VueApexChart from 'vue3-apexcharts'
 // sinh ở mức Tốt/Chưa đánh giá nên không cần hiện.
 const PD_WARNING_EVENT_CODE = 'PD_EXCEEDED'
 
-const LEVEL_META: Record<string, { label: string; color: string }> = {
-  Fair: { label: 'Khá', color: '#2563eb' },
-  Average: { label: 'Trung bình', color: '#d97706' },
-  Bad: { label: 'Xấu', color: '#dc2626' },
+const LEVEL_META: Record<string, { labelKey: string; color: string }> = {
+  Fair: { labelKey: 'pd.levels.fair', color: '#2563eb' },
+  Average: { labelKey: 'pd.levels.average', color: '#d97706' },
+  Bad: { labelKey: 'pd.levels.bad', color: '#dc2626' },
 }
 
 const props = defineProps<{
@@ -45,7 +48,10 @@ const { axisTextColor, legendTextColor, tooltipTheme } = useChartTheme()
 
 const series = computed(() => items.value.map((i) => i.count))
 const chartOptions = computed(() => ({
-  labels: items.value.map((i) => LEVEL_META[i.evaluationLevelObject?.code ?? '']?.label ?? i.evaluationLevelObject?.name ?? '—'),
+  labels: items.value.map((i) => {
+    const key = LEVEL_META[i.evaluationLevelObject?.code ?? '']?.labelKey
+    return key ? t(key) : i.evaluationLevelObject?.name ?? '—'
+  }),
   colors: items.value.map((i) => LEVEL_META[i.evaluationLevelObject?.code ?? '']?.color ?? '#94a3b8'),
   legend: { position: 'bottom' as const, labels: { colors: legendTextColor.value } },
   dataLabels: {
@@ -53,7 +59,7 @@ const chartOptions = computed(() => ({
     formatter: (val: number) => `${val.toFixed(1)}%`,
   },
   tooltip: { theme: tooltipTheme.value },
-  noData: { text: 'Không có dữ liệu', style: { color: axisTextColor.value } },
+  noData: { text: t('pd.noData'), style: { color: axisTextColor.value } },
 }))
 
 async function load() {

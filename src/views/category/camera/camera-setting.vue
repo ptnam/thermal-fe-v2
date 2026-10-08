@@ -10,10 +10,10 @@
       </template>
     </data-fetcher>
       <el-tabs v-model="activeName" type="border-card" @tabChange="tabChange">
-        <el-tab-pane label="Quản lý tour" name="1">
+        <el-tab-pane :label="t('camera.tourManagement')" name="1">
           <setting-tour></setting-tour>
         </el-tab-pane>
-        <el-tab-pane label="Quản lý góc quay" name="2">
+        <el-tab-pane :label="t('camera.presetManagement')" name="2">
           <setting-preset
               @addPreset="startDraw"
               @edit="startEditPreset"
@@ -29,27 +29,27 @@
             <template v-slot:sidebar>
               <div class="mt-4 flex flex-col">
                 <div v-show="newDrawing" class="flex flex-col">
-                  <span class="text-sm">Điều khiển camera và chọn các điểm đo</span>
+                  <span class="text-sm">{{ t('camera.controlHint') }}</span>
                   <div class="mt-2 flex flex-row">
-                    <el-button :disabled="!points.length" type="primary" @click="openDialogThermalAreas">Lưu vùng đo
+                    <el-button :disabled="!points.length" type="primary" @click="openDialogThermalAreas">{{ t('camera.saveZone') }}
                     </el-button>
-                    <el-button type="danger" @click="clearPoints">Xóa vùng đo</el-button>
+                    <el-button type="danger" @click="clearPoints">{{ t('camera.clearZone') }}</el-button>
                   </div>
                 </div>
                 <div v-show="!newDrawing" class="flex">
-                  <el-button type="danger" @click="clearPoints">Vẽ lại</el-button>
+                  <el-button type="danger" @click="clearPoints">{{ t('camera.redraw') }}</el-button>
                   <el-button
                       :disabled="!points.length"
                       type="primary" @click="saveEditingPreset"
                   >
-                    Lưu vùng đo
+                    {{ t('camera.saveZone') }}
                   </el-button>
                 </div>
               </div>
               <div v-show="formModel.thermalAreas.length" class="mt-4">
                 <div class="flex gap-2 justify-center items-center">
-                  <span class="text-sm">Danh sách vùng đã đo</span>
-                  <el-button type="primary" @click="openDialogPreset">Lưu Preset</el-button>
+                  <span class="text-sm">{{ t('camera.measuredZones') }}</span>
+                  <el-button type="primary" @click="openDialogPreset">{{ t('camera.savePreset') }}</el-button>
                 </div>
                 <div>
                   <base-table
@@ -73,12 +73,12 @@
             label-width="auto"
             class="demo-ruleForm"
         >
-          <el-form-item label="Tên Preset" prop="name">
+          <el-form-item :label="t('camera.presetName')" prop="name">
             <el-input v-model="formModel.name" autocomplete="off"/>
           </el-form-item>
           <div class="flex justify-center">
             <el-form-item>
-              <el-button :loading="saveLoading" type="primary" @click="savePreset">Lưu</el-button>
+              <el-button :loading="saveLoading" type="primary" @click="savePreset">{{ t('common.save') }}</el-button>
             </el-form-item>
           </div>
         </el-form>
@@ -93,12 +93,12 @@
             label-width="auto"
             class="demo-ruleForm"
         >
-          <el-form-item label="Tên vùng" prop="name">
+          <el-form-item :label="t('camera.zoneName')" prop="name">
             <el-input v-model="thermalAreaForm.name" autocomplete="off"/>
           </el-form-item>
           <div class="flex justify-center">
             <el-form-item>
-              <el-button type="primary" @click="addThermalArea">Thêm vùng</el-button>
+              <el-button type="primary" @click="addThermalArea">{{ t('camera.addZone') }}</el-button>
             </el-form-item>
           </div>
         </el-form>
@@ -107,6 +107,7 @@
   </div>
 </template>
 <script setup lang="tsx">
+import { useLang } from '@/hooks/web/useI18n'
 import {computed, ref} from 'vue'
 import SettingTour from "@/views/category/camera/components/SettingTour.vue";
 import SettingPreset from "@/views/category/camera/components/SettingPreset.vue";
@@ -120,6 +121,8 @@ import {vDraggable} from "@/components/Table/v-draggable";
 import EditCircleButton from "@/components/Button/EditCircleButton.vue";
 import DeleteCircleButton from "@/components/Button/DeleteCircleButton.vue";
 import { useAppStore } from '@/store/modules/app'
+
+const { t } = useLang()
 
 const activeName = ref("1")
 const newDrawing = ref(true);
@@ -140,13 +143,13 @@ const formModel = ref<any>({
 
 const formRules = computed<FormRules>(() => {
   const rules: FormRules = {
-    name: [rule('required', true, 'Tên preset')],
+    name: [rule('required', true)],
   }
   return rules
 })
 
-const thermalAreasColumns = [
-  {prop: 'name', label: "Tên vùng"},
+const thermalAreasColumns = computed(() => [
+  {prop: 'name', label: t('camera.zoneName')},
   {
     label: "",
     slots: {
@@ -158,7 +161,7 @@ const thermalAreasColumns = [
       ),
     },
   },
-]
+])
 const arrayMoveInPlace = (array: any[], fromIndex: number, toIndex: number) => {
   const [movedItem] = array.splice(fromIndex, 1);
   array.splice(toIndex, 0, movedItem);
@@ -286,7 +289,7 @@ const savePreset = () => {
         clearPoints()
         visibleDialogPreset.value = false
         ElMessage({
-          message: 'Lưu thành công!',
+          message: t('common.saveSuccess'),
           type: 'success',
         })
         formModel.value = {

@@ -4,6 +4,7 @@
   </div>
 </template>
 <script setup lang="tsx">
+import { computed } from 'vue'
 import {BaseTable} from "@/components/Table";
 import {ElTag} from "element-plus";
 import {useLang} from "@/hooks/web/useI18n";
@@ -32,14 +33,14 @@ const showMessage = (res: any) => {
   })
 }
 
-const columns = [
+const columns = computed(() => [
   {
     type: 'expand',
     slots: {
       default: (scope: any) => renderExpand(scope)
     }
   },
-  {prop: 'tourName', label: 'Tên'},
+  {prop: 'tourName', label: t('fields.name')},
   {
     prop: 'presetTypeObject.name',
     label: t('fields.action'),
@@ -64,7 +65,7 @@ const columns = [
       ),
     },
   },
-]
+])
 defineProps({
   data: {
     type: Array,

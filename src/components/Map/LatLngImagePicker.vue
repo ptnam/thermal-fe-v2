@@ -1,9 +1,9 @@
 <template>
   <LatLngPicker
       ref="latLngPickerRef"
-      longitudeLabel="Tọa độ X"
-      latitudeLabel="Tọa độ Y"
-      :buttonText="buttonText"
+      :longitudeLabel="t('map.x')"
+      :latitudeLabel="t('map.y')"
+      :buttonText="buttonText ?? t('map.pickOnImage')"
       :map-config="{ ...mapConfig, zoom: 0 }"
       :crs="crs"
       :mapType="MAP_TYPE_PICTURE"
@@ -14,6 +14,7 @@
 </template>
 
 <script setup>
+import { useLang } from '@/hooks/web/useI18n'
 import {ref, watch, nextTick} from 'vue'
 import LatLngPicker from '@/components/Map/LatLngPicker.vue'
 import {LImageOverlay} from '@vue-leaflet/vue-leaflet'
@@ -21,6 +22,8 @@ import {LImageOverlay} from '@vue-leaflet/vue-leaflet'
 import {CRS} from 'leaflet'
 import {useImageBounds} from "@/hooks/web/useImageBounds.js";
 import { MAP_TYPE_PICTURE } from '@/constants/index.js'
+
+const { t } = useLang()
 
 const crs = CRS.Simple
 const props = defineProps({
@@ -35,7 +38,6 @@ const props = defineProps({
   },
   buttonText: {
     type: String,
-    default: 'Chọn tọa độ trên ảnh',
   },
 })
 const latLngPickerRef = ref()

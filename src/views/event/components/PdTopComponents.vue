@@ -1,14 +1,14 @@
 <template>
   <PdWidgetCard v-loading="loading">
-    <template #title>Top bộ phận có mức PD đo được cao nhất (dB)</template>
+    <template #title>{{ t('pd.top.title') }}</template>
     <template #filters>
-      <el-input v-model="keyword" placeholder="Tìm kiếm..." clearable :prefix-icon="Search" class="search-input" />
+      <el-input v-model="keyword" :placeholder="t('pd.top.searchPlaceholder')" clearable :prefix-icon="Search" class="search-input" />
       <TreeSelectRemote
           v-model="areaId"
           :request-fn="getAllTreeAreaApi"
           filterable
           clearable
-          placeholder="Tất cả khu vực"
+          :placeholder="t('pd.top.allAreas')"
           class="area-select"
           @change="load"
       />
@@ -17,26 +17,26 @@
       </el-select>
     </template>
 
-    <el-table :data="filteredRows" empty-text="Chưa có bộ phận nào có dữ liệu cường độ PD">
+    <el-table :data="filteredRows" :empty-text="t('pd.top.empty')">
       <el-table-column label="#" width="56" align="center">
         <template #default="{ $index }">{{ $index + 1 }}</template>
       </el-table-column>
-      <el-table-column prop="areaName" label="Khu vực" min-width="200" />
-      <el-table-column prop="machineName" label="Thiết bị" width="150" />
-      <el-table-column prop="machineComponentName" label="Bộ phận" width="170" />
+      <el-table-column prop="areaName" :label="t('fields.area')" min-width="200" />
+      <el-table-column prop="machineName" :label="t('alert.equipment')" width="150" />
+      <el-table-column prop="machineComponentName" :label="t('alert.component')" width="170" />
       <el-table-column prop="cameraCode" label="Camera" width="150" />
-      <el-table-column prop="zoneName" label="Vùng trên camera" width="160" />
-      <el-table-column label="Cường độ đo được" width="150" align="center">
+      <el-table-column prop="zoneName" :label="t('dashboard.cameraZone')" width="160" />
+      <el-table-column :label="t('dashboard.measuredIntensity')" width="150" align="center">
         <template #default="{ row }">{{ (row as PdComponentRankingRow).lastLevelDb }} dB</template>
       </el-table-column>
-      <el-table-column label="Đánh giá" width="130" align="center">
+      <el-table-column :label="t('alert.evaluation')" width="130" align="center">
         <template #default="{ row }">
           <el-tag :type="evaluationTagType(row as PdComponentRankingRow)" size="small">
             {{ (row as PdComponentRankingRow).lastEvaluationLevelObject?.name }}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="Cập nhật lúc" width="170">
+      <el-table-column :label="t('pd.top.updatedAt')" width="170">
         <template #default="{ row }">{{ formatDate((row as PdComponentRankingRow).lastReadAt) }}</template>
       </el-table-column>
     </el-table>
@@ -44,12 +44,15 @@
 </template>
 
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 import { Search } from '@element-plus/icons-vue'
 import TreeSelectRemote from '@/components/Tree/TreeSelectRemote.vue'
 import PdWidgetCard from './PdWidgetCard.vue'
 import { getAllTreeAreaApi } from '@/api/area'
 import { pdTopComponentsApi } from '@/api/pd-data'
 import { computed, onMounted, ref } from 'vue'
+
+const { t } = useLang()
 
 // Snapshot PdComponentBaseline mới nhất (không phải lịch sử theo thời gian như các widget khác) -
 // trả lời "đang cần ưu tiên kiểm tra bộ phận nào".

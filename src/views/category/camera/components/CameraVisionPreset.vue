@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-form-item label="Camera tích hợp">
+    <el-form-item :label="t('camera.integratedCamera')">
       <select-options
           ref="cameraRef"
           v-model="cameraTmp"
@@ -40,6 +40,7 @@
   </div>
 </template>
 <script setup lang="tsx">
+import { useLang } from '@/hooks/web/useI18n'
 import {getVisionPresetsApi, invokePresetApi} from "@/api/camera";
 import {computed, onMounted, ref} from "vue";
 import {TableColumn} from "@/components/Table";
@@ -49,6 +50,8 @@ import SimpleDrawRTCPlayer from "@/components/Video/SimpleDrawRTCPlayer.vue";
 import {ElButton, ElTooltip} from 'element-plus'
 import SelectOptions from "@/components/Selection/SelectOptions.vue";
 import ApiButton from "@/components/Button/ApiButton.vue";
+
+const { t } = useLang()
 
 const props = defineProps({
   visionCamera: {
@@ -69,12 +72,12 @@ onMounted(() => {
 const columns = computed<TableColumn[]>(() => [
   {prop: 'presetName', label: 'Presets', width: '80px',},
   {
-    label: 'Vẽ vùng',
+    label: t('camera.drawZone'),
     align: 'center',
     width: '120px',
     slots: {
       default: (scope: any) => (
-          <ElTooltip content='Vẽ vùng'>
+          <ElTooltip content={t('camera.drawZone')}>
             <ApiButton
                 circle={true}
                 icon={EditPen}
@@ -88,13 +91,13 @@ const columns = computed<TableColumn[]>(() => [
     },
   },
   {
-    label: 'Xem ảnh',
+    label: t('camera.viewImage'),
     align: 'center',
     width: '120px',
     slots: {
       default: (scope: any) => (
           scope.row.imagePath ? (
-              <ElTooltip content="Xem ảnh">
+              <ElTooltip content={t('camera.viewImage')}>
                 <ElButton
                     circle={true}
                     icon={View}

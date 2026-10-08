@@ -1,25 +1,17 @@
-import { i18n, setHtmlPageLang } from '@/plugins/vueI18n'
-import { useLocaleStoreWithOut } from '@/store/modules/locale'
-
-const localeStore = useLocaleStoreWithOut()
-const setI18nLanguage = (locale: LocaleType) => {
-  (i18n.global.locale as any).value = locale
-  localeStore.setCurrentLocale({
-    lang: locale
-  })
-  setHtmlPageLang(locale)
-}
+import { i18n, syncLocale } from '@/plugins/vueI18n'
+import { loadLocaleMessages } from '@/locales'
 
 export const useLocale = () => {
-  const changeLocale = async (locale: LocaleType) => {
-    const globalI18n = i18n.global
-    const langModule = await import(`../../locales/${locale}.ts`)
-    globalI18n.setLocaleMessage(locale, langModule.default)
-
-    setI18nLanguage(locale)
+  const changeLocale = async (lang: LocaleType) => {
+    const global = i18n.global
+    if (!global.availableLocales.includes(lang)) {
+      global.setLocaleMessage(lang, await loadLocaleMessages(lang))
+    }
+    global.locale.value = lang
+    syncLocale(lang)
   }
 
   return {
-    changeLocale
+    changeLocale,
   }
 }

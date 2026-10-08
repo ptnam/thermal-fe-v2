@@ -11,18 +11,18 @@
     <!-- Tách 2 tab domain Nhiệt độ / Phóng điện (PD) - 2 nghiệp vụ khác hẳn nhau (đơn vị, cách so sánh,
          công thức riêng cho PD), gộp chung 1 danh sách trước đây dễ chọn nhầm. -->
     <el-tabs v-model="domainTab" type="card">
-      <el-tab-pane name="thermal" label="Ngưỡng nhiệt độ">
+      <el-tab-pane name="thermal" :label="t('machine.thermalThreshold')">
         <el-tabs v-model="thermalTabModel" type="card">
           <el-tab-pane
               v-if="props.machinePartThresholdList"
               name="gen"
-              label="Khai báo chung từ loại thiết bị"
+              :label="t('machine.inheritFromType')"
           >
             <threshold-tab :threshold-list="thermalMachinePartThresholdList"/>
           </el-tab-pane>
-          <el-tab-pane name="main" label="Khai báo riêng">
+          <el-tab-pane name="main" :label="t('machine.customThreshold')">
             <div class="p-4 ml-2 min-h-[400px]">
-              <el-form-item label="Loại ngưỡng cảnh báo" label-position="top">
+              <el-form-item :label="t('machine.thresholdType')" label-position="top">
                 <ThresholdFilter
                     v-model="thermalSelectedTypes"
                     :options="thermalThresholdTypeOptions"
@@ -34,19 +34,19 @@
           </el-tab-pane>
         </el-tabs>
       </el-tab-pane>
-      <el-tab-pane name="pd" label="Ngưỡng phóng điện (PD)">
+      <el-tab-pane name="pd" :label="t('machine.pdThreshold')">
         <el-tabs v-model="pdTabModel" type="card">
           <el-tab-pane
               v-if="props.machinePartThresholdList"
               name="gen"
-              label="Khai báo chung từ loại thiết bị"
+              :label="t('machine.inheritFromType')"
           >
             <threshold-tab :threshold-list="pdMachinePartThresholdList"/>
           </el-tab-pane>
-          <el-tab-pane name="main" label="Khai báo riêng">
+          <el-tab-pane name="main" :label="t('machine.customThreshold')">
             <div class="p-4 ml-2 min-h-[400px]">
               <!-- Single-select - PD chỉ chọn 1 trong 2 kiểu (ΔPD%/tháng HOẶC ngưỡng dB tuyệt đối). -->
-              <el-form-item label="Loại ngưỡng PD nhận cảnh báo" label-position="top">
+              <el-form-item :label="t('machine.pdThresholdType')" label-position="top">
                 <el-select v-model="pdSelectedType" value-key="id" clearable class="!w-full">
                   <el-option v-for="item in pdThresholdTypeOptions" :key="item.id" :label="item.name" :value="item"/>
                 </el-select>
@@ -66,13 +66,14 @@
     <template #footer>
       <div class="flex justify-between space-x-2">
         <cancel-button @click="emits('cancel')"></cancel-button>
-        <el-button type="primary" @click="emits('save', thresholdList)">Lưu cấu hình</el-button>
+        <el-button type="primary" @click="emits('save', thresholdList)">{{ t('machine.saveConfig') }}</el-button>
       </div>
     </template>
   </el-drawer>
 </template>
 
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 import {computed, ref} from 'vue'
 import CancelButton from '@/components/Button/CancelButton.vue'
 import {cloneObject} from "@/utils/objectUtils";
@@ -81,6 +82,8 @@ import ThresholdTab from "@/views/category/machine/components/ThresholdTab.vue";
 import ThresholdFilter from '@/views/category/machine-part/components/ThresholdFilter.vue'
 import PdFormulaAssignmentPicker from '@/views/category/machine/components/PdFormulaAssignmentPicker.vue'
 import { useConfigStore } from '@/store/modules/configStore'
+
+const { t } = useLang()
 
 // ThresholdType.PdGrowthRate (7) / PdLevelDb (8) - xem Enums.cs (BE).
 const PD_THRESHOLD_TYPE_IDS = [7, 8]
@@ -92,14 +95,14 @@ const thermalThresholdTypeOptions = computed(() =>
     allThresholdTypeOptions.value.filter((item: any) => !PD_THRESHOLD_TYPE_IDS.includes(item.id)),
 )
 // Tên hiển thị riêng cho 2 option PD - làm rõ đơn vị/cách so sánh ngay trong tên, tránh nhầm giữa 2 kiểu.
-const PD_THRESHOLD_TYPE_LABELS: Record<number, string> = {
-  [PD_GROWTH_RATE_ID]: 'So với tốc độ tăng ΔPD% theo kỳ',
-  [PD_LEVEL_DB_ID]: 'So với ngưỡng cường độ PD (dB)',
+const PD_THRESHOLD_TYPE_KEYS: Record<number, string> = {
+  [PD_GROWTH_RATE_ID]: 'machinePart.pdGrowthRate',
+  [PD_LEVEL_DB_ID]: 'machinePart.pdLevelDb',
 }
 const pdThresholdTypeOptions = computed(() =>
     allThresholdTypeOptions.value
         .filter((item: any) => PD_THRESHOLD_TYPE_IDS.includes(item.id))
-        .map((item: any) => ({ ...item, name: PD_THRESHOLD_TYPE_LABELS[item.id] ?? item.name }))
+        .map((item: any) => ({ ...item, name: PD_THRESHOLD_TYPE_KEYS[item.id] ? t(PD_THRESHOLD_TYPE_KEYS[item.id]) : item.name }))
         .sort((a: any, b: any) => (a.id === PD_LEVEL_DB_ID ? -1 : b.id === PD_LEVEL_DB_ID ? 1 : 0)),
 )
 

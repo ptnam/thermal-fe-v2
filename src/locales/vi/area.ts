@@ -1,0 +1,15 @@
+export default {
+  listTitle: 'Danh sách khu vực',
+  add: 'Thêm khu vực mới',
+  edit: 'Cập nhật khu vực',
+  code: 'Mã khu vực',
+  name: 'Tên khu vực',
+  namePlaceholder: 'Nhập tên khu vực...',
+  mapType: 'Loại bản đồ',
+  province: 'Tỉnh',
+  singleLineDiagram: 'Sơ đồ một sợi',
+  sitePlan: 'Sơ đồ mặt bằng',
+  parent: 'Khu vực cha',
+  comparisonMode: 'Giá trị đánh giá',
+  ambientTemperature: 'Nhiệt độ môi trường',
+}

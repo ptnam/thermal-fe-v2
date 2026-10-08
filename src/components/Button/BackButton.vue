@@ -5,13 +5,16 @@
       @click="goBack"
       v-bind="$attrs"
   >
-    Quay lại
+    {{ t('common.back') }}
   </el-button>
 </template>
 
 <script lang="ts" setup>
+import { useLang } from '@/hooks/web/useI18n'
 import { Back } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
+
+const { t } = useLang()
 
 // Props
 const props = defineProps<{

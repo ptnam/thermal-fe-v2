@@ -46,7 +46,7 @@
                   </svg>
                 </button>
               </div>
-              <button v-show="showBtnAdd" class="btn-add" @click="$emit('addHandler')">+ Thêm</button>
+              <button v-show="showBtnAdd" class="btn-add" @click="$emit('addHandler')">+ {{ t('buttons.add_new') }}</button>
             </div>
             <slot name="appendTop"></slot>
           </div>
@@ -96,6 +96,7 @@
   </div>
 </template>
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 import BaseTable from '@/components/Table/BaseTable.vue'
 import {useTable} from '@/hooks/web/useTable'
 import type {UseTableConfig} from '@/hooks/web/useTable'
@@ -105,6 +106,8 @@ import BasePagination from '@/components/Pagination/BasePagination.vue'
 import {TableColumn} from '@/components/Table'
 import {usePaginationStore} from '@/store/modules/paginationStore'
 import BasicColsCard from '@/components/Table/BasicColsCard.vue'
+
+const { t } = useLang()
 
 const props = defineProps({
   keyList: {

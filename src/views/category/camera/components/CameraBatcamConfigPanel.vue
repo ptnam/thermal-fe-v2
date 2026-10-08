@@ -3,7 +3,7 @@
     <!-- 1. ROI -->
     <section>
       <div class="flex items-center justify-between flex-wrap gap-2 mb-3">
-        <h3 class="section-title">1. Cấu hình ROI</h3>
+        <h3 class="section-title">1. {{ t('batcam.roiConfig') }}</h3>
       </div>
 
       <div
@@ -62,9 +62,9 @@
           <div class="flex items-center justify-between gap-2 flex-wrap mb-2">
             <div class="flex items-center gap-2">
               <span v-if="row.cx !== null" class="text-xs muted-text">
-                Tọa độ: cx={{ row.cx!.toFixed(3) }}, cy={{ row.cy!.toFixed(3) }}, nw={{ row.nw!.toFixed(3) }}, nh={{ row.nh!.toFixed(3) }}
+                {{ t('map.coordinates') }}: cx={{ row.cx!.toFixed(3) }}, cy={{ row.cy!.toFixed(3) }}, nw={{ row.nw!.toFixed(3) }}, nh={{ row.nh!.toFixed(3) }}
               </span>
-              <span v-else class="text-xs muted-text">Chưa vẽ</span>
+              <span v-else class="text-xs muted-text">{{ t('batcam.notDrawn') }}</span>
             </div>
             <div class="flex items-center gap-2">
               <el-button
@@ -72,21 +72,21 @@
                   :type="drawingIndex === index ? 'warning' : undefined"
                   :class="{ 'roi-customize-btn': drawingIndex !== index }"
                   @click="startDrawing(index)"
-              ><el-icon class="mr-1"><Rank /></el-icon>{{ drawingIndex === index ? 'Đang vẽ - Kéo để chỉ định (nhấn để dừng)' : 'Tùy chỉnh' }}</el-button>
-              <span class="text-xs muted-text">Bật</span>
+              ><el-icon class="mr-1"><Rank /></el-icon>{{ drawingIndex === index ? t('batcam.drawing') : t('batcam.customize') }}</el-button>
+              <span class="text-xs muted-text">{{ t('batcam.enable') }}</span>
               <el-switch v-model="row.enabled" size="small" class="roi-enable-switch" active-color="#409eff" />
             </div>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-            <el-input v-model="row.name" size="small" placeholder="Tên hiển thị, VD: Tủ điện tầng 1" />
-            <el-select v-model="row.machineId" size="small" placeholder="Chọn thiết bị" filterable @change="() => onMachineChange(row)">
+            <el-input v-model="row.name" size="small" :placeholder="t('batcam.displayNamePlaceholder')" />
+            <el-select v-model="row.machineId" size="small" :placeholder="t('batcam.selectEquipment')" filterable @change="() => onMachineChange(row)">
               <el-option v-for="m in machineOptions" :key="m.id" :label="m.name" :value="m.id" />
             </el-select>
             <el-select
                 v-model="row.machineComponentId"
                 size="small"
-                placeholder="Chọn bộ phận"
+                :placeholder="t('batcam.selectComponent')"
                 filterable
                 :disabled="!row.machineId"
                 @change="(val: number) => (row.machineComponentName = row.componentOptions.find((c) => c.id === val)?.name ?? null)"
@@ -96,42 +96,42 @@
           </div>
         </el-tab-pane>
       </el-tabs>
-      <span v-else class="text-xs muted-text block mt-4">Chưa lấy được danh sách ROI từ camera</span>
+      <span v-else class="text-xs muted-text block mt-4">{{ t('batcam.noRoi') }}</span>
     </section>
 
     <!-- 2. PD AI / 3. Chùm tia -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <section v-loading="aiLoading">
-        <h3 class="section-title mb-5">2. Cấu hình PD AI</h3>
+        <h3 class="section-title mb-5">2. {{ t('batcam.pdAiConfig') }}</h3>
         <div class="beam-slider-group">
           <div class="beam-slider beam-slider--switch">
-            <span class="beam-slider__label">Bật cấu hình</span>
+            <span class="beam-slider__label">{{ t('batcam.enableConfig') }}</span>
             <el-switch v-model="aiSetting.pd.enabled" class="pd-enable-switch" />
           </div>
           <div class="beam-slider">
             <div class="beam-slider__header">
-              <span class="beam-slider__label">Số frame (windowSize)</span>
+              <span class="beam-slider__label">{{ t('batcam.frames') }}</span>
               <span class="beam-slider__value">{{ aiSetting.pd.windowSize }}</span>
             </div>
             <el-slider v-model="aiSetting.pd.windowSize" :min="1" :max="50" :step="1" />
           </div>
           <div class="beam-slider">
             <div class="beam-slider__header">
-              <span class="beam-slider__label">Ngưỡng score</span>
+              <span class="beam-slider__label">{{ t('batcam.scoreThreshold') }}</span>
               <span class="beam-slider__value">{{ aiSetting.pd.confidenceThreshold.toFixed(2) }}</span>
             </div>
             <el-slider v-model="aiSetting.pd.confidenceThreshold" :min="0" :max="1" :step="0.05" />
           </div>
           <div class="beam-slider">
             <div class="beam-slider__header">
-              <span class="beam-slider__label">Tỉ lệ kích hoạt</span>
+              <span class="beam-slider__label">{{ t('batcam.triggerRate') }}</span>
               <span class="beam-slider__value">{{ aiSetting.pd.triggerRate.toFixed(2) }}</span>
             </div>
             <el-slider v-model="aiSetting.pd.triggerRate" :min="0" :max="1" :step="0.05" />
           </div>
           <div class="beam-slider">
             <div class="beam-slider__header">
-              <span class="beam-slider__label">Cooldown (giây)</span>
+              <span class="beam-slider__label">{{ t('batcam.cooldown') }}</span>
               <span class="beam-slider__value">{{ aiSetting.pd.eventCooldown }}s</span>
             </div>
             <el-slider v-model="aiSetting.pd.eventCooldown" :min="0" :max="300" :step="1" />
@@ -141,21 +141,21 @@
         <!-- LEAK tạm ẩn, đổi SHOW_LEAK_CONFIG để bật. -->
         <template v-if="SHOW_LEAK_CONFIG">
           <el-divider class="!my-3" />
-          <h3 class="section-title mb-3">Cấu hình LEAK AI</h3>
+          <h3 class="section-title mb-3">{{ t('batcam.leakAiConfig') }}</h3>
           <el-form label-width="160px" label-position="left" size="small">
-            <el-form-item label="Bật đánh giá">
+            <el-form-item :label="t('batcam.enableEvaluation')">
               <el-switch v-model="aiSetting.leak.enabled" />
             </el-form-item>
-            <el-form-item label="Số frame (windowSize)">
+            <el-form-item :label="t('batcam.frames')">
               <el-input-number v-model="aiSetting.leak.windowSize" :min="1" controls-position="right" class="w-full" />
             </el-form-item>
-            <el-form-item label="Ngưỡng score">
+            <el-form-item :label="t('batcam.scoreThreshold')">
               <el-input-number v-model="aiSetting.leak.confidenceThreshold" :min="0" :max="1" :step="0.05" controls-position="right" class="w-full" />
             </el-form-item>
-            <el-form-item label="Tỉ lệ kích hoạt">
+            <el-form-item :label="t('batcam.triggerRate')">
               <el-input-number v-model="aiSetting.leak.triggerRate" :min="0" :max="1" :step="0.05" controls-position="right" class="w-full" />
             </el-form-item>
-            <el-form-item label="Cooldown (giây)">
+            <el-form-item :label="t('batcam.cooldown')">
               <el-input-number v-model="aiSetting.leak.eventCooldown" :min="0" controls-position="right" class="w-full" />
             </el-form-item>
           </el-form>
@@ -163,18 +163,18 @@
       </section>
 
       <section v-loading="measurementLoading">
-        <h3 class="section-title mb-5">3. Cấu hình chùm tia</h3>
+        <h3 class="section-title mb-5">3. {{ t('batcam.beamConfig') }}</h3>
         <div class="beam-slider-group">
           <div class="beam-slider">
             <div class="beam-slider__header">
-              <span class="beam-slider__label">Dải tần số</span>
+              <span class="beam-slider__label">{{ t('batcam.frequencyRange') }}</span>
               <span class="beam-slider__value">{{ frequencyRange[0] }}Hz ~ {{ frequencyRange[1] }}Hz</span>
             </div>
             <el-slider v-model="frequencyRange" range :min="100" :max="98999" :step="100" />
           </div>
           <div class="beam-slider">
             <div class="beam-slider__header">
-              <span class="beam-slider__label">Khoảng cách</span>
+              <span class="beam-slider__label">{{ t('batcam.distance') }}</span>
               <span class="beam-slider__value">{{ measurement.distance }}m</span>
             </div>
             <el-slider v-model="measurement.distance" :min="0.1" :max="10" :step="0.1" />
@@ -201,12 +201,13 @@
 
     <!-- Một nút lưu cho cả panel -->
     <div class="flex justify-end">
-      <el-button type="primary" :loading="savingAll" @click="saveAllConfig">Lưu cấu hình giám sát phóng điện</el-button>
+      <el-button type="primary" :loading="savingAll" @click="saveAllConfig">{{ t('batcam.saveAll') }}</el-button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 import { ref, computed, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Rank } from '@element-plus/icons-vue'
@@ -220,6 +221,8 @@ import {
   getBatcamMeasurementSettingApi,
   saveBatcamMeasurementSettingApi,
 } from '@/api/batcam-config'
+
+const { t } = useLang()
 
 const props = defineProps<{
   formModel: { id?: number; areaId?: number }
@@ -275,14 +278,14 @@ const initVideo = () => {
         })
         videoStream.addEventListener('stream-error', () => {
           videoLoading.value = false
-          ElMessage.error('Không kết nối được luồng video từ camera')
+          ElMessage.error(t('batcam.streamConnectFailed'))
         })
 
         videoContainerRef.value?.appendChild(videoStream)
       })
       .catch(() => {
         videoLoading.value = false
-        ElMessage.error('Không lấy được luồng video từ camera')
+        ElMessage.error(t('batcam.streamFailed'))
       })
 }
 
@@ -359,7 +362,7 @@ const loadRois = async () => {
     )
     activeRoiTab.value = '0'
   } catch {
-    ElMessage.error('Không lấy được cấu hình ROI từ camera')
+    ElMessage.error(t('batcam.roiFailed'))
   }
 }
 
@@ -497,7 +500,7 @@ const loadAiSetting = async () => {
       aiSetting.value.leak = { ...res.data.leak }
     }
   } catch {
-    ElMessage.error('Không lấy được ngưỡng đánh giá AI từ camera')
+    ElMessage.error(t('batcam.aiFailed'))
   } finally {
     aiLoading.value = false
   }
@@ -544,7 +547,7 @@ const loadMeasurementSetting = async () => {
       }
     }
   } catch {
-    ElMessage.error('Không lấy được cấu hình đo beamforming từ camera')
+    ElMessage.error(t('batcam.beamFailed'))
   } finally {
     measurementLoading.value = false
   }
@@ -582,7 +585,7 @@ const saveAllConfig = async () => {
     }
     await saveAiSetting()
     await saveMeasurementSetting()
-    ElMessage.success('Đã lưu cấu hình giám sát phóng điện')
+    ElMessage.success(t('batcam.saved'))
   } finally {
     savingAll.value = false
   }

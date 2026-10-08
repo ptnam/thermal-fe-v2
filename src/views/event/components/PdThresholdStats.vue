@@ -1,6 +1,6 @@
 <template>
   <PdWidgetCard>
-    <template #title>Số lượng cảnh báo theo ngày</template>
+    <template #title>{{ t('pd.alertsByDay') }}</template>
     <VueApexChart
         ref="chartBarRef"
         type="area"
@@ -12,11 +12,14 @@
 </template>
 
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 import { computed, ref, watch } from 'vue'
 import { notificationsCountApi } from '@/api/notification'
 import PdWidgetCard from './PdWidgetCard.vue'
 import { useChartTheme } from './useChartTheme'
 import VueApexChart from 'vue3-apexcharts'
+
+const { t } = useLang()
 
 // Widget "Số lượng cảnh báo theo ngày" (tab Thống kê Phóng điện vượt ngưỡng, màn Tổng hợp phóng điện) - tham khảo
 // ThresholdWarning.vue (Tổng hợp dữ liệu nhiệt độ, /event/home) nhưng khoá cứng warningEventCode =
@@ -53,7 +56,7 @@ const chartOptions = computed(() => ({
   grid: { borderColor: gridColor.value },
   xaxis: {
     categories: categories.value,
-    title: { text: 'Ngày', style: { color: axisTextColor.value, fontSize: '12px' } },
+    title: { text: t('alert.date'), style: { color: axisTextColor.value, fontSize: '12px' } },
     labels: { style: { colors: axisTextColor.value } },
   },
   yaxis: {
@@ -61,13 +64,13 @@ const chartOptions = computed(() => ({
     axisTicks: { show: false },
     allowDecimals: false,
     labels: { show: true, style: { colors: axisTextColor.value } },
-    title: { text: 'Số lượng cảnh báo', style: { color: axisTextColor.value, fontSize: '12px' } },
+    title: { text: t('alert.stats.alertCount'), style: { color: axisTextColor.value, fontSize: '12px' } },
   },
   legend: { position: 'bottom', labels: { colors: legendTextColor.value } },
   tooltip: { theme: tooltipTheme.value },
-  noData: { text: 'Không có dữ liệu', style: { color: axisTextColor.value } },
+  noData: { text: t('pd.noData'), style: { color: axisTextColor.value } },
 }))
-const series = ref<{ name: string; data: number[] }[]>([{ name: 'Số lượng cảnh báo', data: [] }])
+const series = ref<{ name: string; data: number[] }[]>([{ name: t('alert.stats.alertCount'), data: [] }])
 
 const chartBarRef = ref<ApexCharts>()
 
@@ -84,7 +87,7 @@ const refresh = () => {
       seriesData.push(item.numberOfNotifications)
       categoryLabel.push(item.dataDate)
     }
-    series.value = [{ name: 'Số lượng cảnh báo', data: seriesData }]
+    series.value = [{ name: t('alert.stats.alertCount'), data: seriesData }]
     categories.value = categoryLabel
     chartBarRef.value?.updateSeries(series.value, true)
   })

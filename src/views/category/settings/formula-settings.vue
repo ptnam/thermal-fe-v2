@@ -1,4 +1,5 @@
 <script setup lang="tsx">
+import { useLang } from '@/hooks/web/useI18n'
 import ListTemplate from '@/components/PageTemplate/List/ListTemplate.vue'
 import { TableColumn } from '@/components/Table'
 import { computed, nextTick, onMounted, ref } from 'vue'
@@ -23,6 +24,8 @@ import {
   listFormulasApi,
   listFormulaVariablesApi,
 } from '@/api/formula'
+
+const { t } = useLang()
 
 // Hiện chỉ có 1 mục: quản lý công thức cảnh báo PD (bảng formulas/formula_variables) - nơi duy nhất
 // được soạn/sửa biểu thức NCalc, dialog "Thiết lập ngưỡng cảnh báo" chỉ còn CHỌN công thức + ngày áp
@@ -69,9 +72,9 @@ async function fetchFormulasPage(params: any) {
 
 function formulaScopeLabel(row: any) {
   const parts: string[] = []
-  if (row.componentAssignmentCount) parts.push(`${row.componentAssignmentCount} bộ phận`)
-  if (row.partAssignmentCount) parts.push(`${row.partAssignmentCount} loại bộ phận`)
-  return parts.length ? parts.join(' · ') : 'Chưa gán'
+  if (row.componentAssignmentCount) parts.push(t('formula.usageComponents', { n: row.componentAssignmentCount }))
+  if (row.partAssignmentCount) parts.push(t('formula.usageComponentTypes', { n: row.partAssignmentCount }))
+  return parts.length ? parts.join(' · ') : t('formula.notAssigned')
 }
 
 async function toggleFormulaStatus(row: any) {
@@ -90,7 +93,7 @@ async function toggleFormulaStatus(row: any) {
     if (res?.isSuccess === false) throw new Error(res?.message)
   } catch {
     row.status = previous
-    ElMessage.error('Không đổi được trạng thái, thử lại sau')
+    ElMessage.error(t('formula.statusChangeFailed'))
   }
 }
 
@@ -123,9 +126,9 @@ function onFormulaSaved() {
 }
 function onDeleteFormula(scope: any) {
   const row = scope.row
-  confirmModal('Xóa công thức', `Xóa công thức "${row.name}"? Không thể khôi phục.`, async () => {
+  confirmModal(t('formula.deleteFormula'), t('formula.deleteFormulaConfirm', { name: row.name }), async () => {
     await deleteFormulaApi(row.id)
-    ElMessage.success('Xóa thành công')
+    ElMessage.success(t('common.delSuccess'))
     formulaTableRef.value?.refresh()
   })
 }
@@ -151,7 +154,7 @@ function statusToggleKnobStyle(active: boolean) {
 const formulaColumns = computed<TableColumn[]>(() => [
   {
     prop: 'name',
-    label: 'Công thức',
+    label: t('formula.formula'),
     minWidth: 200,
     slots: {
       default: ({ row }) => (
@@ -162,10 +165,10 @@ const formulaColumns = computed<TableColumn[]>(() => [
       ),
     },
   },
-  { prop: 'expression', label: 'Biểu thức', minWidth: 220 },
-  { prop: 'description', label: 'Mô tả', minWidth: 180 },
+  { prop: 'expression', label: t('formula.expression'), minWidth: 220 },
+  { prop: 'description', label: t('formula.description'), minWidth: 180 },
   {
-    label: 'Phạm vi sử dụng',
+    label: t('formula.usage'),
     width: 170,
     slots: {
       default: ({ row }) => (
@@ -174,14 +177,14 @@ const formulaColumns = computed<TableColumn[]>(() => [
     },
   },
   {
-    label: 'Trạng thái',
+    label: t('fields.status'),
     width: 110,
     slots: {
       default: ({ row }) => (
         <button
           type="button"
           style={statusToggleStyle(row.status === 1)}
-          title={row.status === 1 ? 'Hoạt động - bấm để tắt' : 'Không hoạt động - bấm để bật'}
+          title={row.status === 1 ? t('formula.activeToggle') : t('formula.inactiveToggle')}
           onClick={() => toggleFormulaStatus(row)}
         >
           <span style={statusToggleKnobStyle(row.status === 1)}></span>
@@ -190,17 +193,17 @@ const formulaColumns = computed<TableColumn[]>(() => [
     },
   },
   {
-    label: 'Hành động',
+    label: t('fields.action'),
     width: 110,
     slots: {
       default: (scope: any) => (
         <div>
-          <button type="button" class="action-btn-circle btn-edit-round" title="Sửa" onClick={() => openEditFormula(scope)}>✎</button>
+          <button type="button" class="action-btn-circle btn-edit-round" title={t('common.edit')} onClick={() => openEditFormula(scope)}>✎</button>
           <button
             type="button"
             class="action-btn-circle btn-delete-round"
             disabled={scope.row.isLocked || scope.row.inUse}
-            title={scope.row.isLocked ? 'Đã dùng để tính kết quả - không xoá được' : scope.row.inUse ? 'Đang được sử dụng - không xoá được' : 'Xoá'}
+            title={scope.row.isLocked ? t('formula.lockedNoDelete') : scope.row.inUse ? t('formula.inUseNoDelete') : t('common.delOk')}
             onClick={() => onDeleteFormula(scope)}
           >🗑</button>
         </div>
@@ -236,7 +239,7 @@ async function toggleVariableStatus(row: any) {
     if (res?.isSuccess === false) throw new Error(res?.message)
   } catch {
     row.status = previous
-    ElMessage.error('Không đổi được trạng thái, thử lại sau')
+    ElMessage.error(t('formula.statusChangeFailed'))
   }
 }
 
@@ -257,36 +260,36 @@ function onVariableSaved() {
 }
 function onDeleteVariable(scope: any) {
   const row = scope.row
-  confirmModal('Xóa biến số', `Xóa biến số "${row.label}"? Không thể khôi phục.`, async () => {
+  confirmModal(t('formula.deleteVariable'), t('formula.deleteVariableConfirm', { name: row.label }), async () => {
     await deleteFormulaVariableApi(row.id)
-    ElMessage.success('Xóa thành công')
+    ElMessage.success(t('common.delSuccess'))
     variableTableRef.value?.refresh()
   })
 }
 
 const variableColumns = computed<TableColumn[]>(() => [
-  { prop: 'name', label: 'Tên biến', width: 140 },
-  { prop: 'label', label: 'Nhãn hiển thị', width: 160 },
-  { prop: 'description', label: 'Mô tả', minWidth: 160 },
+  { prop: 'name', label: t('formula.variableName'), width: 140 },
+  { prop: 'label', label: t('formula.displayLabel'), width: 160 },
+  { prop: 'description', label: t('formula.description'), minWidth: 160 },
   {
-    label: 'Hàm tổng hợp',
+    label: t('formula.aggregate'),
     width: 150,
     slots: { default: ({ row }) => <span>{aggregateFunctionLabel(row)}</span> },
   },
   {
-    label: 'Khoảng thời gian',
+    label: t('formula.timeRange'),
     minWidth: 220,
     slots: { default: ({ row }) => <span>{scopeRangeLabel(row)}</span> },
   },
   {
-    label: 'Trạng thái',
+    label: t('fields.status'),
     width: 110,
     slots: {
       default: ({ row }) => (
         <button
           type="button"
           style={statusToggleStyle(row.status === 1)}
-          title={row.status === 1 ? 'Hoạt động - bấm để tắt' : 'Không hoạt động - bấm để bật'}
+          title={row.status === 1 ? t('formula.activeToggle') : t('formula.inactiveToggle')}
           onClick={() => toggleVariableStatus(row)}
         >
           <span style={statusToggleKnobStyle(row.status === 1)}></span>
@@ -295,17 +298,17 @@ const variableColumns = computed<TableColumn[]>(() => [
     },
   },
   {
-    label: 'Hành động',
+    label: t('fields.action'),
     width: 110,
     slots: {
       default: (scope: any) => (
         <div>
-          <button type="button" class="action-btn-circle btn-edit-round" title="Sửa" onClick={() => openEditVariable(scope)}>✎</button>
+          <button type="button" class="action-btn-circle btn-edit-round" title={t('common.edit')} onClick={() => openEditVariable(scope)}>✎</button>
           <button
             type="button"
             class="action-btn-circle btn-delete-round"
             disabled={scope.row.inUse}
-            title={scope.row.inUse ? 'Đang được sử dụng trong công thức - không xoá được' : 'Xoá'}
+            title={scope.row.inUse ? t('formula.variableInUseNoDelete') : t('common.delOk')}
             onClick={() => onDeleteVariable(scope)}
           >🗑</button>
         </div>
@@ -331,21 +334,21 @@ onMounted(async () => {
 
 <template>
   <div class="container">
-    <div class="bread-crumb">Quản trị hệ thống / <span>Cài đặt công thức PD</span></div>
+    <div class="bread-crumb">{{ t('router.category') }} / <span>{{ t('router.formula_settings') }}</span></div>
 
     <div class="tabs-container">
       <div :class="['tab-item', activeSection === 'formulas' ? 'active' : '']" @click="onSectionChange('formulas')">
-        Công thức <span class="tab-count">{{ formulaCountAll }}</span>
+        {{ t('formula.tabFormulas') }} <span class="tab-count">{{ formulaCountAll }}</span>
       </div>
       <div :class="['tab-item', activeSection === 'variables' ? 'active' : '']" @click="onSectionChange('variables')">
-        Biến số <span class="tab-count">{{ variableCountAll }}</span>
+        {{ t('formula.tabVariables') }} <span class="tab-count">{{ variableCountAll }}</span>
       </div>
     </div>
 
     <list-template
         v-if="activeSection === 'formulas'"
         ref="formulaTableRef"
-        title="Danh sách công thức"
+        :title="t('formula.formulaListTitle')"
         key-list="formula-settings-formulas"
         :columns="formulaColumns"
         :card-component="FormulaCard"
@@ -358,23 +361,23 @@ onMounted(async () => {
     >
       <template slot="search" v-slot="{ searchParams, tableMethods }">
         <div class="filter-item">
-          <div class="filter-label">Tên hoặc mã công thức</div>
-          <el-input class="filter-input" v-model="searchParams.keyword" clearable placeholder="Tìm theo tên hoặc mã công thức..." />
+          <div class="filter-label">{{ t('formula.searchFormula') }}</div>
+          <el-input class="filter-input" v-model="searchParams.keyword" clearable :placeholder="t('formula.searchFormulaPlaceholder')" />
         </div>
         <div class="filter-item">
-          <div class="filter-label">Trạng thái</div>
+          <div class="filter-label">{{ t('fields.status') }}</div>
           <el-select class="filter-input" v-model="searchParams.status">
-            <el-option label="Tất cả trạng thái" value="all" />
-            <el-option label="Hoạt động" value="1" />
-            <el-option label="Không hoạt động" value="0" />
+            <el-option :label="t('formula.allStatuses')" value="all" />
+            <el-option :label="t('formula.active')" value="1" />
+            <el-option :label="t('formula.inactive')" value="0" />
           </el-select>
         </div>
         <div class="filter-item">
-          <div class="filter-label">Loại thiết bị</div>
+          <div class="filter-label">{{ t('machine.type') }}</div>
           <virtualized-select-from-url
               v-model="searchParams.machineTypeId"
               :request-fn="getAllMachineTypeApi"
-              all-option-label="Tất cả"
+              :all-option-label="t('formula.all')"
               filterable
               value-key="id"
               clearable
@@ -383,12 +386,12 @@ onMounted(async () => {
           />
         </div>
         <div class="filter-item">
-          <div class="filter-label">Thiết bị</div>
+          <div class="filter-label">{{ t('alert.equipment') }}</div>
           <virtualized-select-from-url
               ref="formulaMachineRef"
               v-model="searchParams.machineId"
               :request-fn="() => getAllMachineApi({ machineTypeId: searchParams.machineTypeId })"
-              all-option-label="Tất cả"
+              :all-option-label="t('formula.all')"
               filterable
               value-key="id"
               clearable
@@ -397,12 +400,12 @@ onMounted(async () => {
           />
         </div>
         <div class="filter-item">
-          <div class="filter-label">Bộ phận</div>
+          <div class="filter-label">{{ t('alert.component') }}</div>
           <virtualized-select-from-url
               ref="formulaComponentRef"
               v-model="searchParams.machineComponentId"
               :request-fn="() => getComponentMachineApi({ machineId: searchParams.machineId, hasMonitorPoints: false })"
-              all-option-label="Tất cả"
+              :all-option-label="t('formula.all')"
               filterable
               value-key="id"
               clearable
@@ -416,7 +419,7 @@ onMounted(async () => {
     <list-template
         v-else
         ref="variableTableRef"
-        title="Danh sách biến số"
+        :title="t('formula.variableListTitle')"
         key-list="formula-settings-variables"
         :columns="variableColumns"
         :card-component="FormulaVariableCard"
@@ -426,34 +429,34 @@ onMounted(async () => {
     >
       <template slot="search" v-slot="{ searchParams, tableMethods }">
         <div class="filter-item">
-          <div class="filter-label">Tên biến hoặc nhãn hiển thị</div>
-          <el-input class="filter-input" v-model="searchParams.keyword" clearable placeholder="Tìm theo tên biến hoặc nhãn hiển thị..." />
+          <div class="filter-label">{{ t('formula.searchVariable') }}</div>
+          <el-input class="filter-input" v-model="searchParams.keyword" clearable :placeholder="t('formula.searchVariablePlaceholder')" />
         </div>
         <div class="filter-item">
-          <div class="filter-label">Hàm tổng hợp</div>
+          <div class="filter-label">{{ t('formula.aggregate') }}</div>
           <el-select class="filter-input" v-model="searchParams.aggregateFunction">
-            <el-option label="Tất cả" value="" />
-            <el-option label="Biến cứng (code)" value="none" />
+            <el-option :label="t('formula.all')" value="" />
+            <el-option :label="t('formula.variable.aggregate.hardcoded')" value="none" />
             <el-option v-for="o in AGGREGATE_FUNCTION_OPTIONS" :key="o.value" :label="o.label" :value="String(o.value)" />
           </el-select>
         </div>
         <div class="filter-item">
-          <div class="filter-label">Trạng thái</div>
+          <div class="filter-label">{{ t('fields.status') }}</div>
           <el-select class="filter-input" v-model="searchParams.status">
-            <el-option label="Tất cả trạng thái" value="all" />
-            <el-option label="Hoạt động" value="1" />
-            <el-option label="Không hoạt động" value="0" />
+            <el-option :label="t('formula.allStatuses')" value="all" />
+            <el-option :label="t('formula.active')" value="1" />
+            <el-option :label="t('formula.inactive')" value="0" />
           </el-select>
         </div>
         <search-button @click="tableMethods.getList"></search-button>
       </template>
     </list-template>
 
-    <drawer-form v-model="formulaDialogVisible" :title="formulaFormModel.id ? 'Sửa công thức' : 'Thêm công thức'" :size="isMobile ? '100%' : '560px'">
+    <drawer-form v-model="formulaDialogVisible" :title="formulaFormModel.id ? t('formula.editFormula') : t('formula.addFormula')" :size="isMobile ? '100%' : '560px'">
       <FormulaForm :form-model="formulaFormModel" @success="onFormulaSaved" />
     </drawer-form>
 
-    <drawer-form v-model="variableDialogVisible" :title="variableFormModel.id ? 'Sửa biến số' : 'Thêm biến số'" :size="isMobile ? '100%' : '480px'">
+    <drawer-form v-model="variableDialogVisible" :title="variableFormModel.id ? t('formula.editVariable') : t('formula.addVariable')" :size="isMobile ? '100%' : '480px'">
       <FormulaVariableForm :form-model="variableFormModel" @success="onVariableSaved" />
     </drawer-form>
   </div>

@@ -1,6 +1,8 @@
 <script setup lang="tsx">
+import { useLang } from '@/hooks/web/useI18n'
+import { enumLabel } from '@/utils/enumLabel'
 import ListTemplate from '@/components/PageTemplate/List/ListTemplate.vue'
-import {nextTick, onMounted, onUnmounted, ref} from 'vue'
+import {computed, nextTick, onMounted, onUnmounted, ref} from 'vue'
 import {getAllTreeAreaApi} from '@/api/area'
 import VirtualizedSelectFromUrl from '@/components/Selection/VirtualizedSelectFromUrl.vue'
 import SearchButton from '@/components/Button/SearchButton.vue'
@@ -18,50 +20,52 @@ import {createSignalRConnection, invokeSignalR, onSignalREvent, startSignalR, st
 import {downloadByPathApi} from '@/api/common'
 import {downloadFile} from '@/utils/response'
 
+const { t } = useLang()
+
 // Kiểu so sánh (7/8) THỰC SỰ đã dùng - xem pd-notification-system.vue / PdDataRepository.ClassifyPdReadingAsync.
 const PD_LEVEL_DB_ID = 8
 function pdCriteriaLabel(row: any) {
-  return row.evaluationThresholdType === PD_LEVEL_DB_ID ? 'So với ngưỡng cường độ PD' : 'So với tốc độ tăng ΔPD% theo kỳ'
+  return row.evaluationThresholdType === PD_LEVEL_DB_ID ? t('pd.criteriaDb') : t('pd.criteriaGrowth')
 }
 function pdUnit(row: any) {
   return row.evaluationThresholdType === PD_LEVEL_DB_ID ? 'dB' : '%'
 }
 
-const columns = ref([
-  {prop: 'dateData', label: 'Ngày', width: 130, align: 'center'},
-  {prop: 'timeData', label: 'Giờ', width: 110, align: 'center'},
-  {prop: 'areaName', label: 'Khu vực', minWidth: 180, align: 'center'},
+const columns = computed(() => [
+  {prop: 'dateData', label: t('alert.date'), width: 130, align: 'center'},
+  {prop: 'timeData', label: t('alert.hour'), width: 110, align: 'center'},
+  {prop: 'areaName', label: t('fields.area'), minWidth: 180, align: 'center'},
   {prop: 'cameraCode', label: 'Camera', width: 130, align: 'center'},
-  {prop: 'zoneName', label: 'Vùng trên camera', width: 150, align: 'center'},
-  {prop: 'machineName', label: 'Thiết bị', width: 130, align: 'center'},
-  {prop: 'machineComponentName', label: 'Bộ phận', width: 150, align: 'center'},
+  {prop: 'zoneName', label: t('dashboard.cameraZone'), width: 150, align: 'center'},
+  {prop: 'machineName', label: t('alert.equipment'), width: 130, align: 'center'},
+  {prop: 'machineComponentName', label: t('alert.component'), width: 150, align: 'center'},
   {
-    label: 'Kiểu cảnh báo',
+    label: t('alert.alertMode'),
     width: 230,
     align: 'center',
     slots: {default: ({row}) => <span>{pdCriteriaLabel(row)}</span>},
   },
   {
     prop: 'appliedFormulaName',
-    label: 'Công thức áp dụng',
+    label: t('pd.appliedFormula'),
     width: 170,
     align: 'center',
     slots: {
       default: ({row}) => row.evaluationThresholdType !== PD_LEVEL_DB_ID
-        ? <span>{row.appliedFormulaName ?? 'Mặc định hệ thống'}</span>
+        ? <span>{row.appliedFormulaName ?? t('pd.systemDefault')}</span>
         : <span class="muted">—</span>,
     },
   },
   {
     prop: 'levelDb',
-    label: 'Cường độ PĐ',
+    label: t('pd.intensity'),
     width: 130,
     align: 'center',
     slots: {default: ({row}) => <span>{row.levelDb} dB</span>},
   },
   {
     prop: 'referenceValue',
-    label: 'Mức tham chiếu',
+    label: t('pd.referenceValue'),
     width: 140,
     align: 'center',
     slots: {
@@ -72,7 +76,7 @@ const columns = ref([
   },
   {
     prop: 'difference',
-    label: 'Chênh lệch',
+    label: t('alert.delta'),
     width: 130,
     align: 'center',
     slots: {
@@ -85,14 +89,14 @@ const columns = ref([
   },
   {
     prop: 'evaluationLevelObject.name',
-    label: 'Đánh giá',
+    label: t('alert.evaluation'),
     width: 130,
     align: 'center',
     slots: {
       default: ({row}) => {
         const code = row?.evaluationLevelObject?.code ?? ''
         return code
-          ? <span class="status-badge" style={{backgroundColor: STATUS_COLOR_MAP[code]}}>{row.evaluationLevelObject.name}</span>
+          ? <span class="status-badge" style={{backgroundColor: STATUS_COLOR_MAP[code]}}>{enumLabel('temperatureLevelList', code, row.evaluationLevelObject.name)}</span>
           : <span class="muted">—</span>
       },
     },
@@ -134,7 +138,7 @@ const exportFile = (searchParams: any) => {
   isExportLoading.value = true
   onRequest(pdDataExportApi, searchParams).then((res) => {
     invokeSignalR('RegisterJob', res.jobId)
-    ElMessage.success('File sẽ tự động download sau khi đã xuất xong')
+    ElMessage.success(t('alert.exportStarted'))
   })
 }
 </script>
@@ -142,7 +146,7 @@ const exportFile = (searchParams: any) => {
 <template>
   <list-template
     ref="elTableRef"
-    title="Nhật ký phóng điện"
+    :title="t('pd.historyTitle')"
     key-list="pd-history"
     :columns="columns"
     :use-table-config="{
@@ -158,29 +162,29 @@ const exportFile = (searchParams: any) => {
     <template slot="search" v-slot="{ searchParams }">
       <div class="filter-row">
         <div class="filter-item">
-          <div class="filter-label">Thời gian từ</div>
+          <div class="filter-label">{{ t('alert.timeFrom') }}</div>
           <el-date-picker
             v-model="searchParams.fromTime"
             type="datetime"
-            placeholder="Thời gian bắt đầu"
+            :placeholder="t('alert.startTime')"
             format="YYYY/MM/DD hh:mm:ss A"
             value-format="YYYY-MM-DD HH:mm:ss"
             class="!w-[-webkit-fill-available] filter-input"
           />
         </div>
         <div class="filter-item">
-          <div class="filter-label">Thời gian đến</div>
+          <div class="filter-label">{{ t('alert.timeTo') }}</div>
           <el-date-picker
             v-model="searchParams.toTime"
             type="datetime"
-            placeholder="Thời gian kết thúc"
+            :placeholder="t('alert.endTime')"
             format="YYYY/MM/DD hh:mm:ss A"
             value-format="YYYY-MM-DD HH:mm:ss"
             class="!w-[-webkit-fill-available] filter-input"
           />
         </div>
         <div class="filter-item">
-          <div class="filter-label">Khu vực</div>
+          <div class="filter-label">{{ t('fields.area') }}</div>
           <tree-select-remote
             v-model="searchParams.areaId"
             :requestFn="getAllTreeAreaApi"
@@ -191,7 +195,7 @@ const exportFile = (searchParams: any) => {
           />
         </div>
         <div class="filter-item">
-          <div class="filter-label">Thiết bị</div>
+          <div class="filter-label">{{ t('alert.equipment') }}</div>
           <virtualized-select-from-url
             ref="machineRef"
             v-model="searchParams.machineId"
@@ -204,7 +208,7 @@ const exportFile = (searchParams: any) => {
           />
         </div>
         <div class="filter-item">
-          <div class="filter-label">Bộ phận</div>
+          <div class="filter-label">{{ t('alert.component') }}</div>
           <virtualized-select-from-url
             ref="machineComponentRef"
             v-model="searchParams.machineComponentIds"
@@ -217,15 +221,15 @@ const exportFile = (searchParams: any) => {
           />
         </div>
         <div class="filter-item">
-          <div class="filter-label">ΔPD% từ</div>
+          <div class="filter-label">{{ t('pd.growthFrom') }}</div>
           <input-number v-model="searchParams.deltaMin" class="filter-input" />
         </div>
         <div class="filter-item">
-          <div class="filter-label">ΔPD% đến</div>
+          <div class="filter-label">{{ t('pd.growthTo') }}</div>
           <input-number v-model="searchParams.deltaMax" class="filter-input" />
         </div>
         <div class="filter-item">
-          <div class="filter-label">Đánh giá</div>
+          <div class="filter-label">{{ t('alert.evaluation') }}</div>
           <select-from-config
             v-model="searchParams.evaluationLevel"
             key-config="temperatureLevelList"

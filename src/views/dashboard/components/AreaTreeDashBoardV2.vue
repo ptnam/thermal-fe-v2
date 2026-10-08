@@ -1,7 +1,10 @@
 <!-- AreaTreeCustom.vue -->
 <script lang="ts" setup>
+import { useLang } from '@/hooks/web/useI18n'
 import { ref, onMounted, computed } from 'vue'
 import TreeNodeV2 from './TreeNodeV2.vue'
+
+const { t } = useLang()
 
 interface AreaNode {
   id: string
@@ -70,14 +73,14 @@ const handleNodeClick = (node: AreaNode) => {
 <template>
   <div class="card" :class="treeClass">
     <div class="card-header" style="margin-bottom: 20px;">
-      <div class="card-title">Danh sách khu vực</div>
+      <div class="card-title">{{ t('common.areaList') }}</div>
     </div>
 
     <div style="padding: 0 4px 16px;">
       <el-input
           v-model="keyword"
           type="text"
-          placeholder="Tìm theo khu vực"
+          :placeholder="t('common.searchArea')"
       />
     </div>
 

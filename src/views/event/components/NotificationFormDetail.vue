@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
+import { enumLabel } from '@/utils/enumLabel'
 import { ElButton } from 'element-plus'
 import { useConfirmModal } from '@/hooks/web/useModal'
 import { notificationDetailApi, updateNotificationStatusApi } from '@/api/notification'
@@ -6,6 +8,8 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { PATH_URL } from '@/plugins/axios/service'
 import router from '@/router'
 import { listFormulaVariablesApi } from '@/api/formula'
+
+const { t } = useLang()
 
 // Dùng chung cho cảnh báo nhiệt độ + PD; các phần chỉ-PD (video, xu hướng, công thức) bật theo isPdNotification.
 const formModelValue = ref<any>({
@@ -41,8 +45,8 @@ const isPdNotification = computed(() => formModelValue.value?.compareTypeObject?
 const severity = computed(() => SEVERITY_COLORS[formModelValue.value?.compareResultObject?.code] ?? DEFAULT_SEVERITY)
 const isResolved = computed(() => formModelValue.value?.statusObject?.code === 'Resolved')
 const valueUnit = computed(() => (isPdNotification.value ? 'dB' : '°C'))
-const componentValueLabel = computed(() => (isPdNotification.value ? 'Cường độ đo được' : 'Nhiệt độ đo được'))
-const deltaLabel = computed(() => (isPdNotification.value ? 'Tốc độ tăng ΔPD% theo kỳ' : 'Chênh lệch'))
+const componentValueLabel = computed(() => (isPdNotification.value ? t('dashboard.measuredIntensity') : t('alert.detail.measuredTemperature')))
+const deltaLabel = computed(() => (isPdNotification.value ? t('dashboard.growthRate') : t('alert.delta')))
 const deltaSuffix = computed(() => (isPdNotification.value ? '%' : '°C'))
 
 const activeMedia = ref<'image' | 'video'>('image')
@@ -121,8 +125,8 @@ const appliedFormulaVariables = computed<Record<string, number>>(() => {
 function formatVariableValue(name: string, value: number | undefined): string {
   if (value == null) return '—'
   const key = name.toLowerCase()
-  if (key === 'months') return `≈ ${value.toFixed(2)} tháng`
-  if (key === 'days') return `${value} ngày`
+  if (key === 'months') return t('alert.detail.months', { value: value.toFixed(2) })
+  if (key === 'days') return t('alert.detail.days', { value })
   if (['current', 'first', 'last'].includes(key)) return `${value} dB`
   return `${value}`
 }
@@ -154,20 +158,20 @@ const thresholdLabels = computed(() => {
     const fair = m.thresholdFairMax ?? 0
     const average = m.thresholdAverageMax ?? 0
     return {
-      good: `Tốt <${good}dB`,
-      fair: `Khá ≥${good}dB`,
-      average: `TB ≥${fair}dB`,
-      bad: `Xấu ≥${average}dB`,
+      good: `${t('alert.levels.good')} <${good}dB`,
+      fair: `${t('alert.levels.fair')} ≥${good}dB`,
+      average: `${t('alert.levels.average')} ≥${fair}dB`,
+      bad: `${t('alert.levels.bad')} ≥${average}dB`,
     }
   }
   const good = m.thresholdGoodMax ?? 0
   const fair = m.thresholdFairMax ?? 3
   const average = m.thresholdAverageMax ?? 5
   return {
-    good: `Tốt ≤${good}%`,
-    fair: `Khá ≤${fair}%`,
-    average: `TB ≤${average}%`,
-    bad: `Xấu >${average}%`,
+    good: `${t('alert.levels.good')} ≤${good}%`,
+    fair: `${t('alert.levels.fair')} ≤${fair}%`,
+    average: `${t('alert.levels.average')} ≤${average}%`,
+    bad: `${t('alert.levels.bad')} >${average}%`,
   }
 })
 function levelChipStyle(code: string) {
@@ -209,7 +213,7 @@ const trendPoints = computed(() => {
 const { confirmModal } = useConfirmModal()
 const emits = defineEmits(['updateStatus'])
 function changeStatus() {
-  confirmModal('Cập nhật trạng thái', 'Bạn có chắc muốn cập nhật trạng thái đã xử lý?', () => {
+  confirmModal(t('alert.updateStatus'), t('alert.updateStatusConfirm'), () => {
     updateNotificationStatusApi(formModelValue.value.id, {
       status: formModelValue.value.statusObject.code === 'Pending' ? 2 : 1,
       dataTime: formModelValue.value.dataTime,
@@ -235,7 +239,7 @@ function changeStatus() {
             <svg v-if="standalone" width="20" height="20" viewBox="0 0 20 20" fill="none">
               <path d="M12.5 15 7.5 10l5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
-            Chi tiết cảnh báo
+            {{ t('alert.detail.title') }}
           </button>
           <div class="header__badges">
             <span class="badge badge--severity" :style="{ background: severity.bg, color: severity.color }">
@@ -248,29 +252,29 @@ function changeStatus() {
                   stroke-linejoin="round"
                 />
               </svg>
-              Mức {{ formModelValue?.compareResultObject?.name }}
+              {{ t('alert.detail.level', { level: enumLabel('temperatureLevelList', formModelValue?.compareResultObject?.code, formModelValue?.compareResultObject?.name) }) }}
             </span>
             <span class="badge badge--status" :class="{ 'badge--status-resolved': isResolved }">
               <span class="badge__dot" />
-              {{ formModelValue?.statusObject?.name }}
+              {{ enumLabel('notificationStatusList', formModelValue?.statusObject?.code, formModelValue?.statusObject?.name) }}
             </span>
             <span class="header__meta">
               <svg width="15" height="15" viewBox="0 0 20 20" fill="none">
                 <circle cx="10" cy="10" r="7.3" stroke="currentColor" stroke-width="1.5" />
                 <path d="M10 6v4.3l3 1.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
-              Thời gian phát hiện: <strong>{{ formModelValue?.formattedDate }}</strong>
+              {{ t('alert.detail.detectedAt') }} <strong>{{ formModelValue?.formattedDate }}</strong>
             </span>
           </div>
         </div>
         <div class="header__actions">
           <ElButton v-if="formModelValue?.statusObject?.code === 'Pending'" class="action-btn action-btn--primary" @click="changeStatus">
             <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M4 10.5 8 14.5 16 5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
-            Cập nhật trạng thái
+            {{ t('alert.updateStatus') }}
           </ElButton>
           <a v-if="isPdNotification" :href="downloadVideoUrl" download class="action-btn action-btn--secondary">
             <svg width="15" height="15" viewBox="0 0 20 20" fill="none"><path d="M10 3v9.5M6.2 9 10 12.8 13.8 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /><path d="M4 15.5h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
-            Tải video
+            {{ t('alert.detail.downloadVideo') }}
           </a>
         </div>
       </div>
@@ -281,16 +285,16 @@ function changeStatus() {
         <div class="media-card">
           <div v-if="isPdNotification" class="tabs">
             <button type="button" class="tab-btn" :class="{ 'tab-btn--active': activeMedia === 'image' }" @click="activeMedia = 'image'">
-              Ảnh chụp
+              {{ t('alert.detail.snapshot') }}
             </button>
             <button type="button" class="tab-btn" :class="{ 'tab-btn--active': activeMedia === 'video' }" @click="activeMedia = 'video'">
-              Video sự kiện
+              {{ t('alert.detail.eventVideo') }}
             </button>
           </div>
 
           <div v-if="!isPdNotification || activeMedia === 'image'" class="media-frame">
             <img v-if="formModelValue?.imagePath" :src="formModelValue?.imagePath" class="media-frame__img" alt="" />
-            <div v-else class="media-placeholder">Không có hình ảnh</div>
+            <div v-else class="media-placeholder">{{ t('alert.detail.noImage') }}</div>
           </div>
           <video
             v-else-if="!videoLoadFailed"
@@ -300,7 +304,7 @@ function changeStatus() {
             class="media-frame__video"
             @error="videoLoadFailed = true"
           />
-          <div v-else class="media-placeholder">Không có video</div>
+          <div v-else class="media-placeholder">{{ t('alert.detail.noVideo') }}</div>
         </div>
 
         <button v-if="isPdNotification" type="button" class="map-link" @click="goToMap">
@@ -308,13 +312,13 @@ function changeStatus() {
             <path d="M10 18s6-5.2 6-9.8A6 6 0 0 0 4 8.2C4 12.8 10 18 10 18Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
             <circle cx="10" cy="8.2" r="2.2" stroke="currentColor" stroke-width="1.5" />
           </svg>
-          Xem trên bản đồ giám sát
+          {{ t('alert.detail.viewOnMap') }}
         </button>
 
         <div v-if="isPdNotification && trendPoints" class="card trend-card">
           <div class="card__row-between">
-            <h3 class="card__title">Xu hướng cường độ đo được</h3>
-            <span class="muted-sm">{{ formModelValue.pdTrend.length }} lần đo gần nhất · Bộ phận này</span>
+            <h3 class="card__title">{{ t('alert.detail.trendTitle') }}</h3>
+            <span class="muted-sm">{{ t('alert.detail.trendCount', { count: formModelValue.pdTrend.length }) }}</span>
           </div>
           <div class="trend-chart">
             <svg width="100%" height="150" viewBox="0 0 420 150" preserveAspectRatio="none" class="trend-svg">
@@ -348,7 +352,7 @@ function changeStatus() {
             </svg>
             <div class="trend-summary">
               <div>
-                <div class="field-label">Khoảng đo</div>
+                <div class="field-label">{{ t('alert.detail.range') }}</div>
                 <div class="trend-summary__range">{{ trendPoints.first.levelDb }} → {{ trendPoints.last.levelDb }} dB</div>
               </div>
               <div class="trend-summary__chip" :style="{ background: severity.bg, color: severity.color }">
@@ -370,7 +374,7 @@ function changeStatus() {
                     stroke-linejoin="round"
                   />
                 </svg>
-                {{ trendPoints.rising ? 'Tăng' : 'Giảm' }}
+                {{ trendPoints.rising ? t('alert.detail.rising') : t('alert.detail.falling') }}
               </div>
             </div>
           </div>
@@ -387,15 +391,15 @@ function changeStatus() {
 
       <div class="info-column">
         <div class="card">
-          <h3 class="card__title">Vị trí &amp; thiết bị</h3>
+          <h3 class="card__title">{{ t('alert.detail.locationTitle') }}</h3>
           <div class="field-list">
             <div class="two-col-row">
               <div class="field-row">
-                <div class="field-label">Khu vực</div>
+                <div class="field-label">{{ t('fields.area') }}</div>
                 <div class="field-value">{{ formModelValue?.areaName || '—' }}</div>
               </div>
               <div v-if="isPdNotification" class="field-row">
-                <div class="field-label">Vùng trên camera</div>
+                <div class="field-label">{{ t('dashboard.cameraZone') }}</div>
                 <div class="field-value" :class="{ 'field-value--empty': !formModelValue?.zoneName }">
                   {{ formModelValue?.zoneName || '—' }}
                 </div>
@@ -403,11 +407,11 @@ function changeStatus() {
             </div>
             <div class="two-col-row">
               <div class="field-row">
-                <div class="field-label">Thiết bị</div>
+                <div class="field-label">{{ t('alert.equipment') }}</div>
                 <div class="field-value">{{ formModelValue?.machineName || '—' }}</div>
               </div>
               <div class="field-row">
-                <div class="field-label">Bộ phận</div>
+                <div class="field-label">{{ t('alert.component') }}</div>
                 <div class="field-value" :class="{ 'field-value--empty': !formModelValue?.machineComponentName }">
                   {{ formModelValue?.machineComponentName || '—' }}
                 </div>
@@ -417,7 +421,7 @@ function changeStatus() {
         </div>
 
         <div class="card">
-          <h3 class="card__title">Đo lường &amp; đánh giá</h3>
+          <h3 class="card__title">{{ t('alert.detail.measurementTitle') }}</h3>
           <div class="stat-grid">
             <div class="stat-box">
               <div class="field-label">{{ componentValueLabel }}</div>
@@ -432,13 +436,13 @@ function changeStatus() {
           </div>
           <div v-if="!isPdNotification" class="compare-row">
             <div class="field-row">
-              <div class="field-label">Điểm giám sát</div>
+              <div class="field-label">{{ t('alert.monitorPoint') }}</div>
               <div class="field-value" :class="{ 'field-value--empty': !formModelValue?.compareMonitorPoint }">
                 {{ formModelValue?.compareMonitorPoint || '—' }}
               </div>
             </div>
             <div class="field-row">
-              <div class="field-label">Đối tượng so sánh</div>
+              <div class="field-label">{{ t('alert.compareObject') }}</div>
               <div class="field-value" :class="{ 'field-value--empty': !formModelValue?.compareComponent }">
                 {{ formModelValue?.compareComponent || '—' }}
               </div>
@@ -450,7 +454,9 @@ function changeStatus() {
               <path d="M10 6.5v4l2.6 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
             <div class="hint-text">
-              Đánh giá theo <strong>ngưỡng dB</strong> của bộ phận, không so với điểm đo/thiết bị khác - xem chi tiết ở thẻ "Ngưỡng cường độ PD (dB)" bên dưới.
+              <i18n-t keypath="alert.detail.dbCriteriaHint" tag="span">
+                <template #threshold><strong>{{ t('alert.detail.dbThreshold') }}</strong></template>
+              </i18n-t>
             </div>
           </div>
           <div v-else class="hint-row hint-row--standalone">
@@ -459,14 +465,16 @@ function changeStatus() {
               <path d="M10 6.5v4l2.6 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
             <div class="hint-text">
-              So với chính baseline của <strong>bộ phận</strong>.
+              <i18n-t keypath="alert.detail.baselineHint" tag="span">
+                <template #component><strong>{{ t('alert.detail.componentWord') }}</strong></template>
+              </i18n-t>
             </div>
           </div>
         </div>
 
         <div v-if="hasDbCriteria" class="card">
-          <h3 class="card__title">Ngưỡng cường độ PD (dB)</h3>
-          <p class="hint-text mb-2">Ngưỡng dB áp dụng cho bộ phận này (riêng, hoặc theo loại bộ phận nếu chưa có ngưỡng riêng):</p>
+          <h3 class="card__title">{{ t('alert.detail.pdThresholdTitle') }}</h3>
+          <p class="hint-text mb-2">{{ t('alert.detail.pdThresholdHint') }}</p>
           <div class="level-legend">
             <span class="level-chip" :style="levelChipStyle('Good')">{{ thresholdLabels.good }}</span>
             <span class="level-chip" :style="levelChipStyle('Fair')">{{ thresholdLabels.fair }}</span>
@@ -477,13 +485,13 @@ function changeStatus() {
 
         <div v-if="isPdNotification && hasFormula" class="card">
           <h3 class="card__title">
-            Công thức tính tốc độ tăng ΔPD% theo kỳ<template v-if="formModelValue.appliedFormulaName">: {{ formModelValue.appliedFormulaName }}</template>
+            {{ t('alert.detail.formulaTitle') }}<template v-if="formModelValue.appliedFormulaName">: {{ formModelValue.appliedFormulaName }}</template>
           </h3>
           <div v-if="!isCustomFormula" class="formula-box">
             ΔPD% =
             <span class="formula-fraction">
-              <span class="formula-fraction__top">Cường độ đo được − Cường độ phát hiện lần đầu</span>
-              <span class="formula-fraction__bottom">Cường độ phát hiện lần đầu × Số tháng đã trôi qua</span>
+              <span class="formula-fraction__top">{{ t('alert.detail.formulaTop') }}</span>
+              <span class="formula-fraction__bottom">{{ t('alert.detail.formulaBottom') }}</span>
             </span>
             × 100
           </div>
@@ -499,7 +507,7 @@ function changeStatus() {
               <span class="formula-row__value">{{ row.display }}</span>
             </div>
             <div class="formula-row formula-row--result">
-              <span>Kết quả</span>
+              <span>{{ t('alert.detail.result') }}</span>
               <span :style="{ color: severity.color }">= {{ formModelValue.deltaValue }}%</span>
             </div>
           </div>

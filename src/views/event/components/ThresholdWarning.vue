@@ -1,13 +1,13 @@
 <template>
   <div class="card" style="padding: 20px;">
     <div class="summary-header">
-      <div class="summary-title">Thống kê số lượng cảnh báo</div>
+      <div class="summary-title">{{ t('alert.home.tabAlertStats') }}</div>
     </div>
 
     <div class="filter-section-modern">
       <div class="filter-row-inline">
         <div class="filter-group-inline">
-          <label>Khu vực</label>
+          <label>{{ t('fields.area') }}</label>
           <tree-select-remote
               v-model="searchParams.areaId"
               :request-fn="getAllTreeAreaApi"
@@ -16,21 +16,21 @@
           />
         </div>
         <div class="filter-group-inline">
-          <label>Từ ngày</label>
+          <label>{{ t('alert.fromDate') }}</label>
           <el-date-picker
               v-model="searchParams.startDate"
               type="date"
-              placeholder="Ngày bắt đầu"
+              :placeholder="t('alert.startDate')"
               value-format="YYYY-MM-DD"
               class="select-single-modern !w-full"
           />
         </div>
         <div class="filter-group-inline">
-          <label>Đến ngày</label>
+          <label>{{ t('alert.toDate') }}</label>
           <el-date-picker
               v-model="searchParams.endDate"
               type="date"
-              placeholder="Ngày kết thúc"
+              :placeholder="t('alert.endDate')"
               value-format="YYYY-MM-DD"
               class="select-single-modern !w-full"
           />
@@ -41,7 +41,7 @@
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
-          TÌM KIẾM
+          {{ t('common.search') }}
         </button>
         <el-button :loading="isLoadingExport" class="btn-export" @click="exportFile">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -67,6 +67,7 @@
 </template>
 
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 import { onMounted, ref} from "vue";
 import {exportCountApi, notificationsCountApi} from "@/api/notification";
 import VueApexChart from "vue3-apexcharts";
@@ -75,6 +76,8 @@ import {getAllTreeAreaApi} from "@/api/area";
 import TreeSelectRemote from "@/components/Tree/TreeSelectRemote.vue";
 import useRequest from "@/hooks/web/useRequest";
 import {downloadFile} from "@/utils/response";
+
+const { t } = useLang()
 
 const chartOptions = ref<ApexOptions>({
   chart: {
@@ -113,14 +116,14 @@ const chartOptions = ref<ApexOptions>({
   },
   yaxis: {
     labels: {style: {colors: '#94A3B8'}},
-    title: {text: 'Số lượng (Lần)', style: {color: '#94A3B8', fontWeight: 600}}
+    title: {text: t('alert.stats.countAxis'), style: {color: '#94A3B8', fontWeight: 600}}
   },
   grid: {borderColor: 'rgba(255,255,255,0.05)', strokeDashArray: 4},
   tooltip: {theme: 'dark'}
 })
 
 const series = ref<any[]>([{
-  name: 'Số lượng cảnh báo',
+  name: t('alert.stats.alertCount'),
   data: []
 }])
 const formatDate = (date: Date): string => {
@@ -172,7 +175,7 @@ const refresh = () => {
       categoryLabel.push(item.dataDate);
     }
     series.value = [{
-      name: "Số lượng cảnh báo",
+      name: t('alert.stats.alertCount'),
       data: seriesData
     }]
     chartBarRef.value?.updateSeries(series.value, true)

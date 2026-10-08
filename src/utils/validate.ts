@@ -21,8 +21,10 @@ export const rule = (
   const { t } = useLang()
   return {
     [ruleName]: ruleValue,
+    // Dạng hàm để câu lỗi theo ngôn ngữ hiện tại lúc validate
     message:
-      message ?? t(`validation.${ruleName}`, { field: field ? t(field) : '', value: ruleValue }),
+      message ??
+      (() => t(`validation.${ruleName}`, { field: field ? t(field) : '', value: ruleValue })),
     trigger: trigger,
   }
 }

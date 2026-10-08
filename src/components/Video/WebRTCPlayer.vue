@@ -5,7 +5,7 @@
         {{ cam?.name }}
       </div>
       <div v-show="cam?.area" class="truncate text-xs">
-        <span class="font-bold">Khu vực: </span>{{ cam?.area?.name }}
+        <span class="font-bold">{{ t('video.area') }}: </span>{{ cam?.area?.name }}
       </div>
     </div>
 
@@ -40,7 +40,7 @@
                 circle type="success"
                 @click="visibleControl = !visibleControl"
                 :icon="Coordinate"
-                title="Điều chỉnh camera"
+                :title="t('video.adjustCamera')"
             />
             <ControlButtonCamera v-show="visibleControl" v-if="cam" :form-model="cam"/>
           </div>
@@ -56,7 +56,7 @@
               type="warning"
               :icon="Aim"
               @click="startDrawing"
-              title="Bắt đầu đo nhiệt độ"
+              :title="t('video.startMeasure')"
           >
           </el-button>
           <el-button
@@ -67,7 +67,7 @@
               :icon="Odometer"
               :loading="measureTempLoading"
               @click="measureTemp"
-              title="Đo nhiệt độ"
+              :title="t('video.measureTemperature')"
           >
           </el-button>
           <el-button
@@ -77,7 +77,7 @@
               circle
               :icon="CloseBold"
               @click="stopDrawing"
-              title="Dừng đo"
+              :title="t('video.stopMeasure')"
           >
           </el-button>
           <span class="text-white text-2xl">{{drawResultText}}</span>
@@ -94,6 +94,7 @@
 </template>
 
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 import {ref, onMounted, nextTick, onUnmounted} from 'vue'
 import {
   VideoPlay,
@@ -109,6 +110,8 @@ import {PolygonDrawer} from '@/utils/PolygonDrawer'
 import useRequest from '@/hooks/web/useRequest'
 import {thermalDataByAreaApi} from '@/api/thermal-data'
 import ControlButtonCamera from "@/components/Button/ControlButtonCamera.vue";
+
+const { t } = useLang()
 
 const props = defineProps({
   streamKey: {type: [String, Number], required: true},
@@ -255,7 +258,7 @@ function startDrawing() {
               pointValues.value = points
               nextTick(() => {
                 if (pointCount.value >= 3 && !drawer?.isConvex()) {
-                  drawer?.showFullScreenAlert(videoRef, 'không phải hình đa giác lồi, vui lòng vẽ lại!');
+                  drawer?.showFullScreenAlert(videoRef, t('video.notConvex'));
                   drawer?.clearLastPoint()
                 }
               })
@@ -307,7 +310,7 @@ function measureTempAction() {
   })
       .then((res) => {
         if (res.data) {
-          drawResultText.value = `  Min: ${res.data.minTemperature}, Max: ${res.data.maxTemperature},Trung bình: ${res.data.aveTemperature}`;
+          drawResultText.value = '  ' + t('video.tempResult', { min: res.data.minTemperature, max: res.data.maxTemperature, avg: res.data.aveTemperature });
         }
       })
       .catch((e) => {

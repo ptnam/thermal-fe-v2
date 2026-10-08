@@ -1,4 +1,7 @@
 <script setup>
+import { useLang } from '@/hooks/web/useI18n'
+
+const { t } = useLang()
 const props = defineProps({
   item: {
     type: Object,
@@ -35,17 +38,17 @@ const decrease = () => {
       <div class="lvl-icon" v-html="item.icon">
       </div>
       <div class="lvl-text">
-        <h4>{{ item.label }}</h4>
-        <p>{{ item.note }}</p>
+        <h4>{{ t(item.labelKey) }}</h4>
+        <p>{{ t(item.noteKey) }}</p>
       </div>
     </div>
     <div class="level-range-row">
-      <span class="rng-label">TỪ</span>
+      <span class="rng-label">{{ t('machine.from') }}</span>
       <div class="rng-val-box" style="justify-content: center;">
         <span class="rng-unit">{{ fromModel }}{{ unit }}</span>
       </div>
       <span class="rng-arrow">→</span>
-      <span class="rng-label">ĐẾN</span>
+      <span class="rng-label">{{ t('machine.to') }}</span>
       <div class="val-ctrl-modern">
         <button
             type="button"

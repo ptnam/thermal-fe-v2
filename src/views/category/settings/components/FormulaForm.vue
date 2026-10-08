@@ -9,20 +9,20 @@
   >
     <template v-slot="{ formErrors }">
       <div v-if="isEditing && formModel.isLocked" class="in-use-notice">
-        Công thức này đã dùng để tính ra kết quả thật - không thể sửa Tên/Biểu thức/Mô tả. Đổi Trạng thái ở nút bật/tắt tại danh sách.
+        {{ t('formula.form.lockedNotice') }}
       </div>
-      <el-form-item label="Tên công thức" prop="name" :error="formErrors.Name">
+      <el-form-item :label="t('formula.form.name')" prop="name" :error="formErrors.Name">
         <el-input v-model="formModel.name" :disabled="isLocked"/>
       </el-form-item>
-      <el-form-item label="Mã công thức" prop="code" :error="formErrors.Code">
+      <el-form-item :label="t('formula.form.code')" prop="code" :error="formErrors.Code">
         <el-input v-model="formModel.code" :disabled="isEditing"/>
-        <div class="field-hint">Không đổi được sau khi tạo</div>
+        <div class="field-hint">{{ t('formula.form.codeHint') }}</div>
       </el-form-item>
 
       <div class="formula-form__expression">
         <div class="formula-form__expression-head">
-          <label class="formula-form__label">Biểu thức <span class="required">*</span></label>
-          <a class="formula-form__validate-link" @mousedown.prevent="onValidate">Kiểm tra công thức</a>
+          <label class="formula-form__label">{{ t('formula.expression') }} <span class="required">*</span></label>
+          <a class="formula-form__validate-link" @mousedown.prevent="onValidate">{{ t('formula.form.validate') }}</a>
         </div>
 
         <!-- contenteditable - tô màu @biến ngay trong câu, gõ @ để gợi ý chèn biến (danh sách biến động,
@@ -33,7 +33,7 @@
               class="formula-form__input"
               :class="{ 'is-error': !!formErrors.Expression }"
               :contenteditable="!isLocked"
-              data-placeholder="VD: (current - first) / (first * months) * 100. Gõ @ để chèn biến"
+              :data-placeholder="t('formula.form.expressionPlaceholder')"
               @input="onInput"
               @keydown="onKeydown"
               @blur="popupOpen = false"
@@ -62,10 +62,10 @@
         </div>
       </teleport>
 
-      <el-form-item label="Mô tả" prop="description" :error="formErrors.Description">
+      <el-form-item :label="t('formula.description')" prop="description" :error="formErrors.Description">
         <el-input v-model="formModel.description" type="textarea" :rows="2" :disabled="isLocked"/>
       </el-form-item>
-      <el-form-item label="Trạng thái" prop="status" :error="formErrors.Status">
+      <el-form-item :label="t('fields.status')" prop="status" :error="formErrors.Status">
         <el-select v-model="formModel.status">
           <el-option v-for="o in statusOptions" :key="o.value" :label="o.label" :value="o.value"/>
         </el-select>
@@ -81,12 +81,15 @@
 </template>
 
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 import FormWrapper from '@/components/Form/FormWrapper.vue'
 import SaveButton from '@/components/Button/SaveButton.vue'
 import CancelButton from '@/components/Button/CancelButton.vue'
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { isFormEditing } from '@/utils/is'
 import { addFormulaApi, editFormulaApi, listFormulaVariablesApi, validateFormulaApi } from '@/api/formula'
+
+const { t } = useLang()
 
 // Hiện chỉ có Domain=1 (Pd) - xem FormulaDomain (BE, Enums.cs).
 const PD_DOMAIN = 1
@@ -105,10 +108,10 @@ const isLocked = computed(() => !!(isEditing.value && props.formModel.isLocked))
 if (!props.formModel.domain) props.formModel.domain = PD_DOMAIN
 if (props.formModel.status == null) props.formModel.status = 1
 
-const statusOptions = [
-  { label: 'Hoạt động', value: 1 },
-  { label: 'Không hoạt động', value: 0 },
-]
+const statusOptions = computed(() => [
+  { label: t('formula.active'), value: 1 },
+  { label: t('formula.inactive'), value: 0 },
+])
 
 const variables = ref<{ name: string; label: string }[]>([])
 onMounted(async () => {
@@ -125,7 +128,7 @@ async function onValidate() {
   const res = await validateFormulaApi({ domain: PD_DOMAIN, expression: props.formModel.expression })
   const result = res.data as any
   validateOk.value = !!result?.isValid
-  validateMessage.value = result?.isValid ? 'Hợp lệ' : 'Không hợp lệ'
+  validateMessage.value = result?.isValid ? t('formula.form.valid') : t('formula.form.invalid')
 }
 watch(() => props.formModel.expression, () => {
   validateMessage.value = ''

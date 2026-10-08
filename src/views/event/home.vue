@@ -1,8 +1,11 @@
 <script setup lang="tsx">
+import { useLang } from '@/hooks/web/useI18n'
 
 import TemperatureLog from "@/views/event/components/TemperatureLog.vue";
 import ThresholdWarning from "@/views/event/components/ThresholdWarning.vue";
 import {ref} from "vue";
+
+const { t } = useLang()
 
 
 const tab = ref(1)
@@ -10,11 +13,11 @@ const tab = ref(1)
 
 <template>
   <div class="container">
-    <div class="bread-crumb">Theo dõi điểm đo / <span>Tổng hợp phân tích</span></div>
+    <div class="bread-crumb">{{ t('alert.home.breadcrumbRoot') }} / <span>{{ t('layout.menu.analysisSummary') }}</span></div>
 
     <div class="tabs-container">
-      <div :class="['tab-item', tab === 1 ? 'active' : '']" @click="() => tab = 1">Nhật ký nhiệt độ theo điểm đo</div>
-      <div :class="['tab-item', tab === 2 ? 'active' : '']" @click="() => tab = 2">Thống kê số lượng cảnh báo</div>
+      <div :class="['tab-item', tab === 1 ? 'active' : '']" @click="() => tab = 1">{{ t('alert.home.tabTemperatureLog') }}</div>
+      <div :class="['tab-item', tab === 2 ? 'active' : '']" @click="() => tab = 2">{{ t('alert.home.tabAlertStats') }}</div>
     </div>
 
     <!-- TAB 1: NHẬT KÝ NHIỆT ĐỘ -->

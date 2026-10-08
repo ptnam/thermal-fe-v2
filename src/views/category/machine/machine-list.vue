@@ -1,4 +1,5 @@
 <script setup lang="tsx">
+import { enumLabel } from '@/utils/enumLabel'
 import ListTemplate from '@/components/PageTemplate/List/ListTemplate.vue'
 import {TableColumn} from '@/components/Table'
 import {useLang} from '@/hooks/web/useI18n'
@@ -30,17 +31,17 @@ const {t} = useLang()
 
 const columns = computed<TableColumn[]>(() => [
   {type: 'index', label: 'STT', width: 60},
-  {prop: 'area.name', label: 'Khu vực'},
-  {prop: 'machineType.name', label: 'Loại thiết bị'},
-  {prop: 'name', label: 'Tên thiết bị'},
-  {prop: 'code', label: 'Mã thiết bị'},
+  {prop: 'area.name', label: t('fields.area')},
+  {prop: 'machineType.name', label: t('machine.type')},
+  {prop: 'name', label: t('machine.name')},
+  {prop: 'code', label: t('machine.code')},
   {
     prop: 'displayStatus',
-    label: 'Trạng thái',
+    label: t('fields.status'),
     slots: {
       default: ({row}) => (<span style={{
         color: row.status === 'Active' ? 'var(--success)' : 'var(--danger)'
-      }}>{row?.displayStatus}</span>)
+      }}>{enumLabel('commonStatusList', row?.status, row?.displayStatus)}</span>)
     },
   },
   {
@@ -136,17 +137,17 @@ const isMobile = computed(() => appStore.isMobile)
       @addHandler="openDialogAdd"
       :card-component="MachineCard"
       v-loading="detailLoading"
-      title="Danh sách thiết bị"
+      :title="t('machine.listTitle')"
       @edit="openDialogEdit"
       @delete="openDelete"
   >
     <template slot="search" v-slot="{ searchParams }">
       <div class="filter-item">
-        <div class="filter-label">Thiết bị</div>
-        <el-input class="filter-input" v-model="searchParams.name" clearable placeholder="Nhập tên thiết bị..."/>
+        <div class="filter-label">{{ t('machine.searchLabel') }}</div>
+        <el-input class="filter-input" v-model="searchParams.name" clearable :placeholder="t('machine.namePlaceholder')"/>
       </div>
       <div class="filter-item">
-        <div class="filter-label">Khu vực</div>
+        <div class="filter-label">{{ t('fields.area') }}</div>
         <tree-select-remote
             v-model="searchParams.areaId"
             :request-fn="getAllTreeAreaApi"
@@ -155,7 +156,7 @@ const isMobile = computed(() => appStore.isMobile)
         />
       </div>
       <div class="filter-item">
-        <div class="filter-label">Loại thiết bị</div>
+        <div class="filter-label">{{ t('machine.type') }}</div>
         <virtualized-select-from-url
             v-model="searchParams.machineTypeId"
             :request-fn="getAllMachineTypeApi"
@@ -192,7 +193,7 @@ const isMobile = computed(() => appStore.isMobile)
     <machine-form
         v-model:formModel="formModel"
         @success="saveSuccess"
-        :title="formModel.id ? 'Cập nhật thiết bị': 'Thêm thiết bị'"
+        :title="formModel.id ? t('machine.edit') : t('machine.add')"
     ></machine-form>
   </drawer-form>
 </template>

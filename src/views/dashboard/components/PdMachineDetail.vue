@@ -1,11 +1,11 @@
 <template>
   <div>
     <div class="node-popup-header">
-      <span>Thiết bị: {{ machine?.name }}</span>
+      <span>{{ t('dashboard.equipment') }}: {{ machine?.name }}</span>
     </div>
     <div class="node-popup-body">
-      <p v-if="loading" class="empty-text">Đang tải dữ liệu...</p>
-      <p v-else-if="stale" class="empty-text">Không có dữ liệu gần đây</p>
+      <p v-if="loading" class="empty-text">{{ t('dashboard.loading') }}</p>
+      <p v-else-if="stale" class="empty-text">{{ t('dashboard.noRecentData') }}</p>
       <div v-else-if="components && components.length" class="node-popup-grid grid grid-cols-1 lg:grid-cols-2 gap-[15px]">
         <div v-for="item in components" :key="item.machineComponentId" class="analysis-card">
           <div class="analysis-title">
@@ -19,7 +19,7 @@
 
           <template v-if="item.lastEvaluationLevelObject">
             <div class="analysis-row">
-              <div class="analysis-label">Cường độ đo được</div>
+              <div class="analysis-label">{{ t('dashboard.measuredIntensity') }}</div>
               <div class="analysis-val">
                 {{ item.lastLevelDb }} dB
                 <template v-if="isLevelDbCriteria(item) && item.thresholdGoodMax != null">
@@ -29,7 +29,7 @@
             </div>
             <!-- ΔPD% chỉ hiện với bộ phận chấm theo ΔPD% (không phải theo ngưỡng dB). -->
             <div v-if="isGrowthRateCriteria(item)" class="analysis-row">
-              <div class="analysis-label">Tốc độ tăng ΔPD% theo kỳ</div>
+              <div class="analysis-label">{{ t('dashboard.growthRate') }}</div>
               <div class="analysis-val">
                 {{ item.lastDeltaPdPercent ?? '—' }}%
                 <template v-if="item.thresholdGoodMax != null">
@@ -42,23 +42,26 @@
               <div class="analysis-val">{{ item.cameraCode || '—' }}</div>
             </div>
             <div class="analysis-row">
-              <div class="analysis-label">Vùng trên camera</div>
+              <div class="analysis-label">{{ t('dashboard.cameraZone') }}</div>
               <div class="analysis-val">{{ item.zoneName || '—' }}</div>
             </div>
             <div class="analysis-row">
-              <div class="analysis-label">Đo lần gần nhất</div>
+              <div class="analysis-label">{{ t('dashboard.lastMeasured') }}</div>
               <div class="analysis-val">{{ item.lastReadAt }}</div>
             </div>
           </template>
-          <p v-else class="empty-text">Chưa có dữ liệu PD</p>
+          <p v-else class="empty-text">{{ t('dashboard.noPdData') }}</p>
         </div>
       </div>
-      <p v-else class="empty-text">Thiết bị này chưa có bộ phận nào được vẽ vùng giám sát PD</p>
+      <p v-else class="empty-text">{{ t('dashboard.noPdZones') }}</p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
+
+const { t } = useLang()
 // Nội dung chi tiết marker PD trên dashboard - dùng chung khung .node-popup-*/.analysis-* với ThermalData.vue
 // (bảng chi tiết nhiệt độ) để đồng nhất giao diện, chỉ khác nội dung từng dòng.
 defineProps<{
