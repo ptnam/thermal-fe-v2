@@ -211,7 +211,7 @@ import { useLang } from '@/hooks/web/useI18n'
 import { ref, computed, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Rank } from '@element-plus/icons-vue'
-import { getStreamApi } from '@/api/camera'
+import { prepareCameraStream } from '@/plugins/webRTC/cameraStream'
 import { getAllMachineApi, getComponentMachineApi } from '@/api/machine'
 import {
   getBatcamRoisApi,
@@ -244,19 +244,9 @@ const initVideo = () => {
   const id = cameraId()
   if (!id) return
   videoLoading.value = true
-  getStreamApi(id)
-      .then((res: any) => {
-        const key = res.data
-        const path = import.meta.env.VITE_LIVE_PATH
-        let wsUrl = path
-        if (!path.startsWith('ws://') && !path.startsWith('wss://')) {
-          const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
-          const wsPath = path.startsWith('/') ? path : `/${path}`
-          wsUrl = `${wsProtocol}//${window.location.host}${wsPath}`
-        }
-
-        const videoStream = document.createElement('video-stream') as any
-        videoStream.src = new URL(`${wsUrl}?src=${key}`)
+  const videoStream = document.createElement('video-stream') as any
+  prepareCameraStream(videoStream, id)
+      .then(() => {
         videoStream.style.display = 'block'
         videoStream.style.width = '100%'
         videoStream.style.height = '100%'

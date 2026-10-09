@@ -102,6 +102,10 @@ export class VideoRTC extends HTMLElement {
      */
     this.wsURL = ''
 
+    this.getWebSocketUrl = null
+    this.connectionRequest = 0
+    this.connectionPending = false
+
     /**
      * @type {RTCPeerConnection}
      */
@@ -299,22 +303,45 @@ export class VideoRTC extends HTMLElement {
    * @return {boolean} true if the connection has started.
    */
   onconnect() {
-    if (!this.isConnected || !this.wsURL || this.ws || this.pc) return false
+    if (!this.isConnected || !this.wsURL || this.ws || this.pc || this.connectionPending) return false
 
     // CLOSED or CONNECTING => CONNECTING
     this.wsState = WebSocket.CONNECTING
 
     this.connectTS = Date.now()
 
-    this.ws = new WebSocket(this.wsURL)
-    this.ws.binaryType = 'arraybuffer'
-    this.ws.addEventListener('open', () => this.onopen())
-    this.ws.addEventListener('close', () => this.onclose())
+    const request = ++this.connectionRequest
+    const connect = (url) => {
+      if (request !== this.connectionRequest || !this.isConnected || this.wsState === WebSocket.CLOSED) return
+      this.wsURL = url.toString()
+      const socket = new WebSocket(this.wsURL)
+      this.ws = socket
+      socket.binaryType = 'arraybuffer'
+      socket.addEventListener('open', () => { if (this.ws === socket) this.onopen() })
+      socket.addEventListener('close', () => { if (this.ws === socket) this.onclose() })
+    }
+
+    if (this.getWebSocketUrl) {
+      this.connectionPending = true
+      Promise.resolve()
+        .then(() => this.getWebSocketUrl())
+        .then(connect)
+        .catch(() => {
+          if (request !== this.connectionRequest) return
+          this.dispatchEvent(new CustomEvent('stream-error', { detail: 'authorization' }))
+          this.onclose()
+        })
+        .finally(() => { if (request === this.connectionRequest) this.connectionPending = false })
+    } else {
+      connect(this.wsURL)
+    }
 
     return true
   }
 
   ondisconnect() {
+    this.connectionRequest++
+    this.connectionPending = false
     this.wsState = WebSocket.CLOSED
     if (this.ws) {
       this.ws.close()

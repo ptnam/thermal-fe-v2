@@ -2,7 +2,8 @@
 import { useLang } from '@/hooks/web/useI18n'
 
 import {nextTick, onMounted, onUnmounted, ref} from "vue";
-import {getCameraDetailApi, getStreamApi, sendCommandCameraApi} from "@/api/camera";
+import {getCameraDetailApi, sendCommandCameraApi} from "@/api/camera";
+import { prepareCameraStream } from '@/plugins/webRTC/cameraStream'
 
 import useRequest from "@/hooks/web/useRequest";
 import {CAMERA_COMMANDS} from "@/constants/camera";
@@ -89,11 +90,8 @@ const requestCommand = (command: number, other: any = null) => {
 const speed = ref(3);
 onMounted(() => {
   loading.value = true
-  getStreamApi(props.streamKey)
-      .then((res) => {
-        const key = res.data
-        const path = import.meta.env.VITE_LIVE_PATH
-        videoStream.src = new URL(`${path}?src=${key}`)
+  prepareCameraStream(videoStream, props.streamKey as string | number)
+      .then(() => {
         videoRef?.value?.appendChild(videoStream)
 
         const video = videoStream.video

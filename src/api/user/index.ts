@@ -9,7 +9,7 @@ export const getUserListApi = (searchParams: object): Promise<IResponse<[]>> => 
 }
 
 export const addUserApi = (data: UserLoginType): Promise<IResponse> => {
-  return request.post({ url: 'api/Users', data })
+  return request.post({ url: 'api/Users', data: { ...data, id: 0 } })
 }
 
 export const editUserApi = (id: number, data: UserLoginType): Promise<IResponse> => {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useLang } from '@/hooks/web/useI18n'
 import {ref, onMounted} from 'vue'
-import {getStreamApi} from '@/api/camera'
+import { prepareCameraStream } from '@/plugins/webRTC/cameraStream'
 import { useRouter } from 'vue-router';
 
 const { t } = useLang()
@@ -28,11 +28,8 @@ const loading = ref(false)
 
 onMounted(() => {
   loading.value = true
-  getStreamApi(props.streamKey)
-      .then((res) => {
-        const key = res.data
-        const path = import.meta.env.VITE_LIVE_PATH
-        videoStream.src = new URL(`${path}?src=${key}`)
+  prepareCameraStream(videoStream, props.streamKey)
+      .then(() => {
         videoRef?.value?.appendChild(videoStream)
 
         const video = videoStream.video

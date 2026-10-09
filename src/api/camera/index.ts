@@ -39,6 +39,10 @@ export const getStreamApi = (id: any): Promise<IResponse> => {
   return request.get({url: `api/Cameras/stream/${id}`})
 }
 
+export const getStreamTicketApi = (id: string | number): Promise<IResponse<string>> => {
+  return request.post({url: `api/CameraStreams/${encodeURIComponent(id)}/ticket`})
+}
+
 export const syncPresetsApi = (id: any): Promise<IResponse> => {
   return request.post({url: `api/Cameras/syncPresets/${id}`})
 }
