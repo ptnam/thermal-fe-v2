@@ -13,7 +13,7 @@
     </div>
     <div class="sc-actions">
       <button class="btn-add" @click="() => $emit('addMachinePart',{row:row} )"
-              style="padding: 4px 12px; font-size: 11px;">+ Bộ phận
+              style="padding: 4px 12px; font-size: 11px;">+ {{ t('machineType.parts') }}
       </button>
       <button class="action-btn-circle btn-edit-round" @click="() => $emit('edit', {row:row})">✎</button>
       <button class="action-btn-circle btn-delete-round" @click="() => $emit('delete', {row:row})">🗑</button>
@@ -22,8 +22,11 @@
 </template>
 
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 
 import {TableColumn} from "@/components/Table/TableCard.vue";
+
+const { t } = useLang()
 
 type RowData = any
 defineProps<{

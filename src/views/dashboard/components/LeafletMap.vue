@@ -21,6 +21,7 @@
           :opacity="mapType === MAP_TYPE_MAP ? 1 : 0"
          :url="tile.url"
          :attribution="tile.attribution"
+         :class-name="isDark ? 'map-tile-dark' : ''"
           layer-type="base"
       />
 
@@ -62,18 +63,10 @@ const isDark = computed(() => appStore.theme === 'dark')
 const mapRef = ref<InstanceType<typeof LMap> | null>(null)
 
 
-const tile = computed(() => {
-  if (isDark.value) {
-    return {
-      url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-      attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
-    }
-  }
-  return {
-    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    attribution: '&copy; OpenStreetMap contributors',
-  }
-})
+const tile = computed(() => ({
+  url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+  attribution: '&copy; OpenStreetMap contributors',
+}))
 
 const tileKey = computed(() => (isDark.value ? 'base_dark' : 'base_light'))
 

@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div class="p-6">
     <notification-form-detail
         :form-model="formModel"
+        standalone
         v-loading="isLoading"
         @update-status="loadNotice"
-        title="Chi tiết nội dung cảnh báo" class=" justify-center p-6"
     />
   </div>
 </template>
@@ -23,6 +23,8 @@ const route = useRoute()
 const loadNotice = () => {
   onRequest(notificationDetailApi, route.query).then(res => {
     formModel.value = res.data
+  }).catch(() => {
+    formModel.value = null
   })
 }
 onMounted(() => {

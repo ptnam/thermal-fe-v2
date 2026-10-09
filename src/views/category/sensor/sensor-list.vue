@@ -1,4 +1,5 @@
 <script setup lang="tsx">
+import { enumLabel } from '@/utils/enumLabel'
 import ListTemplate from '@/components/PageTemplate/List/ListTemplate.vue'
 import {TableColumn} from '@/components/Table'
 import {useLang} from '@/hooks/web/useI18n'
@@ -24,17 +25,17 @@ const {t} = useLang()
 
 const columns = computed<TableColumn[]>(() => [
   {type: 'index', width: 60},
-  {prop: 'code', label: 'Mã cảm biến'},
-  {prop: 'name', label: 'Tên cảm biến'},
-  {prop: 'area.name', label: 'Khu vực'},
+  {prop: 'code', label: t('sensor.code')},
+  {prop: 'name', label: t('sensor.name')},
+  {prop: 'area.name', label: t('fields.area')},
   {
     prop: 'deviceStatusObject.name',
     width: 160,
-    label: 'Trạng thái',
+    label: t('fields.status'),
     slots: {
       default: ({row}) => (<span style={{
         color: row.deviceStatusObject.code === 'On' ? 'var(--success)' : 'var(--danger)'
-      }}>{row?.deviceStatusObject?.name}</span>)
+      }}>{enumLabel('deviceStatusList', row?.deviceStatusObject?.code, row?.deviceStatusObject?.name)}</span>)
     },
   },
   {
@@ -111,7 +112,7 @@ const uploadApi = (file: File) => {
         className: ''
       }"
       @addHandler="openDialogAdd"
-      title="Danh sách cảm biến nhiệt"
+      :title="t('sensor.listTitle')"
       :card-component="SensorCard"
       @edit="openDialogEdit"
       @delete="openDelete"
@@ -119,11 +120,11 @@ const uploadApi = (file: File) => {
     <template slot="search" v-slot="{ searchParams, tableMethods }">
       <div class="filter-row">
         <div class="filter-item">
-          <div class="filter-label">Mã/tên cảm biến</div>
-          <el-input v-model="searchParams.name" clearable class="filter-input" placeholder="Nhập mã hoặc tên..."/>
+          <div class="filter-label">{{ t('sensor.searchLabel') }}</div>
+          <el-input v-model="searchParams.name" clearable class="filter-input" :placeholder="t('sensor.searchPlaceholder')"/>
         </div>
         <div class="filter-item">
-          <div class="filter-label">Khu vực</div>
+          <div class="filter-label">{{ t('fields.area') }}</div>
           <tree-select-remote
               v-model="searchParams.areaId"
               :request-fn="getAllTreeAreaApi"
@@ -133,7 +134,7 @@ const uploadApi = (file: File) => {
           />
         </div>
         <div class="filter-item">
-          <div class="filter-label">Loại cảm biến</div>
+          <div class="filter-label">{{ t('sensor.type') }}</div>
           <virtualized-select-from-url
               :request-fn="getAllSensorTypeApi"
               v-model="searchParams.sensorTypeId"
@@ -143,7 +144,7 @@ const uploadApi = (file: File) => {
           />
         </div>
         <div class="filter-item">
-          <div class="filter-label">Trạng thái</div>
+          <div class="filter-label">{{ t('fields.status') }}</div>
           <select-from-config
               key-config="userStatusList"
               v-model="searchParams.status"

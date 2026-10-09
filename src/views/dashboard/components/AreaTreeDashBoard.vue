@@ -1,7 +1,10 @@
 <script lang="ts" setup>
+import { useLang } from '@/hooks/web/useI18n'
 import {onMounted, ref, watch} from 'vue'
 import {TreeInstance} from 'element-plus'
 import {isCam} from "@/utils/cameraUtils";
+
+const { t } = useLang()
 
 
 interface Tree {
@@ -50,14 +53,14 @@ onMounted(() => {
   <!-- Sidebar Area Tree -->
   <div class="card tree-card">
     <div class="card-header" style="margin-bottom: 20px;">
-      <div class="card-title">Danh sách khu vực</div>
+      <div class="card-title">{{ t('common.areaList') }}</div>
     </div>
 
     <div style="padding: 0 4px 16px;">
       <el-input
           v-model="filterText"
           class="tree-search-box border-0"
-          placeholder="Tìm theo khu vực"
+          :placeholder="t('common.searchArea')"
       />
     </div>
 

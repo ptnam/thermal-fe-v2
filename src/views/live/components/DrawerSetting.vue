@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 import {getAllTreeAreaApi} from "@/api/area";
 import SimpleAreaTree from "@/components/Tree/SimpleAreaTree.vue";
 import {computed, ref, watch} from 'vue'
@@ -7,6 +8,8 @@ import {vDraggable} from "@/components/Table/v-draggable";
 import {updateCameraSettingApi} from "@/api/camera-setting";
 import {CAMERA_COMMANDS} from "@/constants";
 import {cloneObject} from "@/utils/objectUtils";
+
+const { t } = useLang()
 
 const emit = defineEmits([
   'close',
@@ -58,11 +61,11 @@ const changeGrid = (cells) => {
   }
 }
 
-const columns = [
+const columns = computed(() => [
   {prop: 'id', label: "ID", width: 60,},
-  {prop: 'code', label: "Mã camera"},
-  {prop: 'name', label: "Tên camera"},
-];
+  {prop: 'code', label: t('camera.code')},
+  {prop: 'name', label: t('camera.name')},
+]);
 const arrayMoveInPlace = (array: any[], fromIndex: number, toIndex: number) => {
   const [movedItem] = array.splice(fromIndex, 1);
   array.splice(toIndex, 0, movedItem);
@@ -92,12 +95,12 @@ const applySettings = () => {
 <template>
   <div class="drawer drawer-md" id="settingsDrawer">
     <div class="drawer-header">
-      <h3>Thiết lập hiển thị</h3>
+      <h3>{{ t('live.displaySettings') }}</h3>
       <button class="close-drawer" @click="()=>emit('close')">×</button>
     </div>
     <div class="drawer-body">
       <div class="settings-section">
-        <div class="settings-title">KHU VỰC</div>
+        <div class="settings-title">{{ t('live.areaSection') }}</div>
         <div class="settings-tree">
           <simple-area-tree
               ref="treeRef"
@@ -129,7 +132,7 @@ const applySettings = () => {
       </div>
       <hr class="drawer-divider">
       <div class="settings-section">
-        <div class="settings-title">KIỂU BỐ CỤC</div>
+        <div class="settings-title">{{ t('live.layoutSection') }}</div>
         <div class="layout-picker">
           <div :class="['layout-option', screenNumber === 1 ? 'active': '']" @click="()=>changeGrid(1)">
             <div class="grid-icon"
@@ -180,7 +183,7 @@ const applySettings = () => {
           </div>
         </div>
 
-        <div class="settings-title" style="margin-top: 30px;">THỨ TỰ CAMERA (KÉO ĐỂ ĐỔI)</div>
+        <div class="settings-title" style="margin-top: 30px;">{{ t('live.cameraOrder') }}</div>
         <div v-if="listMarked.length" class="cam-order-list">
           <base-table
               class="mt-4"
@@ -195,14 +198,14 @@ const applySettings = () => {
          style="padding: 20px 24px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 12px;">
       <button class="btn-cancel" @click="()=>emit('close')"
               style="padding: 10px 24px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: var(--text-sub); cursor: pointer; font-weight: 600;">
-        Hủy
+        {{ t('common.cancel') }}
       </button>
       <el-button
           :loading="loadingSetting"
           class="btn-save"
           @click="applySettings"
           style="height: 42px;padding: 10px 24px; border-radius: 8px; border: none; background: var(--primary); color: white; cursor: pointer; font-weight: 700;">
-        Lưu thiết lập
+        {{ t('live.saveSettings') }}
       </el-button>
     </div>
   </div>

@@ -11,6 +11,7 @@ import {
   setupFcmListener,
 } from '@/plugins/firebase/firebase'
 import {useNoticeModal} from '@/hooks/web/useModal'
+import {useLang} from '@/hooks/web/useI18n'
 import Navbar from "@/layout/components/ThemeV2/Navbar.vue";
 
 try {
@@ -22,6 +23,7 @@ const configStore = useConfigStore()
 const paginationStore = usePaginationStore()
 
 const {noticeModal} = useNoticeModal()
+const {t} = useLang()
 const loadConfigLoading = ref(true)
 onBeforeMount(async () => {
   try {
@@ -36,7 +38,7 @@ onBeforeMount(async () => {
 
 const checkSound = () => {
   if (!isNotificationGranted()) {
-    noticeModal('Hãy cho phép thiết bị bật âm thanh', enableNotificationSound)
+    noticeModal(t('layout.soundPermission'), enableNotificationSound)
   }
 }
 </script>

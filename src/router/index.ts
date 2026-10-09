@@ -83,6 +83,24 @@ const constantRoutes: AppRouteRecordRaw[] = [
         meta: { icon: 'history', permission: ['monitoring'] },
       },
       {
+        path: 'pd-notification-system',
+        name: 'pd_notification_system',
+        component: () => import('@/views/event/pd-notification-system.vue'),
+        meta: { icon: 'bolt', permission: ['monitoring'] },
+      },
+      {
+        path: 'pd-history',
+        name: 'pd_history',
+        component: () => import('@/views/event/pd-history.vue'),
+        meta: { icon: 'history-bolt', permission: ['monitoring'] },
+      },
+      {
+        path: 'pd-summary',
+        name: 'pd_summary',
+        component: () => import('@/views/event/pd-summary.vue'),
+        meta: { icon: 'chart-bolt', permission: ['monitoring'] },
+      },
+      {
         path: 'home',
         name: 'home',
         component: () => import('@/views/event/home.vue'),
@@ -93,6 +111,15 @@ const constantRoutes: AppRouteRecordRaw[] = [
         name: 'event_history_detail',
         component: () => import('@/views/event/notification-system-detail.vue'),
         hidden:true,
+        meta: { icon: 'history', permission: ['monitoring'], hidden: true },
+      },
+      {
+        // Cùng component với event_history_detail (dùng chung cho nhiệt độ + PD), tách route để
+        // breadcrumb có title tĩnh ngay từ đầu, không đợi API trả dữ liệu.
+        path: 'pd-notification-system/detail',
+        name: 'pd_notification_detail',
+        component: () => import('@/views/event/notification-system-detail.vue'),
+        hidden: true,
         meta: { icon: 'history', permission: ['monitoring'], hidden: true },
       },
     ],
@@ -173,6 +200,14 @@ const constantRoutes: AppRouteRecordRaw[] = [
         name: 'machine_part',
         component: () => import('@/views/category/machine-part/machine-part-list.vue'),
         hidden: true,
+      },
+      {
+        // Feature code 'settings' đã có sẵn ở BE (add_settings_feature.sql, dùng chung với forest-fe) -
+        // chỉ quản lý công thức/biến số ΔPD% (gán công thức cho bộ phận vẫn ở Nhóm E - MachinePointDialog.vue).
+        path: 'settings',
+        name: 'formula_settings',
+        component: () => import('@/views/category/settings/formula-settings.vue'),
+        meta: { icon: 'setting', permission: ['settings'] },
       },
     ],
   },

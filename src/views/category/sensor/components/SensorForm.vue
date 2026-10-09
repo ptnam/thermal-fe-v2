@@ -18,10 +18,10 @@
         <div class="modal-left-col flex-1">
           <el-row :gutter="30">
             <el-col :span="isMobile ? 24 : 12">
-              <el-form-item label="Mã cảm biến" prop="code" :error="formErrors.Code">
+              <el-form-item :label="t('sensor.code')" prop="code" :error="formErrors.Code">
                 <el-input v-model="formModel.code" />
               </el-form-item>
-              <el-form-item label="Khu vực" prop="areaId" :error="formErrors.AreaId">
+              <el-form-item :label="t('fields.area')" prop="areaId" :error="formErrors.AreaId">
                 <tree-select-remote
                   v-model="formModel.areaId"
                   :request-fn="getAllTreeAreaApi"
@@ -30,14 +30,14 @@
                   @node-click="handleAreaIdClick"
                 />
               </el-form-item>
-              <el-form-item label="Bật/ tắt" prop="deviceStatus" :error="formErrors.DeviceStatus">
+              <el-form-item :label="t('sensor.onOff')" prop="deviceStatus" :error="formErrors.DeviceStatus">
                 <select-from-config
                   key-config="deviceStatusList"
                   v-model="formModel.deviceStatus"
                   colValue="code"
                 />
               </el-form-item>
-              <el-form-item label="Trạng thái" prop="status" :error="formErrors.Status">
+              <el-form-item :label="t('fields.status')" prop="status" :error="formErrors.Status">
                 <select-from-config
                   key-config="commonStatusList"
                   v-model="formModel.status"
@@ -45,35 +45,35 @@
                 />
               </el-form-item>
               <el-form-item
-                label="Địa chỉ IP (LAN)"
+                :label="t('sensor.ipLan')"
                 prop="lanIpAddress"
                 :error="formErrors.LanIpAddress"
               >
                 <el-input v-model="formModel.lanIpAddress" />
               </el-form-item>
               <el-form-item
-                label="Địa chỉ IP (WAN)"
+                :label="t('sensor.ipWan')"
                 prop="wanIpAddress"
                 :error="formErrors.WanIpAddress"
               >
                 <el-input v-model="formModel.wanIpAddress" />
               </el-form-item>
               <el-form-item
-                label="Chu kỳ lấy dữ liệu"
+                :label="t('sensor.pollingInterval')"
                 prop="frequency"
                 :error="formErrors.Frequency"
               >
                 <InputNumber v-model="formModel.frequency" />
               </el-form-item>
               <el-form-item
-                label="Độ dài dữ liệu"
+                :label="t('sensor.dataLength')"
                 prop="numberOfPoints"
                 :error="formErrors.NumberOfPoints"
               >
                 <InputNumber v-model="formModel.numberOfPoints" />
               </el-form-item>
               <el-form-item
-                label="Địa chỉ IEC"
+                :label="t('sensor.iecAddress')"
                 prop="iecObjectAddress"
                 :error="formErrors.IecObjectAddress"
               >
@@ -81,14 +81,14 @@
               </el-form-item>
             </el-col>
             <el-col :span="isMobile ? 24 : 12">
-              <el-form-item label="Tên cảm biến" prop="name" :error="formErrors.Name">
+              <el-form-item :label="t('sensor.name')" prop="name" :error="formErrors.Name">
                 <el-input v-model="formModel.name" />
               </el-form-item>
-              <el-form-item label="Nguồn nhiệt" prop="monitorType" :error="formErrors.MonitorType">
+              <el-form-item :label="t('sensor.heatSource')" prop="monitorType" :error="formErrors.MonitorType">
                 <select-from-config key-config="monitorTypeList" v-model="formModel.monitorType" />
               </el-form-item>
               <el-form-item
-                label="Loại cảm biến"
+                :label="t('sensor.type')"
                 prop="sensorTypeId"
                 :error="formErrors.sensorTypeId"
               >
@@ -101,7 +101,7 @@
               <el-form-item label="Port" prop="port" :error="formErrors.Port">
                 <InputNumber v-model="formModel.port" />
               </el-form-item>
-              <el-form-item label="Vị trí dữ liệu" prop="slot" :error="formErrors.Slot">
+              <el-form-item :label="t('sensor.dataSlot')" prop="slot" :error="formErrors.Slot">
                 <InputNumber v-model="formModel.slot" />
               </el-form-item>
               <el-form-item label="Slave ID" prop="slaveId" :error="formErrors.SlaveId">
@@ -112,7 +112,7 @@
               </el-form-item>
               <el-form-item
                 v-if="formModel?.area && formModel.areaId"
-                label="Tọa độ"
+                :label="t('map.coordinates')"
                 :error="formErrors.Latitude ?? formErrors.Longitude"
               >
                 <LatLngPicker
@@ -131,8 +131,8 @@
                   class="m-0 whitespace-nowrap"
                   style="font-size: 12px"
                 >
-                  <span class="font-bold">Kinh độ:</span> {{ formModel.longitude }},
-                  <span class="font-bold">Vĩ độ:</span> {{ formModel.latitude }}
+                  <span class="font-bold">{{ t('map.longitude') }}:</span> {{ formModel.longitude }},
+                  <span class="font-bold">{{ t('map.latitude') }}:</span> {{ formModel.latitude }}
                 </p>
               </el-form-item>
             </el-col>
@@ -140,21 +140,21 @@
         </div>
         <div class="modal-right-col flex-1">
           <div class="card-header flex items-center justify-between">
-            <span class="font-bold">Danh sách điểm <br class="block md:hidden"/>giám sát</span>
+            <span class="font-bold">{{ t('sensor.monitorPoints') }}</span>
             <add-button @click="addSensorMonitorPoint"></add-button>
           </div>
           <table class="points-table-modal table-auto border-collapse w-full">
             <thead class="hidden md:table-header-group">
               <tr>
-                <th class="px-2 py-1 text-left min-w-[120px]">Mã</th>
-                <th class="px-2 py-1 text-left min-w-[120px]">Tên</th>
-                <th class="px-2 py-1 text-left min-w-[130px]">Trạng thái</th>
+                <th class="px-2 py-1 text-left min-w-[120px]">{{ t('fields.code') }}</th>
+                <th class="px-2 py-1 text-left min-w-[120px]">{{ t('fields.name') }}</th>
+                <th class="px-2 py-1 text-left min-w-[130px]">{{ t('fields.status') }}</th>
                 <th class="px-2 py-1 text-left min-w-[90x]"></th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(item, index) in formModel.sensorMonitorPoints" :key="index">
-                <td class="px-2 py-1">
+                <td class="px-2 py-1" :data-label="t('sensor.pointCode')">
                   <el-form-item
                     :prop="`sensorMonitorPoints.${index}.code`"
                     :error="formErrors?.[`SensorMonitorPoints[${index}].Code`]"
@@ -164,7 +164,7 @@
                     <el-input v-model="item.code" />
                   </el-form-item>
                 </td>
-                <td class="px-2 py-1">
+                <td class="px-2 py-1" :data-label="t('sensor.pointName')">
                   <el-form-item
                     :prop="`sensorMonitorPoints.${index}.name`"
                     :error="formErrors?.[`SensorMonitorPoints[${index}].Name`]"
@@ -174,7 +174,7 @@
                     <el-input v-model="item.name" />
                   </el-form-item>
                 </td>
-                <td class="px-2 py-1">
+                <td class="px-2 py-1" :data-label="t('fields.status')">
                   <el-form-item
                     :prop="`sensorMonitorPoints.${index}.status`"
                     :error="formErrors?.[`SensorMonitorPoints[${index}].Status`]"
@@ -187,7 +187,7 @@
                     />
                   </el-form-item>
                 </td>
-                <td class="px-2 py-1">
+                <td class="px-2 py-1" :data-label="t('fields.action')">
                   <el-button
                     class="mb-4"
                     circle
@@ -206,6 +206,7 @@
 </template>
 
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 import FormWrapper from '@/components/Form/FormWrapper.vue'
 import { computed } from 'vue'
 import { rule } from '@/utils/validate'
@@ -224,6 +225,8 @@ import { MAP_TYPE_MAP, MAP_TYPE_PICTURE, STATUS_ACTIVE } from '@/constants'
 import LatLngPicker from '@/components/Map/LatLngPicker.vue'
 import LatLngImagePicker from '@/components/Map/LatLngImagePicker.vue'
 import { useAppStore } from '@/store/modules/app'
+
+const { t } = useLang()
 
 const props = defineProps({
   formModel: {
@@ -515,33 +518,9 @@ const handleAreaIdClick = (area: any) => {
     text-overflow: ellipsis;
   }
 
-  /* Specific Labels */
-  .points-table-modal td:nth-child(1)::before {
-    content: 'Mã điểm đo';
-  }
-
-  .points-table-modal td:nth-child(2)::before {
-    content: 'Tên điểm đo';
-  }
-
-  .points-table-modal td:nth-child(3)::before {
-    content: 'Trạng thái';
-  }
-
-  .points-table-modal td:nth-child(4)::before {
-    content: 'Hành động';
-  }
-
-  .points-table-modal td:nth-child(2)::before {
-    content: 'Tên điểm đo';
-  }
-
-  .points-table-modal td:nth-child(3)::before {
-    content: 'Trạng thái';
-  }
-
-  .points-table-modal td:nth-child(4)::before {
-    content: 'Hành động';
+  /* Nhãn cột lấy từ data-label để đổi theo ngôn ngữ */
+  .points-table-modal td::before {
+    content: attr(data-label);
   }
 
   /* Action column styling - remove input look */

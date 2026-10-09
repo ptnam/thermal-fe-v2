@@ -5,6 +5,7 @@ import type {AxiosInstance, InternalAxiosRequestConfig, RequestConfig, AxiosResp
 import {ElMessage} from 'element-plus'
 import {REQUEST_TIMEOUT} from '@/constants'
 import {useUserStoreWithOut} from "@/store/modules/user";
+import {translateApiError} from './apiError'
 
 export const PATH_URL = import.meta.env.VITE_API_BASE_PATH
 
@@ -31,7 +32,7 @@ axiosInstance.interceptors.response.use(
     },
     (error: AxiosError) => {
         ElMessage.error({
-          message: (error.response?.data as { message: string })?.message ?? error.message,
+            message: translateApiError(error),
             showClose: true,
         })
         if (error.status === 401 || error.message === 'Network Error') {

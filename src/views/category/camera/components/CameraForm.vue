@@ -11,17 +11,17 @@
     <template v-slot="{ formErrors }">
       <el-row :gutter="30">
         <el-col :span="isMobile ? 24 : 12">
-          <el-form-item label="Mã camera" prop="code" :error="formErrors.Code">
+          <el-form-item :label="t('camera.code')" prop="code" :error="formErrors.Code">
             <el-input v-model="formModel.code"/>
           </el-form-item>
-          <el-form-item label="Chức năng camera" prop="cameraType" :error="formErrors.CameraType">
+          <el-form-item :label="t('camera.function')" prop="cameraType" :error="formErrors.CameraType">
             <select-from-config
                 key-config="cameraTypeList"
                 v-model="formModel.cameraType"
                 col-value="code"
             />
           </el-form-item>
-          <el-form-item label="Khu vực" prop="areaId" :error="formErrors.AreaId">
+          <el-form-item :label="t('fields.area')" prop="areaId" :error="formErrors.AreaId">
             <tree-select-remote
                 v-model="formModel.areaId"
                 :request-fn="getAllTreeAreaApi"
@@ -30,7 +30,7 @@
             />
           </el-form-item>
           <el-form-item
-              label="Tần suất kiểm tra (giây)"
+              :label="t('camera.checkFrequency')"
               prop="frequency"
               :error="formErrors.Frequency"
           >
@@ -38,7 +38,7 @@
           </el-form-item>
           <el-form-item
               v-show="formModel.cameraType === CAMERA_NORMAL_TYPE"
-              label="Camera tích hợp"
+              :label="t('camera.integratedCamera')"
               prop="IntegratedCamId"
               :error="formErrors.IntegratedCamId"
           >
@@ -57,11 +57,11 @@
           </el-form-item>
         </el-col>
         <el-col :span="isMobile ? 24 : 12">
-          <el-form-item label="Tên camera" prop="name" :error="formErrors.Name">
+          <el-form-item :label="t('camera.name')" prop="name" :error="formErrors.Name">
             <el-input v-model="formModel.name"/>
           </el-form-item>
           <el-form-item
-              label="Loại camera"
+              :label="t('camera.type')"
               prop="ptzType"
               :error="formErrors.PtzType"
           >
@@ -71,21 +71,21 @@
                 col-value="code"
             />
           </el-form-item>
-          <el-form-item label="Đường dẫn camera" prop="cameraLink" :error="formErrors.CameraLink">
+          <el-form-item :label="t('camera.link')" prop="cameraLink" :error="formErrors.CameraLink">
             <el-input v-model="formModel.cameraLink"/>
           </el-form-item>
           <el-form-item
-              label="Địa chỉ IP (LAN)"
+              :label="t('camera.ipLan')"
               prop="lanIpAddress"
               :error="formErrors.LanIpAddress"
           >
             <el-input v-model="formModel.lanIpAddress"/>
           </el-form-item>
-          <el-form-item label="Địa chỉ IP (WAN)" prop="cameraLink" :error="formErrors.WanIpAddress">
+          <el-form-item :label="t('camera.ipWan')" prop="cameraLink" :error="formErrors.WanIpAddress">
             <el-input v-model="formModel.wanIpAddress"/>
           </el-form-item>
           <el-form-item
-              label="Hãng camera"
+              :label="t('camera.brand')"
               prop="brand"
               :error="formErrors.Brand"
           >
@@ -96,7 +96,7 @@
             />
           </el-form-item>
           <el-form-item
-              label="Trạng thái"
+              :label="t('fields.status')"
               prop="status"
               :error="formErrors.Status"
           >
@@ -107,7 +107,7 @@
             />
           </el-form-item>
           <el-form-item
-              label="Địa chỉ IEC"
+              :label="t('camera.iecAddress')"
               prop="iecObjectAddress"
               :error="formErrors.IecObjectAddress"
           >
@@ -120,6 +120,7 @@
 </template>
 
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 import FormWrapper from '@/components/Form/FormWrapper.vue'
 import SelectFromConfig from '@/components/Selection/SelectFromConfig.vue'
 import {computed} from 'vue'
@@ -133,6 +134,8 @@ import VirtualizedSelectFromUrl from "@/components/Selection/VirtualizedSelectFr
 import {removeAllObjectInObject} from "@/utils/objectUtils";
 import TreeSelectRemote from "@/components/Tree/TreeSelectRemote.vue";
 import { useAppStore } from '@/store/modules/app'
+
+const { t } = useLang()
 
 const props = defineProps({
   formModel: {

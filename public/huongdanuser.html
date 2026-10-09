@@ -369,6 +369,9 @@
           ngưỡng</button>
         <button onclick="showPage('temp-log', this)">Nhật ký nhiệt độ</button>
         <button onclick="showPage('analytics-summary', this)">Tổng hợp phân tích</button>
+        <button onclick="showPage('pd-notification', this)">Phóng điện vượt ngưỡng</button>
+        <button onclick="showPage('pd-history', this)">Nhật ký phóng điện</button>
+        <button onclick="showPage('pd-summary', this)">Tổng hợp phóng điện</button>
       </div>
 
     </div>
@@ -408,6 +411,16 @@
             dõi kỹ hơn về tình trạng các thiết bị, so sánh nhiệt độ của thiết bị đó với pha min,
             nhiệt độ môi trường và pha min của toàn trạm.</p>
           <img src="img-user-con/detail.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Với các thiết bị có giám sát phóng điện, trên sơ đồ còn xuất hiện biểu tượng tia sét ⚡. Màu biểu tượng
+            tia sét sẽ thể hiện mức đánh giá xấu nhất trong các bộ phận của thiết bị đang giám sát; nếu quá 15 phút
+            không có lần đo mới, biểu tượng tia sét sẽ tự động chuyển về màu xanh.</p>
+          <img src="img-user-con/pd-icon.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Di chuột vào biểu tượng tia sét, hệ thống hiển thị thông số các bộ phận cùng cường độ phóng điện (dB) đo
+            được.</p>
+          <img src="img-user-con/pd-tooltip.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Bấm vào biểu thượng tia sét sẽ mở bảng thông số chi tiết của từng bộ phận: cường độ đo được, mức đánh
+            giá, ΔPD%/kỳ, Camera quan sát được, Vùng trên camera và thời điểm đo gần nhất.</p>
+          <img src="img-user-con/pd-detail.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
         </div>
         <div class="box">
           <h3>Sơ đồ mặt bằng </h3>
@@ -720,6 +733,90 @@
             Để thực hiện, nhấn vào nút <img src="img-user-con/download.png" alt=""
               style="height:35px; vertical-align:middle; margin:0 4px;"> hệ thống sẽ xuất ra file excel theo bộ lọc
             đã chọn.</p>
+        </div>
+      </div>
+
+      <div id="pd-notification" class="page">
+        <h2>Phóng điện vượt ngưỡng</h2>
+        <div class="box">
+          <h3>Danh sách phóng điện vượt ngưỡng</h3>
+          <p>Trang này lưu trữ toàn bộ cảnh báo được sinh ra khi cường độ phóng điện (dB) hoặc tốc độ tăng ΔPD%/kỳ
+            của một bộ phận vượt ngưỡng đã cấu hình. Danh sách hiển thị Khu vực, Camera, Vùng trên camera, Thiết bị,
+            Bộ phận, Cường độ PĐ, Kiểu cảnh báo, Đánh giá và Trạng thái xử lý.</p>
+          <img src="img-user-con/pd-notification-list.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Để chuyển sang danh sách dạng lưới thì chỉ cần nhấn vào nút grid <img src="img-user-con/grid.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;">.</p>
+          <img src="img-user-con/pd-notification-grid.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Người dùng nếu muốn chỉnh danh sách cột thì chỉ cần nhấn vào nút <img src="img-user-con/setting.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> rồi chọn cột nào muốn ẩn đi hoặc hiện trên danh
+            sách rồi ấn lưu để xác nhận hoặc hủy nếu muốn thoát.</p>
+          <img src="img-user-con/pd-notification-column.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div class="box">
+          <h3>Xem chi tiết và xử lý cảnh báo</h3>
+          <p>Nhấn vào nút <img src="img-user-con/eye.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;">
+            ở đầu mỗi dòng để mở trang chi tiết cảnh báo: ảnh chụp/video sự kiện, vị trí & thiết bị, cường độ đo được,
+            ngưỡng cường độ PD (dB) đang áp dụng cho bộ phận và biểu đồ xu hướng cường độ của những lần đo gần nhất.
+            Tại đây cũng có thể cập nhật trạng thái xử lý hoặc tải video sự kiện.</p>
+          <img src="img-user-con/pd-notification-detail.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Ngoài ra có thể nhấn nút <img src="img-user-con/bell.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;">
+            ở góc trên bên phải để xem nhanh các cảnh báo phóng điện mới nhất mà không cần rời trang.</p>
+        </div>
+        <div class="box">
+          <h3>Tìm kiếm</h3>
+          <p>Chọn khoảng thời gian tại ô "Thời gian từ"/"Thời gian đến", có thể lọc thêm theo Khu vực, Thiết bị, Kiểu
+            cảnh báo rồi nhấn nút <img src="img-user-con/search.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;">.
+            Nhấn nút <img src="img-user-con/export.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;">
+            để xuất danh sách ra file excel theo bộ lọc đã chọn.</p>
+          <img src="img-user-con/pd-notification-search.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+      </div>
+
+      <div id="pd-history" class="page">
+        <h2>Nhật ký phóng điện</h2>
+        <div class="box">
+          <h3>Nhật ký phóng điện</h3>
+          <p>Trang Nhật ký phóng điện lưu lại toàn bộ lần đọc dữ liệu PD, kể cả những lần chưa vượt ngưỡng để cảnh báo.
+            Mỗi dòng gồm Camera, Vùng trên camera, Thiết bị, Bộ phận, Kiểu cảnh báo, Công thức áp dụng, Cường độ PĐ,
+            Mức tham chiếu, Chênh lệch và Đánh giá - giúp đối chiếu lại toàn bộ diễn biến của một bộ phận theo thời
+            gian.</p>
+          <img src="img-user-con/pd-history-list.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div class="box">
+          <h3>Tìm kiếm và xuất file</h3>
+          <p>Chọn "Thời gian từ"/"Thời gian đến", lọc thêm theo Khu vực, Thiết bị, Bộ phận, khoảng ΔPD% (Từ/Đến) hoặc
+            Đánh giá rồi nhấn nút <img src="img-user-con/search.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;">.
+            Có thể chuyển qua lại giữa hiển thị dạng danh sách hoặc dạng lưới bằng 2 nút ở góc phải bảng, và nhấn
+            <img src="img-user-con/export.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;"> để
+            xuất file excel theo bộ lọc đã chọn.</p>
+          <img src="img-user-con/pd-history-search.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+      </div>
+
+      <div id="pd-summary" class="page">
+        <h2>Tổng hợp phóng điện</h2>
+        <div class="box">
+          <h3>Thống kê phóng điện vượt ngưỡng</h3>
+          <p>Chọn "Khu vực" và khoảng "Từ ngày"/"Đến ngày" rồi nhấn <img src="img-user-con/search.png" alt=""
+              style="height:35px; vertical-align:middle; margin:0 4px;"> để lọc dữ liệu; nhấn nút
+            <img src="img-user-con/download.png" alt="" style="height:35px; vertical-align:middle; margin:0 4px;">
+            để tải dữ liệu thống kê ra file excel.</p>
+          <img src="img-user-con/pd-summary-filter.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Trang hiển thị biểu đồ số lượng cảnh báo theo khu vực, biểu đồ tròn phân bố tình trạng cảnh báo (Tốt/
+            Khá/Trung bình/Xấu) và bảng "Top bộ phận có mức PD đo được cao nhất" để nhanh chóng xác định các bộ phận
+            cần chú ý.</p>
+          <img src="img-user-con/pd-summary-chart.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+          <p>Phía dưới còn có các chỉ số tỷ lệ xử lý cảnh báo (Tổng số, Chưa xử lý, Đã xử lý, Thời gian xử lý trung
+            bình) cùng biểu đồ số lượng cảnh báo theo từng ngày trong khoảng thời gian đã chọn.</p>
+          <img src="img-user-con/pd-summary-overview.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+        </div>
+        <div class="box">
+          <h3>Nhật ký phóng điện theo điểm đo</h3>
+          <p>Chuyển sang tab "Nhật ký phóng điện theo điểm đo" để xem biểu đồ miền (Area Chart) nhiều lớp thể hiện
+            cường độ PD (dB) của từng bộ phận theo thời gian. Di chuột vào bất kỳ thời điểm nào trên biểu đồ, hệ thống
+            sẽ hiển thị bảng giá trị dB của tất cả các bộ phận tại đúng thời điểm đó, hỗ trợ đối chiếu nhanh giữa các
+            bộ phận trong cùng khu vực.</p>
+          <img src="img-user-con/pd-summary-log.png" alt="" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
         </div>
       </div>
     </div>

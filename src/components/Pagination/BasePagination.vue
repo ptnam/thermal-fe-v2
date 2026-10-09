@@ -1,6 +1,6 @@
 <template>
   <div class="page-info-bar ">
-    <p class="mt-2">Hiển thị từ {{rowIndex}} đến {{lastRowIndex}} trong tổng số {{total}}</p>
+    <p class="mt-2">{{ t('common.paginationInfo', { from: rowIndex, to: lastRowIndex, total }) }}</p>
     <div class="pagination-group flex gap-2">
       <el-pagination
           v-model:current-page="currentPage"
@@ -24,7 +24,7 @@
         </svg>
       </el-button>
       <el-dialog v-model="dialogVisible" :center="true"    align-center draggable>
-        <template v-slot:header>Danh sách cột</template>
+        <template v-slot:header>{{ t('common.columnList') }}</template>
         <template v-slot:default>
           <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
             <template v-for="(col, index) in columns" :key="index">
@@ -48,11 +48,14 @@
 </template>
 
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 import { computed, ref } from 'vue'
 import SaveButton from '@/components/Button/SaveButton.vue'
 import CancelButton from '@/components/Button/CancelButton.vue'
 import { usePaginationStore } from '@/store/modules/paginationStore'
 import { useAppStore } from '@/store/modules/app'
+
+const { t } = useLang()
 
 const currentPage = defineModel<number>('currentPage', { required: true })
 const pageSize = defineModel<number>('pageSize', { required: true })

@@ -1,4 +1,5 @@
 <script setup lang="tsx">
+import { enumLabel } from '@/utils/enumLabel'
 import ListTemplate from '@/components/PageTemplate/List/ListTemplate.vue'
 import {TableColumn} from '@/components/Table'
 import {useLang} from '@/hooks/web/useI18n'
@@ -21,10 +22,10 @@ const {t} = useLang()
 
 const columns = computed<TableColumn[]>(() => [
   {label: 'STT', type: 'index', width: '60'},
-  {prop: 'name', label: 'Tên cảnh báo'},
-  {prop: 'channelType', label: 'Loại cảnh báo'},
+  {prop: 'name', label: t('alertSetting.channel.name')},
+  {prop: 'channelType', label: t('alertSetting.channel.type')},
   {
-    label: 'Người dùng',
+    label: t('alertSetting.channel.users'),
     slots: {
       default: (scope: any) => <span>{joinFieldValues(scope.row.users, 'firstName')}</span>,
     },
@@ -36,10 +37,10 @@ const columns = computed<TableColumn[]>(() => [
     slots: {
       default: ({row}) => (<span   style={{
         color: row.status === 'Active' ? 'var(--success)' : 'var(--danger)'
-      }}>{row.displayStatus}</span>)
+      }}>{enumLabel('notificationChannelStatusList', row.status, row.displayStatus)}</span>)
     },
   },
-  {prop: 'createdAt', label: 'Ngày tạo'},
+  {prop: 'createdAt', label: t('alertSetting.channel.createdAt')},
   {
     label: t('fields.action'),
     width: '110px',
@@ -86,7 +87,7 @@ const isMobile = computed(() => appStore.isMobile)
 <template>
   <list-template
       ref="elTableRef"
-      title="Danh sách cảnh báo"
+      :title="t('alertSetting.channel.listTitle')"
       key-list="channel-list"
       :columns="columns"
       :use-table-config="{
@@ -101,11 +102,11 @@ const isMobile = computed(() => appStore.isMobile)
     <template slot="search" v-slot="{ searchParams, tableMethods }">
       <div class="filter-row">
         <div class="filter-item">
-          <div class="filter-label">Tên kênh</div>
-          <el-input v-model="searchParams.name" clearable placeholder="Nhập tên kênh..."/>
+          <div class="filter-label">{{ t('alertSetting.channel.searchName') }}</div>
+          <el-input v-model="searchParams.name" clearable :placeholder="t('alertSetting.channel.namePlaceholder')"/>
         </div>
         <div class="filter-item">
-          <div class="filter-label">Nơi nhận cảnh báo</div>
+          <div class="filter-label">{{ t('alertSetting.channel.receivers') }}</div>
           <select-from-config
               class="filter-input"
               key-config="notificationChannelTypeList"
@@ -117,10 +118,10 @@ const isMobile = computed(() => appStore.isMobile)
         </div>
         <div class="filter-item">
           <div class="filter-label">Email</div>
-          <el-input v-model="searchParams.email" clearable class="filter-input" placeholder="Nhập email..."/>
+          <el-input v-model="searchParams.email" clearable class="filter-input" :placeholder="t('user.emailPlaceholder')"/>
         </div>
         <div class="filter-item">
-          <div class="filter-label">Người dùng</div>
+          <div class="filter-label">{{ t('alertSetting.channel.users') }}</div>
           <InfiniteSelect
               v-model="searchParams.userId"
               :request-fn="getUserListApi"

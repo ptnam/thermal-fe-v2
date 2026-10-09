@@ -1,7 +1,7 @@
 <template>
   <div id="deviceNodePopup" style="display: block;">
     <div class="node-popup-header">
-      <span>Thiết bị: <span id="popupDeviceTitle">{{ marker?.name }}</span></span>
+      <span>{{ t('dashboard.equipment') }}: <span id="popupDeviceTitle">{{ marker?.name }}</span></span>
     </div>
     <div class="node-popup-body">
       <!-- Content will be populated by JS -->
@@ -33,6 +33,9 @@
   </div>
 </template>
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
+
+const { t } = useLang()
 
 defineProps({
   thermalInfo: {

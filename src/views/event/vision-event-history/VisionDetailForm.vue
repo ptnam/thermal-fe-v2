@@ -7,19 +7,19 @@
     label-width="auto"
     style="min-width: 600px"
   >
-    <el-form-item label="Thời gian">
+    <el-form-item :label="t('alert.time')">
       <view-input :contain="formModelValue?.formattedDate" :disabled="true" />
     </el-form-item>
-    <el-form-item label="Khu vực">
+    <el-form-item :label="t('fields.area')">
       <view-input :contain="formModelValue?.areaName" :disabled="true" />
     </el-form-item>
-    <el-form-item label="Tên camera">
+    <el-form-item :label="t('camera.name')">
       <view-input :contain="formModelValue?.cameraName" :disabled="true" />
     </el-form-item>
-    <el-form-item label="Loại cảnh báo">
+    <el-form-item :label="t('alert.alertType')">
       <view-input :contain="formModelValue?.warningEventName" :disabled="true" />
     </el-form-item>
-    <el-form-item label="Hình ảnh">
+    <el-form-item :label="t('alert.image')">
       <el-image
         :src="formModelValue.imagePath"
         :lazy="true"
@@ -32,9 +32,12 @@
   </el-form>
 </template>
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 import { ElImage } from 'element-plus'
 import ViewInput from '@/components/Input/ViewInput.vue'
 import { ref, watch } from 'vue'
+
+const { t } = useLang()
 
 const formModelValue = ref<any>({
   id: null,

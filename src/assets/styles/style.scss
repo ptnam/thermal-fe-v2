@@ -2459,4 +2459,36 @@ body {
     padding: 5px 0 15px 0;
   }
 
+  /* Leaflet's default tooltip/popup chrome is hardcoded white - override to theme so PD/nhiệt độ
+     tooltip trên bản đồ đọc được ở dark mode. */
+  .leaflet-tooltip {
+    background-color: var(--bg-card);
+    color: var(--text-main);
+    border: 1px solid var(--border);
+  }
+  .leaflet-tooltip-top:before {
+    border-top-color: var(--bg-card);
+  }
+  .leaflet-tooltip-bottom:before {
+    border-bottom-color: var(--bg-card);
+  }
+  .leaflet-tooltip-left:before {
+    border-left-color: var(--bg-card);
+  }
+  .leaflet-tooltip-right:before {
+    border-right-color: var(--bg-card);
+  }
+  .leaflet-popup-content-wrapper,
+  .leaflet-popup-tip {
+    background: var(--bg-card);
+    color: var(--text-main);
+  }
+  .leaflet-popup-close-button {
+    color: var(--text-sub) !important;
+  }
+
+}
+
+.map-tile-dark {
+  filter: grayscale(1) invert(1) brightness(0.9) contrast(1.1);
 }

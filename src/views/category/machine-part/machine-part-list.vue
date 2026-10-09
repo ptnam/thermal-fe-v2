@@ -1,4 +1,5 @@
 <script setup lang="tsx">
+import { enumLabel } from '@/utils/enumLabel'
 import ListTemplate from '@/components/PageTemplate/List/ListTemplate.vue'
 import {TableColumn} from '@/components/Table'
 import {useLang} from '@/hooks/web/useI18n'
@@ -20,16 +21,17 @@ const {t} = useLang()
 
 const columns = computed<TableColumn[]>(() => [
   {
-    prop: 'index', label: 'STT',  width: 80,
+    prop: 'index', label: t('fields.index'),  width: 80,
     slots: {
       default: (scope: any) => (
           <span>{scope.row._index}</span>
       ),
     },
   },
-  {prop: 'name', label: 'Tên'},
-  {prop: 'code', label: 'Mã'},
-  {prop: 'statusObject.name', width: 140, label: t('fields.status')},
+  {prop: 'name', label: t('fields.name')},
+  {prop: 'code', label: t('fields.code')},
+  {prop: 'statusObject.name', width: 140, label: t('fields.status'),
+    formatter: (row: any) => enumLabel('commonStatusList', row.statusObject?.code, row.statusObject?.name)},
   {prop: 'createdAt', width: 360, label: t('fields.created_at')},
   {
     label: t('fields.action'),
@@ -98,7 +100,7 @@ const isMobile = computed(() => appStore.isMobile)
 <template>
   <list-template
       ref="elTableRef"
-      title="Danh sách bộ phận của thiết bị"
+      :title="t('machinePart.listTitle')"
       key-list="machine-part-list"
       :row-key="(row: any) => row.id"
       :default-expand-all="true"
@@ -121,29 +123,28 @@ const isMobile = computed(() => appStore.isMobile)
         <div>
           <div
               style="font-size: 16px; font-weight: 700; color: var(--primary); text-transform: uppercase; margin-bottom: 4px;">
-            Danh sách bộ phận
+            {{ t('machinePart.listHeader') }}
           </div>
-          <div style="font-size: 12px; color: var(--text-sub);">Loại thiết bị: <span
+          <div style="font-size: 12px; color: var(--text-sub);">{{ t('machinePart.equipmentType') }}: <span
               style="font-weight: 600; color: var(--text-main);">{{ machineNameValue }}</span></div>
         </div>
         <div style="display: flex; align-items: center; gap: 12px;">
           <back-button default-path="/category/machine-type"></back-button>
 
-          <button :disabled="!machineTypeValue" @click="openDialogAdd" class="btn-add" style="margin: 0;">+ Thêm bộ
-            phận
+          <button :disabled="!machineTypeValue" @click="openDialogAdd" class="btn-add" style="margin: 0;">+ {{ t('machinePart.addPart') }}
           </button>
         </div>
       </div>
     </template>
     <template v-slot:bottom>
       <div style="padding: 16px 24px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text-sub);">
-        Tổng cộng: <span style="font-weight: 600; color: var(--text-main);">{{ mainPart }}</span> bộ phận chính, <span style="font-weight: 600; color: var(--text-main);">{{ childPart }}</span> bộ phận con
+        {{ t('machinePart.totalLabel') }} <span style="font-weight: 600; color: var(--text-main);">{{ mainPart }}</span> {{ t('machinePart.mainParts') }} <span style="font-weight: 600; color: var(--text-main);">{{ childPart }}</span> {{ t('machinePart.childParts') }}
       </div>
     </template>
   </list-template>
   <drawer-form v-model="dialogVisible" :destroy-on-close="true" :size="isMobile ? '100%': '50%'">
     <MachinePartForm
-        :title="formModel.id ? 'Sửa bộ phận': 'Thêm mới bộ phận'"
+        :title="formModel.id ? t('machinePart.edit') : t('machinePart.add')"
         v-model:formModel="formModel"
         @success="saveSuccess"
     ></MachinePartForm>

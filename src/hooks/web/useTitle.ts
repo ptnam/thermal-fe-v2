@@ -1,5 +1,3 @@
-import {watch, ref} from 'vue'
-import {isString} from '@/utils/is'
 import {useAppStoreWithOut} from '@/store/modules/app'
 import {useLang} from '@/hooks/web/useI18n'
 import {RouteLocationMatched, RouteLocationNormalizedGeneric} from 'vue-router'
@@ -12,17 +10,7 @@ export const routerTitle = (route?: RouteLocationNormalizedGeneric | RouteLocati
 export const useTitle = (route?: RouteLocationNormalizedGeneric) => {
     const appStore = useAppStoreWithOut()
     const newTitle = routerTitle(route)
-    const title = ref(newTitle ? `${appStore.getTitle} - ${newTitle}` : appStore.getTitle)
-
-    watch(
-        title,
-        (n, o) => {
-            if (isString(n) && n !== o && document) {
-                document.title = n
-            }
-        },
-        {immediate: true},
-    )
-
+    const title = newTitle ? `${appStore.getTitle} - ${newTitle}` : appStore.getTitle
+    document.title = title
     return title
 }

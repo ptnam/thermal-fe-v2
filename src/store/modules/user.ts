@@ -5,6 +5,7 @@ import { ElMessageBox } from 'element-plus'
 import router from '@/router'
 import { logoutApi, myProfileApi, refreshTokenApi } from '@/api/login'
 import { getFirebaseToken } from '@/plugins/firebase/firebase'
+import { useLang } from '@/hooks/web/useI18n'
 
 let refreshTimer: number | null = null
 
@@ -56,17 +57,27 @@ export const useUserStore = defineStore('user', {
     updateStates(state: Partial<UserState>) {
       this.$state = { ...this.$state, ...state }
     },
+    normalizePermissions(user: any): string[] {
+      const raw = user?.permissions ?? user?.features
+      if (!Array.isArray(raw)) return []
+      return raw
+        .map((item: any) => (typeof item === 'string' ? item : (item?.featureCode ?? item?.code)))
+        .filter((code: unknown): code is string => typeof code === 'string' && code.length > 0)
+    },
     updateStatesFromResponse(res: any) {
       const expireAt = new Date(res.data.refreshTokenExpiryTime).getTime()
+      const user = expireAt ? res.data.user : res.data
+      const permissions = this.normalizePermissions(user)
       let states = {
         userInfo: res.data,
+        permissions,
       } as object
       if (expireAt) {
         states = {
           userInfo: res.data.user,
           accessToken: res.data.token,
           refreshToken: res.data.refreshToken,
-          permissions: res.data.user?.features,
+          permissions,
           expiresAt: expireAt,
         }
       }
@@ -74,9 +85,10 @@ export const useUserStore = defineStore('user', {
       this.loadScheduleRefresh()
     },
     logoutConfirm() {
-      ElMessageBox.confirm('Bạn có chắc chắn muốn đăng xuất không?', '', {
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Hủy',
+      const { t } = useLang()
+      ElMessageBox.confirm(t('common.logoutConfirm'), '', {
+        confirmButtonText: t('common.ok'),
+        cancelButtonText: t('common.cancel'),
         type: 'warning',
       }).then(async () => {
         const token = await getFirebaseToken();

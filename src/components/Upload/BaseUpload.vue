@@ -10,7 +10,7 @@
         :limit="1"
     >
       <template #trigger>
-        <el-button class="h-[32px] w-[120px]" type="primary">Chọn file</el-button>
+        <el-button class="h-[32px] w-[120px]" type="primary">{{ t('upload.chooseFile') }}</el-button>
       </template>
     </el-upload>
     <div class="text-center">
@@ -27,8 +27,11 @@
 </template>
 
 <script lang="ts" setup>
+import { useLang } from '@/hooks/web/useI18n'
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
+
+const { t } = useLang()
 
 interface Props {
   title?: string
@@ -47,7 +50,7 @@ const handleChange = (uploadFile: any) => {
 
 const handleUpload = async () => {
   if (!file.value) {
-    ElMessage.warning('Vui lòng chọn file')
+    ElMessage.warning(t('upload.pleaseChooseFile'))
     return
   }
 
@@ -55,10 +58,10 @@ const handleUpload = async () => {
     loading.value = true
     const res = await props.api(file.value)
 
-    ElMessage.success('Upload thành công')
+    ElMessage.success(t('upload.success'))
     emit('success', res)
   } catch (err) {
-    ElMessage.error('Upload thất bại')
+    ElMessage.error(t('upload.failed'))
     emit('error', err)
   } finally {
     loading.value = false

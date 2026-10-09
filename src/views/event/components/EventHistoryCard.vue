@@ -19,13 +19,13 @@
              stroke="currentColor" stroke-width="2">
           <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"></path>
         </svg>
-        Nhiệt độ: <strong style="font-size:16px">{{ row.maxTemperature }}°C</strong>
+        {{ t('alert.temperature') }}: <strong style="font-size:16px">{{ row.maxTemperature }}°C</strong>
       </div>
 
       <div style="margin-top: 15px; border-top: 1px solid var(--border); padding-top: 12px;">
         <div
             style="font-size: 11px; font-weight: 700; color: var(--text-sub); margin-bottom: 8px; text-transform: uppercase;">
-          So sánh chi tiết
+          {{ t('alert.compareDetail') }}
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 12px;">
@@ -58,8 +58,11 @@
 </template>
 
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 import {STATUS_COLOR_MAP} from '@/constants'
 import {TableColumn} from "@/components/Table/TableCard.vue";
+
+const { t } = useLang()
 
 type RowData = any
 defineProps<{

@@ -1,4 +1,5 @@
 <script setup lang="tsx">
+import { useLang } from '@/hooks/web/useI18n'
 import ListTemplate from '@/components/PageTemplate/List/ListTemplate.vue'
 import {TableColumn} from '@/components/Table'
 import {computed, nextTick, ref} from 'vue'
@@ -14,10 +15,12 @@ import {WARNING_TYPE_AI} from '@/constants/warningType'
 import {ElImage} from 'element-plus'
 import AICard from '@/views/event/components/AICard.vue'
 
+const { t } = useLang()
+
 const columns = computed<TableColumn[]>(() => [
   {
     width: '120px',
-    label: 'Hình ảnh',
+    label: t('alert.image'),
     slots: {
       default: ({row}) => (
           <div class="ai-thumb">
@@ -35,13 +38,13 @@ const columns = computed<TableColumn[]>(() => [
       ),
     },
   },
-  {prop: 'dateData', label: 'Ngày', width: 120},
-  {prop: 'timeData', label: 'Giờ'},
-  {prop: 'areaName', label: 'Khu vực'},
-  {prop: 'cameraName', label: 'Tên camera'},
+  {prop: 'dateData', label: t('alert.date'), width: 120},
+  {prop: 'timeData', label: t('alert.hour')},
+  {prop: 'areaName', label: t('fields.area')},
+  {prop: 'cameraName', label: t('camera.name')},
   {
     prop: 'warningEventName',
-    label: 'Loại cảnh báo',
+    label: t('alert.alertType'),
     slots: {
       default: ({row}) => (<span style={{color: 'var(--danger)'}}>{row.warningEventName}</span>)
     },
@@ -61,7 +64,7 @@ const elTableRef = ref<InstanceType<typeof ListTemplate>>()
 <template>
   <list-template
       ref="elTableRef"
-      title="Danh sách Cảnh báo AI"
+      :title="t('alert.aiTitle')"
       key-list="ai-notification"
       :columns="columns"
       :search-props="{ visibleSearchButton: false, inline: false, className: '' }"
@@ -78,31 +81,31 @@ const elTableRef = ref<InstanceType<typeof ListTemplate>>()
       <div class="filter-grid-ai">
         <!-- Row 1 -->
         <div class="filter-group-ai">
-          <label>Thời gian từ</label>
+          <label>{{ t('alert.timeFrom') }}</label>
           <div class="input-icon-wrapper">
             <el-date-picker
               v-model="searchParams.fromTime"
               type="datetime"
-              placeholder="Thời gian bắt đầu"
+              :placeholder="t('alert.startTime')"
               value-format="YYYY-MM-DD HH:mm:ss"
               class="filter-input"
             />
           </div>
         </div>
         <div class="filter-group-ai">
-          <label>Thời gian đến</label>
+          <label>{{ t('alert.timeTo') }}</label>
           <div class="input-icon-wrapper">
             <el-date-picker
               v-model="searchParams.toTime"
               type="datetime"
-              placeholder="Thời gian kết thúc"
+              :placeholder="t('alert.endTime')"
               value-format="YYYY-MM-DD HH:mm:ss"
               class="filter-input"
             />
           </div>
         </div>
         <div class="filter-group-ai">
-          <label>Khu vực</label>
+          <label>{{ t('fields.area') }}</label>
           <tree-select-remote
             v-model="searchParams.areaId"
             :request-fn="getAllTreeAreaApi"
@@ -127,7 +130,7 @@ const elTableRef = ref<InstanceType<typeof ListTemplate>>()
           />
         </div>
         <div class="filter-group-ai">
-          <label>Loại cảnh báo</label>
+          <label>{{ t('alert.alertType') }}</label>
           <virtualized-select-from-url
             ref="warningEventId"
             v-model="searchParams.warningEventId"

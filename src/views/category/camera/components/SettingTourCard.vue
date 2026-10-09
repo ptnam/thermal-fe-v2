@@ -1,10 +1,10 @@
 <template>
   <div class="sensor-card-item">
-    <div class="sc-name">Tên: {{ row.name }}</div>
+    <div class="sc-name">{{ t('fields.name') }}: {{ row.name }}</div>
     <div class="sc-info">
       <div class="sc-info-item">
         <div class="inline-block">
-          Góc quay :
+          {{ t('camera.preset') }}:
           <ElTag v-for="item in row.cameraTourPresets" class="m-2" :key="item.id" type="success" effect="dark">
             {{ item.name }}({{ item.stayTime }})
           </ElTag>
@@ -40,12 +40,15 @@
 </template>
 
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 
 import {TableColumn} from "@/components/Table/TableCard.vue";
 import { ElMessage, ElTag } from 'element-plus'
 import ApiButton from '@/components/Button/ApiButton.vue'
 import { playTourApi } from '@/api/camera'
 import { ArrowRight, SwitchButton } from '@element-plus/icons-vue'
+
+const { t } = useLang()
 
 type RowData = any
 defineProps<{

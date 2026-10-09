@@ -10,7 +10,7 @@
 
     <div class="flex flex-wrap items-center gap-2">
       <el-button type="primary" @click="openFilePicker">
-        Chọn file GLB
+        {{ t('upload.chooseGlb') }}
       </el-button>
 
       <el-button
@@ -26,7 +26,7 @@
         type="danger"
         @click="clearLocalFile"
       >
-        Xóa file
+        {{ t('upload.deleteFile') }}
       </el-button>
     </div>
 
@@ -85,7 +85,7 @@
 
           <div class="flex flex-wrap gap-2 mb-4">
 <!--            <el-button type="primary" @click="applyFromForm">Apply</el-button>-->
-            <el-button type="success" @click="handleSavePreview">Lưu config</el-button>
+            <el-button type="success" @click="handleSavePreview">{{ t('upload.saveConfig') }}</el-button>
             <el-button @click="resetForm">Reset</el-button>
             <el-button @click="reloadModel">Reload model</el-button>
           </div>
@@ -109,11 +109,14 @@
 </template>
 
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 import { computed, nextTick, onBeforeUnmount, reactive, ref, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+
+const { t } = useLang()
 
 type Vec3 = {
   x: number
@@ -181,7 +184,7 @@ const displayPath = computed(() => {
   if (localFile.value && localObjectUrl.value) {
     return `${localFile.value.name} (local)`
   }
-  return props.filePath || 'Chưa có file GLB'
+  return props.filePath || t('upload.noGlb')
 })
 
 function syncFormFromProps() {
@@ -229,7 +232,7 @@ function handlePickFile(event: Event) {
 
   const isGlb = file.name.toLowerCase().endsWith('.glb')
   if (!isGlb) {
-    ElMessage.error('Chỉ cho phép chọn file .glb')
+    ElMessage.error(t('upload.onlyGlb'))
     input.value = ''
     return
   }
@@ -246,7 +249,7 @@ function handlePickFile(event: Event) {
     fileName: file.name,
   })
 
-  ElMessage.success('Đã chọn file GLB')
+  ElMessage.success(t('upload.glbSelected'))
 
   input.value = ''
 }

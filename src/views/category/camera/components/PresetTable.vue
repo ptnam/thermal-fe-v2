@@ -4,8 +4,12 @@
   </div>
 </template>
 <script setup lang="tsx">
+import { useLang } from '@/hooks/web/useI18n'
+import { computed } from 'vue'
 import {BaseTable} from "@/components/Table";
 import {ElTag} from "element-plus";
+
+const { t } = useLang()
 
 const renderExpand = (props: any) => {
   return (
@@ -19,16 +23,16 @@ const renderExpand = (props: any) => {
   )
 }
 
-const columns = [
+const columns = computed(() => [
   {
     type: 'expand',
     slots: {
       default: (props: any) => renderExpand(props)
     }
   },
-  {prop: 'name', label: 'Góc quay'},
-  {prop: 'presetTypeObject.name', label: 'Loại'},
-]
+  {prop: 'name', label: t('camera.preset')},
+  {prop: 'presetTypeObject.name', label: t('fields.type')},
+])
 defineProps({
   data: {
     type: Array,

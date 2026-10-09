@@ -7,13 +7,13 @@
     @success="handleSuccess"
   >
     <template v-slot="{ formErrors }">
-      <el-form-item label="Tên loại thiết bị" prop="name" :error="formErrors.Name">
+      <el-form-item :label="t('machineType.name')" prop="name" :error="formErrors.Name">
         <el-input v-model="formModel.name" />
       </el-form-item>
-      <el-form-item label="Mã loại thiết bị" prop="code" :error="formErrors.Code">
+      <el-form-item :label="t('machineType.code')" prop="code" :error="formErrors.Code">
         <el-input v-model="formModel.code" />
       </el-form-item>
-      <el-form-item label="Trạng thái" prop="status" :error="formErrors.Status">
+      <el-form-item :label="t('fields.status')" prop="status" :error="formErrors.Status">
         <select-from-config
           key-config="userStatusList"
           v-model="formModel.status"
@@ -25,12 +25,15 @@
 </template>
 
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 import FormWrapper from '@/components/Form/FormWrapper.vue'
 import SelectFromConfig from '@/components/Selection/SelectFromConfig.vue'
 import { computed } from 'vue'
 import { isFormEditing } from '@/utils/is'
 import { addMachineTypeApi, editMachineTypeApi } from '@/api/machine-type'
 import { useAppStore } from '@/store/modules/app'
+
+const { t } = useLang()
 const appStore = useAppStore();
 const props = defineProps({
   formModel: {

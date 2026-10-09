@@ -1,4 +1,6 @@
 <script setup lang="tsx">
+import { enumLabel } from '@/utils/enumLabel'
+import { useLang } from '@/hooks/web/useI18n'
 import ListTemplate from '@/components/PageTemplate/List/ListTemplate.vue'
 import {TableColumn} from '@/components/Table'
 import {computed, ref} from 'vue'
@@ -32,14 +34,16 @@ import {downloadFile} from "@/utils/response";
 import CameraCard from '@/views/category/camera/components/CameraCard.vue'
 import { useAppStore } from '@/store/modules/app'
 
+const { t } = useLang()
+
 const router = useRouter();
 
 const columns = computed<TableColumn[]>(() => [
-  {type: 'index', label: 'STT', width: 60, headerAlign: 'center'},
-  {prop: 'code', label: 'Mã camera'},
+  {type: 'index', label: t('fields.index'), width: 60, headerAlign: 'center'},
+  {prop: 'code', label: t('camera.code')},
   {
     prop: 'name',
-    label: 'Tên camera',
+    label: t('camera.name'),
     slots: {
       default: ({ row }) => (
           <span
@@ -51,31 +55,31 @@ const columns = computed<TableColumn[]>(() => [
       )
     },
   },
-  {prop: 'area.name', label: 'Khu vực'},
-  {prop: 'cameraTypeObject.name', label: 'Chức năng camera'},
+  {prop: 'area.name', label: t('fields.area')},
+  {prop: 'cameraTypeObject.name', label: t('camera.function')},
   {
     prop: 'deviceStatusObject.name',
-    label: 'Trạng thái',
+    label: t('fields.status'),
     width: '150px',
     slots: {
       default: ({row}) => (<span style={{
         color: row.deviceStatusObject.code !== 'Off' ? 'var(--success)' : 'var(--danger)'
-      }}>{row?.deviceStatusObject?.name}</span>)
+      }}>{enumLabel('deviceStatusList', row?.deviceStatusObject?.code, row?.deviceStatusObject?.name)}</span>)
     },
   },
   {
-    label: 'Hành động',
+    label: t('fields.action'),
     width: '300px',
     slots: {
       default: (scope: any) => (
           <div>
-            <ElTooltip content="Đồng bộ góc quay">
+            <ElTooltip content={t('camera.syncPresets')}>
               <ElButton circle={true} icon={Refresh} onClick={() => syncPresets(scope.row)}/>
             </ElTooltip>
-            <ElTooltip content="Xem danh sách góc quay">
+            <ElTooltip content={t('camera.viewPresets')}>
               <ElButton circle={true} icon={Rank} onClick={() => showPresets(scope.row)}/>
             </ElTooltip>
-            <ElTooltip content="Chỉnh góc quay">
+            <ElTooltip content={t('camera.adjustPresets')}>
               <ElButton
                 circle={true}
                 icon={Aim}
@@ -88,10 +92,10 @@ const columns = computed<TableColumn[]>(() => [
                 onClick={() => showVisionPresets(scope.row)}
               />
             </ElTooltip>
-            <ElTooltip content="Cài đặt góc quay">
+            <ElTooltip content={t('camera.presetSettings')}>
               <ElButton circle={true} icon={Pointer} onClick={() => showPresetSetting(scope.row)}/>
             </ElTooltip>
-            <ElTooltip content="Cài đặt AI">
+            <ElTooltip content={t('camera.aiSettings')}>
               <ElButton circle={true} icon={Notification} onClick={() => showAISetting(scope.row)}/>
             </ElTooltip>
             <EditCircleButton onClick={() => openDialogEdit(scope)}></EditCircleButton>
@@ -215,7 +219,7 @@ const isMobile = computed(() => appStore.isMobile)
           className: ''
         }"
         @addHandler="openDialogAdd"
-        title="Danh sách camera"
+        :title="t('camera.listTitle')"
         @syncPresets="syncPresets"
         @showPresets="showPresets"
         @edit="openDialogEdit"
@@ -228,11 +232,11 @@ const isMobile = computed(() => appStore.isMobile)
       <template slot="search" v-slot="{ searchParams, tableMethods }">
         <div class="filter-row">
           <div class="filter-item">
-            <div class="filter-label">Mã/tên camera</div>
-            <el-input v-model="searchParams.name" class="filter-input" clearable placeholder="Nhập mã hoặc tên..."/>
+            <div class="filter-label">{{ t('camera.searchLabel') }}</div>
+            <el-input v-model="searchParams.name" class="filter-input" clearable :placeholder="t('camera.searchPlaceholder')"/>
           </div>
           <div class="filter-item">
-            <div class="filter-label">Chức năng</div>
+            <div class="filter-label">{{ t('camera.functionShort') }}</div>
             <select-from-config
                 class="filter-input"
                 key-config="cameraTypeList"
@@ -241,7 +245,7 @@ const isMobile = computed(() => appStore.isMobile)
             ></select-from-config>
           </div>
           <div class="filter-item">
-            <div class="filter-label">Khu vực</div>
+            <div class="filter-label">{{ t('fields.area') }}</div>
             <tree-select-remote
                 class="filter-input"
                 v-model="searchParams.areaId"
@@ -280,13 +284,13 @@ const isMobile = computed(() => appStore.isMobile)
     <base-dialog
         v-model="presetVisionVisible"
         :destroy-on-close="true"
-        title="Thông số góc quay"
+        :title="t('camera.presetParams')"
         :width="isMobile? '100%': '50%'"
         :show-close="true"
     >
       <CameraVisionPreset :visionCamera="visionCamera"/>
     </base-dialog>
-    <drawer-form v-model="aiSettingDialogVisible" :destroy-on-close="true" title="Cài đặt AI" :size="isMobile ? '100%': '70%'">
+    <drawer-form v-model="aiSettingDialogVisible" :destroy-on-close="true" :title="t('camera.aiSettings')" :size="isMobile ? '100%': '70%'">
       <ai-setting :camera="selectedCamera" @saved="aiSettingDialogVisible = false"/>
     </drawer-form>
   </div>

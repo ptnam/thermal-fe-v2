@@ -2,7 +2,7 @@
   <div v-loading="isLoading || getSettingLoading">
     <div class="card" style="padding: 20px;">
       <div class="summary-header">
-        <div class="summary-title">Nhật ký nhiệt độ theo điểm đo</div>
+        <div class="summary-title">{{ t('alert.home.tabTemperatureLog') }}</div>
         <div class="header-tools">
           <AvgSelect v-model="avgType" @change="()=>search()"/>
           <div class="filter-badge-simple" @click="()=>dialogVisible = true">
@@ -10,12 +10,12 @@
                  stroke-width="2.5">
               <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
             </svg>
-            <span class="avg-text">Bộ lọc</span> <span class="badge-count">{{ countValidFields(searchParams) }}</span>
+            <span class="avg-text">{{ t('common.filter') }}</span> <span class="badge-count">{{ countValidFields(searchParams) }}</span>
           </div>
           <drawer-form
               v-model="dialogVisible"
               :destroy-on-close="true"
-              title="Bộ lọc dữ liệu"
+              :title="t('alert.log.dataFilter')"
               style="min-width: 300px">
             <div class="drawer">
               <div class="drawer-header">
@@ -23,14 +23,14 @@
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2.5">
                     <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
                   </svg>
-                  Bộ lọc dữ liệu
+                  {{ t('alert.log.dataFilter') }}
                 </h3>
                 <button class="close-drawer" @click="()=>dialogVisible = false">×</button>
               </div>
               <div class="drawer-body" style="padding: 10px">
                 <filter-group-input-tree
                     v-model="searchParams.areaIds"
-                    title="Khu vực"
+                    :title="t('fields.area')"
                     @change="changeAreaIds"
                 />
                 <filter-group-input
@@ -38,7 +38,7 @@
                     ref="machineInputRef"
                     :request-fn="() => getMachinesByAreasApi({areaIds:searchParams.areaIds})"
                     v-model="searchParams.machineIds"
-                    title="Thiết bị"
+                    :title="t('alert.equipment')"
                     col-label="name"
                     col-value="id"
                     @change="changeMachineIds"
@@ -48,7 +48,7 @@
                     ref="machineComponentInputRef"
                     :request-fn="() => getMultiComponentsMachineApi({machineIds:searchParams.machineIds})"
                     v-model="searchParams.machineComponentIds"
-                    title="Bộ phận"
+                    :title="t('alert.component')"
                     col-label="name"
                     col-value="id"
                 />
@@ -56,11 +56,11 @@
                     v-show="searchParams.machineComponentIds && searchParams.machineComponentIds.length === 1"
                     :request-fn="() => allMonitorPointsByMachineComponentApi({machineComponentIds: searchParams.machineComponentIds})"
                     v-model="monitorPoint"
-                    title="Điểm giám sát"
+                    :title="t('alert.monitorPoint')"
                     col-label="name"
                     col-value="id"
                 />
-                <filter-group title="KHOẢNG THỜI GIAN">
+                <filter-group :title="t('alert.log.timeRange')">
                   <div class="px-4">
                     <el-form-item label="">
                       <el-select
@@ -91,8 +91,8 @@
                       <el-date-picker
                         v-model="dateRange"
                         type="daterange"
-                        start-placeholder="Ngày bắt đầu"
-                        end-placeholder="Ngày kết thúc"
+                        :start-placeholder="t('alert.startDate')"
+                        :end-placeholder="t('alert.endDate')"
                         value-format="YYYY-MM-DD"
                       />
                     </el-form-item>
@@ -100,19 +100,19 @@
                       <el-date-picker
                         v-model="dateRange"
                         type="datetimerange"
-                        start-placeholder="Ngày bắt đầu"
-                        end-placeholder="Ngày kết thúc"
+                        :start-placeholder="t('alert.startDate')"
+                        :end-placeholder="t('alert.endDate')"
                         value-format="YYYY-MM-DD HH:mm:ss"
                       />
                     </el-form-item>
                   </div>
                 </filter-group>
-                <filter-group title="Ẩn hiện nhiệt độ">
+                <filter-group :title="t('alert.log.toggleTemperature')">
                   <div class="px-4">
                     <el-form-item>
                       <el-radio-group v-model="searchParams.showLabel">
-                        <el-radio :value="true">Hiện</el-radio>
-                        <el-radio :label="false">Ẩn</el-radio>
+                        <el-radio :value="true">{{ t('alert.log.show') }}</el-radio>
+                        <el-radio :label="false">{{ t('common.hide') }}</el-radio>
                       </el-radio-group>
                     </el-form-item>
                   </div>
@@ -127,7 +127,7 @@
                     <path d="M23 4v6h-6"></path>
                     <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
                   </svg>
-                  <span class="px-2 whitespace-nowrap">Đặt lại</span>
+                  <span class="px-2 whitespace-nowrap">{{ t('alert.log.reset') }}</span>
                 </el-button>
                 <el-button
                     :loading="saveSettingLoading"
@@ -139,14 +139,14 @@
                     <polyline points="17 21 17 13 7 13 7 21"></polyline>
                     <polyline points="7 3 7 8 15 8"></polyline>
                   </svg>
-                  <span class="px-2 whitespace-nowrap">Lưu</span>
+                  <span class="px-2 whitespace-nowrap">{{ t('common.save') }}</span>
                 </el-button>
                 <button class="btn-apply-drawer whitespace-nowrap" @click="appySetting" style="flex: 1.5;">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                   </svg>
-                  <span class="whitespace-nowrap">Áp dụng</span>
+                  <span class="whitespace-nowrap">{{ t('alert.log.apply') }}</span>
                 </button>
               </div>
             </div>
@@ -166,6 +166,7 @@
   </div>
 </template>
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 import {
   getMachineSettingApi,
   getMultiComponentsMachineApi, saveMachineSettingApi, getMachinesByAreasApi
@@ -188,6 +189,8 @@ import DrawerForm from "@/components/Form/DrawerForm.vue";
 import FilterGroupInput from '@/views/event/components/FilterGroupInput.vue'
 import FilterGroupInputTree from '@/views/event/components/FilterGroupInputTree.vue'
 import FilterGroup from '@/views/event/components/FilterGroup.vue'
+
+const { t } = useLang()
 
 const HOUR = 1
 const DAY = 2
@@ -231,7 +234,7 @@ const chartOptions: ApexOptions = {
       style: {colors: '#94A3B8', fontSize: '12px'},
       formatter: (v) => v.toFixed(1) + "°C"
     },
-    title: {text: 'Nhiệt độ (°C)', style: {color: '#94A3B8', fontWeight: 600}}
+    title: {text: t('alert.log.temperatureAxis'), style: {color: '#94A3B8', fontWeight: 600}}
   },
   grid: {borderColor: 'rgba(255,255,255,0.05)', strokeDashArray: 4},
   legend: {
@@ -248,28 +251,28 @@ const series = ref(
 )
 const avgType = ref<'1' | '2' | '3'>('3')
 const searchType = ref(TIME)
-const searchTypeOptions = [
+const searchTypeOptions = computed(() => [
   {
     value: HOUR,
-    label: "Giờ"
+    label: t('alert.log.byHour')
   },
   {
     value: DAY,
-    label: "Ngày"
+    label: t('alert.log.byDay')
   },
   {
     value: TIME,
-    label: "Khoảng thời gian"
+    label: t('alert.log.byRange')
   },
   {
     value: PREDICT,
-    label: "Dự đoán xu hướng nhiệt"
+    label: t('alert.log.forecast')
   },
   // {
   //   value: PHASE,
   //   label: "So sách các pha"
   // }
-];
+]);
 
 const monitorPoint = ref();
 const dialogVisible = ref(false)
@@ -385,7 +388,7 @@ const saveSetting = (data: any) => {
     search()
     dialogVisible.value = false
     ElMessage({
-      message: 'Lưu thành công!',
+      message: t('common.saveSuccess'),
       type: 'success',
     })
   })

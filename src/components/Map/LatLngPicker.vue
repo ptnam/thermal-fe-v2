@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-button @click="toggleModal" color="#F9CD37">{{ buttonText }}</el-button>
+    <el-button @click="toggleModal" color="#F9CD37">{{ buttonText ?? t('map.pickOnMap') }}</el-button>
 
     <el-dialog
         v-model="modalShow"
@@ -23,12 +23,12 @@
 
         <!-- Coordinate Panel -->
         <div class="position-absolute fixed-modal-bottom bg-white">
-          <el-card v-if="coordinateShow" class="mb-2" style="min-width: 16rem" header="Tọa độ">
+          <el-card v-if="coordinateShow" class="mb-2" style="min-width: 16rem" :header="t('map.coordinates')">
             <el-form label-position="left" label-width="auto">
-              <el-form-item :label="longitudeLabel">
+              <el-form-item :label="longitudeLabel ?? t('map.longitude')">
                 <el-input v-model="marker.longitude" type="number" step="0.0001"/>
               </el-form-item>
-              <el-form-item :label="latitudeLabel">
+              <el-form-item :label="latitudeLabel ?? t('map.latitude')">
                 <el-input v-model="marker.latitude" type="number" step="0.0001"/>
               </el-form-item>
               <el-form-item label="Zoom">
@@ -43,8 +43,8 @@
                 />
               </el-form-item>
             </el-form>
-            <el-button @click="coordinateShow = false">Ẩn</el-button>
-            <el-button type="success" @click="save">Lưu</el-button>
+            <el-button @click="coordinateShow = false">{{ t('common.hide') }}</el-button>
+            <el-button type="success" @click="save">{{ t('common.save') }}</el-button>
           </el-card>
         </div>
         <l-map
@@ -62,6 +62,7 @@
             <l-tile-layer
                 :url="tile.url"
                 :attribution="tile.attribution"
+                :class-name="appStore.isDark ? 'map-tile-dark' : ''"
             />
           </slot>
           <l-marker
@@ -75,6 +76,7 @@
   </div>
 </template>
 <script setup>
+import { useLang } from '@/hooks/web/useI18n'
 import {computed, onMounted, ref} from 'vue'
 import {LMap, LTileLayer, LMarker} from '@vue-leaflet/vue-leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -83,18 +85,17 @@ import Islands from '@/components/Map/islands.vue'
 import { MAP_TYPE_MAP } from '@/constants/index.js'
 import {useAppStore} from "@/store/modules/app.ts";
 
+const { t } = useLang()
+
 const props = defineProps({
   buttonText: {
     type: String,
-    default: () => 'Chọn tọa độ trên bản đồ',
   },
   longitudeLabel: {
     type: String,
-    default: 'Kinh độ',
   },
   latitudeLabel: {
     type: String,
-    default: 'Vĩ độ',
   },
   mapType: {
     type: String,
@@ -123,18 +124,10 @@ const props = defineProps({
 const emit = defineEmits(['input'])
 
 const appStore = useAppStore();
-const tile = computed(() => {
-  if (appStore.isDark) {
-    return {
-      url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-      attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
-    }
-  }
-  return {
-    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    attribution: '&copy; OpenStreetMap contributors',
-  }
-})
+const tile = computed(() => ({
+  url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+  attribution: '&copy; OpenStreetMap contributors',
+}))
 const mapRef = ref(null)
 const modalShow = ref(false)
 const coordinateShow = ref(true)

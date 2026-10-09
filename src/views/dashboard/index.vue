@@ -7,7 +7,7 @@
           <div class="kpi-row">
             <div class="card kpi-card">
               <div class="kpi-label-group">
-                <div class="kpi-lbl">Tổng Camera</div>
+                <div class="kpi-lbl">{{ t('dashboard.totalCameras') }}</div>
                 <div class="kpi-val">{{ data?.numberOfCameras }}</div>
               </div>
               <div class="kpi-icon bg-blue">
@@ -19,7 +19,7 @@
             </div>
             <div class="card kpi-card">
               <div class="kpi-label-group">
-                <div class="kpi-lbl">Địa điểm giám sát</div>
+                <div class="kpi-lbl">{{ t('dashboard.monitoredSites') }}</div>
                 <div class="kpi-val">{{ data?.numberOfAreas }}</div>
               </div>
               <div class="kpi-icon bg-purple">
@@ -31,7 +31,7 @@
             </div>
             <div class="card kpi-card">
               <div class="kpi-label-group">
-                <div class="kpi-lbl">Cảnh báo Mới</div>
+                <div class="kpi-lbl">{{ t('dashboard.newAlerts') }}</div>
                 <div class="kpi-val" style="color:var(--danger)">{{ data?.totalNotifications }}</div>
               </div>
               <div class="kpi-icon bg-red">
@@ -43,11 +43,11 @@
             </div>
             <div class="card kpi-card">
               <div style="flex: 1;">
-                <div class="kpi-lbl">Nhiệt độ Môi trường</div>
+                <div class="kpi-lbl">{{ t('dashboard.ambientTemperature') }}</div>
                 <div class="region-temp-list-compact">
-                  <div class="temp-item-compact"><label>Bắc</label><b>-°C</b></div>
-                  <div class="temp-item-compact"><label>Trung</label><b>-°C</b></div>
-                  <div class="temp-item-compact"><label>Nam</label><b>-°C</b></div>
+                  <div class="temp-item-compact"><label>{{ t('dashboard.north') }}</label><b>-°C</b></div>
+                  <div class="temp-item-compact"><label>{{ t('dashboard.central') }}</label><b>-°C</b></div>
+                  <div class="temp-item-compact"><label>{{ t('dashboard.south') }}</label><b>-°C</b></div>
                 </div>
               </div>
               <div class="kpi-icon bg-green">
@@ -62,12 +62,12 @@
           <div class="card map-section" id="mainDisplayCard">
             <div class="map-toolbar">
           <span class="card-title" id="displayTitle">
-            {{ areaItem.mapType === MAP_TYPE_MAP ? 'Bản đồ' : '' }}
-            {{ areaItem.mapType === MAP_TYPE_PICTURE ? 'Sơ đồ 1 sợi' : '' }}
+            {{ areaItem.mapType === MAP_TYPE_MAP ? t('dashboard.map') : '' }}
+            {{ areaItem.mapType === MAP_TYPE_PICTURE ? t('dashboard.singleLine') : '' }}
           </span>
 
               <!-- Location button separated -->
-              <button class="map-btn visible-mobile-only location-btn" @click="visibleTreeMoble = true" title="Chọn khu vực">
+              <button class="map-btn visible-mobile-only location-btn" @click="visibleTreeMoble = true" :title="t('dashboard.selectArea')">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                   <circle cx="12" cy="10" r="3"></circle>
@@ -75,14 +75,14 @@
               </button>
 
               <div class="map-toggle-group">
-                <button v-show="areaItem.mapType === MAP_TYPE_MAP" class="map-btn active">Bản đồ</button>
+                <button v-show="areaItem.mapType === MAP_TYPE_MAP" class="map-btn active">{{ t('dashboard.map') }}</button>
                 <span v-show="areaItem.mapType === MAP_TYPE_PICTURE">
                   <button v-show="areaItem.photoPath"
                           :class="['map-btn', mapTypeDiagram === 'photoPath' ? 'active' : '']"
-                          @click="mapTypeDiagram = 'photoPath'">Sơ đồ 1 sợi</button>
+                          @click="mapTypeDiagram = 'photoPath'">{{ t('dashboard.singleLine') }}</button>
                   <button v-show="areaItem.emapPhotoPath"
                           :class="['map-btn', mapTypeDiagram === 'emapPhotoPath' ? 'active' : '']"
-                          @click="mapTypeDiagram = 'emapPhotoPath'"> Sơ đồ mặt bằng</button>
+                          @click="mapTypeDiagram = 'emapPhotoPath'">{{ t('area.sitePlan') }}</button>
               </span>
               </div>
             </div>
@@ -102,7 +102,8 @@
                       <SensorDiagram v-if="mapTypeDiagram === 'photoPath'" :live-markers="liveMarkers"
                                      :area-range-point-list="areaRangePointList"
                                      :live-temperature-map="liveTemperatureMap"
-                                     @handleNodeClick="handleNodeClick" @showMarkerInfo="showMarkerInfo">
+                                     @handleNodeClick="handleNodeClick" @showMarkerInfo="showMarkerInfo"
+                                     @showPdMachineInfo="showPdMachineInfo">
                       </SensorDiagram>
 <!--                      <CameraDiagram v-else-if="mapTypeDiagram === 'emapPhotoPath'" :live-markers="cameraMarker"-->
 <!--                                     @showMarkerInfo="showCameraInfo">-->
@@ -117,7 +118,7 @@
               :request-fn="() => getAllTreeAreaApi({warnings: true})"
               @node-click="handleNodeClick"
           ></AreaTreeDashBoardV2>
-          <el-drawer v-model="visibleTreeMoble" size="100%" title="DANH SÁCH KHU VỰC">
+          <el-drawer v-model="visibleTreeMoble" size="100%" :title="t('common.areaList')">
             <AreaTreeDashBoardV2
               treeClass="mobile-tree"
               :request-fn="() => getAllTreeAreaApi({warnings: true})"
@@ -130,7 +131,7 @@
     <base-dialog v-model="visibleThermalDetail" :close-on-click-modal="true" class="!w-[90%] !lg:w-1/2">
       <div class="mt-4" v-loading="loadingThermalData">
         <div v-if="selectedComponent.deviceType === 'Sensor'" class="text-center">
-          Nhiệt độ: {{ selectedEnvironmentThermal?.temperature }}
+          {{ t('dashboard.temperature') }}: {{ selectedEnvironmentThermal?.temperature }}
         </div>
         <div v-else>
           <thermal-data :marker="selectedComponent" :thermalInfo="selectedThermalData">
@@ -143,10 +144,21 @@
         <web-player :streamKey="selectedCamera.id" :cam="selectedCamera"></web-player>
       </div>
     </el-dialog>
+    <base-dialog v-model="visiblePdDetail" :close-on-click-modal="true" class="!w-[90%] !lg:w-1/2">
+      <div class="mt-4" v-loading="loadingPdDetail">
+        <PdMachineDetail
+            :machine="selectedPdMachine"
+            :components="pdMachineComponents"
+            :loading="loadingPdDetail"
+            :stale="isPdReadingStale(liveTemperatureMap[selectedPdMachine?.key]?.dataTime)"
+        />
+      </div>
+    </base-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 import 'leaflet/dist/leaflet.css'
 import {nextTick, onMounted, onUnmounted, ref} from 'vue'
 import {getAllTreeAreaApi} from '@/api/area'
@@ -168,10 +180,14 @@ import _ from 'lodash'
 import BaseDialog from "@/components/Dialog/BaseDialog.vue";
 import ThermalData from "@/views/dashboard/components/ThermalData.vue";
 import SensorDiagram from './components/SensorDiagram.vue'
+import PdMachineDetail from './components/PdMachineDetail.vue'
+import {pdByMachineApi} from '@/api/pd-data'
 import {getAllCamerasApi} from '@/api/camera'
 import {summariseInfoApi} from "@/api/common";
 import AreaTreeDashBoardV2 from "@/views/dashboard/components/AreaTreeDashBoardV2.vue";
 import ViewLoader from '@/views/dashboard/components/ViewLoader.vue'
+
+const { t } = useLang()
 
 onMounted(() => {
   loadThermalData({}, false)
@@ -179,6 +195,16 @@ onMounted(() => {
   startSignalR()
   onSignalREvent('newThermalData', function (thermalData: any) {
     liveTemperatureMap.value = {...liveTemperatureMap.value, ...thermalData}
+    liveMarkers.value = liveMarkers.value.map(function (item, index) {
+      return {
+        ...item,
+        updateAt: `${Date.now()}_${index}_${Math.floor(1000 + Math.random() * 9000)}`,
+      }
+    })
+  })
+  // Key PD dạng "<machineId>_Pd" - dùng chung liveTemperatureMap/liveMarkers với nhiệt độ.
+  onSignalREvent('newPdData', function (pdData: any) {
+    liveTemperatureMap.value = {...liveTemperatureMap.value, ...pdData}
     liveMarkers.value = liveMarkers.value.map(function (item, index) {
       return {
         ...item,
@@ -306,6 +332,31 @@ const showMarkerInfo = (marker: any) => {
 const selectedCamera = ref<any>(null)
 const visibleCameraDetail = ref(false)
 
+// Quá PD_STALE_MS kể từ lần đọc gần nhất coi như hết phóng điện - dùng chung logic với SensorDiagram.vue.
+const PD_STALE_MS = 15 * 60 * 1000
+const isPdReadingStale = (dataTime: any) => {
+  if (!dataTime) return true
+  const readAt = new Date(dataTime).getTime()
+  if (Number.isNaN(readAt)) return true
+  return Date.now() - readAt > PD_STALE_MS
+}
+
+const selectedPdMachine = ref<any>(null)
+const pdMachineComponents = ref<any[]>([])
+const loadingPdDetail = ref(false)
+const visiblePdDetail = ref(false)
+const showPdMachineInfo = (marker: any) => {
+  selectedPdMachine.value = marker
+  visiblePdDetail.value = true
+  loadingPdDetail.value = true
+  pdByMachineApi(marker.machineId)
+    .then((res) => {
+      pdMachineComponents.value = res.data ?? []
+    })
+    .finally(() => {
+      loadingPdDetail.value = false
+    })
+}
 </script>
 <style scoped>
 .region-temp-list {

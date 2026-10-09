@@ -1,40 +1,41 @@
 import type { App } from 'vue'
 import { createI18n } from 'vue-i18n'
+import type { I18n } from 'vue-i18n'
 import { useLocaleStoreWithOut } from '@/store/modules/locale'
-import type { I18n, I18nOptions } from 'vue-i18n'
+import { loadLocaleMessages } from '@/locales'
+import { applyLibraryLocale } from './libraryLocale'
 
-export let i18n: I18n
+export const DEFAULT_LOCALE: LocaleType = 'vi'
+
+export let i18n: I18n<{}, {}, {}, string, false>
+
 export const setHtmlPageLang = (locale: LocaleType) => {
   document.querySelector('html')?.setAttribute('lang', locale)
 }
 
-const createI18nOptions = async (): Promise<I18nOptions> => {
-  const localeStore = useLocaleStoreWithOut()
-  const locale = localeStore.getCurrentLocale
-  const localeMap = localeStore.getLocaleMap
-  const defaultLocal = await import(`../../locales/${locale.lang}.ts`)
-  const message = defaultLocal.default ?? {}
-  setHtmlPageLang(locale.lang)
-
-  localeStore.setCurrentLocale({
-    lang: locale.lang,
-  })
-
-  return {
-    locale: locale.lang,
-    fallbackLocale: locale.lang,
-    messages: {
-      [locale.lang]: message,
-    },
-    availableLocales: localeMap.map((v) => v.lang),
-    sync: true,
-    silentTranslationWarn: false,
-    missingWarn: false,
-    silentFallbackWarn: false,
-  }
+// Đồng bộ store, thẻ html và thư viện ngoài sau khi đổi ngôn ngữ
+export const syncLocale = (lang: LocaleType) => {
+  useLocaleStoreWithOut().setCurrentLocale({ lang })
+  setHtmlPageLang(lang)
+  applyLibraryLocale(lang)
 }
+
 export const setupI18n = async (app: App<Element>) => {
-  const options = await createI18nOptions()
-  i18n = createI18n(options)
+  const lang = useLocaleStoreWithOut().getCurrentLocale.lang
+  // Luôn nạp vi để key thiếu ở ngôn ngữ khác rơi về tiếng Việt thay vì hiện tên key
+  const langs = [...new Set<LocaleType>([DEFAULT_LOCALE, lang])]
+  const messages = Object.fromEntries(
+    await Promise.all(langs.map(async (l) => [l, await loadLocaleMessages(l)] as const)),
+  )
+
+  i18n = createI18n({
+    legacy: false,
+    locale: lang,
+    fallbackLocale: DEFAULT_LOCALE,
+    messages,
+    missingWarn: import.meta.env.DEV,
+    fallbackWarn: false,
+  })
   app.use(i18n)
+  syncLocale(lang)
 }

@@ -35,11 +35,14 @@
 </template>
 
 <script lang="ts" setup>
+import { useLang } from '@/hooks/web/useI18n'
 import { useFormRequest } from '@/hooks/web/useFormRequest'
 import { ElMessage, FormInstance } from 'element-plus'
 import { ref, inject } from 'vue'
 import SaveButton from '@/components/Button/SaveButton.vue'
 import CancelButton from '@/components/Button/CancelButton.vue'
+
+const { t } = useLang()
 
 const injectedCancelDialog = inject<() => void>('cancelDialog')
 
@@ -75,7 +78,7 @@ const submitForm = async () => {
     const { success, data } = await submit(props.requestFn, ...args)
     if (success) {
       ElMessage({
-        message: 'Lưu thành công!',
+        message: t('common.saveSuccess'),
         type: 'success',
       })
       emits('success', data)

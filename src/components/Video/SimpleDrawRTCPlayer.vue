@@ -41,7 +41,7 @@
               @click="drawer?.removeAllPoint()"
           >
           </el-button>
-          <el-tooltip content="Lưu tọa độ vùng">
+          <el-tooltip :content="t('video.saveZone')">
             <el-button
                 v-if="isDrawing && pointCount"
                 color="#16457F"
@@ -66,15 +66,19 @@
 </template>
 
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 import {ref, onMounted, nextTick} from 'vue'
 import {
   CloseBold,
   SetUp,
   FullScreen, Aim,
 } from '@element-plus/icons-vue'
-import {getStreamApi, visionPresetApi} from '@/api/camera'
+import {visionPresetApi} from '@/api/camera'
+import { prepareCameraStream } from '@/plugins/webRTC/cameraStream'
 import {PolygonDrawer} from '@/utils/PolygonDrawer'
 import {ElMessage} from "element-plus";
+
+const { t } = useLang()
 
 const props = defineProps({
   streamKey: {type: [String, Number], required: true},
@@ -105,11 +109,8 @@ let drawer: PolygonDrawer | null = null
 
 onMounted(() => {
   loading.value = true
-  getStreamApi(props.streamKey)
-      .then((res) => {
-        const key = res.data
-        const path = import.meta.env.VITE_LIVE_PATH
-        videoStream.src = new URL(`${path}?src=${key}`)
+  prepareCameraStream(videoStream, props.streamKey)
+      .then(() => {
         videoRef?.value?.appendChild(videoStream)
 
         const video = videoStream.video
@@ -198,7 +199,7 @@ function startDrawing() {
                 if (pointCount.value >= 3 && !drawer?.isConvex()) {
                   drawer?.showFullScreenAlert(
                       videoRef,
-                      'không phải hình đa giác lồi, vui lòng vẽ lại!',
+                      t('video.notConvex'),
                   )
                 }
               })
@@ -272,7 +273,7 @@ const saveVisionPresets = () => {
     toggleFullScreen()
     nextTick(() => {
       ElMessage({
-        message: 'Lưu thành công!',
+        message: t('common.saveSuccess'),
         type: 'success',
       })
     })

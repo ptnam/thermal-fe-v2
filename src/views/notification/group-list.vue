@@ -1,4 +1,5 @@
 <script setup lang="tsx">
+import { enumLabel } from '@/utils/enumLabel'
 import ListTemplate from '@/components/PageTemplate/List/ListTemplate.vue'
 import {TableColumn} from '@/components/Table'
 import {useLang} from '@/hooks/web/useI18n'
@@ -23,9 +24,9 @@ const {t} = useLang()
 
 const columns = computed<TableColumn[]>(() => [
   {label: 'STT', type: 'index', width: '60'},
-  {prop: 'name', label: 'Bộ cảnh báo'},
+  {prop: 'name', label: t('alertSetting.group.name')},
   {
-    label: 'Kênh cảnh báo',
+    label: t('alertSetting.group.channel'),
     prop: 'notificationChannels',
     slots: {
       default: (scope: any) => (
@@ -34,7 +35,7 @@ const columns = computed<TableColumn[]>(() => [
     },
   },
   {
-    label: 'Sự kiện',
+    label: t('alertSetting.group.events'),
     prop: 'events',
     slots: {
       default: (scope: any) => <span>{joinFieldValues(scope.row.events, 'name')}</span>,
@@ -47,7 +48,7 @@ const columns = computed<TableColumn[]>(() => [
     slots: {
       default: ({row}) => (<span   style={{
         color: row.status === 'Active' ? 'var(--success)' : 'var(--danger)'
-      }}>{row?.groupStatusObject?.name}</span>)
+      }}>{enumLabel('notificationGroupStatusList', row?.groupStatusObject?.code, row?.groupStatusObject?.name)}</span>)
     },
   },
   {
@@ -100,7 +101,7 @@ const isMobile = computed(() => appStore.isMobile)
 
 <template>
   <list-template
-      title="Danh sách cảnh báo hệ thống"
+      :title="t('alertSetting.group.listTitle')"
       ref="elTableRef"
       key-list="group-list"
       :columns="columns"
@@ -118,11 +119,11 @@ const isMobile = computed(() => appStore.isMobile)
     <template slot="search" v-slot="{ searchParams, tableMethods }">
       <div class="filter-row">
         <div class="filter-item">
-          <div class="filter-label">Bộ cảnh báo</div>
-          <el-input v-model="searchParams.name" clearable class="filter-input" placeholder="Nhập tên bộ cảnh báo..."/>
+          <div class="filter-label">{{ t('alertSetting.group.name') }}</div>
+          <el-input v-model="searchParams.name" clearable class="filter-input" :placeholder="t('alertSetting.group.namePlaceholder')"/>
         </div>
         <div class="filter-item">
-          <div class="filter-label">Kênh cảnh báo</div>
+          <div class="filter-label">{{ t('alertSetting.group.channel') }}</div>
           <virtualized-select-from-url
               :request-fn="getAllNotificationChannelApi"
               v-model="searchParams.notificationChannels"
@@ -132,7 +133,7 @@ const isMobile = computed(() => appStore.isMobile)
           />
         </div>
         <div class="filter-item">
-          <div class="filter-label">Sự kiện</div>
+          <div class="filter-label">{{ t('alertSetting.group.events') }}</div>
           <virtualized-select-from-url
               :request-fn="getAllWarningEventApi"
               v-model="searchParams.events"
@@ -141,7 +142,7 @@ const isMobile = computed(() => appStore.isMobile)
           />
         </div>
         <div class="filter-item">
-          <div class="filter-label">Khu vực</div>
+          <div class="filter-label">{{ t('fields.area') }}</div>
           <tree-select-remote
               v-model="searchParams.areaId"
               :request-fn="getAllTreeAreaApi"

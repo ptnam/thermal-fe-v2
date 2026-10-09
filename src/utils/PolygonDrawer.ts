@@ -1,3 +1,5 @@
+import { i18n } from '@/plugins/vueI18n'
+
 type Range = {
   points: { x: number; y: number }[]
   strokeStyle: string
@@ -199,7 +201,7 @@ export class PolygonDrawer {
     box.innerHTML = `
         <div class="text-2xl font-bold mb-4">${message}</div>
         <button class="px-4 py-2 rounded-lg font-semibold">
-            Đóng
+            ${i18n.global.t('common.close')}
         </button>
     `
     const button = box.querySelector('button')

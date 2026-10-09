@@ -5,6 +5,12 @@
       <polyline points="7 10 12 15 17 10"></polyline>
       <line x1="12" y1="15" x2="12" y2="3"></line>
     </svg>
-    Xuất file
+    {{ t('common.exportFile') }}
   </el-button>
 </template>
+
+<script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
+
+const { t } = useLang()
+</script>

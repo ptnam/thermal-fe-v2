@@ -2,6 +2,7 @@
 import { useAppStore } from '@/store/modules/app'
 import { onMounted, computed, ref } from 'vue'
 import NarBarNotification from '@/components/DropDown/NarBarNotification.vue'
+import LocaleDropdown from '@/components/LocaleDropdown/LocaleDropdown.vue'
 import ChangePasswordForm from '@/layout/components/ChangePasswordForm.vue'
 import { changePasswordApi } from '@/api/user/index.ts'
 import { useDialogForm } from '@/hooks/web/useDialogForm.tsx'
@@ -154,28 +155,33 @@ function isPrefixActive(prefix) {
         <router-link
           :class="['nav-link', isPrefixActive('/dashboard') ? 'active-link' : '']"
           to="/dashboard"
-          >TRANG CHỦ</router-link
+          >{{ t('layout.menu.home') }}</router-link
         >
       </div>
       <div class="nav-wrapper">
         <router-link :class="['nav-link', isPrefixActive('/live') ? 'active-link' : '']" to="/live"
-          >GIÁM SÁT TRỰC TIẾP</router-link
+          >{{ t('layout.menu.live') }}</router-link
         >
       </div>
       <div class="nav-wrapper">
         <div :class="['nav-link', isPrefixActive('/event') ? 'active-link' : '']">
-          THEO DÕI ĐIỂM ĐO
+          {{ t('layout.menu.monitoring') }}
           <svg class="nav-arrow" width="10" viewBox="0 0 24 24">
             <path d="M7 10l5 5 5-5z" />
           </svg>
         </div>
         <div class="dropdown-menu">
-          <router-link class="menu-link" to="/event/ai-notification">Cảnh báo AI</router-link>
+          <router-link class="menu-link" to="/event/ai-notification">{{ t('layout.menu.aiAlert') }}</router-link>
           <router-link class="menu-link" to="/event/notification-system"
-            >Nhiệt độ vượt ngưỡng</router-link
+            >{{ t('layout.menu.overTemperature') }}</router-link
           >
-          <router-link class="menu-link" to="/event/event-history">Nhật ký nhiệt độ</router-link>
-          <router-link class="menu-link" to="/event/home">Tổng hợp phân tích</router-link>
+          <router-link class="menu-link" to="/event/event-history">{{ t('layout.menu.temperatureLog') }}</router-link>
+          <router-link class="menu-link" to="/event/home">{{ t('layout.menu.analysisSummary') }}</router-link>
+          <router-link class="menu-link" to="/event/pd-notification-system"
+            >{{ t('layout.menu.pdOverThreshold') }}</router-link
+          >
+          <router-link class="menu-link" to="/event/pd-history">{{ t('layout.menu.pdLog') }}</router-link>
+          <router-link class="menu-link" to="/event/pd-summary">{{ t('layout.menu.pdSummary') }}</router-link>
         </div>
       </div>
 
@@ -186,27 +192,27 @@ function isPrefixActive(prefix) {
             isPrefixActive('/category') || isPrefixActive('/setting') ? 'active-link' : '',
           ]"
         >
-          QUẢN TRỊ HỆ THỐNG
+          {{ t('layout.menu.admin') }}
           <svg class="nav-arrow" width="10" viewBox="0 0 24 24">
             <path d="M7 10l5 5 5-5z" />
           </svg>
         </div>
         <div class="dropdown-menu mega-menu">
           <div class="mega-col">
-            <div class="col-header">HẠ TẦNG & THIẾT BỊ</div>
-            <router-link class="menu-link" to="/category/area">Khu vực</router-link>
-            <router-link class="menu-link" to="/category/camera-list">Camera</router-link>
-            <router-link class="menu-link" to="/category/camera-sensor">Cảm biến</router-link>
-            <router-link class="menu-link" to="/category/machine-type">Loại Thiết bị</router-link>
-            <router-link class="menu-link" to="/category/machine-list">Thiết bị</router-link>
+            <div class="col-header">{{ t('layout.menu.infrastructure') }}</div>
+            <router-link class="menu-link" to="/category/area">{{ t('layout.menu.area') }}</router-link>
+            <router-link class="menu-link" to="/category/camera-list">{{ t('layout.menu.camera') }}</router-link>
+            <router-link class="menu-link" to="/category/camera-sensor">{{ t('layout.menu.sensor') }}</router-link>
+            <router-link class="menu-link" to="/category/machine-type">{{ t('layout.menu.equipmentType') }}</router-link>
+            <router-link class="menu-link" to="/category/machine-list">{{ t('layout.menu.equipment') }}</router-link>
           </div>
           <div class="mega-col">
-            <div class="col-header">THIẾT LẬP CẢNH BÁO</div>
+            <div class="col-header">{{ t('layout.menu.alertSettings') }}</div>
             <router-link class="menu-link menu-item-with-bg" to="/setting/notification-channel">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
               </svg>
-              Kênh Cảnh báo
+              {{ t('layout.menu.alertChannel') }}
             </router-link>
 
             <router-link class="menu-link menu-item-with-bg" to="/setting/notification-group">
@@ -216,17 +222,25 @@ function isPrefixActive(prefix) {
                 <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
                 <line x1="12" y1="20" x2="12.01" y2="20"></line>
               </svg>
-              Bộ cảnh báo
+              {{ t('layout.menu.alertGroup') }}
+            </router-link>
+
+            <router-link class="menu-link menu-item-with-bg" to="/category/settings">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 17l6-11h4l6 11"></path>
+                <path d="M8 12h8"></path>
+              </svg>
+              {{ t('layout.menu.pdFormula') }}
             </router-link>
           </div>
           <div class="mega-col">
-            <div class="col-header">QUẢN LÝ NGƯỜI DÙNG</div>
+            <div class="col-header">{{ t('layout.menu.userManagement') }}</div>
             <router-link class="menu-link menu-item-with-bg" to="/category/user">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                 <circle cx="12" cy="7" r="4"></circle>
               </svg>
-              Người dùng
+              {{ t('layout.menu.user') }}
             </router-link>
 
             <router-link
@@ -238,7 +252,7 @@ function isPrefixActive(prefix) {
                 <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
                 <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
               </svg>
-              Hướng dẫn sử dụng
+              {{ t('layout.menu.userGuide') }}
             </router-link>
           </div>
         </div>
@@ -253,6 +267,7 @@ function isPrefixActive(prefix) {
         style="--el-switch-on-color: #10172a; --el-switch-off-color: #f3f4f6"
       />
 
+      <locale-dropdown />
       <nar-bar-notification></nar-bar-notification>
       <div class="user-wrapper">
         <div class="user-profile" @click="toggleUserDropdown">
@@ -277,10 +292,10 @@ function isPrefixActive(prefix) {
           @click="toggleUserDropdown"
         ></div>
         <div v-show="visibleDropdown" class="user-dropdown">
-          <router-link class="dropdown-item" to="/dashboard">Home </router-link>
-          <a @click="forgetPassword" class="cursor-pointer dropdown-item">Quên mật khẩu</a>
+          <router-link class="dropdown-item" to="/dashboard">{{ t('common.home') }}</router-link>
+          <a @click="forgetPassword" class="cursor-pointer dropdown-item">{{ t('buttons.forgetPassword') }}</a>
           <div class="user-dropdown-divider"></div>
-          <a @click="logout" class="cursor-pointer dropdown-item logout">Log Out</a>
+          <a @click="logout" class="cursor-pointer dropdown-item logout">{{ t('common.logout') }}</a>
         </div>
       </div>
     </div>

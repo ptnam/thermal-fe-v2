@@ -3,7 +3,7 @@
     <div class="sc-header">
       <span class="sc-id">ID: {{ row.id }}</span>
       <span
-          :style="{color: row.status === 'Active' ? 'var(--success)' : 'var(--danger)', fontSize: '12px'}">● {{ row.displayStatus }}</span>
+          :style="{color: row.status === 'Active' ? 'var(--success)' : 'var(--danger)', fontSize: '12px'}">● {{ enumLabel('notificationChannelStatusList', row.status, row.displayStatus) }}</span>
     </div>
     <div class="sc-name">{{ row.name }}</div>
     <div class="sc-info">
@@ -13,7 +13,7 @@
           <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
           <line x1="12" y1="18" x2="12.01" y2="18"></line>
         </svg>
-        Loại: {{ row.channelType }}
+        {{ t('fields.type') }}: {{ row.channelType }}
       </div>
       <div class="sc-info-item">
         <svg style="width:14px; height:14px; margin-right:4px; vertical-align:middle" viewBox="0 0 24 24" fill="none"
@@ -42,9 +42,13 @@
 </template>
 
 <script setup lang="ts">
+import { enumLabel } from '@/utils/enumLabel'
+import { useLang } from '@/hooks/web/useI18n'
 
 import {TableColumn} from "@/components/Table/TableCard.vue";
 import {joinFieldValues} from "@/utils/stringUtils";
+
+const { t } = useLang()
 
 type RowData = Record<string, unknown>
 defineProps<{

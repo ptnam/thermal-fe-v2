@@ -16,11 +16,14 @@
 </template>
 
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 import { onMounted, ref } from 'vue'
 import SaveButton from '@/components/Button/SaveButton.vue'
 import { getAiServicesApi, saveAiServicesApi } from '@/api/camera'
 import useRequest from '@/hooks/web/useRequest'
 import { ElMessage } from 'element-plus'
+
+const { t } = useLang()
 
 interface Option {
   code: string
@@ -50,7 +53,7 @@ const saveForm = () => {
     aiServices: options.value,
   }).then(() => {
     ElMessage({
-      message: 'Lưu thành công!',
+      message: t('common.saveSuccess'),
       type: 'success',
     })
     emits('saved')

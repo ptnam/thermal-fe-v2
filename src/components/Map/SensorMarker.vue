@@ -5,9 +5,10 @@
 </template>
 
 <script setup>
-import {watch, computed, ref, onMounted} from 'vue'
+import {watch, ref, onMounted} from 'vue'
 import {LMarker} from '@vue-leaflet/vue-leaflet'
 import L from 'leaflet'
+import {buildSensorMarkerIcon} from '@/utils/sensorMarkerIcon'
 // Props
 const props = defineProps({
   latLng: {
@@ -22,27 +23,31 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  iconVariant: {
+    type: String,
+    default: 'default',
+  },
 })
 
 // Reactive state
 const currentIcon = ref(null)
 
-const svgHtml = computed(() => `<svg class="thermometer-icon" viewBox="0 0 24 24" fill="none" stroke="${props.iconColor}" stroke-width="2">
-                                <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"></path>
-                            </svg>`)
-
-// Create Leaflet icon from either SVG or PNG
 function createIcon() {
+  const icon = buildSensorMarkerIcon({
+    iconColor: props.iconColor,
+    isBlink: props.isBlink,
+    iconVariant: props.iconVariant,
+  })
   return L.divIcon({
-    html: svgHtml.value,
-    className: props.isBlink ? 'blink' : '',
-    iconSize: [20, 20],
-    iconAnchor: [10, 10],
+    html: icon.html,
+    className: icon.className,
+    iconSize: icon.size,
+    iconAnchor: icon.anchor,
   })
 }
 
 watch(
-    () => props.iconColor,
+    () => [props.iconColor, props.iconVariant, props.isBlink],
     () => {
       currentIcon.value = createIcon()
     },
@@ -57,6 +62,12 @@ onMounted(() => {
 <style lang="scss">
 .blink {
   animation: blink 0.6s infinite;
+}
+
+.pd-icon-wrapper {
+  background: transparent;
+  border: 0;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.35));
 }
 
 :global {

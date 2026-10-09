@@ -1,8 +1,13 @@
 <script setup lang="ts">
+import { enumLabel } from '@/utils/enumLabel'
+import { useLang } from '@/hooks/web/useI18n'
 import {computed} from 'vue'
+
+const { t } = useLang()
 
 interface Option {
   id: string
+  code?: string
   name: string
 }
 
@@ -45,7 +50,7 @@ const toggleAll = () => {
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
                         </svg>
-        Bộ lọc ({{ selectedIds.length }})
+        {{ t('common.filter') }} ({{ selectedIds.length }})
       </el-button>
     </span>
 
@@ -54,9 +59,9 @@ const toggleAll = () => {
       <div class="p-3 w-[260px]">
         <!-- Header -->
         <div class="flex justify-between items-center mb-2">
-          <span class="font-semibold text-sm">Loại ngưỡng</span>
+          <span class="font-semibold text-sm">{{ t('machinePart.thresholdTypeShort') }}</span>
           <el-link type="primary" @click="toggleAll" :underline="false">
-            {{ isAllSelected ? 'Bỏ chọn' : 'Chọn tất cả' }}
+            {{ isAllSelected ? t('common.deselectAll') : t('common.selectAll') }}
           </el-link>
         </div>
 
@@ -67,7 +72,7 @@ const toggleAll = () => {
               :key="item.id"
               :label="item.id"
           >
-            {{ item.name }}
+            {{ enumLabel('thresholdTypeList', item.code, item.name) }}
           </el-checkbox>
         </el-checkbox-group>
       </div>

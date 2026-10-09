@@ -2,7 +2,7 @@
   <div :class="outerClass">
     <!-- TITLE -->
     <div class="modern-tree-title">
-      <span>Danh sách khu vực</span>
+      <span>{{ t('common.areaList') }}</span>
     </div>
 
     <!-- SEARCH -->
@@ -15,7 +15,7 @@
           v-model="keyword"
           type="text"
           class="modern-tree-search-box"
-          placeholder="Tìm trạm, camera..."
+          :placeholder="t('live.searchPlaceholder')"
       />
     </div>
 
@@ -42,8 +42,11 @@
 </template>
 
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 import {ref, computed, onMounted} from 'vue'
 import TreeNode from './TreeNode.vue'
+
+const { t } = useLang()
 
 const props = defineProps({
   requestFn: {

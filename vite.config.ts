@@ -36,7 +36,8 @@ export default (): UserConfig => {
       VueI18nPlugin({
         runtimeOnly: true,
         compositionOnly: true,
-        include: [resolve(__dirname, 'src/locales/**')],
+        // Chỉ file message trong locales/<lang>/, bỏ qua loader và schema ở thư mục gốc
+        include: [resolve(__dirname, 'src/locales/*/*.ts')],
       }),
 
       createSvgIconsPlugin({

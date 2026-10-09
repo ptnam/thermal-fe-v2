@@ -7,13 +7,13 @@
     @success="handleSuccess"
   >
     <template v-slot="{ formErrors }">
-      <el-form-item label="Tên kênh cảnh báo" prop="name" :error="formErrors.Name">
+      <el-form-item :label="t('alertSetting.channel.formName')" prop="name" :error="formErrors.Name">
         <el-input v-model="formModel.name" />
       </el-form-item>
-      <el-form-item label="Mã cảnh báo" prop="code" :error="formErrors.Code">
+      <el-form-item :label="t('alertSetting.channel.code')" prop="code" :error="formErrors.Code">
         <el-input v-model="formModel.code" />
       </el-form-item>
-      <el-form-item label="Nơi nhận cảnh báo" prop="channelTypes" :error="formErrors.ChannelTypes">
+      <el-form-item :label="t('alertSetting.channel.receivers')" prop="channelTypes" :error="formErrors.ChannelTypes">
         <select-from-config
           v-model="formModel.channelTypes"
           key-config="notificationChannelTypeList"
@@ -23,7 +23,7 @@
           multiple
         ></select-from-config>
       </el-form-item>
-      <el-form-item label="Người dùng" prop="users" :error="formErrors?.Users">
+      <el-form-item :label="t('alertSetting.channel.users')" prop="users" :error="formErrors?.Users">
         <object-select-from-url
           v-model="formModel.users"
           :request-fn="getAllUserListApi"
@@ -36,7 +36,7 @@
       </el-form-item>
       <el-form-item
         v-show="isEditing"
-        label="Trạng thái"
+        :label="t('fields.status')"
         prop="channelStatus"
         :error="formErrors.ChannelStatus"
       >
@@ -46,7 +46,7 @@
           colValue="code"
         />
       </el-form-item>
-      <el-form-item label="Ghi chú" prop="note" :error="formErrors.Note">
+      <el-form-item :label="t('fields.note')" prop="note" :error="formErrors.Note">
         <el-input v-model="formModel.note" />
       </el-form-item>
     </template>
@@ -54,6 +54,7 @@
 </template>
 
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 import FormWrapper from '@/components/Form/FormWrapper.vue'
 import SelectFromConfig from '@/components/Selection/SelectFromConfig.vue'
 import { computed } from 'vue'
@@ -65,6 +66,8 @@ import { STATUS_ACTIVE } from '@/constants'
 import { getAllUserListApi } from '@/api/user'
 import ObjectSelectFromUrl from '@/components/Selection/ObjectSelectFromUrl.vue'
 import { useAppStore } from '@/store/modules/app'
+
+const { t } = useLang()
 
 const props = defineProps({
   formModel: {

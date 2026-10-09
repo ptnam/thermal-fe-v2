@@ -1,4 +1,5 @@
 <script setup lang="tsx">
+import { enumLabel } from '@/utils/enumLabel'
 import ListTemplate from '@/components/PageTemplate/List/ListTemplate.vue'
 import { TableColumn } from '@/components/Table'
 import { useLang } from '@/hooks/web/useI18n'
@@ -24,10 +25,10 @@ const renderActionColumn = (scope: any) => {
   )
 }
 const columns = computed<TableColumn[]>(() => [
-  { prop: 'code', label: 'Mã khu vực' },
-  { prop: 'name', label: 'Tên khu vực' },
-  { prop: 'mapTypeObject.name', label: 'Loại bản đồ' },
-  { prop: 'note', label: 'Ghi chú' },
+  { prop: 'code', label: t('area.code') },
+  { prop: 'name', label: t('area.name') },
+  { prop: 'mapTypeObject.name', label: t('area.mapType') },
+  { prop: 'note', label: t('fields.note') },
   {
     prop: 'displayStatus',
     width: 140,
@@ -35,7 +36,7 @@ const columns = computed<TableColumn[]>(() => [
     slots: {
       default: ({row}) => (<span   style={{
         color: row.status === 'Active' ? 'var(--success)' : 'var(--danger)'
-      }}>{row.displayStatus}</span>)
+      }}>{enumLabel('commonStatusList', row.status, row.displayStatus)}</span>)
     },
   },
   {
@@ -79,7 +80,7 @@ const isMobile = computed(() => appStore.isMobile)
 <template>
   <list-template
       ref="elTableRef"
-      title="Danh sách khu vực"
+      :title="t('area.listTitle')"
       key-list="area-list"
       :columns="columns"
       :card-component="AreaCard"
@@ -95,11 +96,11 @@ const isMobile = computed(() => appStore.isMobile)
   >
     <template slot="search" v-slot="{ searchParams, tableMethods }">
       <div class="filter-item">
-        <div class="filter-label">Tên khu vực</div>
-        <el-input class="filter-input" v-model="searchParams.name" clearable placeholder="Nhập tên khu vực..." />
+        <div class="filter-label">{{ t('area.name') }}</div>
+        <el-input class="filter-input" v-model="searchParams.name" clearable :placeholder="t('area.namePlaceholder')" />
       </div>
       <div class="filter-item">
-        <div class="filter-label">Trạng thái</div>
+        <div class="filter-label">{{ t('fields.status') }}</div>
         <select-from-config
             class="filter-input"
             key-config="userStatusList"
@@ -118,7 +119,7 @@ const isMobile = computed(() => appStore.isMobile)
     <area-form
       v-model:formModel="formModel"
       @success="saveSuccess"
-      :title="formModel.id ? 'Cập nhật khu vực': 'Thêm khu vực mới'"
+      :title="formModel.id ? t('area.edit') : t('area.add')"
     ></area-form>
   </drawer-form>
 </template>

@@ -1,0 +1,15 @@
+export default {
+  listTitle: 'Areas',
+  add: 'Add new area',
+  edit: 'Update area',
+  code: 'Area code',
+  name: 'Area name',
+  namePlaceholder: 'Enter area name...',
+  mapType: 'Map type',
+  province: 'Province',
+  singleLineDiagram: 'Single-line diagram',
+  sitePlan: 'Site plan',
+  parent: 'Parent area',
+  comparisonMode: 'Evaluation value',
+  ambientTemperature: 'Ambient temperature',
+}

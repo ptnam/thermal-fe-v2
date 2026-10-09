@@ -1,13 +1,19 @@
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 
 import {nextTick, onMounted, onUnmounted, ref} from "vue";
-import {getCameraDetailApi, getStreamApi, sendCommandCameraApi} from "@/api/camera";
+import {getCameraDetailApi, sendCommandCameraApi} from "@/api/camera";
+import { prepareCameraStream } from '@/plugins/webRTC/cameraStream'
 
 import useRequest from "@/hooks/web/useRequest";
 import {CAMERA_COMMANDS} from "@/constants/camera";
 import {PolygonDrawer} from "@/utils/PolygonDrawer";
 import {thermalDataByAreaApi} from "@/api/thermal-data";
+import {getBatcamRoisApi} from "@/api/batcam-config";
+import {CAMERA_PD_TYPE} from "@/constants";
 import { useClock } from '@/hooks/web/useClock'
+
+const { t } = useLang()
 
 const props = defineProps({
   streamKey: {
@@ -35,10 +41,36 @@ videoStream.addEventListener('stream-onopen', () => {
   if(props.startDraw) {
     startDrawing();
   }
+  const video = videoStream.video as HTMLVideoElement | undefined
+  if (video?.videoWidth && video?.videoHeight) {
+    roiNaturalWidth.value = video.videoWidth
+    roiNaturalHeight.value = video.videoHeight
+  }
 })
 videoStream.addEventListener('stream-error', () => {
   videoLoading.value = false
 })
+
+// ---- Overlay ROI của camera giám sát phóng điện (chỉ đọc) ----
+interface RoiOverlayItem {
+  roiIndex: number
+  cx: number
+  cy: number
+  nw: number
+  nh: number
+  name: string | null
+  machineComponentName: string | null
+}
+const rois = ref<RoiOverlayItem[]>([])
+const roiNaturalWidth = ref(1920)
+const roiNaturalHeight = ref(1080)
+const roiLabel = (roi: RoiOverlayItem) => roi.name || roi.machineComponentName || `ROI ${roi.roiIndex + 1}`
+function loadRois() {
+  getBatcamRoisApi(Number(props.streamKey)).then((res) => {
+    // Chỉ vẽ ROI đã bật và đã gán bộ phận (ROI chưa gán không có nhãn để hiển thị).
+    rois.value = (res.data ?? []).filter((r: any) => r.enabled && r.machineComponentId)
+  })
+}
 const isPlaying = ref(false)
 const isDrawing = ref(false)
 const loading = ref(false)
@@ -58,11 +90,8 @@ const requestCommand = (command: number, other: any = null) => {
 const speed = ref(3);
 onMounted(() => {
   loading.value = true
-  getStreamApi(props.streamKey)
-      .then((res) => {
-        const key = res.data
-        const path = import.meta.env.VITE_LIVE_PATH
-        videoStream.src = new URL(`${path}?src=${key}`)
+  prepareCameraStream(videoStream, props.streamKey as string | number)
+      .then(() => {
         videoRef?.value?.appendChild(videoStream)
 
         const video = videoStream.video
@@ -82,6 +111,7 @@ onMounted(() => {
 
   getCameraDetailApi(props.streamKey).then(res => {
     cam.value = res.data
+    if (cam.value.cameraType === CAMERA_PD_TYPE) loadRois()
   });
 });
 
@@ -119,7 +149,7 @@ function startDrawing(ranges = []) {
               emits("pointedClicked", points);
               nextTick(() => {
                 if (points.length >= 3 && !drawer?.isConvex()) {
-                  drawer?.showFullScreenAlert(videoRef, 'không phải hình đa giác lồi, vui lòng vẽ lại!');
+                  drawer?.showFullScreenAlert(videoRef, t('video.notConvex'));
                   drawer?.clearLastPoint()
                 }
               })
@@ -208,7 +238,7 @@ defineExpose({
 <template>
   <header class="live-header">
     <div style="display:flex; align-items:center; gap:15px">
-      <router-link v-show="showBtnBack" class="v-btn" title="Thu nhỏ / Quay lại"
+      <router-link v-show="showBtnBack" class="v-btn" :title="t('video.back')"
                    style="text-decoration: none;
     background: rgba(255, 255, 255, 0.05);
     width: 36px;
@@ -243,6 +273,31 @@ defineExpose({
             class="absolute"
         >
         </canvas>
+        <!-- Overlay ROI giám sát phóng điện (chỉ đọc) - xem CameraBatcamConfigPanel.vue (nơi vẽ/lưu ROI). -->
+        <svg
+            v-if="rois.length"
+            class="absolute inset-0 w-full h-full roi-overlay"
+            :viewBox="`0 0 ${roiNaturalWidth} ${roiNaturalHeight}`"
+            preserveAspectRatio="xMidYMid meet"
+        >
+          <rect
+              v-for="roi in rois"
+              :key="roi.roiIndex"
+              :x="(roi.cx - roi.nw / 2) * roiNaturalWidth"
+              :y="(roi.cy - roi.nh / 2) * roiNaturalHeight"
+              :width="roi.nw * roiNaturalWidth"
+              :height="roi.nh * roiNaturalHeight"
+              class="roi-shape"
+              :class="`roi-shape--${roi.roiIndex % 3}`"
+          />
+          <text
+              v-for="roi in rois"
+              :key="`roi-label-${roi.roiIndex}`"
+              :x="roi.cx * roiNaturalWidth"
+              :y="(roi.cy - roi.nh / 2) * roiNaturalHeight - 6"
+              class="roi-label"
+          >{{ roiLabel(roi) }}</text>
+        </svg>
       </div>
     </div>
     <div class="sidebar">
@@ -288,7 +343,7 @@ defineExpose({
         </div>
 
         <div class="slider-group">
-          <div style="font-size:12px; color:var(--text-sub); width:60px; font-weight:600">Tốc độ</div>
+          <div style="font-size:12px; color:var(--text-sub); width:60px; font-weight:600">{{ t('video.speed') }}</div>
           <span style="font-size:12px; color:var(--text-sub)">1</span>
           <input v-model="speed" type="range" min="1" max="5" class="custom-slider">
           <span style="font-size:12px; color:var(--text-sub)">5</span>
@@ -301,7 +356,7 @@ defineExpose({
         <div class="slider-group" style="margin-top:10px">
           <div style="font-size:12px; color:var(--text-sub); width:60px; font-weight:600">Zoom</div>
           <div style="display:flex; gap:10px; flex:1">
-            <button class="v-btn" style="background:#334155; flex:1; height:40px" title="Phóng to"
+            <button class="v-btn" style="background:#334155; flex:1; height:40px" :title="t('video.zoomIn')"
                     @click="() => requestCommand(CAMERA_COMMANDS.ZoomIn)">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
                    stroke-linecap="round" stroke-linejoin="round">
@@ -311,7 +366,7 @@ defineExpose({
                 <line x1="8" y1="11" x2="14" y2="11"></line>
               </svg>
             </button>
-            <button class="v-btn" style="background:#334155; flex:1; height:40px" title="Thu nhỏ"
+            <button class="v-btn" style="background:#334155; flex:1; height:40px" :title="t('video.zoomOut')"
                     @click="() => requestCommand(CAMERA_COMMANDS.ZoomOut)">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
                    stroke-linecap="round" stroke-linejoin="round">
@@ -327,7 +382,7 @@ defineExpose({
           <div style="margin-top:20px; padding-top:20px; border-top:1px solid var(--border); width:100%">
             <div
                 style="font-size:11px; font-weight:700; color:var(--text-sub); margin-bottom:12px; text-transform:uppercase;">
-              ĐO NHIỆT ĐỘ
+              {{ t('video.measureTitle') }}
             </div>
 
             <!-- Start Button -->
@@ -338,7 +393,7 @@ defineExpose({
                   <polygon points="14 2 18 6 7 17 3 17 3 13 14 2"></polygon>
                   <line x1="3" y1="22" x2="21" y2="22"></line>
                 </svg>
-                Vẽ điểm/vùng
+                {{ t('video.drawPointArea') }}
               </button>
             </div>
             <!-- Active Actions (Hidden by default) -->
@@ -351,7 +406,7 @@ defineExpose({
                      stroke-linecap="round" stroke-linejoin="round">
                   <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"></path>
                 </svg>
-                Đo nhiệt
+                {{ t('video.measure') }}
               </el-button>
               <button class="v-btn" @click="stopDrawing"
                       style="background:rgba(239, 68, 68, 0.15); border:1px solid rgba(239, 68, 68, 0.5); color:#EF4444; width:100%; height:44px; display:flex; align-items:center; justify-content:center; gap:8px; border-radius:6px; font-weight:600; font-size:13px">
@@ -360,13 +415,13 @@ defineExpose({
                   <line x1="18" y1="6" x2="6" y2="18"></line>
                   <line x1="6" y1="6" x2="18" y2="18"></line>
                 </svg>
-                Thoát
+                {{ t('video.exit') }}
               </button>
             </div>
 
             <!-- Measurement Results (Hidden by default) -->
             <div v-show="visibleMeasurement" style="margin-top:15px; animation: fadeIn 0.3s ease-in-out;">
-              <div style="font-size:13px; color:var(--text-sub); margin-bottom:10px;">Kết quả đo:</div>
+              <div style="font-size:13px; color:var(--text-sub); margin-bottom:10px;">{{ t('video.measureResult') }}</div>
               <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:8px;">
                 <!-- Max -->
                 <div
@@ -403,20 +458,20 @@ defineExpose({
           <div style="margin-top:20px; padding-top:20px; border-top:1px solid var(--border); width:100%">
             <div
                 style="font-size:11px; font-weight:700; color:var(--text-sub); margin-bottom:12px; text-transform:uppercase;">
-              ĐIỀU KHIỂN
+              {{ t('video.controlTitle') }}
             </div>
 
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
-              <button class="v-btn action-btn-danger" title="Nút nguồn"
+              <button class="v-btn action-btn-danger" :title="t('video.power')"
                       @click="() => requestCommand(CAMERA_COMMANDS.Restart)">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
                      stroke-linecap="round" stroke-linejoin="round">
                   <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
                   <line x1="12" y1="2" x2="12" y2="12"></line>
                 </svg>
-                Nguồn
+                {{ t('video.powerLabel') }}
               </button>
-              <button class="v-btn action-btn-secondary" title="Cài đặt camera">
+              <button class="v-btn action-btn-secondary" :title="t('video.cameraSettings')">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
                      stroke-linecap="round" stroke-linejoin="round">
                   <circle cx="12" cy="12" r="3"></circle>
@@ -424,7 +479,7 @@ defineExpose({
                       d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
                   </path>
                 </svg>
-                Cài đặt
+                {{ t('video.settings') }}
               </button>
             </div>
           </div>
@@ -599,6 +654,35 @@ body {
   position: absolute;
   top: 0;
   left: 0;
+}
+
+/* Overlay ROI - màu cố định (không theo theme trang), đè lên video giống mọi overlay video khác. */
+.roi-overlay {
+  top: 0;
+  left: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+.roi-shape {
+  fill: rgba(64, 158, 255, 0.15);
+  stroke: #409eff;
+  stroke-width: 3;
+}
+.roi-shape--1 {
+  fill: rgba(103, 194, 58, 0.15);
+  stroke: #67c23a;
+}
+.roi-shape--2 {
+  fill: rgba(230, 162, 60, 0.15);
+  stroke: #e6a23c;
+}
+.roi-label {
+  fill: #fff;
+  font-size: 20px;
+  text-anchor: middle;
+  paint-order: stroke;
+  stroke: #000;
+  stroke-width: 4px;
 }
 
 /* HUD Overlay (Lớp phủ thông tin) */

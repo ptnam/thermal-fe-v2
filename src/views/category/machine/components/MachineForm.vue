@@ -8,16 +8,16 @@
   >
     <template v-slot="{ formErrors }">
       <el-tabs type="border-card">
-        <el-tab-pane label="Thông tin chung">
+        <el-tab-pane :label="t('machine.tabGeneral')">
           <el-card>
             <template #header>
               <div class="card-header">
-                <span class="font-bold">Thông tin thiết bị</span>
+                <span class="font-bold">{{ t('machine.info') }}</span>
               </div>
             </template>
             <el-row :gutter="10">
               <el-col :span="isMobile ? 24 : 12">
-                <el-form-item label="Khu vực" prop="areaId" :error="formErrors.AreaId">
+                <el-form-item :label="t('fields.area')" prop="areaId" :error="formErrors.AreaId">
                   <tree-select-remote
                       v-model="formModel.areaId"
                       :request-fn="getAllTreeAreaApi"
@@ -30,7 +30,7 @@
               <el-col :span="isMobile ? 24 : 12">
                 <el-form-item
                     v-if="formModel?.area && formModel.areaId"
-                    label="Tọa độ"
+                    :label="t('map.coordinates')"
                     :error="formErrors.Latitude ?? formErrors.Longitude"
                     label-width="100px"
                 >
@@ -46,21 +46,50 @@
                       @input="setCoordinate"
                   />
                   <p v-if="formModel.longitude && formModel.latitude" class="m-0 whitespace-nowrap">
-                    <span class="font-bold">Kinh độ:</span> {{ formModel.longitude }},
-                    <span class="font-bold">Vĩ độ:</span> {{ formModel.latitude }}
+                    <span class="font-bold">{{ t('map.longitude') }}:</span> {{ formModel.longitude }},
+                    <span class="font-bold">{{ t('map.latitude') }}:</span> {{ formModel.latitude }}
+                  </p>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <!-- Vị trí marker tia sét trên bản đồ/sơ đồ - độc lập với "Tọa độ" nhiệt ở trên (Machine.PdLatitude/PdLongitude). -->
+            <el-row :gutter="10">
+              <el-col :span="isMobile ? 24 : 12"></el-col>
+              <el-col :span="isMobile ? 24 : 12">
+                <el-form-item
+                    v-if="formModel?.area && formModel.areaId"
+                    :label="t('machine.pdCoordinates')"
+                    label-width="100px"
+                >
+                  <LatLngPicker
+                      v-if="formModel?.area?.mapType === MAP_TYPE_MAP"
+                      :button-text="t('machine.pickPdOnMap')"
+                      :map-config="pdMapConfig"
+                      @input="setPdCoordinate"
+                  />
+                  <lat-lng-image-picker
+                      v-if="formModel?.area?.mapType === MAP_TYPE_PICTURE"
+                      :button-text="t('machine.pickPdOnImage')"
+                      :image-path="formModel?.area?.photoPath"
+                      :map-config="pdMapConfig"
+                      @input="setPdCoordinate"
+                  />
+                  <p v-if="formModel.pdLongitude && formModel.pdLatitude" class="m-0 whitespace-nowrap">
+                    <span class="font-bold">{{ t('map.longitude') }}:</span> {{ formModel.pdLongitude }},
+                    <span class="font-bold">{{ t('map.latitude') }}:</span> {{ formModel.pdLatitude }}
                   </p>
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="10">
               <el-col :span="isMobile ? 24 : 12">
-                <el-form-item label="Mã thiết bị" prop="code" :error="formErrors.Code">
+                <el-form-item :label="t('machine.code')" prop="code" :error="formErrors.Code">
                   <el-input v-model="formModel.code"/>
                 </el-form-item>
               </el-col>
               <el-col :span="isMobile ? 24 : 12">
                 <el-form-item
-                    label="Tên thiết bị"
+                    :label="t('machine.name')"
                     prop="code"
                     :error="formErrors.Name"
                     label-width="100px"
@@ -72,7 +101,7 @@
             <el-row :gutter="10">
               <el-col :span="isMobile ? 24 : 12">
                 <el-form-item
-                    label="Chu kỳ lấy data (phút)"
+                    :label="t('machine.pollingInterval')"
                     prop="frequency"
                     :error="formErrors.Frequency"
                 >
@@ -81,7 +110,7 @@
               </el-col>
               <el-col :span="isMobile ? 24 : 12">
                 <el-form-item
-                    label="Loại thiết bị"
+                    :label="t('machine.type')"
                     prop="machineTypeId"
                     :error="formErrors.MachineTypeId"
                     label-width="110px"
@@ -102,7 +131,7 @@
               <el-col :span="isMobile ? 24 : 12">
 
                 <el-form-item
-                    label="Trạng thái"
+                    :label="t('fields.status')"
                     prop="status"
                     :error="formErrors.Status"
                     label-width="100px"
@@ -137,7 +166,7 @@
               :size="isMobile ? '100%': '50%'"
           />
         </el-tab-pane>
-        <el-tab-pane label="Thông tin chi tiết">
+        <el-tab-pane :label="t('machine.tabDetail')">
             <machine-detail
                 :formModel="formModel"
                 :machineDetail="formModel?.machineDetail"
@@ -154,6 +183,7 @@
 </template>
 
 <script setup lang="tsx">
+import { useLang } from '@/hooks/web/useI18n'
 import FormWrapper from '@/components/Form/FormWrapper.vue'
 import {computed, onMounted, ref} from 'vue'
 import {rule} from '@/utils/validate'
@@ -176,6 +206,8 @@ import RemoteTable from "@/components/Table/RemoteTable.vue";
 import SelectFromConfig from "@/components/Selection/SelectFromConfig.vue";
 import MachineDetail from "@/views/category/machine/components/MachineDetail.vue";
 import { useAppStore } from '@/store/modules/app'
+
+const { t } = useLang()
 
 const machinePartTableRef = ref<InstanceType<typeof RemoteTable>>()
 
@@ -202,11 +234,11 @@ const renderCameraPointTags = (cameraPoints: any) => {
   );
 };
 
-const machinePartCols = [
-  {prop: 'name', label: 'Tên bộ phận'},
+const machinePartCols = computed(() => [
+  {prop: 'name', label: t('machine.partName')},
   {
     prop: 'machineType.name',
-    label: 'Điểm giám sát',
+    label: t('machine.monitorPoint'),
     slots: {
       default: (scope: any) => (
           <div class="flex flex-wrap gap-2">
@@ -248,7 +280,7 @@ const machinePartCols = [
       ),
     },
   },
-]
+])
 
 const machinePartId = ref(0)
 let machinePartRow = null
@@ -312,5 +344,20 @@ const updateFormModel = (node: any) => {
 }
 const setCoordinate = (coordinate: any) => {
   updateFormModel(coordinate)
+}
+
+// pdLatitude/pdLongitude/pdZoom của formModel remap qua latitude/longitude/zoom cho LatLngPicker dùng
+// chung, và remap ngược khi lưu - xem Machine.PdLatitude/PdLongitude (BE).
+const pdMapConfig = computed(() => ({
+  latitude: formModel.value?.pdLatitude,
+  longitude: formModel.value?.pdLongitude,
+  zoom: formModel.value?.pdZoom,
+}))
+const setPdCoordinate = (coordinate: any) => {
+  const node: any = {}
+  if ('latitude' in coordinate) node.pdLatitude = coordinate.latitude
+  if ('longitude' in coordinate) node.pdLongitude = coordinate.longitude
+  if ('zoom' in coordinate) node.pdZoom = coordinate.zoom
+  updateFormModel(node)
 }
 </script>

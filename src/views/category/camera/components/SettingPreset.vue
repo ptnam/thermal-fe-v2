@@ -22,7 +22,7 @@
 import { ElTag} from "element-plus";
 import {useLang} from "@/hooks/web/useI18n";
 import {deletePreset, presetList} from "@/api/camera";
-import {ref} from 'vue'
+import {ref, computed } from 'vue'
 import {useRoute} from "vue-router";
 import DeleteCircleButton from "@/components/Button/DeleteCircleButton.vue";
 import ListTemplate from "@/components/PageTemplate/List/ListTemplate.vue";
@@ -46,10 +46,10 @@ const renderExpand = (scope: any) => {
       </div>
   )
 }
-const tourCols = [
-  {prop: 'name', label: 'Tên'},
+const tourCols = computed(() => [
+  {prop: 'name', label: t('fields.name')},
   {
-    label: 'Điểm đo',
+    label: t('camera.measurePoints'),
     slots: {
       default: (scope: any) => renderExpand(scope)
     }
@@ -65,7 +65,7 @@ const tourCols = [
       ),
     },
   },
-]
+])
 const elTableRef = ref<InstanceType<typeof ListTemplate>>()
 // const dialogVisible = ref(false)
 

@@ -5,10 +5,11 @@ import {
   TEMPERATURE_LEVEL_BAD
 } from "@/constants"
 
+// labelKey/noteKey là key i18n, dịch lúc hiển thị
 export const defaultLevels = [
   {
-    label: "Mức 1 - Tốt",
-    note: "Nhiệt độ bình thường",
+    labelKey: 'machine.levels.good',
+    noteKey: 'machine.levels.goodNote',
     fromText: "",
     toText: "<=",
     color: "bg-[green]",
@@ -18,8 +19,8 @@ export const defaultLevels = [
                             </svg>`
   },
   {
-    label: "Mức 2 - Chú ý",
-    note: "Cần theo dõi",
+    labelKey: 'machine.levels.fair',
+    noteKey: 'machine.levels.fairNote',
     fromText: ">",
     toText: "<=",
     color: "bg-[blue]",
@@ -31,8 +32,8 @@ export const defaultLevels = [
                             </svg>`
   },
   {
-    label: "Mức 3 - Cảnh báo",
-    note: "Cần xử lý sớm",
+    labelKey: 'machine.levels.average',
+    noteKey: 'machine.levels.averageNote',
     fromText: ">",
     toText: "<=",
     color: "bg-[orange]",
@@ -45,8 +46,8 @@ export const defaultLevels = [
                             </svg>`
   },
   {
-    label: "Mức 4 - Nguy hiểm",
-    note: "Cần xử lý ngay",
+    labelKey: 'machine.levels.bad',
+    noteKey: 'machine.levels.badNote',
     fromText: ">",
     toText: "<=",
     color: "bg-[red]",

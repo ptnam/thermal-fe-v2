@@ -1,7 +1,7 @@
 <template>
   <div class="sensor-card-item">
     <div class="sc-header"><span class="sc-id">{{row.code}}</span>
-      <span :style="{color: row.status === 'Active' ? 'var(--success)' : 'var(--danger)', fontSize: '12px'}">● {{row.displayStatus}}</span>
+      <span :style="{color: row.status === 'Active' ? 'var(--success)' : 'var(--danger)', fontSize: '12px'}">● {{ enumLabel('commonStatusList', row.status, row.displayStatus) }}</span>
     </div>
     <div class="sc-name">{{row.name}}</div>
     <div class="sc-info">
@@ -27,6 +27,7 @@
 </template>
 
 <script setup lang="ts">
+import { enumLabel } from '@/utils/enumLabel'
 import type { TableColumn } from '@/components/Table/TableCard.vue'
 
 type RowData = any

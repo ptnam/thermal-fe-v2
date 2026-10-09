@@ -1,6 +1,7 @@
 <script setup lang="tsx">
+import { useLang } from '@/hooks/web/useI18n'
 import ListTemplate from '@/components/PageTemplate/List/ListTemplate.vue'
-import { nextTick, onMounted, onUnmounted, ref } from 'vue'
+import { nextTick, onMounted, onUnmounted, ref, computed } from 'vue'
 import { getAllTreeAreaApi } from '@/api/area'
 import VirtualizedSelectFromUrl from '@/components/Selection/VirtualizedSelectFromUrl.vue'
 import SearchButton from '@/components/Button/SearchButton.vue'
@@ -25,16 +26,56 @@ import { downloadByPathApi } from '@/api/common'
 import { downloadFile } from '@/utils/response'
 import EventHistoryCard from '@/views/event/components/EventHistoryCard.vue'
 
-const defaultCols = [
-  { prop: 'dateData', label: 'Ngày', width: 160, align: 'center' },
-  { prop: 'timeData', label: 'Giờ', align: 'center' },
-  { prop: 'areaName', label: 'Khu vực', align: 'center', minWidth: 160,  },
-  { prop: 'machineName', label: 'Thiết bị', align: 'center' },
-  { prop: 'machineComponentName', label: 'Bộ phận', align: 'center', minWidth: 120, },
-  { prop: 'monitorPointCode', label: 'Điểm nhiệt', align: 'center', minWidth: 120, },
-  { prop: 'maxTemperature', label: 'Nhiệt độ', align: 'center', minWidth: 100, },
+const { t } = useLang()
+
+const defaultCols = () => [
+  { prop: 'dateData', label: t('alert.date'), width: 160, align: 'center' },
+  { prop: 'timeData', label: t('alert.hour'), align: 'center' },
+  { prop: 'areaName', label: t('fields.area'), align: 'center', minWidth: 160,  },
+  { prop: 'machineName', label: t('alert.equipment'), align: 'center' },
+  { prop: 'machineComponentName', label: t('alert.component'), align: 'center', minWidth: 120, },
+  { prop: 'monitorPointCode', label: t('alert.thermalPoint'), align: 'center', minWidth: 120, },
+  { prop: 'maxTemperature', label: t('alert.temperature'), align: 'center', minWidth: 100, },
 ]
-const columns = ref(defaultCols)
+// Cột động theo từng kiểu so sánh có trong dữ liệu; computed để đổi nhãn theo ngôn ngữ
+const mergedResults = ref<Record<string, any>>({})
+const buildOtherCols = (merged: Record<string, any>) => {
+  const otherCols: any[] = []
+  for (const key in merged) {
+    const value = merged[key]
+    otherCols.push({
+      label: value?.compareTypeObject?.name ?? '',
+      align: 'center',
+      children: [
+        { prop: `dicThermalDataResults.${key}.compareValue`, label: '°C', align: 'center' },
+        { prop: `dicThermalDataResults.${key}.deltaValue`, label: t('alert.delta'), align: 'center', width: '110' },
+        {
+          prop: `dicThermalDataResults.${key}.compareComponent`,
+          label: t('alert.compareObjectShort'),
+          minWidth: '120px',
+          align: 'center',
+          width: '110',
+          hidden: ['Enviroment', 'Threshold'].includes(value?.compareTypeObject?.code),
+        },
+        {
+          prop: `dicThermalDataResults.${key}.compareResultObject.name`,
+          label: t('fields.status'),
+          align: 'center',
+          width: 120,
+          slots: {
+            default: ({row}) => {
+              const code = row?.dicThermalDataResults?.[key]?.compareResultObject?.code ?? ''
+              const backgroundColor = STATUS_COLOR_MAP[code]
+              return (<span class="status-badge" style={{backgroundColor: backgroundColor}}>{row?.dicThermalDataResults[key]?.compareResultObject?.name}</span>)
+            }
+          },
+        },
+      ],
+    })
+  }
+  return otherCols
+}
+const columns = computed(() => [...defaultCols(), ...buildOtherCols(mergedResults.value)])
 
 const elTableRef = ref<ComponentRef<typeof ListTemplate>>()
 
@@ -84,40 +125,7 @@ const formatDataList = (rows: any[]) => {
   const merged = tmpRows.reduce((acc, row) => {
     return { ...acc, ...row?.dicThermalDataResults }
   }, {})
-  const otherCols: any[] = []
-  for (const key in merged) {
-    const value = merged[key]
-    otherCols.push({
-      label: value?.compareTypeObject?.name ?? '',
-      align: 'center',
-      children: [
-        { prop: `dicThermalDataResults.${key}.compareValue`, label: '°C', align: 'center' },
-        { prop: `dicThermalDataResults.${key}.deltaValue`, label: 'Chênh lệch', align: 'center', width: '110' },
-        {
-          prop: `dicThermalDataResults.${key}.compareComponent`,
-          label: 'Đ.tượng SS',
-          minWidth: '120px',
-          align: 'center',
-          width: '110',
-          hidden: ['Enviroment', 'Threshold'].includes(value?.compareTypeObject?.code),
-        },
-        {
-          prop: `dicThermalDataResults.${key}.compareResultObject.name`,
-          label: 'Trạng thái',
-          align: 'center',
-          width: 120,
-          slots: {
-            default: ({row}) => {
-              const code = row?.dicThermalDataResults?.[key]?.compareResultObject?.code ?? ''
-              const backgroundColor = STATUS_COLOR_MAP[code]
-              return (<span class="status-badge" style={{backgroundColor: backgroundColor}}>{row?.dicThermalDataResults[key]?.compareResultObject?.name}</span>)
-            }
-          },
-        },
-      ],
-    })
-  }
-  columns.value = [...defaultCols, ...otherCols]
+  mergedResults.value = merged
   return tmpRows
 }
 const objectSpanMethod = ({ row, column, columnIndex }) => {
@@ -178,7 +186,7 @@ const exportFile = (searchParams: any) => {
   isExportLoading.value = true
   onRequest(thermalExportApi, searchParams).then((res) => {
     invokeSignalR('RegisterJob', res.jobId)
-    ElMessage.success('File sẽ tự động download sau khi đã xuất xong')
+    ElMessage.success(t('alert.exportStarted'))
   })
 }
 </script>
@@ -186,7 +194,7 @@ const exportFile = (searchParams: any) => {
 <template>
     <list-template
       ref="elTableRef"
-      title="Nhật ký nhiệt độ"
+      :title="t('alert.temperatureLogTitle')"
       key-list="event-history"
       :columns="columns"
       :use-table-config="{
@@ -205,29 +213,29 @@ const exportFile = (searchParams: any) => {
       <template slot="search" v-slot="{ searchParams }">
         <div class="filter-row">
           <div class="filter-item">
-            <div class="filter-label">Thời gian từ</div>
+            <div class="filter-label">{{ t('alert.timeFrom') }}</div>
             <el-date-picker
               v-model="searchParams.fromTime"
               type="datetime"
-              placeholder="Thời gian bắt đầu"
+              :placeholder="t('alert.startTime')"
               format="YYYY/MM/DD hh:mm:ss A"
               value-format="YYYY-MM-DD HH:mm:ss"
               class="!w-[-webkit-fill-available] filter-input"
             />
           </div>
           <div class="filter-item">
-            <div class="filter-label">Thời gian đến</div>
+            <div class="filter-label">{{ t('alert.timeTo') }}</div>
             <el-date-picker
               v-model="searchParams.toTime"
               type="datetime"
-              placeholder="Thời gian kết thúc"
+              :placeholder="t('alert.endTime')"
               format="YYYY/MM/DD hh:mm:ss A"
               value-format="YYYY-MM-DD HH:mm:ss"
               class="!w-[-webkit-fill-available] filter-input"
             />
           </div>
           <div class="filter-item">
-            <div class="filter-label">Khu vực</div>
+            <div class="filter-label">{{ t('fields.area') }}</div>
             <tree-select-remote
               v-model="searchParams.areaId"
               :requestFn="getAllTreeAreaApi"
@@ -238,7 +246,7 @@ const exportFile = (searchParams: any) => {
             />
           </div>
           <div class="filter-item">
-            <div class="filter-label">Kiểu so sánh</div>
+            <div class="filter-label">{{ t('alert.compareMode') }}</div>
             <select-from-config
               v-model="searchParams.thresholdType"
               key-config="thresholdTypeList"
@@ -247,15 +255,15 @@ const exportFile = (searchParams: any) => {
             />
           </div>
           <div class="filter-item">
-            <div class="filter-label">Từ</div>
+            <div class="filter-label">{{ t('alert.from') }}</div>
             <input-number v-model="searchParams.deltaMin" class="filter-input" />
           </div>
           <div class="filter-item">
-            <div class="filter-label">Đến</div>
+            <div class="filter-label">{{ t('alert.to') }}</div>
             <input-number v-model="searchParams.deltaMax" class="filter-input" />
           </div>
           <div class="filter-item">
-            <div class="filter-label">Đánh giá</div>
+            <div class="filter-label">{{ t('alert.evaluation') }}</div>
             <select-from-config
               v-model="searchParams.temperatureLevel"
               key-config="temperatureLevelList"

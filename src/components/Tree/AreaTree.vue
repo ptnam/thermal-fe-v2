@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h5 class="el-form-item__label">Danh sách khu vực</h5>
-    <el-input v-model="filterText" class="w-60 mb-2" placeholder="Tìm theo khu vực"/>
+    <h5 class="el-form-item__label">{{ t('common.areaList') }}</h5>
+    <el-input v-model="filterText" class="w-60 mb-2" :placeholder="t('common.searchArea')"/>
 
     <el-tree
         ref="treeRef"
@@ -25,9 +25,12 @@
 </template>
 
 <script lang="ts" setup>
+import { useLang } from '@/hooks/web/useI18n'
 import {onMounted, ref, watch} from 'vue'
 import {TreeInstance} from 'element-plus'
 import {isCam} from "@/utils/cameraUtils";
+
+const { t } = useLang()
 
 interface Tree {
   [key: string]: any

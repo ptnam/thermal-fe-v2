@@ -12,22 +12,42 @@
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2.5">
             <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"></path>
           </svg>
-          <h3 class="text-[14px] md:text-[18px] text-[#3b82f6] uppercase">THIẾT LẬP NGƯỠNG CẢNH BÁO</h3>
+          <h3 class="text-[14px] md:text-[18px] text-[#3b82f6] uppercase">{{ t('machinePart.setupThreshold') }}</h3>
         </div>
       </div>
     </template>
-    <div class="p-4 ml-2 min-h-[400px]">
-      <div class="absolute" style="right: 39px; top: 44px;">
-        <ThresholdFilter
-            v-model="thresholdListModel"
-            :options="options"
-            @change="changeThresholdTypeList"
-        />
-      </div>
-      <div class="threshold-tabs">
-        <threshold-tab :threshold-list="thresholdList"/>
-      </div>
-    </div>
+    <!-- Tách 2 tab domain Nhiệt độ / Phóng điện (PD) - đây là nơi cấu hình "Khai báo chung từ loại thiết
+         bị" hiện ra ở MachinePointDialog.vue (Khai báo riêng theo bộ phận). -->
+    <el-tabs v-model="domainTab" type="card">
+      <el-tab-pane name="thermal" :label="t('machinePart.thermalThreshold')">
+        <div class="p-4 ml-2 min-h-[400px]">
+          <el-form-item :label="t('machinePart.thresholdType')" label-position="top">
+            <ThresholdFilter
+                v-model="thermalSelectedTypes"
+                :options="thermalThresholdTypeOptions"
+                @change="changeThresholdTypeList"
+            />
+          </el-form-item>
+          <threshold-tab :threshold-list="thermalThresholdList"/>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane name="pd" :label="t('machinePart.pdThreshold')">
+        <div class="p-4 ml-2 min-h-[400px]">
+          <!-- Single-select - PD chỉ chọn 1 trong 2 kiểu (ΔPD%/tháng HOẶC ngưỡng dB tuyệt đối). -->
+          <el-form-item :label="t('machinePart.pdThresholdType')" label-position="top">
+            <el-select v-model="pdSelectedType" value-key="id" clearable class="!w-full">
+              <el-option v-for="item in pdThresholdTypeOptions" :key="item.id" :label="item.name" :value="item"/>
+            </el-select>
+          </el-form-item>
+
+          <!-- Công thức ΔPD%/tháng MẶC ĐỊNH cho mọi bộ phận thuộc loại này (bộ phận nào có công thức riêng
+               thì công thức riêng ưu tiên hơn - xem MachinePointDialog.vue). -->
+          <PdFormulaAssignmentPicker v-if="pdSelectedType?.id === PD_GROWTH_RATE_ID" :target-type="2" :target-id="props.partId"/>
+
+          <threshold-tab :threshold-list="pdThresholdList"/>
+        </div>
+      </el-tab-pane>
+    </el-tabs>
 
     <template #footer>
       <div class="flex justify-between md:justify-start space-x-2">
@@ -35,20 +55,45 @@
         <el-button
             type="primary"
             @click="emits('save', thresholdList)"
-        >Lưu cấu hình</el-button>
+        >{{ t('machinePart.saveConfig') }}</el-button>
       </div>
     </template>
   </el-drawer>
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue'
+import { useLang } from '@/hooks/web/useI18n'
+import {computed, ref} from 'vue'
 import CancelButton from '@/components/Button/CancelButton.vue'
 import {cloneObject} from "@/utils/objectUtils";
 import {defaultLevels} from "@/views/category/machine/components/levels";
 import ThresholdTab from "@/views/category/machine/components/ThresholdTab.vue";
 import {useConfigStore} from "@/store/modules/configStore";
 import ThresholdFilter from "@/views/category/machine-part/components/ThresholdFilter.vue";
+import PdFormulaAssignmentPicker from '@/views/category/machine/components/PdFormulaAssignmentPicker.vue'
+
+const { t } = useLang()
+
+// ThresholdType.PdGrowthRate (7) / PdLevelDb (8) - xem Enums.cs (BE).
+const PD_THRESHOLD_TYPE_IDS = [7, 8]
+const PD_LEVEL_DB_ID = 8
+const PD_GROWTH_RATE_ID = 7
+const configStore = useConfigStore();
+const allThresholdTypeOptions = computed(() => configStore.getConfig('thresholdTypeList') ?? [])
+const thermalThresholdTypeOptions = computed(() =>
+    allThresholdTypeOptions.value.filter((item: any) => !PD_THRESHOLD_TYPE_IDS.includes(item.id)),
+)
+const PD_THRESHOLD_TYPE_KEYS: Record<number, string> = {
+  [PD_GROWTH_RATE_ID]: 'machinePart.pdGrowthRate',
+  [PD_LEVEL_DB_ID]: 'machinePart.pdLevelDb',
+}
+const pdThresholdTypeOptions = computed(() =>
+    allThresholdTypeOptions.value
+        .filter((item: any) => PD_THRESHOLD_TYPE_IDS.includes(item.id))
+        .map((item: any) => ({ ...item, name: PD_THRESHOLD_TYPE_KEYS[item.id] ? t(PD_THRESHOLD_TYPE_KEYS[item.id]) : item.name }))
+        .sort((a: any, b: any) => (a.id === PD_LEVEL_DB_ID ? -1 : b.id === PD_LEVEL_DB_ID ? 1 : 0)),
+)
+const domainTab = ref<'thermal' | 'pd'>('thermal')
 
 // Props
 const props = defineProps({
@@ -59,10 +104,13 @@ const props = defineProps({
   machinePartThresholdList: {
     type: Array<any>,
     required: false,
-  }
+  },
+  // Id loại bộ phận đang sửa - undefined khi đang thêm mới (chưa lưu) - xem PdFormulaAssignmentPicker.vue.
+  partId: {
+    type: Number,
+    required: false,
+  },
 })
-const configStore = useConfigStore();
-const options = ref(configStore.getConfig('thresholdTypeList') ?? [])
 
 // Emits
 const emits = defineEmits(['save', 'cancel', 'update:thresholdList'])
@@ -71,6 +119,7 @@ const thresholdListModel = ref<any[]>([])
 
 const dialogOpen = () => {
   thresholdListModel.value = props.thresholdList
+  domainTab.value = 'thermal'
 }
 const changeThresholdTypeList = () => {
   const listModeTmp: any[] = [];
@@ -92,112 +141,29 @@ const changeThresholdTypeList = () => {
   })
   emits("update:thresholdList", listModeTmp)
 }
+
+const thermalSelectedTypes = computed<any[]>({
+  get: () => thresholdListModel.value.filter((t: any) => !PD_THRESHOLD_TYPE_IDS.includes(t.id)),
+  set: (val: any[]) => {
+    thresholdListModel.value = [...val, ...thresholdListModel.value.filter((t: any) => PD_THRESHOLD_TYPE_IDS.includes(t.id))]
+  },
+})
+const pdSelectedType = computed<any | null>({
+  get: () => thresholdListModel.value.find((t: any) => PD_THRESHOLD_TYPE_IDS.includes(t.id)) ?? null,
+  set: (val: any | null) => {
+    const thermalPart = thresholdListModel.value.filter((t: any) => !PD_THRESHOLD_TYPE_IDS.includes(t.id))
+    thresholdListModel.value = val ? [...thermalPart, val] : thermalPart
+    changeThresholdTypeList()
+  },
+})
+
+const thermalThresholdList = computed(() => (props.thresholdList ?? []).filter((t: any) => !PD_THRESHOLD_TYPE_IDS.includes(t.id)))
+const pdThresholdList = computed(() => (props.thresholdList ?? []).filter((t: any) => PD_THRESHOLD_TYPE_IDS.includes(t.id)))
 </script>
 <style scoped>
-.threshold-tabs {
-  display: flex;
-  gap: 30px;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 24px;
-  position: relative;
-}
-
-.th-tab {
-  padding: 12px 0;
-  color: var(--text-sub);
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  position: relative;
-  white-space: nowrap;
-}
-
-.th-tab.active {
-  color: #3b82f6;
-}
-
-.th-tab.active::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: #3b82f6;
-  box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
-}
-
-.filter-badge {
-  background: var(--bg-body);
-  border: 1px solid var(--border);
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 12px;
+.drawer-header {
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: var(--text-main);
-  cursor: pointer;
-  position: absolute;
-  right: 0;
-  top: 4px;
-  z-index: 10;
-}
-
-.filter-dropdown {
-  position: absolute;
-  top: calc(100% + 12px);
-  right: 0;
-  width: 280px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
-  display: none;
-  flex-direction: column;
-  gap: 16px;
-  z-index: 100;
-  animation: fdFadeIn 0.2s ease-out;
-}
-
-@keyframes fdFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.filter-dropdown.show {
-  display: flex;
-}
-
-.fd-title {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--primary);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 4px;
-}
-
-.fd-header-actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--border);
-}
-
-.fd-header-actions a {
-  color: #3b82f6;
-  text-decoration: none;
-  font-size: 12px;
-  font-weight: 600;
+  gap: 12px;
 }
 </style>

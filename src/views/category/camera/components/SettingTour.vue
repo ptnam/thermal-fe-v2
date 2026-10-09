@@ -19,7 +19,7 @@
     <ActionForm v-model="dialogVisible" :size="isMobile? '100%' : '50%'">
       <add-tour-form
           v-model:formModel="formModel"
-          :title="formModel.id ? 'Cập nhật':'Thêm mới'"
+          :title="formModel.id ? t('common.update') : t('common.addNew')"
           @success="handleSuccess"
       >
       </add-tour-form>
@@ -61,10 +61,10 @@ const renderExpand = (scope: any) => {
       </div>
   )
 }
-const tourCols = [
-  {prop: 'tourName', label: 'Tên'},
+const tourCols = computed(() => [
+  {prop: 'tourName', label: t('fields.name')},
   {
-    label: 'Góc quay',
+    label: t('camera.preset'),
     slots: {
       default: (scope: any) => renderExpand(scope)
     }
@@ -103,7 +103,7 @@ const tourCols = [
       ),
     },
   },
-]
+])
 const elTableRef = ref<InstanceType<typeof ListTemplate>>()
 const dialogVisible = ref(false)
 

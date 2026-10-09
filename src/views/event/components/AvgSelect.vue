@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+
+const { t } = useLang()
 
 type AvgType = '1' | '2' | '3'
 
@@ -12,39 +15,39 @@ const emit = defineEmits(['update:modelValue', 'change'])
 const open = ref(false)
 const root = ref<HTMLElement>()
 
-const options = [
+const options = computed(() => [
   {
     value: '1',
     label: 'MAX',
-    title: 'Nhiệt độ Max',
-    desc: 'Giá trị cao nhất trong khoảng thời gian',
+    title: t('alert.log.maxTemperature'),
+    desc: t('alert.log.maxDesc'),
     class: 'box-max'
   },
   {
     value: '2',
     label: 'MIN',
-    title: 'Nhiệt độ Min',
-    desc: 'Giá trị thấp nhất trong khoảng thời gian',
+    title: t('alert.log.minTemperature'),
+    desc: t('alert.log.minDesc'),
     class: 'box-min'
   },
   {
     value: '3',
     label: 'AVG',
-    title: 'Trung bình',
-    desc: 'Giá trị trung bình trong khoảng thời gian',
+    title: t('alert.log.average'),
+    desc: t('alert.log.averageDesc'),
     class: 'box-avg'
   }
-]
+])
 
 const selected = computed(() =>
-    options.find(o => o.value === props.modelValue)
+    options.value.find(o => o.value === props.modelValue)
 )
 
 function toggle() {
   open.value = !open.value
 }
 
-function select(opt: typeof options[number]) {
+function select(opt: (typeof options.value)[number]) {
   emit('update:modelValue', opt.value as AvgType)
   emit('change', opt.value as AvgType)
   open.value = false

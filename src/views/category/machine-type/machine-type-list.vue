@@ -1,4 +1,5 @@
 <script setup lang="tsx">
+import { enumLabel } from '@/utils/enumLabel'
 import ListTemplate from '@/components/PageTemplate/List/ListTemplate.vue'
 import {TableColumn} from '@/components/Table'
 import {useLang} from '@/hooks/web/useI18n'
@@ -20,8 +21,8 @@ const {t} = useLang()
 const router = useRouter()
 
 const columns = computed<TableColumn[]>(() => [
-  {prop: 'code', label: 'Mã loại thiết bị'},
-  {prop: 'name', label: 'Tên loại thiết bị'},
+  {prop: 'code', label: t('machineType.code')},
+  {prop: 'name', label: t('machineType.name')},
   {
     prop: 'displayStatus',
     width: 140,
@@ -29,7 +30,7 @@ const columns = computed<TableColumn[]>(() => [
     slots: {
       default: ({row}) => (<span   style={{
         color: row.status === 'Active' ? 'var(--success)' : 'var(--danger)'
-      }}>{row.displayStatus}</span>)
+      }}>{enumLabel('commonStatusList', row.status, row.displayStatus)}</span>)
     },
   },
   {prop: 'createdAt', width: 260, label: t('fields.created_at')},
@@ -40,7 +41,7 @@ const columns = computed<TableColumn[]>(() => [
       default: (scope: any) => (
           <div>
             <ElButton size="small" type="primary" icon={Plus} onClick={() => addMachinePart(scope)}>
-              Bộ phận
+              {t('machineType.parts')}
             </ElButton>
             <EditCircleButton onClick={() => openDialogEdit(scope)}></EditCircleButton>
             <DeleteCircleButton onClick={() => openDelete(scope)}></DeleteCircleButton>
@@ -84,7 +85,7 @@ const isMobile = computed(() => appStore.isMobile)
 
 <template>
   <list-template
-      title="Danh sách loại thiết bị"
+      :title="t('machineType.listTitle')"
       ref="elTableRef"
       key-list="machine-type-list"
       :columns="columns"
@@ -103,8 +104,8 @@ const isMobile = computed(() => appStore.isMobile)
     <template slot="search" v-slot="{ searchParams, tableMethods }">
       <div class="filter-row">
         <div class="filter-item">
-          <div class="filter-label">Tên</div>
-          <el-input v-model="searchParams.name" class="filter-input" placeholder="Nhập tên loại thiết bị..." clearable/>
+          <div class="filter-label">{{ t('fields.name') }}</div>
+          <el-input v-model="searchParams.name" class="filter-input" :placeholder="t('machineType.namePlaceholder')" clearable/>
         </div>
         <search-button @click="tableMethods.getList"></search-button>
       </div>

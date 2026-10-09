@@ -1,0 +1,20 @@
+// Cảm biến nhiệt
+export default {
+  listTitle: 'Temperature sensors',
+  code: 'Sensor code',
+  name: 'Sensor name',
+  type: 'Sensor type',
+  searchLabel: 'Sensor code/name',
+  searchPlaceholder: 'Enter code or name...',
+  onOff: 'On/Off',
+  ipLan: 'IP address (LAN)',
+  ipWan: 'IP address (WAN)',
+  pollingInterval: 'Data polling interval',
+  dataLength: 'Data length',
+  iecAddress: 'IEC address',
+  heatSource: 'Heat source',
+  dataSlot: 'Data slot',
+  monitorPoints: 'Monitoring points',
+  pointCode: 'Point code',
+  pointName: 'Point name',
+}

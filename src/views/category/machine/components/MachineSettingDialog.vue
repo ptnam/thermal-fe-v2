@@ -25,13 +25,13 @@
         >
           <div class="drawer-body">
             <div class="form-grid">
-              <el-form-item label="Tên" label-width="100px"  labelPosition="top">
+              <el-form-item :label="t('fields.name')" label-width="100px"  labelPosition="top">
                 <el-input v-model="item.name"></el-input>
               </el-form-item>
               <el-form-item
                 v-if="formModel?.area && formModel.areaId"
                 label-width="60px"
-                label="Tọa độ"
+                :label="t('map.coordinates')"
                 labelPosition="top"
               >
                 <LatLngPicker
@@ -46,14 +46,14 @@
                   @input="(coordinate) => setCoordinate(index, coordinate)"
                 />
                 <p v-if="item.longitude && item.latitude" class="m-0 whitespace-nowrap">
-                  <span class="font-bold">Kinh độ:</span> {{ item.longitude }},
-                  <span class="font-bold">Vĩ độ:</span> {{ item.latitude }}
+                  <span class="font-bold">{{ t('map.longitude') }}:</span> {{ item.longitude }},
+                  <span class="font-bold">{{ t('map.latitude') }}:</span> {{ item.latitude }}
                 </p>
               </el-form-item>
             </div>
 
             <el-form-item
-              label="Bộ phận cha"
+              :label="t('machine.parentPart')"
               label-width="100px"
               labelPosition="top"
             >
@@ -63,14 +63,14 @@
                 value-key="name"
                 col-value="name"
                 col-label="name"
-                placeholder="Chọn bộ phận cha"
+                :placeholder="t('machine.selectParentPart')"
                 filterable
               >
               </select-options>
             </el-form-item>
 
             <el-form-item
-              label="Địa chỉ IEC"
+              :label="t('machine.iecAddress')"
               prop="iecObjectAddress"
               label-width="100px"
               labelPosition="top"
@@ -107,7 +107,7 @@
             </el-row>
             <el-form-item
               v-if="item.cameraId"
-              label="Điểm giám sát của camera được chọn"
+              :label="t('machine.cameraPoints')"
               label-position="top"
               label-width="120px"
             >
@@ -122,7 +122,7 @@
                 value-key="monitorPointId"
                 col-value="monitorPointId"
                 col-label="name"
-                placeholder="Chọn điểm giám sát"
+                :placeholder="t('machine.selectMonitorPoint')"
                 filterable
               >
               </ObjectSelectPoints>
@@ -130,7 +130,7 @@
             <el-form-item
               v-if="item.sensorId"
               label-position="top"
-              label="Điểm giám sát của Sensor được chọn"
+              :label="t('machine.sensorPoints')"
               label-width="120px"
             >
               <ObjectSelectPoints
@@ -144,13 +144,13 @@
                 value-key="monitorPointId"
                 col-value="monitorPointId"
                 col-label="name"
-                placeholder="Chọn điểm giám sát"
+                :placeholder="t('machine.selectMonitorPoint')"
                 filterable
               >
               </ObjectSelectPoints>
             </el-form-item>
             <div class="form-item-v" v-show="item?.machineMonitorCameraPoints?.length">
-              <p class="font-bold">Danh sách điểm giám sát của camera</p>
+              <p class="font-bold">{{ t('machine.cameraPointList') }}</p>
               <div class="flex gap-2 mt-2">
                 <machine-point-button
                   v-for="(point, pointIndex) in item?.machineMonitorCameraPoints ?? []"
@@ -165,7 +165,7 @@
               </div>
             </div>
             <div class="form-item-v" v-show="item?.machineMonitorSensorPoints?.length">
-              <p class="font-bold">Danh sách điểm giám sát của cảm biến</p>
+              <p class="font-bold">{{ t('machine.sensorPointList') }}</p>
               <div class="flex gap-2 mt-2">
                 <machine-point-button
                   v-for="(point, pointIndex) in item.machineMonitorSensorPoints ?? []"
@@ -182,7 +182,7 @@
             <div class="form-item-v">
               <el-form-item
                 v-show="item?.machineComponentThresholdList?.length"
-                label="Ngưỡng nhiệt"
+                :label="t('machine.alertThreshold')"
                 prop="machinePartThresholdList"
                 label-width="120px"
                 labelPosition="top"
@@ -194,7 +194,7 @@
                     :effect="thresholdItem?.temperatureThresholds?.length ? 'dark' : 'plain'"
                     :type="thresholdItem?.temperatureThresholds?.length ? 'success' : 'danger'"
                   >
-                    {{ thresholdItem.name }}
+                    {{ enumLabel('thresholdTypeList', thresholdItem.code, thresholdItem.name) }}
                   </el-tag>
                 </div>
               </el-form-item>
@@ -219,7 +219,7 @@
           <cancel-button :icon="null" class="w-full md:w-fit whitespace-nowrap" @click="emits('cancel')"></cancel-button>
           <el-button
             class="!m-0 w-full p-0 md:w-fit whitespace-nowrap" v-show="modelComponents.length" type="warning" @click="() => openTemperatureThreshold(editableTabsValue)">
-            Thiết lập ngưỡng nhiệt
+            {{ t('machine.setupThreshold') }}
           </el-button>
         </div>
         <save-button class="!m-0 w-full md:w-fit whitespace-nowrap" @click="() => saveForm(true)" :icon="null"></save-button>
@@ -231,6 +231,7 @@
       v-model="dialogMachinePointVisible"
       v-model:threshold-list="machineMonitorPoint"
       v-model:machinePartThresholdList="machinePartThresholdList"
+      :component-id="modelComponents[componentIndexValue]?.id"
       @save="saveMachinePoint"
       @cancel="dialogMachinePointVisible = false"
       :append-to-body="true"
@@ -241,6 +242,8 @@
 </template>
 
 <script setup lang="ts">
+import { useLang } from '@/hooks/web/useI18n'
+import { enumLabel } from '@/utils/enumLabel'
 import VirtualizedSelectFromUrl from '@/components/Selection/VirtualizedSelectFromUrl.vue'
 import {getAllCamerasApi} from '@/api/camera'
 import { computed, nextTick, ref} from 'vue'
@@ -260,6 +263,8 @@ import SelectOptions from "@/components/Selection/SelectOptions.vue";
 import ObjectSelectPoints from "@/views/category/machine/components/ObjectSelectPoints.vue";
 import InputNumber from "@/components/Input/InputNumber.vue";
 import { useAppStore } from '@/store/modules/app'
+
+const { t } = useLang()
 
 const emits = defineEmits(['cancel', 'save'])
 const editableTabsValue = ref(0)
